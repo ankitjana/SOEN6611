@@ -61,8 +61,8 @@ public class SerialUtils {
     /**
      * Private constructor prevents object creation.
      */
-<span class="nc" id="L64">    private SerialUtils() {</span>
-<span class="nc" id="L65">    }</span>
+    private SerialUtils() {
+    }
 
     /**
      * Returns {@code true} if a class implements {@code Serializable}
@@ -73,7 +73,7 @@ public class SerialUtils {
      * @return A boolean.
      */
     public static boolean isSerializable(Class c) {
-<span class="nc" id="L76">        return (Serializable.class.isAssignableFrom(c));</span>
+<span class="fc" id="L76">        return (Serializable.class.isAssignableFrom(c));</span>
     }
 
     /**
@@ -90,28 +90,28 @@ public class SerialUtils {
     public static Paint readPaint(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
 
-<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L94">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L96">        Paint result = null;</span>
-<span class="nc" id="L97">        boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (!isNull) {</span>
-<span class="nc" id="L99">            final Class c = (Class) stream.readObject();</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">            if (isSerializable(c)) {</span>
-<span class="nc" id="L101">                result = (Paint) stream.readObject();</span>
+<span class="fc" id="L96">        Paint result = null;</span>
+<span class="fc" id="L97">        boolean isNull = stream.readBoolean();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (!isNull) {</span>
+<span class="fc" id="L99">            final Class c = (Class) stream.readObject();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if (isSerializable(c)) {</span>
+<span class="fc" id="L101">                result = (Paint) stream.readObject();</span>
             }
-<span class="nc bnc" id="L103" title="All 2 branches missed.">            else if (c.equals(GradientPaint.class)) {</span>
-<span class="nc" id="L104">                float x1 = stream.readFloat();</span>
-<span class="nc" id="L105">                float y1 = stream.readFloat();</span>
-<span class="nc" id="L106">                Color c1 = (Color) stream.readObject();</span>
-<span class="nc" id="L107">                float x2 = stream.readFloat();</span>
-<span class="nc" id="L108">                float y2 = stream.readFloat();</span>
-<span class="nc" id="L109">                Color c2 = (Color) stream.readObject();</span>
-<span class="nc" id="L110">                boolean isCyclic = stream.readBoolean();</span>
-<span class="nc" id="L111">                result = new GradientPaint(x1, y1, c1, x2, y2, c2, isCyclic);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            else if (c.equals(GradientPaint.class)) {</span>
+<span class="fc" id="L104">                float x1 = stream.readFloat();</span>
+<span class="fc" id="L105">                float y1 = stream.readFloat();</span>
+<span class="fc" id="L106">                Color c1 = (Color) stream.readObject();</span>
+<span class="fc" id="L107">                float x2 = stream.readFloat();</span>
+<span class="fc" id="L108">                float y2 = stream.readFloat();</span>
+<span class="fc" id="L109">                Color c2 = (Color) stream.readObject();</span>
+<span class="fc" id="L110">                boolean isCyclic = stream.readBoolean();</span>
+<span class="fc" id="L111">                result = new GradientPaint(x1, y1, c1, x2, y2, c2, isCyclic);</span>
             }
         }
-<span class="nc" id="L114">        return result;</span>
+<span class="fc" id="L114">        return result;</span>
 
     }
 
@@ -126,31 +126,31 @@ public class SerialUtils {
     public static void writePaint(Paint paint, ObjectOutputStream stream)
         throws IOException {
 
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L130">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (paint != null) {</span>
-<span class="nc" id="L133">            stream.writeBoolean(false);</span>
-<span class="nc" id="L134">            stream.writeObject(paint.getClass());</span>
-<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (paint instanceof Serializable) {</span>
-<span class="nc" id="L136">                stream.writeObject(paint);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (paint != null) {</span>
+<span class="fc" id="L133">            stream.writeBoolean(false);</span>
+<span class="fc" id="L134">            stream.writeObject(paint.getClass());</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">            if (paint instanceof Serializable) {</span>
+<span class="fc" id="L136">                stream.writeObject(paint);</span>
             }
-<span class="nc bnc" id="L138" title="All 2 branches missed.">            else if (paint instanceof GradientPaint) {</span>
-<span class="nc" id="L139">                final GradientPaint gp = (GradientPaint) paint;</span>
-<span class="nc" id="L140">                stream.writeFloat((float) gp.getPoint1().getX());</span>
-<span class="nc" id="L141">                stream.writeFloat((float) gp.getPoint1().getY());</span>
-<span class="nc" id="L142">                stream.writeObject(gp.getColor1());</span>
-<span class="nc" id="L143">                stream.writeFloat((float) gp.getPoint2().getX());</span>
-<span class="nc" id="L144">                stream.writeFloat((float) gp.getPoint2().getY());</span>
-<span class="nc" id="L145">                stream.writeObject(gp.getColor2());</span>
-<span class="nc" id="L146">                stream.writeBoolean(gp.isCyclic());</span>
-<span class="nc" id="L147">            }</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">            else if (paint instanceof GradientPaint) {</span>
+<span class="fc" id="L139">                final GradientPaint gp = (GradientPaint) paint;</span>
+<span class="fc" id="L140">                stream.writeFloat((float) gp.getPoint1().getX());</span>
+<span class="fc" id="L141">                stream.writeFloat((float) gp.getPoint1().getY());</span>
+<span class="fc" id="L142">                stream.writeObject(gp.getColor1());</span>
+<span class="fc" id="L143">                stream.writeFloat((float) gp.getPoint2().getX());</span>
+<span class="fc" id="L144">                stream.writeFloat((float) gp.getPoint2().getY());</span>
+<span class="fc" id="L145">                stream.writeObject(gp.getColor2());</span>
+<span class="fc" id="L146">                stream.writeBoolean(gp.isCyclic());</span>
+<span class="fc" id="L147">            }</span>
         }
         else {
-<span class="nc" id="L150">            stream.writeBoolean(true);</span>
+<span class="fc" id="L150">            stream.writeBoolean(true);</span>
         }
 
-<span class="nc" id="L153">    }</span>
+<span class="fc" id="L153">    }</span>
 
     /**
      * Reads a {@code Stroke} object that has been serialised by the
@@ -166,28 +166,28 @@ public class SerialUtils {
     public static Stroke readStroke(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
 
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L170">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L172">        Stroke result = null;</span>
-<span class="nc" id="L173">        boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (!isNull) {</span>
-<span class="nc" id="L175">            Class c = (Class) stream.readObject();</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (c.equals(BasicStroke.class)) {</span>
-<span class="nc" id="L177">                float width = stream.readFloat();</span>
-<span class="nc" id="L178">                int cap = stream.readInt();</span>
-<span class="nc" id="L179">                int join = stream.readInt();</span>
-<span class="nc" id="L180">                float miterLimit = stream.readFloat();</span>
-<span class="nc" id="L181">                float[] dash = (float[]) stream.readObject();</span>
-<span class="nc" id="L182">                float dashPhase = stream.readFloat();</span>
-<span class="nc" id="L183">                result = new BasicStroke(width, cap, join, miterLimit, dash, </span>
+<span class="fc" id="L172">        Stroke result = null;</span>
+<span class="fc" id="L173">        boolean isNull = stream.readBoolean();</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (!isNull) {</span>
+<span class="fc" id="L175">            Class c = (Class) stream.readObject();</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">            if (c.equals(BasicStroke.class)) {</span>
+<span class="fc" id="L177">                float width = stream.readFloat();</span>
+<span class="fc" id="L178">                int cap = stream.readInt();</span>
+<span class="fc" id="L179">                int join = stream.readInt();</span>
+<span class="fc" id="L180">                float miterLimit = stream.readFloat();</span>
+<span class="fc" id="L181">                float[] dash = (float[]) stream.readObject();</span>
+<span class="fc" id="L182">                float dashPhase = stream.readFloat();</span>
+<span class="fc" id="L183">                result = new BasicStroke(width, cap, join, miterLimit, dash, </span>
                         dashPhase);
-<span class="nc" id="L185">            }</span>
+<span class="fc" id="L185">            }</span>
             else {
 <span class="nc" id="L187">                result = (Stroke) stream.readObject();</span>
             }
         }
-<span class="nc" id="L190">        return result;</span>
+<span class="fc" id="L190">        return result;</span>
 
     }
 
@@ -205,28 +205,28 @@ public class SerialUtils {
     public static void writeStroke(Stroke stroke, ObjectOutputStream stream)
             throws IOException {
 
-<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L209">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L211" title="All 2 branches missed.">        if (stroke != null) {</span>
-<span class="nc" id="L212">            stream.writeBoolean(false);</span>
-<span class="nc bnc" id="L213" title="All 2 branches missed.">            if (stroke instanceof BasicStroke) {</span>
-<span class="nc" id="L214">                BasicStroke s = (BasicStroke) stroke;</span>
-<span class="nc" id="L215">                stream.writeObject(BasicStroke.class);</span>
-<span class="nc" id="L216">                stream.writeFloat(s.getLineWidth());</span>
-<span class="nc" id="L217">                stream.writeInt(s.getEndCap());</span>
-<span class="nc" id="L218">                stream.writeInt(s.getLineJoin());</span>
-<span class="nc" id="L219">                stream.writeFloat(s.getMiterLimit());</span>
-<span class="nc" id="L220">                stream.writeObject(s.getDashArray());</span>
-<span class="nc" id="L221">                stream.writeFloat(s.getDashPhase());</span>
-<span class="nc" id="L222">            } else {</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (stroke != null) {</span>
+<span class="fc" id="L212">            stream.writeBoolean(false);</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">            if (stroke instanceof BasicStroke) {</span>
+<span class="fc" id="L214">                BasicStroke s = (BasicStroke) stroke;</span>
+<span class="fc" id="L215">                stream.writeObject(BasicStroke.class);</span>
+<span class="fc" id="L216">                stream.writeFloat(s.getLineWidth());</span>
+<span class="fc" id="L217">                stream.writeInt(s.getEndCap());</span>
+<span class="fc" id="L218">                stream.writeInt(s.getLineJoin());</span>
+<span class="fc" id="L219">                stream.writeFloat(s.getMiterLimit());</span>
+<span class="fc" id="L220">                stream.writeObject(s.getDashArray());</span>
+<span class="fc" id="L221">                stream.writeFloat(s.getDashPhase());</span>
+<span class="fc" id="L222">            } else {</span>
 <span class="nc" id="L223">                stream.writeObject(stroke.getClass());</span>
 <span class="nc" id="L224">                stream.writeObject(stroke);</span>
             }
         } else {
-<span class="nc" id="L227">            stream.writeBoolean(true);</span>
+<span class="fc" id="L227">            stream.writeBoolean(true);</span>
         }
-<span class="nc" id="L229">    }</span>
+<span class="fc" id="L229">    }</span>
 
     /**
      * Reads a {@code Composite} object that has been serialised by the
@@ -245,23 +245,23 @@ public class SerialUtils {
     public static Composite readComposite(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
 
-<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L249">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L251">        Composite result = null;</span>
-<span class="nc" id="L252">        boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (!isNull) {</span>
-<span class="nc" id="L254">            Class c = (Class) stream.readObject();</span>
-<span class="nc bnc" id="L255" title="All 2 branches missed.">            if (isSerializable(c)) {</span>
+<span class="fc" id="L251">        Composite result = null;</span>
+<span class="fc" id="L252">        boolean isNull = stream.readBoolean();</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        if (!isNull) {</span>
+<span class="fc" id="L254">            Class c = (Class) stream.readObject();</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">            if (isSerializable(c)) {</span>
 <span class="nc" id="L256">                result = (Composite) stream.readObject();</span>
             }
-<span class="nc bnc" id="L258" title="All 2 branches missed.">            else if (c.equals(AlphaComposite.class)) {</span>
-<span class="nc" id="L259">                int rule = stream.readInt();</span>
-<span class="nc" id="L260">                float alpha = stream.readFloat();</span>
-<span class="nc" id="L261">                result = AlphaComposite.getInstance(rule, alpha);</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">            else if (c.equals(AlphaComposite.class)) {</span>
+<span class="fc" id="L259">                int rule = stream.readInt();</span>
+<span class="fc" id="L260">                float alpha = stream.readFloat();</span>
+<span class="fc" id="L261">                result = AlphaComposite.getInstance(rule, alpha);</span>
             }
         }
-<span class="nc" id="L264">        return result;</span>
+<span class="fc" id="L264">        return result;</span>
 
     }
 
@@ -278,24 +278,24 @@ public class SerialUtils {
     public static void writeComposite(Composite composite, 
             ObjectOutputStream stream) throws IOException {
 
-<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L282">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (composite != null) {</span>
-<span class="nc" id="L285">            stream.writeBoolean(false);</span>
-<span class="nc" id="L286">            stream.writeObject(composite.getClass());</span>
-<span class="nc bnc" id="L287" title="All 2 branches missed.">            if (composite instanceof Serializable) {</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (composite != null) {</span>
+<span class="fc" id="L285">            stream.writeBoolean(false);</span>
+<span class="fc" id="L286">            stream.writeObject(composite.getClass());</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">            if (composite instanceof Serializable) {</span>
 <span class="nc" id="L288">                stream.writeObject(composite);</span>
             }
-<span class="nc bnc" id="L290" title="All 2 branches missed.">            else if (composite instanceof AlphaComposite) {</span>
-<span class="nc" id="L291">                AlphaComposite ac = (AlphaComposite) composite;</span>
-<span class="nc" id="L292">                stream.writeInt(ac.getRule());</span>
-<span class="nc" id="L293">                stream.writeFloat(ac.getAlpha());</span>
-<span class="nc" id="L294">            }</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">            else if (composite instanceof AlphaComposite) {</span>
+<span class="fc" id="L291">                AlphaComposite ac = (AlphaComposite) composite;</span>
+<span class="fc" id="L292">                stream.writeInt(ac.getRule());</span>
+<span class="fc" id="L293">                stream.writeFloat(ac.getAlpha());</span>
+<span class="fc" id="L294">            }</span>
         } else {
 <span class="nc" id="L296">            stream.writeBoolean(true);</span>
         }
-<span class="nc" id="L298">    }</span>
+<span class="fc" id="L298">    }</span>
 
     /**
      * Reads a {@code Shape} object that has been serialised by the
@@ -311,35 +311,35 @@ public class SerialUtils {
     public static Shape readShape(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
 
-<span class="nc bnc" id="L314" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L315">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L317">        Shape result = null;</span>
-<span class="nc" id="L318">        boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L319" title="All 2 branches missed.">        if (!isNull) {</span>
-<span class="nc" id="L320">            Class c = (Class) stream.readObject();</span>
-<span class="nc bnc" id="L321" title="All 2 branches missed.">            if (c.equals(Line2D.class)) {</span>
-<span class="nc" id="L322">                double x1 = stream.readDouble();</span>
-<span class="nc" id="L323">                double y1 = stream.readDouble();</span>
-<span class="nc" id="L324">                double x2 = stream.readDouble();</span>
-<span class="nc" id="L325">                double y2 = stream.readDouble();</span>
-<span class="nc" id="L326">                result = new Line2D.Double(x1, y1, x2, y2);</span>
-<span class="nc" id="L327">            }</span>
-<span class="nc bnc" id="L328" title="All 2 branches missed.">            else if (c.equals(Rectangle2D.class)) {</span>
-<span class="nc" id="L329">                double x = stream.readDouble();</span>
-<span class="nc" id="L330">                double y = stream.readDouble();</span>
-<span class="nc" id="L331">                double w = stream.readDouble();</span>
-<span class="nc" id="L332">                double h = stream.readDouble();</span>
-<span class="nc" id="L333">                result = new Rectangle2D.Double(x, y, w, h);</span>
-<span class="nc" id="L334">            }</span>
-<span class="nc bnc" id="L335" title="All 2 branches missed.">            else if (c.equals(Ellipse2D.class)) {</span>
-<span class="nc" id="L336">                double x = stream.readDouble();</span>
-<span class="nc" id="L337">                double y = stream.readDouble();</span>
-<span class="nc" id="L338">                double w = stream.readDouble();</span>
-<span class="nc" id="L339">                double h = stream.readDouble();</span>
-<span class="nc" id="L340">                result = new Ellipse2D.Double(x, y, w, h);</span>
-<span class="nc" id="L341">            }</span>
-<span class="nc bnc" id="L342" title="All 2 branches missed.">            else if (c.equals(Arc2D.class)) {</span>
+<span class="fc" id="L317">        Shape result = null;</span>
+<span class="fc" id="L318">        boolean isNull = stream.readBoolean();</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        if (!isNull) {</span>
+<span class="fc" id="L320">            Class c = (Class) stream.readObject();</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">            if (c.equals(Line2D.class)) {</span>
+<span class="fc" id="L322">                double x1 = stream.readDouble();</span>
+<span class="fc" id="L323">                double y1 = stream.readDouble();</span>
+<span class="fc" id="L324">                double x2 = stream.readDouble();</span>
+<span class="fc" id="L325">                double y2 = stream.readDouble();</span>
+<span class="fc" id="L326">                result = new Line2D.Double(x1, y1, x2, y2);</span>
+<span class="fc" id="L327">            }</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">            else if (c.equals(Rectangle2D.class)) {</span>
+<span class="fc" id="L329">                double x = stream.readDouble();</span>
+<span class="fc" id="L330">                double y = stream.readDouble();</span>
+<span class="fc" id="L331">                double w = stream.readDouble();</span>
+<span class="fc" id="L332">                double h = stream.readDouble();</span>
+<span class="fc" id="L333">                result = new Rectangle2D.Double(x, y, w, h);</span>
+<span class="fc" id="L334">            }</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">            else if (c.equals(Ellipse2D.class)) {</span>
+<span class="fc" id="L336">                double x = stream.readDouble();</span>
+<span class="fc" id="L337">                double y = stream.readDouble();</span>
+<span class="fc" id="L338">                double w = stream.readDouble();</span>
+<span class="fc" id="L339">                double h = stream.readDouble();</span>
+<span class="fc" id="L340">                result = new Ellipse2D.Double(x, y, w, h);</span>
+<span class="fc" id="L341">            }</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            else if (c.equals(Arc2D.class)) {</span>
 <span class="nc" id="L343">                double x = stream.readDouble();</span>
 <span class="nc" id="L344">                double y = stream.readDouble();</span>
 <span class="nc" id="L345">                double w = stream.readDouble();</span>
@@ -349,22 +349,22 @@ public class SerialUtils {
 <span class="nc" id="L349">                int at = stream.readInt();       // Arc type</span>
 <span class="nc" id="L350">                result = new Arc2D.Double(x, y, w, h, as, ae, at);</span>
 <span class="nc" id="L351">            }</span>
-<span class="nc bnc" id="L352" title="All 2 branches missed.">            else if (c.equals(GeneralPath.class)) {</span>
-<span class="nc" id="L353">                GeneralPath gp = new GeneralPath();</span>
-<span class="nc" id="L354">                float[] args = new float[6];</span>
-<span class="nc" id="L355">                boolean hasNext = stream.readBoolean();</span>
-<span class="nc bnc" id="L356" title="All 2 branches missed.">                while (!hasNext) {</span>
-<span class="nc" id="L357">                    int type = stream.readInt();</span>
-<span class="nc bnc" id="L358" title="All 2 branches missed.">                    for (int i = 0; i &lt; 6; i++) {</span>
-<span class="nc" id="L359">                        args[i] = stream.readFloat();</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">            else if (c.equals(GeneralPath.class)) {</span>
+<span class="fc" id="L353">                GeneralPath gp = new GeneralPath();</span>
+<span class="fc" id="L354">                float[] args = new float[6];</span>
+<span class="fc" id="L355">                boolean hasNext = stream.readBoolean();</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">                while (!hasNext) {</span>
+<span class="fc" id="L357">                    int type = stream.readInt();</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">                    for (int i = 0; i &lt; 6; i++) {</span>
+<span class="fc" id="L359">                        args[i] = stream.readFloat();</span>
                     }
-<span class="nc bnc" id="L361" title="All 6 branches missed.">                    switch (type) {</span>
+<span class="pc bpc" id="L361" title="3 of 6 branches missed.">                    switch (type) {</span>
                         case PathIterator.SEG_MOVETO :
-<span class="nc" id="L363">                            gp.moveTo(args[0], args[1]);</span>
-<span class="nc" id="L364">                            break;</span>
+<span class="fc" id="L363">                            gp.moveTo(args[0], args[1]);</span>
+<span class="fc" id="L364">                            break;</span>
                         case PathIterator.SEG_LINETO :
-<span class="nc" id="L366">                            gp.lineTo(args[0], args[1]);</span>
-<span class="nc" id="L367">                            break;</span>
+<span class="fc" id="L366">                            gp.lineTo(args[0], args[1]);</span>
+<span class="fc" id="L367">                            break;</span>
                         case PathIterator.SEG_CUBICTO :
 <span class="nc" id="L369">                            gp.curveTo(args[0], args[1], args[2],</span>
                                     args[3], args[4], args[5]);
@@ -373,22 +373,22 @@ public class SerialUtils {
 <span class="nc" id="L373">                            gp.quadTo(args[0], args[1], args[2], args[3]);</span>
 <span class="nc" id="L374">                            break;</span>
                         case PathIterator.SEG_CLOSE :
-<span class="nc" id="L376">                            gp.closePath();</span>
-<span class="nc" id="L377">                            break;</span>
+<span class="fc" id="L376">                            gp.closePath();</span>
+<span class="fc" id="L377">                            break;</span>
                         default :
 <span class="nc" id="L379">                            throw new RuntimeException(</span>
                                     &quot;JFreeChart - No path exists&quot;);
                     }
-<span class="nc" id="L382">                    gp.setWindingRule(stream.readInt());</span>
-<span class="nc" id="L383">                    hasNext = stream.readBoolean();</span>
-<span class="nc" id="L384">                }</span>
-<span class="nc" id="L385">                result = gp;</span>
-<span class="nc" id="L386">            }</span>
+<span class="fc" id="L382">                    gp.setWindingRule(stream.readInt());</span>
+<span class="fc" id="L383">                    hasNext = stream.readBoolean();</span>
+<span class="fc" id="L384">                }</span>
+<span class="fc" id="L385">                result = gp;</span>
+<span class="fc" id="L386">            }</span>
             else {
-<span class="nc" id="L388">                result = (Shape) stream.readObject();</span>
+<span class="fc" id="L388">                result = (Shape) stream.readObject();</span>
             }
         }
-<span class="nc" id="L391">        return result;</span>
+<span class="fc" id="L391">        return result;</span>
 
     }
 
@@ -403,36 +403,36 @@ public class SerialUtils {
     public static void writeShape(Shape shape, ObjectOutputStream stream)
             throws IOException {
 
-<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L407">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L409" title="All 2 branches missed.">        if (shape != null) {</span>
-<span class="nc" id="L410">            stream.writeBoolean(false);</span>
-<span class="nc bnc" id="L411" title="All 2 branches missed.">            if (shape instanceof Line2D) {</span>
-<span class="nc" id="L412">                final Line2D line = (Line2D) shape;</span>
-<span class="nc" id="L413">                stream.writeObject(Line2D.class);</span>
-<span class="nc" id="L414">                stream.writeDouble(line.getX1());</span>
-<span class="nc" id="L415">                stream.writeDouble(line.getY1());</span>
-<span class="nc" id="L416">                stream.writeDouble(line.getX2());</span>
-<span class="nc" id="L417">                stream.writeDouble(line.getY2());</span>
-<span class="nc" id="L418">            }</span>
-<span class="nc bnc" id="L419" title="All 2 branches missed.">            else if (shape instanceof Rectangle2D) {</span>
-<span class="nc" id="L420">                final Rectangle2D rectangle = (Rectangle2D) shape;</span>
-<span class="nc" id="L421">                stream.writeObject(Rectangle2D.class);</span>
-<span class="nc" id="L422">                stream.writeDouble(rectangle.getX());</span>
-<span class="nc" id="L423">                stream.writeDouble(rectangle.getY());</span>
-<span class="nc" id="L424">                stream.writeDouble(rectangle.getWidth());</span>
-<span class="nc" id="L425">                stream.writeDouble(rectangle.getHeight());</span>
-<span class="nc" id="L426">            }</span>
-<span class="nc bnc" id="L427" title="All 2 branches missed.">            else if (shape instanceof Ellipse2D) {</span>
-<span class="nc" id="L428">                final Ellipse2D ellipse = (Ellipse2D) shape;</span>
-<span class="nc" id="L429">                stream.writeObject(Ellipse2D.class);</span>
-<span class="nc" id="L430">                stream.writeDouble(ellipse.getX());</span>
-<span class="nc" id="L431">                stream.writeDouble(ellipse.getY());</span>
-<span class="nc" id="L432">                stream.writeDouble(ellipse.getWidth());</span>
-<span class="nc" id="L433">                stream.writeDouble(ellipse.getHeight());</span>
-<span class="nc" id="L434">            }</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">            else if (shape instanceof Arc2D) {</span>
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        if (shape != null) {</span>
+<span class="fc" id="L410">            stream.writeBoolean(false);</span>
+<span class="fc bfc" id="L411" title="All 2 branches covered.">            if (shape instanceof Line2D) {</span>
+<span class="fc" id="L412">                final Line2D line = (Line2D) shape;</span>
+<span class="fc" id="L413">                stream.writeObject(Line2D.class);</span>
+<span class="fc" id="L414">                stream.writeDouble(line.getX1());</span>
+<span class="fc" id="L415">                stream.writeDouble(line.getY1());</span>
+<span class="fc" id="L416">                stream.writeDouble(line.getX2());</span>
+<span class="fc" id="L417">                stream.writeDouble(line.getY2());</span>
+<span class="fc" id="L418">            }</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">            else if (shape instanceof Rectangle2D) {</span>
+<span class="fc" id="L420">                final Rectangle2D rectangle = (Rectangle2D) shape;</span>
+<span class="fc" id="L421">                stream.writeObject(Rectangle2D.class);</span>
+<span class="fc" id="L422">                stream.writeDouble(rectangle.getX());</span>
+<span class="fc" id="L423">                stream.writeDouble(rectangle.getY());</span>
+<span class="fc" id="L424">                stream.writeDouble(rectangle.getWidth());</span>
+<span class="fc" id="L425">                stream.writeDouble(rectangle.getHeight());</span>
+<span class="fc" id="L426">            }</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">            else if (shape instanceof Ellipse2D) {</span>
+<span class="fc" id="L428">                final Ellipse2D ellipse = (Ellipse2D) shape;</span>
+<span class="fc" id="L429">                stream.writeObject(Ellipse2D.class);</span>
+<span class="fc" id="L430">                stream.writeDouble(ellipse.getX());</span>
+<span class="fc" id="L431">                stream.writeDouble(ellipse.getY());</span>
+<span class="fc" id="L432">                stream.writeDouble(ellipse.getWidth());</span>
+<span class="fc" id="L433">                stream.writeDouble(ellipse.getHeight());</span>
+<span class="fc" id="L434">            }</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">            else if (shape instanceof Arc2D) {</span>
 <span class="nc" id="L436">                final Arc2D arc = (Arc2D) shape;</span>
 <span class="nc" id="L437">                stream.writeObject(Arc2D.class);</span>
 <span class="nc" id="L438">                stream.writeDouble(arc.getX());</span>
@@ -443,33 +443,33 @@ public class SerialUtils {
 <span class="nc" id="L443">                stream.writeDouble(arc.getAngleExtent());</span>
 <span class="nc" id="L444">                stream.writeInt(arc.getArcType());</span>
 <span class="nc" id="L445">            }</span>
-<span class="nc bnc" id="L446" title="All 2 branches missed.">            else if (shape instanceof GeneralPath) {</span>
-<span class="nc" id="L447">                stream.writeObject(GeneralPath.class);</span>
-<span class="nc" id="L448">                final PathIterator pi = shape.getPathIterator(null);</span>
-<span class="nc" id="L449">                final float[] args = new float[6];</span>
-<span class="nc" id="L450">                stream.writeBoolean(pi.isDone());</span>
-<span class="nc bnc" id="L451" title="All 2 branches missed.">                while (!pi.isDone()) {</span>
-<span class="nc" id="L452">                    final int type = pi.currentSegment(args);</span>
-<span class="nc" id="L453">                    stream.writeInt(type);</span>
+<span class="fc bfc" id="L446" title="All 2 branches covered.">            else if (shape instanceof GeneralPath) {</span>
+<span class="fc" id="L447">                stream.writeObject(GeneralPath.class);</span>
+<span class="fc" id="L448">                final PathIterator pi = shape.getPathIterator(null);</span>
+<span class="fc" id="L449">                final float[] args = new float[6];</span>
+<span class="fc" id="L450">                stream.writeBoolean(pi.isDone());</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">                while (!pi.isDone()) {</span>
+<span class="fc" id="L452">                    final int type = pi.currentSegment(args);</span>
+<span class="fc" id="L453">                    stream.writeInt(type);</span>
                     // TODO: could write this to only stream the values
                     // required for the segment type
-<span class="nc bnc" id="L456" title="All 2 branches missed.">                    for (int i = 0; i &lt; 6; i++) {</span>
-<span class="nc" id="L457">                        stream.writeFloat(args[i]);</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">                    for (int i = 0; i &lt; 6; i++) {</span>
+<span class="fc" id="L457">                        stream.writeFloat(args[i]);</span>
                     }
-<span class="nc" id="L459">                    stream.writeInt(pi.getWindingRule());</span>
-<span class="nc" id="L460">                    pi.next();</span>
-<span class="nc" id="L461">                    stream.writeBoolean(pi.isDone());</span>
-<span class="nc" id="L462">                }</span>
-<span class="nc" id="L463">            }</span>
+<span class="fc" id="L459">                    stream.writeInt(pi.getWindingRule());</span>
+<span class="fc" id="L460">                    pi.next();</span>
+<span class="fc" id="L461">                    stream.writeBoolean(pi.isDone());</span>
+<span class="fc" id="L462">                }</span>
+<span class="fc" id="L463">            }</span>
             else {
-<span class="nc" id="L465">                stream.writeObject(shape.getClass());</span>
-<span class="nc" id="L466">                stream.writeObject(shape);</span>
+<span class="fc" id="L465">                stream.writeObject(shape.getClass());</span>
+<span class="fc" id="L466">                stream.writeObject(shape);</span>
             }
         }
         else {
-<span class="nc" id="L470">            stream.writeBoolean(true);</span>
+<span class="fc" id="L470">            stream.writeBoolean(true);</span>
         }
-<span class="nc" id="L472">    }</span>
+<span class="fc" id="L472">    }</span>
 
     /**
      * Reads a {@code Point2D} object that has been serialised by the
@@ -484,17 +484,17 @@ public class SerialUtils {
     public static Point2D readPoint2D(ObjectInputStream stream)
             throws IOException {
 
-<span class="nc bnc" id="L487" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L488">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L490">        Point2D result = null;</span>
-<span class="nc" id="L491">        boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L492" title="All 2 branches missed.">        if (!isNull) {</span>
-<span class="nc" id="L493">            double x = stream.readDouble();</span>
-<span class="nc" id="L494">            double y = stream.readDouble();</span>
-<span class="nc" id="L495">            result = new Point2D.Double(x, y);</span>
+<span class="fc" id="L490">        Point2D result = null;</span>
+<span class="fc" id="L491">        boolean isNull = stream.readBoolean();</span>
+<span class="pc bpc" id="L492" title="1 of 2 branches missed.">        if (!isNull) {</span>
+<span class="fc" id="L493">            double x = stream.readDouble();</span>
+<span class="fc" id="L494">            double y = stream.readDouble();</span>
+<span class="fc" id="L495">            result = new Point2D.Double(x, y);</span>
         }
-<span class="nc" id="L497">        return result;</span>
+<span class="fc" id="L497">        return result;</span>
 
     }
 
@@ -509,18 +509,18 @@ public class SerialUtils {
     public static void writePoint2D(Point2D p, ObjectOutputStream stream)
             throws IOException {
 
-<span class="nc bnc" id="L512" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L512" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L513">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L515" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L516">            stream.writeBoolean(false);</span>
-<span class="nc" id="L517">            stream.writeDouble(p.getX());</span>
-<span class="nc" id="L518">            stream.writeDouble(p.getY());</span>
+<span class="pc bpc" id="L515" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L516">            stream.writeBoolean(false);</span>
+<span class="fc" id="L517">            stream.writeDouble(p.getX());</span>
+<span class="fc" id="L518">            stream.writeDouble(p.getY());</span>
         }
         else {
 <span class="nc" id="L521">            stream.writeBoolean(true);</span>
         }
-<span class="nc" id="L523">    }</span>
+<span class="fc" id="L523">    }</span>
 
     /**
      * Reads a {@code AttributedString} object that has been serialised by
@@ -538,26 +538,26 @@ public class SerialUtils {
             ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
 
-<span class="nc bnc" id="L541" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L541" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L542">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc" id="L544">        AttributedString result = null;</span>
-<span class="nc" id="L545">        final boolean isNull = stream.readBoolean();</span>
-<span class="nc bnc" id="L546" title="All 2 branches missed.">        if (!isNull) {</span>
+<span class="fc" id="L544">        AttributedString result = null;</span>
+<span class="fc" id="L545">        final boolean isNull = stream.readBoolean();</span>
+<span class="fc bfc" id="L546" title="All 2 branches covered.">        if (!isNull) {</span>
             // read string and attributes then create result
-<span class="nc" id="L548">            String plainStr = (String) stream.readObject();</span>
-<span class="nc" id="L549">            result = new AttributedString(plainStr);</span>
-<span class="nc" id="L550">            char c = stream.readChar();</span>
-<span class="nc" id="L551">            int start = 0;</span>
-<span class="nc bnc" id="L552" title="All 2 branches missed.">            while (c != CharacterIterator.DONE) {</span>
-<span class="nc" id="L553">                int limit = stream.readInt();</span>
-<span class="nc" id="L554">                Map atts = (Map) stream.readObject();</span>
-<span class="nc" id="L555">                result.addAttributes(atts, start, limit);</span>
-<span class="nc" id="L556">                start = limit;</span>
-<span class="nc" id="L557">                c = stream.readChar();</span>
-<span class="nc" id="L558">            }</span>
+<span class="fc" id="L548">            String plainStr = (String) stream.readObject();</span>
+<span class="fc" id="L549">            result = new AttributedString(plainStr);</span>
+<span class="fc" id="L550">            char c = stream.readChar();</span>
+<span class="fc" id="L551">            int start = 0;</span>
+<span class="fc bfc" id="L552" title="All 2 branches covered.">            while (c != CharacterIterator.DONE) {</span>
+<span class="fc" id="L553">                int limit = stream.readInt();</span>
+<span class="fc" id="L554">                Map atts = (Map) stream.readObject();</span>
+<span class="fc" id="L555">                result.addAttributes(atts, start, limit);</span>
+<span class="fc" id="L556">                start = limit;</span>
+<span class="fc" id="L557">                c = stream.readChar();</span>
+<span class="fc" id="L558">            }</span>
         }
-<span class="nc" id="L560">        return result;</span>
+<span class="fc" id="L560">        return result;</span>
     }
 
     /**
@@ -571,50 +571,50 @@ public class SerialUtils {
     public static void writeAttributedString(AttributedString as,
             ObjectOutputStream stream) throws IOException {
 
-<span class="nc bnc" id="L574" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="pc bpc" id="L574" title="1 of 2 branches missed.">        if (stream == null) {</span>
 <span class="nc" id="L575">            throw new IllegalArgumentException(&quot;Null 'stream' argument.&quot;);</span>
         }
-<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (as != null) {</span>
-<span class="nc" id="L578">            stream.writeBoolean(false);</span>
-<span class="nc" id="L579">            AttributedCharacterIterator aci = as.getIterator();</span>
+<span class="fc bfc" id="L577" title="All 2 branches covered.">        if (as != null) {</span>
+<span class="fc" id="L578">            stream.writeBoolean(false);</span>
+<span class="fc" id="L579">            AttributedCharacterIterator aci = as.getIterator();</span>
             // build a plain string from aci
             // then write the string
-<span class="nc" id="L582">            StringBuffer plainStr = new StringBuffer();</span>
-<span class="nc" id="L583">            char current = aci.first();</span>
-<span class="nc bnc" id="L584" title="All 2 branches missed.">            while (current != CharacterIterator.DONE) {</span>
-<span class="nc" id="L585">                plainStr = plainStr.append(current);</span>
-<span class="nc" id="L586">                current = aci.next();</span>
+<span class="fc" id="L582">            StringBuffer plainStr = new StringBuffer();</span>
+<span class="fc" id="L583">            char current = aci.first();</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">            while (current != CharacterIterator.DONE) {</span>
+<span class="fc" id="L585">                plainStr = plainStr.append(current);</span>
+<span class="fc" id="L586">                current = aci.next();</span>
             }
-<span class="nc" id="L588">            stream.writeObject(plainStr.toString());</span>
+<span class="fc" id="L588">            stream.writeObject(plainStr.toString());</span>
 
             // then write the attributes and limits for each run
-<span class="nc" id="L591">            current = aci.first();</span>
-<span class="nc" id="L592">            int begin = aci.getBeginIndex();</span>
-<span class="nc bnc" id="L593" title="All 2 branches missed.">            while (current != CharacterIterator.DONE) {</span>
+<span class="fc" id="L591">            current = aci.first();</span>
+<span class="fc" id="L592">            int begin = aci.getBeginIndex();</span>
+<span class="fc bfc" id="L593" title="All 2 branches covered.">            while (current != CharacterIterator.DONE) {</span>
                 // write the current character - when the reader sees that this
                 // is not CharacterIterator.DONE, it will know to read the
                 // run limits and attributes
-<span class="nc" id="L597">                stream.writeChar(current);</span>
+<span class="fc" id="L597">                stream.writeChar(current);</span>
 
                 // now write the limit, adjusted as if beginIndex is zero
-<span class="nc" id="L600">                int limit = aci.getRunLimit();</span>
-<span class="nc" id="L601">                stream.writeInt(limit - begin);</span>
+<span class="fc" id="L600">                int limit = aci.getRunLimit();</span>
+<span class="fc" id="L601">                stream.writeInt(limit - begin);</span>
 
                 // now write the attribute set
-<span class="nc" id="L604">                Map atts = new HashMap(aci.getAttributes());</span>
-<span class="nc" id="L605">                stream.writeObject(atts);</span>
-<span class="nc" id="L606">                current = aci.setIndex(limit);</span>
-<span class="nc" id="L607">            }</span>
+<span class="fc" id="L604">                Map atts = new HashMap(aci.getAttributes());</span>
+<span class="fc" id="L605">                stream.writeObject(atts);</span>
+<span class="fc" id="L606">                current = aci.setIndex(limit);</span>
+<span class="fc" id="L607">            }</span>
             // write a character that signals to the reader that all runs
             // are done...
-<span class="nc" id="L610">            stream.writeChar(CharacterIterator.DONE);</span>
-<span class="nc" id="L611">        }</span>
+<span class="fc" id="L610">            stream.writeChar(CharacterIterator.DONE);</span>
+<span class="fc" id="L611">        }</span>
         else {
             // write a flag that indicates a null
-<span class="nc" id="L614">            stream.writeBoolean(true);</span>
+<span class="fc" id="L614">            stream.writeBoolean(true);</span>
         }
 
-<span class="nc" id="L617">    }</span>
+<span class="fc" id="L617">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

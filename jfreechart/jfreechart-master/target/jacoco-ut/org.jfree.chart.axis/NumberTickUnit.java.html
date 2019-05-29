@@ -70,8 +70,8 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      * @param size  the size of the tick unit.
      */
     public NumberTickUnit(double size) {
-<span class="nc" id="L73">        this(size, NumberFormat.getNumberInstance());</span>
-<span class="nc" id="L74">    }</span>
+<span class="fc" id="L73">        this(size, NumberFormat.getNumberInstance());</span>
+<span class="fc" id="L74">    }</span>
 
     /**
      * Creates a new number tick unit.
@@ -81,10 +81,10 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      *                   not permitted).
      */
     public NumberTickUnit(double size, NumberFormat formatter) {
-<span class="nc" id="L84">        super(size);</span>
-<span class="nc" id="L85">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
-<span class="nc" id="L86">        this.formatter = formatter;</span>
-<span class="nc" id="L87">    }</span>
+<span class="fc" id="L84">        super(size);</span>
+<span class="fc" id="L85">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
+<span class="fc" id="L86">        this.formatter = formatter;</span>
+<span class="fc" id="L87">    }</span>
 
     /**
      * Creates a new number tick unit.
@@ -98,10 +98,10 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      */
     public NumberTickUnit(double size, NumberFormat formatter,
             int minorTickCount) {
-<span class="nc" id="L101">        super(size, minorTickCount);</span>
-<span class="nc" id="L102">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
-<span class="nc" id="L103">        this.formatter = formatter;</span>
-<span class="nc" id="L104">    }</span>
+<span class="fc" id="L101">        super(size, minorTickCount);</span>
+<span class="fc" id="L102">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
+<span class="fc" id="L103">        this.formatter = formatter;</span>
+<span class="fc" id="L104">    }</span>
 
     /**
      * Converts a value to a string.
@@ -112,7 +112,7 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      */
     @Override
     public String valueToString(double value) {
-<span class="nc" id="L115">        return this.formatter.format(value);</span>
+<span class="fc" id="L115">        return this.formatter.format(value);</span>
     }
 
     /**
@@ -124,20 +124,20 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L128">            return true;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L128">            return true;</span>
         }
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (!(obj instanceof NumberTickUnit)) {</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (!(obj instanceof NumberTickUnit)) {</span>
 <span class="nc" id="L131">            return false;</span>
         }
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L134">            return false;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L134">            return false;</span>
         }
-<span class="nc" id="L136">        NumberTickUnit that = (NumberTickUnit) obj;</span>
-<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (!this.formatter.equals(that.formatter)) {</span>
-<span class="nc" id="L138">            return false;</span>
+<span class="fc" id="L136">        NumberTickUnit that = (NumberTickUnit) obj;</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (!this.formatter.equals(that.formatter)) {</span>
+<span class="fc" id="L138">            return false;</span>
         }
-<span class="nc" id="L140">        return true;</span>
+<span class="fc" id="L140">        return true;</span>
     }
 
     /**
@@ -157,11 +157,11 @@ public class NumberTickUnit extends TickUnit implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L160">        int result = super.hashCode();</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        result = 29 * result + (this.formatter != null</span>
-<span class="nc" id="L162">                ? this.formatter.hashCode() : 0);</span>
-<span class="nc" id="L163">        return result;</span>
+<span class="fc" id="L160">        int result = super.hashCode();</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        result = 29 * result + (this.formatter != null</span>
+<span class="pc" id="L162">                ? this.formatter.hashCode() : 0);</span>
+<span class="fc" id="L163">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

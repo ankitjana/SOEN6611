@@ -82,14 +82,14 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      *                       ({@code null} not permitted).
      */
     protected AbstractPieItemLabelGenerator(String labelFormat, 
-<span class="nc" id="L85">            NumberFormat numberFormat, NumberFormat percentFormat) {</span>
-<span class="nc" id="L86">        Args.nullNotPermitted(labelFormat, &quot;labelFormat&quot;);</span>
-<span class="nc" id="L87">        Args.nullNotPermitted(numberFormat, &quot;numberFormat&quot;);</span>
-<span class="nc" id="L88">        Args.nullNotPermitted(percentFormat, &quot;percentFormat&quot;);</span>
-<span class="nc" id="L89">        this.labelFormat = labelFormat;</span>
-<span class="nc" id="L90">        this.numberFormat = numberFormat;</span>
-<span class="nc" id="L91">        this.percentFormat = percentFormat;</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L85">            NumberFormat numberFormat, NumberFormat percentFormat) {</span>
+<span class="fc" id="L86">        Args.nullNotPermitted(labelFormat, &quot;labelFormat&quot;);</span>
+<span class="fc" id="L87">        Args.nullNotPermitted(numberFormat, &quot;numberFormat&quot;);</span>
+<span class="fc" id="L88">        Args.nullNotPermitted(percentFormat, &quot;percentFormat&quot;);</span>
+<span class="fc" id="L89">        this.labelFormat = labelFormat;</span>
+<span class="fc" id="L90">        this.numberFormat = numberFormat;</span>
+<span class="fc" id="L91">        this.percentFormat = percentFormat;</span>
+<span class="fc" id="L92">    }</span>
 
     /**
      * Returns the label format string.
@@ -106,7 +106,7 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      * @return The formatter (never {@code null}).
      */
     public NumberFormat getNumberFormat() {
-<span class="nc" id="L109">        return this.numberFormat;</span>
+<span class="fc" id="L109">        return this.numberFormat;</span>
     }
 
     /**
@@ -115,7 +115,7 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      * @return The formatter (never {@code null}).
      */
     public NumberFormat getPercentFormat() {
-<span class="nc" id="L118">        return this.percentFormat;</span>
+<span class="fc" id="L118">        return this.percentFormat;</span>
     }
 
     /**
@@ -135,26 +135,26 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      * @return The items (never {@code null}).
      */
     protected Object[] createItemArray(PieDataset dataset, Comparable key) {
-<span class="nc" id="L138">        Object[] result = new Object[4];</span>
-<span class="nc" id="L139">        double total = DatasetUtils.calculatePieDatasetTotal(dataset);</span>
-<span class="nc" id="L140">        result[0] = key.toString();</span>
-<span class="nc" id="L141">        Number value = dataset.getValue(key);</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (value != null) {</span>
-<span class="nc" id="L143">            result[1] = this.numberFormat.format(value);</span>
+<span class="fc" id="L138">        Object[] result = new Object[4];</span>
+<span class="fc" id="L139">        double total = DatasetUtils.calculatePieDatasetTotal(dataset);</span>
+<span class="fc" id="L140">        result[0] = key.toString();</span>
+<span class="fc" id="L141">        Number value = dataset.getValue(key);</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L143">            result[1] = this.numberFormat.format(value);</span>
         }
         else {
-<span class="nc" id="L146">            result[1] = &quot;null&quot;;</span>
+<span class="fc" id="L146">            result[1] = &quot;null&quot;;</span>
         }
-<span class="nc" id="L148">        double percent = 0.0;</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (value != null) {</span>
-<span class="nc" id="L150">            double v = value.doubleValue();</span>
-<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (v &gt; 0.0) {</span>
-<span class="nc" id="L152">                percent = v / total;</span>
+<span class="fc" id="L148">        double percent = 0.0;</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L150">            double v = value.doubleValue();</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (v &gt; 0.0) {</span>
+<span class="fc" id="L152">                percent = v / total;</span>
             }
         }
-<span class="nc" id="L155">        result[2] = this.percentFormat.format(percent);</span>
-<span class="nc" id="L156">        result[3] = this.numberFormat.format(total);</span>
-<span class="nc" id="L157">        return result;</span>
+<span class="fc" id="L155">        result[2] = this.percentFormat.format(percent);</span>
+<span class="fc" id="L156">        result[3] = this.numberFormat.format(total);</span>
+<span class="fc" id="L157">        return result;</span>
     }
 
     /**
@@ -166,12 +166,12 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      * @return The label (possibly {@code null}).
      */
     protected String generateSectionLabel(PieDataset dataset, Comparable key) {
-<span class="nc" id="L169">        String result = null;</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L171">            Object[] items = createItemArray(dataset, key);</span>
-<span class="nc" id="L172">            result = MessageFormat.format(this.labelFormat, items);</span>
+<span class="fc" id="L169">        String result = null;</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (dataset != null) {</span>
+<span class="fc" id="L171">            Object[] items = createItemArray(dataset, key);</span>
+<span class="fc" id="L172">            result = MessageFormat.format(this.labelFormat, items);</span>
         }
-<span class="nc" id="L174">        return result;</span>
+<span class="fc" id="L174">        return result;</span>
     }
 
     /**
@@ -183,25 +183,25 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L187">            return true;</span>
         }
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (!(obj instanceof AbstractPieItemLabelGenerator)) {</span>
-<span class="nc" id="L190">            return false;</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (!(obj instanceof AbstractPieItemLabelGenerator)) {</span>
+<span class="fc" id="L190">            return false;</span>
         }
 
-<span class="nc" id="L193">        AbstractPieItemLabelGenerator that</span>
+<span class="fc" id="L193">        AbstractPieItemLabelGenerator that</span>
                 = (AbstractPieItemLabelGenerator) obj;
-<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (!this.labelFormat.equals(that.labelFormat)) {</span>
-<span class="nc" id="L196">            return false;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (!this.labelFormat.equals(that.labelFormat)) {</span>
+<span class="fc" id="L196">            return false;</span>
         }
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (!this.numberFormat.equals(that.numberFormat)) {</span>
-<span class="nc" id="L199">            return false;</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (!this.numberFormat.equals(that.numberFormat)) {</span>
+<span class="fc" id="L199">            return false;</span>
         }
-<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (!this.percentFormat.equals(that.percentFormat)) {</span>
-<span class="nc" id="L202">            return false;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (!this.percentFormat.equals(that.percentFormat)) {</span>
+<span class="fc" id="L202">            return false;</span>
         }
-<span class="nc" id="L204">        return true;</span>
+<span class="fc" id="L204">        return true;</span>
 
     }
 
@@ -212,11 +212,11 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L215">        int result = 127;</span>
-<span class="nc" id="L216">        result = HashUtils.hashCode(result, this.labelFormat);</span>
-<span class="nc" id="L217">        result = HashUtils.hashCode(result, this.numberFormat);</span>
-<span class="nc" id="L218">        result = HashUtils.hashCode(result, this.percentFormat);</span>
-<span class="nc" id="L219">        return result;</span>
+<span class="fc" id="L215">        int result = 127;</span>
+<span class="fc" id="L216">        result = HashUtils.hashCode(result, this.labelFormat);</span>
+<span class="fc" id="L217">        result = HashUtils.hashCode(result, this.numberFormat);</span>
+<span class="fc" id="L218">        result = HashUtils.hashCode(result, this.percentFormat);</span>
+<span class="fc" id="L219">        return result;</span>
     }
 
     /**
@@ -228,16 +228,16 @@ public class AbstractPieItemLabelGenerator implements Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L231">        AbstractPieItemLabelGenerator clone</span>
-<span class="nc" id="L232">                = (AbstractPieItemLabelGenerator) super.clone();</span>
-<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (this.numberFormat != null) {</span>
-<span class="nc" id="L234">            clone.numberFormat = (NumberFormat) this.numberFormat.clone();</span>
+<span class="fc" id="L231">        AbstractPieItemLabelGenerator clone</span>
+<span class="fc" id="L232">                = (AbstractPieItemLabelGenerator) super.clone();</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        if (this.numberFormat != null) {</span>
+<span class="fc" id="L234">            clone.numberFormat = (NumberFormat) this.numberFormat.clone();</span>
         }
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (this.percentFormat != null) {</span>
-<span class="nc" id="L237">            clone.percentFormat = (NumberFormat) this.percentFormat.clone();</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (this.percentFormat != null) {</span>
+<span class="fc" id="L237">            clone.percentFormat = (NumberFormat) this.percentFormat.clone();</span>
         }
-<span class="nc" id="L239">        return clone;</span>
+<span class="fc" id="L239">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

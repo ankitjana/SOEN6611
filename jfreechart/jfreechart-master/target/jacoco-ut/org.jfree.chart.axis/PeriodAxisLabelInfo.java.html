@@ -76,21 +76,21 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
     private static final long serialVersionUID = 5710451740920277357L;
 
     /** The default insets. */
-<span class="nc" id="L79">    public static final RectangleInsets DEFAULT_INSETS</span>
+<span class="fc" id="L79">    public static final RectangleInsets DEFAULT_INSETS</span>
             = new RectangleInsets(2, 2, 2, 2);
 
     /** The default font. */
-<span class="nc" id="L83">    public static final Font DEFAULT_FONT</span>
+<span class="fc" id="L83">    public static final Font DEFAULT_FONT</span>
             = new Font(&quot;SansSerif&quot;, Font.PLAIN, 10);
 
     /** The default label paint. */
-<span class="nc" id="L87">    public static final Paint DEFAULT_LABEL_PAINT = Color.BLACK;</span>
+<span class="fc" id="L87">    public static final Paint DEFAULT_LABEL_PAINT = Color.BLACK;</span>
 
     /** The default divider stroke. */
-<span class="nc" id="L90">    public static final Stroke DEFAULT_DIVIDER_STROKE = new BasicStroke(0.5f);</span>
+<span class="fc" id="L90">    public static final Stroke DEFAULT_DIVIDER_STROKE = new BasicStroke(0.5f);</span>
 
     /** The default divider paint. */
-<span class="nc" id="L93">    public static final Paint DEFAULT_DIVIDER_PAINT = Color.GRAY;</span>
+<span class="fc" id="L93">    public static final Paint DEFAULT_DIVIDER_PAINT = Color.GRAY;</span>
 
     /** The subclass of {@link RegularTimePeriod} to use for this band. */
     private Class periodClass;
@@ -124,10 +124,10 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      * @param dateFormat  the date format ({@code null} not permitted).
      */
     public PeriodAxisLabelInfo(Class periodClass, DateFormat dateFormat) {
-<span class="nc" id="L127">        this(periodClass, dateFormat, DEFAULT_INSETS, DEFAULT_FONT,</span>
+<span class="fc" id="L127">        this(periodClass, dateFormat, DEFAULT_INSETS, DEFAULT_FONT,</span>
             DEFAULT_LABEL_PAINT, true, DEFAULT_DIVIDER_STROKE,
             DEFAULT_DIVIDER_PAINT);
-<span class="nc" id="L130">    }</span>
+<span class="fc" id="L130">    }</span>
 
     /**
      * Creates a new instance.
@@ -147,23 +147,23 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     public PeriodAxisLabelInfo(Class periodClass, DateFormat dateFormat,
             RectangleInsets padding, Font labelFont, Paint labelPaint,
-<span class="nc" id="L150">            boolean drawDividers, Stroke dividerStroke, Paint dividerPaint) {</span>
-<span class="nc" id="L151">        Args.nullNotPermitted(periodClass, &quot;periodClass&quot;);</span>
-<span class="nc" id="L152">        Args.nullNotPermitted(dateFormat, &quot;dateFormat&quot;);</span>
-<span class="nc" id="L153">        Args.nullNotPermitted(padding, &quot;padding&quot;);</span>
-<span class="nc" id="L154">        Args.nullNotPermitted(labelFont, &quot;labelFont&quot;);</span>
-<span class="nc" id="L155">        Args.nullNotPermitted(labelPaint, &quot;labelPaint&quot;);</span>
-<span class="nc" id="L156">        Args.nullNotPermitted(dividerStroke, &quot;dividerStroke&quot;);</span>
-<span class="nc" id="L157">        Args.nullNotPermitted(dividerPaint, &quot;dividerPaint&quot;);</span>
-<span class="nc" id="L158">        this.periodClass = periodClass;</span>
-<span class="nc" id="L159">        this.dateFormat = (DateFormat) dateFormat.clone();</span>
-<span class="nc" id="L160">        this.padding = padding;</span>
-<span class="nc" id="L161">        this.labelFont = labelFont;</span>
-<span class="nc" id="L162">        this.labelPaint = labelPaint;</span>
-<span class="nc" id="L163">        this.drawDividers = drawDividers;</span>
-<span class="nc" id="L164">        this.dividerStroke = dividerStroke;</span>
-<span class="nc" id="L165">        this.dividerPaint = dividerPaint;</span>
-<span class="nc" id="L166">    }</span>
+<span class="fc" id="L150">            boolean drawDividers, Stroke dividerStroke, Paint dividerPaint) {</span>
+<span class="fc" id="L151">        Args.nullNotPermitted(periodClass, &quot;periodClass&quot;);</span>
+<span class="fc" id="L152">        Args.nullNotPermitted(dateFormat, &quot;dateFormat&quot;);</span>
+<span class="fc" id="L153">        Args.nullNotPermitted(padding, &quot;padding&quot;);</span>
+<span class="fc" id="L154">        Args.nullNotPermitted(labelFont, &quot;labelFont&quot;);</span>
+<span class="fc" id="L155">        Args.nullNotPermitted(labelPaint, &quot;labelPaint&quot;);</span>
+<span class="fc" id="L156">        Args.nullNotPermitted(dividerStroke, &quot;dividerStroke&quot;);</span>
+<span class="fc" id="L157">        Args.nullNotPermitted(dividerPaint, &quot;dividerPaint&quot;);</span>
+<span class="fc" id="L158">        this.periodClass = periodClass;</span>
+<span class="fc" id="L159">        this.dateFormat = (DateFormat) dateFormat.clone();</span>
+<span class="fc" id="L160">        this.padding = padding;</span>
+<span class="fc" id="L161">        this.labelFont = labelFont;</span>
+<span class="fc" id="L162">        this.labelPaint = labelPaint;</span>
+<span class="fc" id="L163">        this.drawDividers = drawDividers;</span>
+<span class="fc" id="L164">        this.dividerStroke = dividerStroke;</span>
+<span class="fc" id="L165">        this.dividerPaint = dividerPaint;</span>
+<span class="fc" id="L166">    }</span>
 
     /**
      * Returns the subclass of {@link RegularTimePeriod} that should be used
@@ -252,17 +252,17 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     public RegularTimePeriod createInstance(Date millisecond, TimeZone zone,
             Locale locale) {
-<span class="nc" id="L255">        RegularTimePeriod result = null;</span>
+<span class="fc" id="L255">        RegularTimePeriod result = null;</span>
         try {
-<span class="nc" id="L257">            Constructor c = this.periodClass.getDeclaredConstructor(</span>
+<span class="fc" id="L257">            Constructor c = this.periodClass.getDeclaredConstructor(</span>
                     new Class[] {Date.class, TimeZone.class, Locale.class});
-<span class="nc" id="L259">            result = (RegularTimePeriod) c.newInstance(new Object[] {</span>
+<span class="fc" id="L259">            result = (RegularTimePeriod) c.newInstance(new Object[] {</span>
                     millisecond, zone, locale});
         }
 <span class="nc" id="L262">        catch (Exception e) {</span>
             // do nothing
-<span class="nc" id="L264">        }</span>
-<span class="nc" id="L265">        return result;</span>
+<span class="fc" id="L264">        }</span>
+<span class="fc" id="L265">        return result;</span>
     }
 
     /**
@@ -274,36 +274,36 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L278">            return true;</span>
         }
-<span class="nc bnc" id="L280" title="All 2 branches missed.">        if (obj instanceof PeriodAxisLabelInfo) {</span>
-<span class="nc" id="L281">            PeriodAxisLabelInfo info = (PeriodAxisLabelInfo) obj;</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">            if (!info.periodClass.equals(this.periodClass)) {</span>
-<span class="nc" id="L283">                return false;</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">        if (obj instanceof PeriodAxisLabelInfo) {</span>
+<span class="fc" id="L281">            PeriodAxisLabelInfo info = (PeriodAxisLabelInfo) obj;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">            if (!info.periodClass.equals(this.periodClass)) {</span>
+<span class="fc" id="L283">                return false;</span>
             }
-<span class="nc bnc" id="L285" title="All 2 branches missed.">            if (!info.dateFormat.equals(this.dateFormat)) {</span>
-<span class="nc" id="L286">                return false;</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">            if (!info.dateFormat.equals(this.dateFormat)) {</span>
+<span class="fc" id="L286">                return false;</span>
             }
-<span class="nc bnc" id="L288" title="All 2 branches missed.">            if (!info.padding.equals(this.padding)) {</span>
-<span class="nc" id="L289">                return false;</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">            if (!info.padding.equals(this.padding)) {</span>
+<span class="fc" id="L289">                return false;</span>
             }
-<span class="nc bnc" id="L291" title="All 2 branches missed.">            if (!info.labelFont.equals(this.labelFont)) {</span>
-<span class="nc" id="L292">                return false;</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            if (!info.labelFont.equals(this.labelFont)) {</span>
+<span class="fc" id="L292">                return false;</span>
             }
-<span class="nc bnc" id="L294" title="All 2 branches missed.">            if (!info.labelPaint.equals(this.labelPaint)) {</span>
-<span class="nc" id="L295">                return false;</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">            if (!info.labelPaint.equals(this.labelPaint)) {</span>
+<span class="fc" id="L295">                return false;</span>
             }
-<span class="nc bnc" id="L297" title="All 2 branches missed.">            if (info.drawDividers != this.drawDividers) {</span>
-<span class="nc" id="L298">                return false;</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">            if (info.drawDividers != this.drawDividers) {</span>
+<span class="fc" id="L298">                return false;</span>
             }
-<span class="nc bnc" id="L300" title="All 2 branches missed.">            if (!info.dividerStroke.equals(this.dividerStroke)) {</span>
-<span class="nc" id="L301">                return false;</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            if (!info.dividerStroke.equals(this.dividerStroke)) {</span>
+<span class="fc" id="L301">                return false;</span>
             }
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (!info.dividerPaint.equals(this.dividerPaint)) {</span>
-<span class="nc" id="L304">                return false;</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            if (!info.dividerPaint.equals(this.dividerPaint)) {</span>
+<span class="fc" id="L304">                return false;</span>
             }
-<span class="nc" id="L306">            return true;</span>
+<span class="fc" id="L306">            return true;</span>
         }
 <span class="nc" id="L308">        return false;</span>
     }
@@ -315,10 +315,10 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L318">        int result = 41;</span>
-<span class="nc" id="L319">        result = result + 37 * this.periodClass.hashCode();</span>
-<span class="nc" id="L320">        result = result + 37 * this.dateFormat.hashCode();</span>
-<span class="nc" id="L321">        return result;</span>
+<span class="fc" id="L318">        int result = 41;</span>
+<span class="fc" id="L319">        result = result + 37 * this.periodClass.hashCode();</span>
+<span class="fc" id="L320">        result = result + 37 * this.dateFormat.hashCode();</span>
+<span class="fc" id="L321">        return result;</span>
     }
 
     /**
@@ -330,8 +330,8 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L333">        PeriodAxisLabelInfo clone = (PeriodAxisLabelInfo) super.clone();</span>
-<span class="nc" id="L334">        return clone;</span>
+<span class="fc" id="L333">        PeriodAxisLabelInfo clone = (PeriodAxisLabelInfo) super.clone();</span>
+<span class="fc" id="L334">        return clone;</span>
     }
 
     /**
@@ -342,11 +342,11 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L345">        stream.defaultWriteObject();</span>
-<span class="nc" id="L346">        SerialUtils.writePaint(this.labelPaint, stream);</span>
-<span class="nc" id="L347">        SerialUtils.writeStroke(this.dividerStroke, stream);</span>
-<span class="nc" id="L348">        SerialUtils.writePaint(this.dividerPaint, stream);</span>
-<span class="nc" id="L349">    }</span>
+<span class="fc" id="L345">        stream.defaultWriteObject();</span>
+<span class="fc" id="L346">        SerialUtils.writePaint(this.labelPaint, stream);</span>
+<span class="fc" id="L347">        SerialUtils.writeStroke(this.dividerStroke, stream);</span>
+<span class="fc" id="L348">        SerialUtils.writePaint(this.dividerPaint, stream);</span>
+<span class="fc" id="L349">    }</span>
 
     /**
      * Provides serialization support.
@@ -358,11 +358,11 @@ public class PeriodAxisLabelInfo implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L361">        stream.defaultReadObject();</span>
-<span class="nc" id="L362">        this.labelPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L363">        this.dividerStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L364">        this.dividerPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L365">    }</span>
+<span class="fc" id="L361">        stream.defaultReadObject();</span>
+<span class="fc" id="L362">        this.labelPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L363">        this.dividerStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L364">        this.dividerPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L365">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

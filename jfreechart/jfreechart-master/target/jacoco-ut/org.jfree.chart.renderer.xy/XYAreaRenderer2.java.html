@@ -142,8 +142,8 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      * Constructs a new renderer.
      */
     public XYAreaRenderer2() {
-<span class="nc" id="L145">        this(null, null);</span>
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L145">        this(null, null);</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Constructs a new renderer.
@@ -154,19 +154,19 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      */
     public XYAreaRenderer2(XYToolTipGenerator labelGenerator,
                            XYURLGenerator urlGenerator) {
-<span class="nc" id="L157">        super();</span>
-<span class="nc" id="L158">        this.showOutline = false;</span>
-<span class="nc" id="L159">        setDefaultToolTipGenerator(labelGenerator);</span>
-<span class="nc" id="L160">        setURLGenerator(urlGenerator);</span>
-<span class="nc" id="L161">        GeneralPath area = new GeneralPath();</span>
-<span class="nc" id="L162">        area.moveTo(0.0f, -4.0f);</span>
-<span class="nc" id="L163">        area.lineTo(3.0f, -2.0f);</span>
-<span class="nc" id="L164">        area.lineTo(4.0f, 4.0f);</span>
-<span class="nc" id="L165">        area.lineTo(-4.0f, 4.0f);</span>
-<span class="nc" id="L166">        area.lineTo(-3.0f, -2.0f);</span>
-<span class="nc" id="L167">        area.closePath();</span>
-<span class="nc" id="L168">        this.legendArea = area;</span>
-<span class="nc" id="L169">    }</span>
+<span class="fc" id="L157">        super();</span>
+<span class="fc" id="L158">        this.showOutline = false;</span>
+<span class="fc" id="L159">        setDefaultToolTipGenerator(labelGenerator);</span>
+<span class="fc" id="L160">        setURLGenerator(urlGenerator);</span>
+<span class="fc" id="L161">        GeneralPath area = new GeneralPath();</span>
+<span class="fc" id="L162">        area.moveTo(0.0f, -4.0f);</span>
+<span class="fc" id="L163">        area.lineTo(3.0f, -2.0f);</span>
+<span class="fc" id="L164">        area.lineTo(4.0f, 4.0f);</span>
+<span class="fc" id="L165">        area.lineTo(-4.0f, 4.0f);</span>
+<span class="fc" id="L166">        area.lineTo(-3.0f, -2.0f);</span>
+<span class="fc" id="L167">        area.closePath();</span>
+<span class="fc" id="L168">        this.legendArea = area;</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Returns a flag that controls whether or not outlines of the areas are
@@ -177,7 +177,7 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      * @see #setOutline(boolean)
      */
     public boolean isOutline() {
-<span class="nc" id="L180">        return this.showOutline;</span>
+<span class="fc" id="L180">        return this.showOutline;</span>
     }
 
     /**
@@ -190,9 +190,9 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      * @see #isOutline()
      */
     public void setOutline(boolean show) {
-<span class="nc" id="L193">        this.showOutline = show;</span>
-<span class="nc" id="L194">        fireChangeEvent();</span>
-<span class="nc" id="L195">    }</span>
+<span class="fc" id="L193">        this.showOutline = show;</span>
+<span class="fc" id="L194">        fireChangeEvent();</span>
+<span class="fc" id="L195">    }</span>
 
     /**
      * Returns the shape used to represent an area in the legend.
@@ -214,10 +214,10 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      * @see #getLegendArea()
      */
     public void setLegendArea(Shape area) {
-<span class="nc" id="L217">        Args.nullNotPermitted(area, &quot;area&quot;);</span>
-<span class="nc" id="L218">        this.legendArea = area;</span>
-<span class="nc" id="L219">        fireChangeEvent();</span>
-<span class="nc" id="L220">    }</span>
+<span class="fc" id="L217">        Args.nullNotPermitted(area, &quot;area&quot;);</span>
+<span class="fc" id="L218">        this.legendArea = area;</span>
+<span class="fc" id="L219">        fireChangeEvent();</span>
+<span class="fc" id="L220">    }</span>
 
     /**
      * Returns a default legend item for the specified series.  Subclasses
@@ -230,39 +230,39 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      */
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
-<span class="nc" id="L233">        LegendItem result = null;</span>
-<span class="nc" id="L234">        XYPlot xyplot = getPlot();</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (xyplot != null) {</span>
-<span class="nc" id="L236">            XYDataset dataset = xyplot.getDataset(datasetIndex);</span>
-<span class="nc bnc" id="L237" title="All 2 branches missed.">            if (dataset != null) {</span>
-<span class="nc" id="L238">                XYSeriesLabelGenerator lg = getLegendItemLabelGenerator();</span>
-<span class="nc" id="L239">                String label = lg.generateLabel(dataset, series);</span>
-<span class="nc" id="L240">                String description = label;</span>
-<span class="nc" id="L241">                String toolTipText = null;</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">                if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L233">        LegendItem result = null;</span>
+<span class="fc" id="L234">        XYPlot xyplot = getPlot();</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (xyplot != null) {</span>
+<span class="fc" id="L236">            XYDataset dataset = xyplot.getDataset(datasetIndex);</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">            if (dataset != null) {</span>
+<span class="fc" id="L238">                XYSeriesLabelGenerator lg = getLegendItemLabelGenerator();</span>
+<span class="fc" id="L239">                String label = lg.generateLabel(dataset, series);</span>
+<span class="fc" id="L240">                String description = label;</span>
+<span class="fc" id="L241">                String toolTipText = null;</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">                if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L243">                    toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                             dataset, series);
                 }
-<span class="nc" id="L246">                String urlText = null;</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L246">                String urlText = null;</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">                if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L248">                    urlText = getLegendItemURLGenerator().generateLabel(</span>
                             dataset, series);
                 }
-<span class="nc" id="L251">                Paint paint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L252">                result = new LegendItem(label, description, toolTipText,</span>
+<span class="fc" id="L251">                Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L252">                result = new LegendItem(label, description, toolTipText,</span>
                         urlText, this.legendArea, paint);
-<span class="nc" id="L254">                result.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L255">                Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">                if (labelPaint != null) {</span>
+<span class="fc" id="L254">                result.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L255">                Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                if (labelPaint != null) {</span>
 <span class="nc" id="L257">                    result.setLabelPaint(labelPaint);</span>
                 }
-<span class="nc" id="L259">                result.setDataset(dataset);</span>
-<span class="nc" id="L260">                result.setDatasetIndex(datasetIndex);</span>
-<span class="nc" id="L261">                result.setSeriesKey(dataset.getSeriesKey(series));</span>
-<span class="nc" id="L262">                result.setSeriesIndex(series);</span>
+<span class="fc" id="L259">                result.setDataset(dataset);</span>
+<span class="fc" id="L260">                result.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L261">                result.setSeriesKey(dataset.getSeriesKey(series));</span>
+<span class="fc" id="L262">                result.setSeriesIndex(series);</span>
             }
         }
-<span class="nc" id="L265">        return result;</span>
+<span class="fc" id="L265">        return result;</span>
     }
 
     /**
@@ -289,50 +289,50 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
          ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset,
          int series, int item, CrosshairState crosshairState, int pass) {
 
-<span class="nc bnc" id="L292" title="All 2 branches missed.">        if (!getItemVisible(series, item)) {</span>
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if (!getItemVisible(series, item)) {</span>
 <span class="nc" id="L293">            return;</span>
         }
         // get the data point...
-<span class="nc" id="L296">        double x1 = dataset.getXValue(series, item);</span>
-<span class="nc" id="L297">        double y1 = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (Double.isNaN(y1)) {</span>
+<span class="fc" id="L296">        double x1 = dataset.getXValue(series, item);</span>
+<span class="fc" id="L297">        double y1 = dataset.getYValue(series, item);</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (Double.isNaN(y1)) {</span>
 <span class="nc" id="L299">            y1 = 0.0;</span>
         }
 
-<span class="nc" id="L302">        double transX1 = domainAxis.valueToJava2D(x1, dataArea,</span>
-<span class="nc" id="L303">                plot.getDomainAxisEdge());</span>
-<span class="nc" id="L304">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea,</span>
-<span class="nc" id="L305">                plot.getRangeAxisEdge());</span>
+<span class="fc" id="L302">        double transX1 = domainAxis.valueToJava2D(x1, dataArea,</span>
+<span class="fc" id="L303">                plot.getDomainAxisEdge());</span>
+<span class="fc" id="L304">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea,</span>
+<span class="fc" id="L305">                plot.getRangeAxisEdge());</span>
 
         // get the previous point and the next point so we can calculate a
         // &quot;hot spot&quot; for the area (used by the chart entity)...
-<span class="nc" id="L309">        double x0 = dataset.getXValue(series, Math.max(item - 1, 0));</span>
-<span class="nc" id="L310">        double y0 = dataset.getYValue(series, Math.max(item - 1, 0));</span>
-<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (Double.isNaN(y0)) {</span>
+<span class="fc" id="L309">        double x0 = dataset.getXValue(series, Math.max(item - 1, 0));</span>
+<span class="fc" id="L310">        double y0 = dataset.getYValue(series, Math.max(item - 1, 0));</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (Double.isNaN(y0)) {</span>
 <span class="nc" id="L312">            y0 = 0.0;</span>
         }
-<span class="nc" id="L314">        double transX0 = domainAxis.valueToJava2D(x0, dataArea,</span>
-<span class="nc" id="L315">                plot.getDomainAxisEdge());</span>
-<span class="nc" id="L316">        double transY0 = rangeAxis.valueToJava2D(y0, dataArea,</span>
-<span class="nc" id="L317">                plot.getRangeAxisEdge());</span>
+<span class="fc" id="L314">        double transX0 = domainAxis.valueToJava2D(x0, dataArea,</span>
+<span class="fc" id="L315">                plot.getDomainAxisEdge());</span>
+<span class="fc" id="L316">        double transY0 = rangeAxis.valueToJava2D(y0, dataArea,</span>
+<span class="fc" id="L317">                plot.getRangeAxisEdge());</span>
 
-<span class="nc" id="L319">        int itemCount = dataset.getItemCount(series);</span>
-<span class="nc" id="L320">        double x2 = dataset.getXValue(series, Math.min(item + 1,</span>
+<span class="fc" id="L319">        int itemCount = dataset.getItemCount(series);</span>
+<span class="fc" id="L320">        double x2 = dataset.getXValue(series, Math.min(item + 1,</span>
                 itemCount - 1));
-<span class="nc" id="L322">        double y2 = dataset.getYValue(series, Math.min(item + 1,</span>
+<span class="fc" id="L322">        double y2 = dataset.getYValue(series, Math.min(item + 1,</span>
                 itemCount - 1));
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (Double.isNaN(y2)) {</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (Double.isNaN(y2)) {</span>
 <span class="nc" id="L325">            y2 = 0.0;</span>
         }
-<span class="nc" id="L327">        double transX2 = domainAxis.valueToJava2D(x2, dataArea,</span>
-<span class="nc" id="L328">                plot.getDomainAxisEdge());</span>
-<span class="nc" id="L329">        double transY2 = rangeAxis.valueToJava2D(y2, dataArea,</span>
-<span class="nc" id="L330">                plot.getRangeAxisEdge());</span>
+<span class="fc" id="L327">        double transX2 = domainAxis.valueToJava2D(x2, dataArea,</span>
+<span class="fc" id="L328">                plot.getDomainAxisEdge());</span>
+<span class="fc" id="L329">        double transY2 = rangeAxis.valueToJava2D(y2, dataArea,</span>
+<span class="fc" id="L330">                plot.getRangeAxisEdge());</span>
 
-<span class="nc" id="L332">        double transZero = rangeAxis.valueToJava2D(0.0, dataArea,</span>
-<span class="nc" id="L333">                plot.getRangeAxisEdge());</span>
-<span class="nc" id="L334">        GeneralPath hotspot = new GeneralPath();</span>
-<span class="nc bnc" id="L335" title="All 2 branches missed.">        if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L332">        double transZero = rangeAxis.valueToJava2D(0.0, dataArea,</span>
+<span class="fc" id="L333">                plot.getRangeAxisEdge());</span>
+<span class="fc" id="L334">        GeneralPath hotspot = new GeneralPath();</span>
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">        if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L336">            moveTo(hotspot, transZero, ((transX0 + transX1) / 2.0));</span>
 <span class="nc" id="L337">            lineTo(hotspot, ((transY0 + transY1) / 2.0),</span>
                             ((transX0 + transX1) / 2.0));
@@ -342,38 +342,38 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
 <span class="nc" id="L342">            lineTo(hotspot, transZero, ((transX1 + transX2) / 2.0));</span>
         }
         else {  // vertical orientation
-<span class="nc" id="L345">            moveTo(hotspot, ((transX0 + transX1) / 2.0), transZero);</span>
-<span class="nc" id="L346">            lineTo(hotspot, ((transX0 + transX1) / 2.0),</span>
+<span class="fc" id="L345">            moveTo(hotspot, ((transX0 + transX1) / 2.0), transZero);</span>
+<span class="fc" id="L346">            lineTo(hotspot, ((transX0 + transX1) / 2.0),</span>
                             ((transY0 + transY1) / 2.0));
-<span class="nc" id="L348">            lineTo(hotspot, transX1, transY1);</span>
-<span class="nc" id="L349">            lineTo(hotspot, ((transX1 + transX2) / 2.0),</span>
+<span class="fc" id="L348">            lineTo(hotspot, transX1, transY1);</span>
+<span class="fc" id="L349">            lineTo(hotspot, ((transX1 + transX2) / 2.0),</span>
                             ((transY1 + transY2) / 2.0));
-<span class="nc" id="L351">            lineTo(hotspot, ((transX1 + transX2) / 2.0), transZero);</span>
+<span class="fc" id="L351">            lineTo(hotspot, ((transX1 + transX2) / 2.0), transZero);</span>
         }
-<span class="nc" id="L353">        hotspot.closePath();</span>
+<span class="fc" id="L353">        hotspot.closePath();</span>
 
-<span class="nc" id="L355">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L356">        Paint paint = getItemPaint(series, item);</span>
-<span class="nc" id="L357">        Stroke stroke = getItemStroke(series, item);</span>
-<span class="nc" id="L358">        g2.setPaint(paint);</span>
-<span class="nc" id="L359">        g2.setStroke(stroke);</span>
+<span class="fc" id="L355">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L356">        Paint paint = getItemPaint(series, item);</span>
+<span class="fc" id="L357">        Stroke stroke = getItemStroke(series, item);</span>
+<span class="fc" id="L358">        g2.setPaint(paint);</span>
+<span class="fc" id="L359">        g2.setStroke(stroke);</span>
 
         // Check if the item is the last item for the series.
         // and number of items &gt; 0.  We can't draw an area for a single point.
-<span class="nc" id="L363">        g2.fill(hotspot);</span>
+<span class="fc" id="L363">        g2.fill(hotspot);</span>
 
         // draw an outline around the Area.
-<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (isOutline()) {</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">        if (isOutline()) {</span>
 <span class="nc" id="L367">            g2.setStroke(lookupSeriesOutlineStroke(series));</span>
 <span class="nc" id="L368">            g2.setPaint(lookupSeriesOutlinePaint(series));</span>
 <span class="nc" id="L369">            g2.draw(hotspot);</span>
         }
-<span class="nc" id="L371">        int datasetIndex = plot.indexOf(dataset);</span>
-<span class="nc" id="L372">        updateCrosshairValues(crosshairState, x1, y1, datasetIndex,</span>
+<span class="fc" id="L371">        int datasetIndex = plot.indexOf(dataset);</span>
+<span class="fc" id="L372">        updateCrosshairValues(crosshairState, x1, y1, datasetIndex,</span>
                 transX1, transY1, orientation);
 
         // collect entity and tool tip information...
-<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (state.getInfo() != null) {</span>
+<span class="pc bpc" id="L376" title="1 of 2 branches missed.">        if (state.getInfo() != null) {</span>
 <span class="nc" id="L377">            EntityCollection entities = state.getEntityCollection();</span>
 <span class="nc bnc" id="L378" title="All 2 branches missed.">            if (entities != null) {</span>
                 // limit the entity hotspot area to the data area
@@ -398,7 +398,7 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
             }
         }
 
-<span class="nc" id="L401">    }</span>
+<span class="fc" id="L401">    }</span>
 
     /**
      * Tests this renderer for equality with an arbitrary object.
@@ -409,20 +409,20 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L412" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L413">            return true;</span>
         }
-<span class="nc bnc" id="L415" title="All 2 branches missed.">        if (!(obj instanceof XYAreaRenderer2)) {</span>
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (!(obj instanceof XYAreaRenderer2)) {</span>
 <span class="nc" id="L416">            return false;</span>
         }
-<span class="nc" id="L418">        XYAreaRenderer2 that = (XYAreaRenderer2) obj;</span>
-<span class="nc bnc" id="L419" title="All 2 branches missed.">        if (this.showOutline != that.showOutline) {</span>
-<span class="nc" id="L420">            return false;</span>
+<span class="fc" id="L418">        XYAreaRenderer2 that = (XYAreaRenderer2) obj;</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">        if (this.showOutline != that.showOutline) {</span>
+<span class="fc" id="L420">            return false;</span>
         }
-<span class="nc bnc" id="L422" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendArea, that.legendArea)) {</span>
-<span class="nc" id="L423">            return false;</span>
+<span class="fc bfc" id="L422" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendArea, that.legendArea)) {</span>
+<span class="fc" id="L423">            return false;</span>
         }
-<span class="nc" id="L425">        return super.equals(obj);</span>
+<span class="fc" id="L425">        return super.equals(obj);</span>
     }
 
     /**
@@ -434,9 +434,9 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L437">        XYAreaRenderer2 clone = (XYAreaRenderer2) super.clone();</span>
-<span class="nc" id="L438">        clone.legendArea = ShapeUtils.clone(this.legendArea);</span>
-<span class="nc" id="L439">        return clone;</span>
+<span class="fc" id="L437">        XYAreaRenderer2 clone = (XYAreaRenderer2) super.clone();</span>
+<span class="fc" id="L438">        clone.legendArea = ShapeUtils.clone(this.legendArea);</span>
+<span class="fc" id="L439">        return clone;</span>
     }
 
     /**
@@ -449,9 +449,9 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L452">        stream.defaultReadObject();</span>
-<span class="nc" id="L453">        this.legendArea = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L454">    }</span>
+<span class="fc" id="L452">        stream.defaultReadObject();</span>
+<span class="fc" id="L453">        this.legendArea = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L454">    }</span>
 
     /**
      * Provides serialization support.
@@ -461,10 +461,10 @@ public class XYAreaRenderer2 extends AbstractXYItemRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L464">        stream.defaultWriteObject();</span>
-<span class="nc" id="L465">        SerialUtils.writeShape(this.legendArea, stream);</span>
-<span class="nc" id="L466">    }</span>
+<span class="fc" id="L464">        stream.defaultWriteObject();</span>
+<span class="fc" id="L465">        SerialUtils.writeShape(this.legendArea, stream);</span>
+<span class="fc" id="L466">    }</span>
 
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

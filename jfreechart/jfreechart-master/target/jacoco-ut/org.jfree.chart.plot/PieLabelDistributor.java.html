@@ -52,7 +52,7 @@ import java.util.Collections;
 public class PieLabelDistributor extends AbstractPieLabelDistributor {
 
     /** The minimum gap. */
-<span class="nc" id="L55">    private double minGap = 4.0;</span>
+<span class="fc" id="L55">    private double minGap = 4.0;</span>
 
     /**
      * Creates a new distributor.
@@ -60,8 +60,8 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      * @param labelCount  the number of labels (ignored).
      */
     public PieLabelDistributor(int labelCount) {
-<span class="nc" id="L63">        super();</span>
-<span class="nc" id="L64">    }</span>
+<span class="fc" id="L63">        super();</span>
+<span class="fc" id="L64">    }</span>
 
     /**
      * Distributes the labels.
@@ -71,23 +71,23 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      */
     @Override
     public void distributeLabels(double minY, double height) {
-<span class="nc" id="L74">        sort();  // sorts the label records into ascending order by baseY</span>
+<span class="fc" id="L74">        sort();  // sorts the label records into ascending order by baseY</span>
 //        if (isOverlap()) {
 //            adjustInwards();
 //        }
         // if still overlapping, do something else...
-<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (isOverlap()) {</span>
-<span class="nc" id="L80">            adjustDownwards(minY, height);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (isOverlap()) {</span>
+<span class="fc" id="L80">            adjustDownwards(minY, height);</span>
         }
 
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (isOverlap()) {</span>
-<span class="nc" id="L84">            adjustUpwards(minY, height);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (isOverlap()) {</span>
+<span class="fc" id="L84">            adjustUpwards(minY, height);</span>
         }
 
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (isOverlap()) {</span>
-<span class="nc" id="L88">            spreadEvenly(minY, height);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (isOverlap()) {</span>
+<span class="fc" id="L88">            spreadEvenly(minY, height);</span>
         }
-<span class="nc" id="L90">    }</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Returns {@code true} if there are overlapping labels in the list,
@@ -96,15 +96,15 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      * @return A boolean.
      */
     private boolean isOverlap() {
-<span class="nc" id="L99">        double y = 0.0;</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
-<span class="nc" id="L101">            PieLabelRecord plr = getPieLabelRecord(i);</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (y &gt; plr.getLowerY()) {</span>
-<span class="nc" id="L103">                return true;</span>
+<span class="fc" id="L99">        double y = 0.0;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
+<span class="fc" id="L101">            PieLabelRecord plr = getPieLabelRecord(i);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (y &gt; plr.getLowerY()) {</span>
+<span class="fc" id="L103">                return true;</span>
             }
-<span class="nc" id="L105">            y = plr.getUpperY();</span>
+<span class="fc" id="L105">            y = plr.getUpperY();</span>
         }
-<span class="nc" id="L107">        return false;</span>
+<span class="fc" id="L107">        return false;</span>
     }
 
     /**
@@ -143,17 +143,17 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      * @param height  the height available for all labels.
      */
     protected void adjustDownwards(double minY, double height) {
-<span class="nc bnc" id="L146" title="All 2 branches missed.">        for (int i = 0; i &lt; this.labels.size() - 1; i++) {</span>
-<span class="nc" id="L147">            PieLabelRecord record0 = getPieLabelRecord(i);</span>
-<span class="nc" id="L148">            PieLabelRecord record1 = getPieLabelRecord(i + 1);</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (record1.getLowerY() &lt; record0.getUpperY()) {</span>
-<span class="nc" id="L150">                record1.setAllocatedY(Math.min(minY + height</span>
-<span class="nc" id="L151">                        - record1.getLabelHeight() / 2.0,</span>
-<span class="nc" id="L152">                        record0.getUpperY() + this.minGap</span>
-<span class="nc" id="L153">                        + record1.getLabelHeight() / 2.0));</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        for (int i = 0; i &lt; this.labels.size() - 1; i++) {</span>
+<span class="fc" id="L147">            PieLabelRecord record0 = getPieLabelRecord(i);</span>
+<span class="fc" id="L148">            PieLabelRecord record1 = getPieLabelRecord(i + 1);</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">            if (record1.getLowerY() &lt; record0.getUpperY()) {</span>
+<span class="fc" id="L150">                record1.setAllocatedY(Math.min(minY + height</span>
+<span class="fc" id="L151">                        - record1.getLabelHeight() / 2.0,</span>
+<span class="fc" id="L152">                        record0.getUpperY() + this.minGap</span>
+<span class="fc" id="L153">                        + record1.getLabelHeight() / 2.0));</span>
             }
         }
-<span class="nc" id="L156">    }</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Any labels that are overlapping are moved up in an attempt to eliminate
@@ -163,16 +163,16 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      * @param height  the height available for all labels.
      */
     protected void adjustUpwards(double minY, double height) {
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        for (int i = this.labels.size() - 1; i &gt; 0; i--) {</span>
-<span class="nc" id="L167">            PieLabelRecord record0 = getPieLabelRecord(i);</span>
-<span class="nc" id="L168">            PieLabelRecord record1 = getPieLabelRecord(i - 1);</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (record1.getUpperY() &gt; record0.getLowerY()) {</span>
-<span class="nc" id="L170">                record1.setAllocatedY(Math.max(minY</span>
-<span class="nc" id="L171">                        + record1.getLabelHeight() / 2.0, record0.getLowerY()</span>
-<span class="nc" id="L172">                        - this.minGap - record1.getLabelHeight() / 2.0));</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        for (int i = this.labels.size() - 1; i &gt; 0; i--) {</span>
+<span class="fc" id="L167">            PieLabelRecord record0 = getPieLabelRecord(i);</span>
+<span class="fc" id="L168">            PieLabelRecord record1 = getPieLabelRecord(i - 1);</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">            if (record1.getUpperY() &gt; record0.getLowerY()) {</span>
+<span class="fc" id="L170">                record1.setAllocatedY(Math.max(minY</span>
+<span class="fc" id="L171">                        + record1.getLabelHeight() / 2.0, record0.getLowerY()</span>
+<span class="fc" id="L172">                        - this.minGap - record1.getLabelHeight() / 2.0));</span>
             }
         }
-<span class="nc" id="L175">    }</span>
+<span class="fc" id="L175">    }</span>
 
     /**
      * Labels are spaced evenly in the available space in an attempt to
@@ -182,29 +182,29 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
      * @param height  the height available for all labels.
      */
     protected void spreadEvenly(double minY, double height) {
-<span class="nc" id="L185">        double y = minY;</span>
-<span class="nc" id="L186">        double sumOfLabelHeights = 0.0;</span>
-<span class="nc bnc" id="L187" title="All 2 branches missed.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
-<span class="nc" id="L188">            sumOfLabelHeights += getPieLabelRecord(i).getLabelHeight();</span>
+<span class="fc" id="L185">        double y = minY;</span>
+<span class="fc" id="L186">        double sumOfLabelHeights = 0.0;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
+<span class="fc" id="L188">            sumOfLabelHeights += getPieLabelRecord(i).getLabelHeight();</span>
         }
-<span class="nc" id="L190">        double gap = height - sumOfLabelHeights;</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (this.labels.size() &gt; 1) {</span>
-<span class="nc" id="L192">            gap = gap / (this.labels.size() - 1);</span>
+<span class="fc" id="L190">        double gap = height - sumOfLabelHeights;</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (this.labels.size() &gt; 1) {</span>
+<span class="fc" id="L192">            gap = gap / (this.labels.size() - 1);</span>
         }
-<span class="nc bnc" id="L194" title="All 2 branches missed.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
-<span class="nc" id="L195">            PieLabelRecord record = getPieLabelRecord(i);</span>
-<span class="nc" id="L196">            y = y + record.getLabelHeight() / 2.0;</span>
-<span class="nc" id="L197">            record.setAllocatedY(y);</span>
-<span class="nc" id="L198">            y = y + record.getLabelHeight() / 2.0 + gap;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        for (int i = 0; i &lt; this.labels.size(); i++) {</span>
+<span class="fc" id="L195">            PieLabelRecord record = getPieLabelRecord(i);</span>
+<span class="fc" id="L196">            y = y + record.getLabelHeight() / 2.0;</span>
+<span class="fc" id="L197">            record.setAllocatedY(y);</span>
+<span class="fc" id="L198">            y = y + record.getLabelHeight() / 2.0 + gap;</span>
         }
-<span class="nc" id="L200">    }</span>
+<span class="fc" id="L200">    }</span>
 
     /**
      * Sorts the label records into ascending order by y-value.
      */
     public void sort() {
-<span class="nc" id="L206">        Collections.sort(this.labels);</span>
-<span class="nc" id="L207">    }</span>
+<span class="fc" id="L206">        Collections.sort(this.labels);</span>
+<span class="fc" id="L207">    }</span>
 
     /**
      * Returns a string containing a description of the object for
@@ -222,4 +222,4 @@ public class PieLabelDistributor extends AbstractPieLabelDistributor {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

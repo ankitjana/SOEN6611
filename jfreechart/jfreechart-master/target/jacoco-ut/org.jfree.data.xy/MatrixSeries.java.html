@@ -74,10 +74,10 @@ public class MatrixSeries extends Series implements Serializable {
      * @param columns  the number of columns.
      */
     public MatrixSeries(String name, int rows, int columns) {
-<span class="nc" id="L77">        super(name);</span>
-<span class="nc" id="L78">        this.data = new double[rows][columns];</span>
-<span class="nc" id="L79">        zeroAll();</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L77">        super(name);</span>
+<span class="fc" id="L78">        this.data = new double[rows][columns];</span>
+<span class="fc" id="L79">        zeroAll();</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Returns the number of columns in this matrix series.
@@ -85,7 +85,7 @@ public class MatrixSeries extends Series implements Serializable {
      * @return The number of columns in this matrix series.
      */
     public int getColumnsCount() {
-<span class="nc" id="L88">        return this.data[0].length;</span>
+<span class="fc" id="L88">        return this.data[0].length;</span>
     }
 
 
@@ -100,12 +100,12 @@ public class MatrixSeries extends Series implements Serializable {
      * @see #get(int, int)
      */
     public Number getItem(int itemIndex) {
-<span class="nc" id="L103">        int i = getItemRow(itemIndex);</span>
-<span class="nc" id="L104">        int j = getItemColumn(itemIndex);</span>
+<span class="fc" id="L103">        int i = getItemRow(itemIndex);</span>
+<span class="fc" id="L104">        int j = getItemColumn(itemIndex);</span>
 
-<span class="nc" id="L106">        Number n = new Double(get(i, j));</span>
+<span class="fc" id="L106">        Number n = new Double(get(i, j));</span>
 
-<span class="nc" id="L108">        return n;</span>
+<span class="fc" id="L108">        return n;</span>
     }
 
 
@@ -118,7 +118,7 @@ public class MatrixSeries extends Series implements Serializable {
      */
     public int getItemColumn(int itemIndex) {
         //assert itemIndex &gt;= 0 &amp;&amp; itemIndex &lt; getItemCount();
-<span class="nc" id="L121">        return itemIndex % getColumnsCount();</span>
+<span class="fc" id="L121">        return itemIndex % getColumnsCount();</span>
     }
 
 
@@ -142,7 +142,7 @@ public class MatrixSeries extends Series implements Serializable {
      */
     public int getItemRow(int itemIndex) {
         //assert itemIndex &gt;= 0 &amp;&amp; itemIndex &lt; getItemCount();
-<span class="nc" id="L145">        return itemIndex / getColumnsCount();</span>
+<span class="fc" id="L145">        return itemIndex / getColumnsCount();</span>
     }
 
 
@@ -152,7 +152,7 @@ public class MatrixSeries extends Series implements Serializable {
      * @return The number of rows in this matrix series.
      */
     public int getRowCount() {
-<span class="nc" id="L155">        return this.data.length;</span>
+<span class="fc" id="L155">        return this.data.length;</span>
     }
 
 
@@ -168,7 +168,7 @@ public class MatrixSeries extends Series implements Serializable {
      * @see #update(int, int, double)
      */
     public double get(int i, int j) {
-<span class="nc" id="L171">        return this.data[i][j];</span>
+<span class="fc" id="L171">        return this.data[i][j];</span>
     }
 
 
@@ -182,9 +182,9 @@ public class MatrixSeries extends Series implements Serializable {
      * @see #get(int, int)
      */
     public void update(int i, int j, double mij) {
-<span class="nc" id="L185">        this.data[i][j] = mij;</span>
-<span class="nc" id="L186">        fireSeriesChanged();</span>
-<span class="nc" id="L187">    }</span>
+<span class="fc" id="L185">        this.data[i][j] = mij;</span>
+<span class="fc" id="L186">        fireSeriesChanged();</span>
+<span class="fc" id="L187">    }</span>
 
 
     /**
@@ -193,16 +193,16 @@ public class MatrixSeries extends Series implements Serializable {
      * listeners.
      */
     public void zeroAll() {
-<span class="nc" id="L196">        int rows = getRowCount();</span>
-<span class="nc" id="L197">        int columns = getColumnsCount();</span>
+<span class="fc" id="L196">        int rows = getRowCount();</span>
+<span class="fc" id="L197">        int columns = getColumnsCount();</span>
 
-<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (int row = 0; row &lt; rows; row++) {</span>
-<span class="nc bnc" id="L200" title="All 2 branches missed.">            for (int column = 0; column &lt; columns; column++) {</span>
-<span class="nc" id="L201">                this.data[row][column] = 0.0;</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        for (int row = 0; row &lt; rows; row++) {</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">            for (int column = 0; column &lt; columns; column++) {</span>
+<span class="fc" id="L201">                this.data[row][column] = 0.0;</span>
             }
         }
-<span class="nc" id="L204">        fireSeriesChanged();</span>
-<span class="nc" id="L205">    }</span>
+<span class="fc" id="L204">        fireSeriesChanged();</span>
+<span class="fc" id="L205">    }</span>
 
     /**
      * Tests this object instance for equality with an arbitrary object.
@@ -213,28 +213,28 @@ public class MatrixSeries extends Series implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L217">            return true;</span>
         }
-<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (!(obj instanceof MatrixSeries)) {</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">        if (!(obj instanceof MatrixSeries)) {</span>
 <span class="nc" id="L220">            return false;</span>
         }
-<span class="nc" id="L222">        MatrixSeries that = (MatrixSeries) obj;</span>
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (!(getRowCount() == that.getRowCount())) {</span>
-<span class="nc" id="L224">            return false;</span>
+<span class="fc" id="L222">        MatrixSeries that = (MatrixSeries) obj;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (!(getRowCount() == that.getRowCount())) {</span>
+<span class="fc" id="L224">            return false;</span>
         }
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (!(getColumnsCount() == that.getColumnsCount())) {</span>
-<span class="nc" id="L227">            return false;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if (!(getColumnsCount() == that.getColumnsCount())) {</span>
+<span class="fc" id="L227">            return false;</span>
         }
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        for (int r = 0; r &lt; getRowCount(); r++) {</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">            for (int c = 0; c &lt; getColumnsCount(); c++) {</span>
-<span class="nc bnc" id="L231" title="All 2 branches missed.">                if (get(r, c) != that.get(r, c)) {</span>
-<span class="nc" id="L232">                    return false;</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        for (int r = 0; r &lt; getRowCount(); r++) {</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">            for (int c = 0; c &lt; getColumnsCount(); c++) {</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">                if (get(r, c) != that.get(r, c)) {</span>
+<span class="fc" id="L232">                    return false;</span>
                 }
             }
         }
-<span class="nc" id="L236">        return super.equals(obj);</span>
+<span class="fc" id="L236">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

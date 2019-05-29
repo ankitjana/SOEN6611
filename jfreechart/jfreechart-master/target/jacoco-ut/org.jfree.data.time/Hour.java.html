@@ -104,8 +104,8 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * Constructs a new Hour, based on the system date/time.
      */
     public Hour() {
-<span class="nc" id="L107">        this(new Date());</span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this(new Date());</span>
+<span class="fc" id="L108">    }</span>
 
     /**
      * Constructs a new Hour.
@@ -113,12 +113,12 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @param hour  the hour (in the range 0 to 23).
      * @param day  the day ({@code null} not permitted).
      */
-<span class="nc" id="L116">    public Hour(int hour, Day day) {</span>
-<span class="nc" id="L117">        Args.nullNotPermitted(day, &quot;day&quot;);</span>
-<span class="nc" id="L118">        this.hour = (byte) hour;</span>
-<span class="nc" id="L119">        this.day = day;</span>
-<span class="nc" id="L120">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L116">    public Hour(int hour, Day day) {</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(day, &quot;day&quot;);</span>
+<span class="fc" id="L118">        this.hour = (byte) hour;</span>
+<span class="fc" id="L119">        this.day = day;</span>
+<span class="fc" id="L120">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L121">    }</span>
 
     /**
      * Creates a new hour.
@@ -129,8 +129,8 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @param year  the year (1900-9999).
      */
     public Hour(int hour, int day, int month, int year) {
-<span class="nc" id="L132">        this(hour, new Day(day, month, year));</span>
-<span class="nc" id="L133">    }</span>
+<span class="fc" id="L132">        this(hour, new Day(day, month, year));</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Constructs a new instance, based on the supplied date/time and
@@ -142,8 +142,8 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     public Hour(Date time) {
         // defer argument checking...
-<span class="nc" id="L145">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L145">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Constructs a new instance, based on the supplied date/time evaluated
@@ -155,16 +155,16 @@ public class Hour extends RegularTimePeriod implements Serializable {
      *
      * @since 1.0.13
      */
-<span class="nc" id="L158">    public Hour(Date time, TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L159">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
-<span class="nc" id="L160">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L161">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L162">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L163">        calendar.setTime(time);</span>
-<span class="nc" id="L164">        this.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY);</span>
-<span class="nc" id="L165">        this.day = new Day(time, zone, locale);</span>
-<span class="nc" id="L166">        peg(calendar);</span>
-<span class="nc" id="L167">    }</span>
+<span class="fc" id="L158">    public Hour(Date time, TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L159">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
+<span class="fc" id="L160">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L161">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L162">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L163">        calendar.setTime(time);</span>
+<span class="fc" id="L164">        this.hour = (byte) calendar.get(Calendar.HOUR_OF_DAY);</span>
+<span class="fc" id="L165">        this.day = new Day(time, zone, locale);</span>
+<span class="fc" id="L166">        peg(calendar);</span>
+<span class="fc" id="L167">    }</span>
 
     /**
      * Returns the hour.
@@ -172,7 +172,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @return The hour (0 &amp;lt;= hour &amp;lt;= 23).
      */
     public int getHour() {
-<span class="nc" id="L175">        return this.hour;</span>
+<span class="fc" id="L175">        return this.hour;</span>
     }
 
     /**
@@ -181,7 +181,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @return The day.
      */
     public Day getDay() {
-<span class="nc" id="L184">        return this.day;</span>
+<span class="fc" id="L184">        return this.day;</span>
     }
 
     /**
@@ -190,7 +190,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @return The year.
      */
     public int getYear() {
-<span class="nc" id="L193">        return this.day.getYear();</span>
+<span class="fc" id="L193">        return this.day.getYear();</span>
     }
 
     /**
@@ -199,7 +199,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @return The month.
      */
     public int getMonth() {
-<span class="nc" id="L202">        return this.day.getMonth();</span>
+<span class="fc" id="L202">        return this.day.getMonth();</span>
     }
 
     /**
@@ -208,7 +208,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      * @return The day-of-the-month.
      */
     public int getDayOfMonth() {
-<span class="nc" id="L211">        return this.day.getDayOfMonth();</span>
+<span class="fc" id="L211">        return this.day.getDayOfMonth();</span>
     }
 
     /**
@@ -223,7 +223,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond() {
-<span class="nc" id="L226">        return this.firstMillisecond;</span>
+<span class="fc" id="L226">        return this.firstMillisecond;</span>
     }
 
     /**
@@ -238,7 +238,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond() {
-<span class="nc" id="L241">        return this.lastMillisecond;</span>
+<span class="fc" id="L241">        return this.lastMillisecond;</span>
     }
 
     /**
@@ -251,9 +251,9 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public void peg(Calendar calendar) {
-<span class="nc" id="L254">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L255">        this.lastMillisecond = getLastMillisecond(calendar);</span>
-<span class="nc" id="L256">    }</span>
+<span class="fc" id="L254">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L255">        this.lastMillisecond = getLastMillisecond(calendar);</span>
+<span class="fc" id="L256">    }</span>
 
     /**
      * Returns the hour preceding this one.
@@ -263,19 +263,19 @@ public class Hour extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod previous() {
         Hour result;
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (this.hour != FIRST_HOUR_IN_DAY) {</span>
-<span class="nc" id="L267">            result = new Hour(this.hour - 1, this.day);</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (this.hour != FIRST_HOUR_IN_DAY) {</span>
+<span class="fc" id="L267">            result = new Hour(this.hour - 1, this.day);</span>
         }
         else { // we are at the first hour in the day...
-<span class="nc" id="L270">            Day prevDay = (Day) this.day.previous();</span>
-<span class="nc bnc" id="L271" title="All 2 branches missed.">            if (prevDay != null) {</span>
+<span class="fc" id="L270">            Day prevDay = (Day) this.day.previous();</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">            if (prevDay != null) {</span>
 <span class="nc" id="L272">                result = new Hour(LAST_HOUR_IN_DAY, prevDay);</span>
             }
             else {
-<span class="nc" id="L275">                result = null;</span>
+<span class="fc" id="L275">                result = null;</span>
             }
         }
-<span class="nc" id="L278">        return result;</span>
+<span class="fc" id="L278">        return result;</span>
     }
 
     /**
@@ -286,19 +286,19 @@ public class Hour extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod next() {
         Hour result;
-<span class="nc bnc" id="L289" title="All 2 branches missed.">        if (this.hour != LAST_HOUR_IN_DAY) {</span>
-<span class="nc" id="L290">            result = new Hour(this.hour + 1, this.day);</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (this.hour != LAST_HOUR_IN_DAY) {</span>
+<span class="fc" id="L290">            result = new Hour(this.hour + 1, this.day);</span>
         }
         else { // we are at the last hour in the day...
-<span class="nc" id="L293">            Day nextDay = (Day) this.day.next();</span>
-<span class="nc bnc" id="L294" title="All 2 branches missed.">            if (nextDay != null) {</span>
+<span class="fc" id="L293">            Day nextDay = (Day) this.day.next();</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">            if (nextDay != null) {</span>
 <span class="nc" id="L295">                result = new Hour(FIRST_HOUR_IN_DAY, nextDay);</span>
             }
             else {
-<span class="nc" id="L298">                result = null;</span>
+<span class="fc" id="L298">                result = null;</span>
             }
         }
-<span class="nc" id="L301">        return result;</span>
+<span class="fc" id="L301">        return result;</span>
     }
 
     /**
@@ -308,7 +308,7 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getSerialIndex() {
-<span class="nc" id="L311">        return this.day.getSerialIndex() * 24L + this.hour;</span>
+<span class="fc" id="L311">        return this.day.getSerialIndex() * 24L + this.hour;</span>
     }
 
     /**
@@ -323,12 +323,12 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond(Calendar calendar) {
-<span class="nc" id="L326">        int year = this.day.getYear();</span>
-<span class="nc" id="L327">        int month = this.day.getMonth() - 1;</span>
-<span class="nc" id="L328">        int dom = this.day.getDayOfMonth();</span>
-<span class="nc" id="L329">        calendar.set(year, month, dom, this.hour, 0, 0);</span>
-<span class="nc" id="L330">        calendar.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L331">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L326">        int year = this.day.getYear();</span>
+<span class="fc" id="L327">        int month = this.day.getMonth() - 1;</span>
+<span class="fc" id="L328">        int dom = this.day.getDayOfMonth();</span>
+<span class="fc" id="L329">        calendar.set(year, month, dom, this.hour, 0, 0);</span>
+<span class="fc" id="L330">        calendar.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L331">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -343,12 +343,12 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond(Calendar calendar) {
-<span class="nc" id="L346">        int year = this.day.getYear();</span>
-<span class="nc" id="L347">        int month = this.day.getMonth() - 1;</span>
-<span class="nc" id="L348">        int dom = this.day.getDayOfMonth();</span>
-<span class="nc" id="L349">        calendar.set(year, month, dom, this.hour, 59, 59);</span>
-<span class="nc" id="L350">        calendar.set(Calendar.MILLISECOND, 999);</span>
-<span class="nc" id="L351">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L346">        int year = this.day.getYear();</span>
+<span class="fc" id="L347">        int month = this.day.getMonth() - 1;</span>
+<span class="fc" id="L348">        int dom = this.day.getDayOfMonth();</span>
+<span class="fc" id="L349">        calendar.set(year, month, dom, this.hour, 59, 59);</span>
+<span class="fc" id="L350">        calendar.set(Calendar.MILLISECOND, 999);</span>
+<span class="fc" id="L351">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -364,20 +364,20 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L367" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L368">            return true;</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L368">            return true;</span>
         }
-<span class="nc bnc" id="L370" title="All 2 branches missed.">        if (!(obj instanceof Hour)) {</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (!(obj instanceof Hour)) {</span>
 <span class="nc" id="L371">            return false;</span>
         }
-<span class="nc" id="L373">        Hour that = (Hour) obj;</span>
-<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (this.hour != that.hour) {</span>
+<span class="fc" id="L373">        Hour that = (Hour) obj;</span>
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (this.hour != that.hour) {</span>
 <span class="nc" id="L375">            return false;</span>
         }
-<span class="nc bnc" id="L377" title="All 2 branches missed.">        if (!this.day.equals(that.day)) {</span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">        if (!this.day.equals(that.day)) {</span>
 <span class="nc" id="L378">            return false;</span>
         }
-<span class="nc" id="L380">        return true;</span>
+<span class="fc" id="L380">        return true;</span>
     }
 
     /**
@@ -403,10 +403,10 @@ public class Hour extends RegularTimePeriod implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L406">        int result = 17;</span>
-<span class="nc" id="L407">        result = 37 * result + this.hour;</span>
-<span class="nc" id="L408">        result = 37 * result + this.day.hashCode();</span>
-<span class="nc" id="L409">        return result;</span>
+<span class="fc" id="L406">        int result = 17;</span>
+<span class="fc" id="L407">        result = 37 * result + this.hour;</span>
+<span class="fc" id="L408">        result = 37 * result + this.day.hashCode();</span>
+<span class="fc" id="L409">        return result;</span>
     }
 
     /**
@@ -461,25 +461,25 @@ public class Hour extends RegularTimePeriod implements Serializable {
      *         otherwise.
      */
     public static Hour parseHour(String s) {
-<span class="nc" id="L464">        Hour result = null;</span>
-<span class="nc" id="L465">        s = s.trim();</span>
+<span class="fc" id="L464">        Hour result = null;</span>
+<span class="fc" id="L465">        s = s.trim();</span>
 
-<span class="nc" id="L467">        String daystr = s.substring(0, Math.min(10, s.length()));</span>
-<span class="nc" id="L468">        Day day = Day.parseDay(daystr);</span>
-<span class="nc bnc" id="L469" title="All 2 branches missed.">        if (day != null) {</span>
-<span class="nc" id="L470">            String hourstr = s.substring(</span>
-<span class="nc" id="L471">                Math.min(daystr.length() + 1, s.length()), s.length()</span>
+<span class="fc" id="L467">        String daystr = s.substring(0, Math.min(10, s.length()));</span>
+<span class="fc" id="L468">        Day day = Day.parseDay(daystr);</span>
+<span class="pc bpc" id="L469" title="1 of 2 branches missed.">        if (day != null) {</span>
+<span class="fc" id="L470">            String hourstr = s.substring(</span>
+<span class="fc" id="L471">                Math.min(daystr.length() + 1, s.length()), s.length()</span>
             );
-<span class="nc" id="L473">            hourstr = hourstr.trim();</span>
-<span class="nc" id="L474">            int hour = Integer.parseInt(hourstr);</span>
+<span class="fc" id="L473">            hourstr = hourstr.trim();</span>
+<span class="fc" id="L474">            int hour = Integer.parseInt(hourstr);</span>
             // if the hour is 0 - 23 then create an hour
-<span class="nc bnc" id="L476" title="All 4 branches missed.">            if ((hour &gt;= FIRST_HOUR_IN_DAY) &amp;&amp; (hour &lt;= LAST_HOUR_IN_DAY)) {</span>
-<span class="nc" id="L477">                result = new Hour(hour, day);</span>
+<span class="pc bpc" id="L476" title="2 of 4 branches missed.">            if ((hour &gt;= FIRST_HOUR_IN_DAY) &amp;&amp; (hour &lt;= LAST_HOUR_IN_DAY)) {</span>
+<span class="fc" id="L477">                result = new Hour(hour, day);</span>
             }
         }
 
-<span class="nc" id="L481">        return result;</span>
+<span class="fc" id="L481">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

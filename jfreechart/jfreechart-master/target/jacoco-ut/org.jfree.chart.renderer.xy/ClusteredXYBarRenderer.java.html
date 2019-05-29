@@ -112,8 +112,8 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      * Default constructor. Bar margin is set to 0.0.
      */
     public ClusteredXYBarRenderer() {
-<span class="nc" id="L115">        this(0.0, false);</span>
-<span class="nc" id="L116">    }</span>
+<span class="fc" id="L115">        this(0.0, false);</span>
+<span class="fc" id="L116">    }</span>
 
     /**
      * Constructs a new XY clustered bar renderer.
@@ -124,9 +124,9 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      */
     public ClusteredXYBarRenderer(double margin,
                                   boolean centerBarAtStartValue) {
-<span class="nc" id="L127">        super(margin);</span>
-<span class="nc" id="L128">        this.centerBarAtStartValue = centerBarAtStartValue;</span>
-<span class="nc" id="L129">    }</span>
+<span class="fc" id="L127">        super(margin);</span>
+<span class="fc" id="L128">        this.centerBarAtStartValue = centerBarAtStartValue;</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Returns the number of passes through the dataset that this renderer
@@ -149,15 +149,15 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      */
     @Override
     public Range findDomainBounds(XYDataset dataset) {
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L153">            return null;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L153">            return null;</span>
         }
         // need to handle cluster centering as a special case
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (this.centerBarAtStartValue) {</span>
-<span class="nc" id="L157">            return findDomainBoundsWithOffset((IntervalXYDataset) dataset);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (this.centerBarAtStartValue) {</span>
+<span class="fc" id="L157">            return findDomainBoundsWithOffset((IntervalXYDataset) dataset);</span>
         }
         else {
-<span class="nc" id="L160">            return super.findDomainBounds(dataset);</span>
+<span class="fc" id="L160">            return super.findDomainBounds(dataset);</span>
         }
     }
 
@@ -171,30 +171,30 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      * @return The range (possibly {@code null}).
      */
     protected Range findDomainBoundsWithOffset(IntervalXYDataset dataset) {
-<span class="nc" id="L174">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L175">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L176">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L177">        int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc" id="L174">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L175">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L176">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L177">        int seriesCount = dataset.getSeriesCount();</span>
         double lvalue;
         double uvalue;
-<span class="nc bnc" id="L180" title="All 2 branches missed.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L181">            int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L182" title="All 2 branches missed.">            for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L183">                lvalue = dataset.getStartXValue(series, item);</span>
-<span class="nc" id="L184">                uvalue = dataset.getEndXValue(series, item);</span>
-<span class="nc" id="L185">                double offset = (uvalue - lvalue) / 2.0;</span>
-<span class="nc" id="L186">                lvalue = lvalue - offset;</span>
-<span class="nc" id="L187">                uvalue = uvalue - offset;</span>
-<span class="nc" id="L188">                minimum = Math.min(minimum, lvalue);</span>
-<span class="nc" id="L189">                maximum = Math.max(maximum, uvalue);</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L181">            int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L183">                lvalue = dataset.getStartXValue(series, item);</span>
+<span class="fc" id="L184">                uvalue = dataset.getEndXValue(series, item);</span>
+<span class="fc" id="L185">                double offset = (uvalue - lvalue) / 2.0;</span>
+<span class="fc" id="L186">                lvalue = lvalue - offset;</span>
+<span class="fc" id="L187">                uvalue = uvalue - offset;</span>
+<span class="fc" id="L188">                minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L189">                maximum = Math.max(maximum, uvalue);</span>
             }
         }
 
-<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (minimum &gt; maximum) {</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (minimum &gt; maximum) {</span>
 <span class="nc" id="L194">            return null;</span>
         }
         else {
-<span class="nc" id="L197">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L197">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -352,17 +352,17 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L355" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L356">            return true;</span>
         }
-<span class="nc bnc" id="L358" title="All 2 branches missed.">        if (!(obj instanceof ClusteredXYBarRenderer)) {</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">        if (!(obj instanceof ClusteredXYBarRenderer)) {</span>
 <span class="nc" id="L359">            return false;</span>
         }
-<span class="nc" id="L361">        ClusteredXYBarRenderer that = (ClusteredXYBarRenderer) obj;</span>
-<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (this.centerBarAtStartValue != that.centerBarAtStartValue) {</span>
-<span class="nc" id="L363">            return false;</span>
+<span class="fc" id="L361">        ClusteredXYBarRenderer that = (ClusteredXYBarRenderer) obj;</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">        if (this.centerBarAtStartValue != that.centerBarAtStartValue) {</span>
+<span class="fc" id="L363">            return false;</span>
         }
-<span class="nc" id="L365">        return super.equals(obj);</span>
+<span class="fc" id="L365">        return super.equals(obj);</span>
     }
 
     /**
@@ -374,8 +374,8 @@ public class ClusteredXYBarRenderer extends XYBarRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L377">        return super.clone();</span>
+<span class="fc" id="L377">        return super.clone();</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

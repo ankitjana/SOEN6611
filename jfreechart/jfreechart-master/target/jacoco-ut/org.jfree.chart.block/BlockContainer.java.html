@@ -82,8 +82,8 @@ public class BlockContainer extends AbstractBlock
      * Creates a new instance with default settings.
      */
     public BlockContainer() {
-<span class="nc" id="L85">        this(new BorderArrangement());</span>
-<span class="nc" id="L86">    }</span>
+<span class="fc" id="L85">        this(new BorderArrangement());</span>
+<span class="fc" id="L86">    }</span>
 
     /**
      * Creates a new instance with the specified arrangement.
@@ -91,11 +91,11 @@ public class BlockContainer extends AbstractBlock
      * @param arrangement  the arrangement manager ({@code null} not
      *                     permitted).
      */
-<span class="nc" id="L94">    public BlockContainer(Arrangement arrangement) {</span>
-<span class="nc" id="L95">        Args.nullNotPermitted(arrangement, &quot;arrangement&quot;);</span>
-<span class="nc" id="L96">        this.arrangement = arrangement;</span>
-<span class="nc" id="L97">        this.blocks = new ArrayList();</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L94">    public BlockContainer(Arrangement arrangement) {</span>
+<span class="fc" id="L95">        Args.nullNotPermitted(arrangement, &quot;arrangement&quot;);</span>
+<span class="fc" id="L96">        this.arrangement = arrangement;</span>
+<span class="fc" id="L97">        this.blocks = new ArrayList();</span>
+<span class="fc" id="L98">    }</span>
 
     /**
      * Returns the arrangement (layout) manager for the container.
@@ -112,9 +112,9 @@ public class BlockContainer extends AbstractBlock
      * @param arrangement  the arrangement ({@code null} not permitted).
      */
     public void setArrangement(Arrangement arrangement) {
-<span class="nc" id="L115">        Args.nullNotPermitted(arrangement, &quot;arrangement&quot;);</span>
-<span class="nc" id="L116">        this.arrangement = arrangement;</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L115">        Args.nullNotPermitted(arrangement, &quot;arrangement&quot;);</span>
+<span class="fc" id="L116">        this.arrangement = arrangement;</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Returns {@code true} if there are no blocks in the container, and
@@ -123,7 +123,7 @@ public class BlockContainer extends AbstractBlock
      * @return A boolean.
      */
     public boolean isEmpty() {
-<span class="nc" id="L126">        return this.blocks.isEmpty();</span>
+<span class="fc" id="L126">        return this.blocks.isEmpty();</span>
     }
 
     /**
@@ -133,7 +133,7 @@ public class BlockContainer extends AbstractBlock
      * @return A list of blocks.
      */
     public List getBlocks() {
-<span class="nc" id="L136">        return Collections.unmodifiableList(this.blocks);</span>
+<span class="fc" id="L136">        return Collections.unmodifiableList(this.blocks);</span>
     }
 
     /**
@@ -142,8 +142,8 @@ public class BlockContainer extends AbstractBlock
      * @param block  the block ({@code null} permitted).
      */
     public void add(Block block) {
-<span class="nc" id="L145">        add(block, null);</span>
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L145">        add(block, null);</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Adds a block to the container.
@@ -152,17 +152,17 @@ public class BlockContainer extends AbstractBlock
      * @param key  the key ({@code null} permitted).
      */
     public void add(Block block, Object key) {
-<span class="nc" id="L155">        this.blocks.add(block);</span>
-<span class="nc" id="L156">        this.arrangement.add(block, key);</span>
-<span class="nc" id="L157">    }</span>
+<span class="fc" id="L155">        this.blocks.add(block);</span>
+<span class="fc" id="L156">        this.arrangement.add(block, key);</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Clears all the blocks from the container.
      */
     public void clear() {
-<span class="nc" id="L163">        this.blocks.clear();</span>
-<span class="nc" id="L164">        this.arrangement.clear();</span>
-<span class="nc" id="L165">    }</span>
+<span class="fc" id="L163">        this.blocks.clear();</span>
+<span class="fc" id="L164">        this.arrangement.clear();</span>
+<span class="fc" id="L165">    }</span>
 
     /**
      * Arranges the contents of the block, within the given constraints, and
@@ -175,7 +175,7 @@ public class BlockContainer extends AbstractBlock
      */
     @Override
     public Size2D arrange(Graphics2D g2, RectangleConstraint constraint) {
-<span class="nc" id="L178">        return this.arrangement.arrange(this, g2, constraint);</span>
+<span class="fc" id="L178">        return this.arrangement.arrange(this, g2, constraint);</span>
     }
 
     /**
@@ -203,40 +203,40 @@ public class BlockContainer extends AbstractBlock
     public Object draw(Graphics2D g2, Rectangle2D area, Object params) {
         // check if we need to collect chart entities from the container
         EntityBlockParams ebp;
-<span class="nc" id="L206">        StandardEntityCollection sec = null;</span>
-<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (params instanceof EntityBlockParams) {</span>
-<span class="nc" id="L208">            ebp = (EntityBlockParams) params;</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (ebp.getGenerateEntities()) {</span>
-<span class="nc" id="L210">                sec = new StandardEntityCollection();</span>
+<span class="fc" id="L206">        StandardEntityCollection sec = null;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (params instanceof EntityBlockParams) {</span>
+<span class="fc" id="L208">            ebp = (EntityBlockParams) params;</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (ebp.getGenerateEntities()) {</span>
+<span class="fc" id="L210">                sec = new StandardEntityCollection();</span>
             }
         }
-<span class="nc" id="L213">        Rectangle2D contentArea = (Rectangle2D) area.clone();</span>
-<span class="nc" id="L214">        contentArea = trimMargin(contentArea);</span>
-<span class="nc" id="L215">        drawBorder(g2, contentArea);</span>
-<span class="nc" id="L216">        contentArea = trimBorder(contentArea);</span>
-<span class="nc" id="L217">        contentArea = trimPadding(contentArea);</span>
-<span class="nc" id="L218">        Iterator iterator = this.blocks.iterator();</span>
-<span class="nc bnc" id="L219" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L220">            Block block = (Block) iterator.next();</span>
-<span class="nc" id="L221">            Rectangle2D bounds = block.getBounds();</span>
-<span class="nc" id="L222">            Rectangle2D drawArea = new Rectangle2D.Double(bounds.getX()</span>
-<span class="nc" id="L223">                    + area.getX(), bounds.getY() + area.getY(),</span>
-<span class="nc" id="L224">                    bounds.getWidth(), bounds.getHeight());</span>
-<span class="nc" id="L225">            Object r = block.draw(g2, drawArea, params);</span>
-<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (sec != null) {</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">                if (r instanceof EntityBlockResult) {</span>
-<span class="nc" id="L228">                    EntityBlockResult ebr = (EntityBlockResult) r;</span>
-<span class="nc" id="L229">                    EntityCollection ec = ebr.getEntityCollection();</span>
-<span class="nc" id="L230">                    sec.addAll(ec);</span>
+<span class="fc" id="L213">        Rectangle2D contentArea = (Rectangle2D) area.clone();</span>
+<span class="fc" id="L214">        contentArea = trimMargin(contentArea);</span>
+<span class="fc" id="L215">        drawBorder(g2, contentArea);</span>
+<span class="fc" id="L216">        contentArea = trimBorder(contentArea);</span>
+<span class="fc" id="L217">        contentArea = trimPadding(contentArea);</span>
+<span class="fc" id="L218">        Iterator iterator = this.blocks.iterator();</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L220">            Block block = (Block) iterator.next();</span>
+<span class="fc" id="L221">            Rectangle2D bounds = block.getBounds();</span>
+<span class="fc" id="L222">            Rectangle2D drawArea = new Rectangle2D.Double(bounds.getX()</span>
+<span class="fc" id="L223">                    + area.getX(), bounds.getY() + area.getY(),</span>
+<span class="fc" id="L224">                    bounds.getWidth(), bounds.getHeight());</span>
+<span class="fc" id="L225">            Object r = block.draw(g2, drawArea, params);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            if (sec != null) {</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                if (r instanceof EntityBlockResult) {</span>
+<span class="fc" id="L228">                    EntityBlockResult ebr = (EntityBlockResult) r;</span>
+<span class="fc" id="L229">                    EntityCollection ec = ebr.getEntityCollection();</span>
+<span class="fc" id="L230">                    sec.addAll(ec);</span>
                 }
             }
-<span class="nc" id="L233">        }</span>
-<span class="nc" id="L234">        BlockResult result = null;</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (sec != null) {</span>
-<span class="nc" id="L236">            result = new BlockResult();</span>
-<span class="nc" id="L237">            result.setEntityCollection(sec);</span>
+<span class="fc" id="L233">        }</span>
+<span class="fc" id="L234">        BlockResult result = null;</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (sec != null) {</span>
+<span class="fc" id="L236">            result = new BlockResult();</span>
+<span class="fc" id="L237">            result.setEntityCollection(sec);</span>
         }
-<span class="nc" id="L239">        return result;</span>
+<span class="fc" id="L239">        return result;</span>
     }
 
     /**
@@ -248,23 +248,23 @@ public class BlockContainer extends AbstractBlock
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L252">            return true;</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L252">            return true;</span>
         }
-<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (!(obj instanceof BlockContainer)) {</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        if (!(obj instanceof BlockContainer)) {</span>
 <span class="nc" id="L255">            return false;</span>
         }
-<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L258">            return false;</span>
         }
-<span class="nc" id="L260">        BlockContainer that = (BlockContainer) obj;</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (!this.arrangement.equals(that.arrangement)) {</span>
-<span class="nc" id="L262">            return false;</span>
+<span class="fc" id="L260">        BlockContainer that = (BlockContainer) obj;</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (!this.arrangement.equals(that.arrangement)) {</span>
+<span class="fc" id="L262">            return false;</span>
         }
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (!this.blocks.equals(that.blocks)) {</span>
-<span class="nc" id="L265">            return false;</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (!this.blocks.equals(that.blocks)) {</span>
+<span class="fc" id="L265">            return false;</span>
         }
-<span class="nc" id="L267">        return true;</span>
+<span class="fc" id="L267">        return true;</span>
     }
 
     /**
@@ -276,10 +276,10 @@ public class BlockContainer extends AbstractBlock
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L279">        BlockContainer clone = (BlockContainer) super.clone();</span>
+<span class="fc" id="L279">        BlockContainer clone = (BlockContainer) super.clone();</span>
         // TODO : complete this
-<span class="nc" id="L281">        return clone;</span>
+<span class="fc" id="L281">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

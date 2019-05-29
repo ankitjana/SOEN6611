@@ -97,10 +97,10 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      * Creates a new (empty) dataset with a default type of
      * {@link HistogramType}.FREQUENCY.
      */
-<span class="nc" id="L100">    public HistogramDataset() {</span>
-<span class="nc" id="L101">        this.list = new ArrayList();</span>
-<span class="nc" id="L102">        this.type = HistogramType.FREQUENCY;</span>
-<span class="nc" id="L103">    }</span>
+<span class="fc" id="L100">    public HistogramDataset() {</span>
+<span class="fc" id="L101">        this.list = new ArrayList();</span>
+<span class="fc" id="L102">        this.type = HistogramType.FREQUENCY;</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Returns the histogram type.
@@ -133,10 +133,10 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     public void addSeries(Comparable key, double[] values, int bins) {
         // defer argument checking...
-<span class="nc" id="L136">        double minimum = getMinimum(values);</span>
-<span class="nc" id="L137">        double maximum = getMaximum(values);</span>
-<span class="nc" id="L138">        addSeries(key, values, bins, minimum, maximum);</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L136">        double minimum = getMinimum(values);</span>
+<span class="fc" id="L137">        double maximum = getMaximum(values);</span>
+<span class="fc" id="L138">        addSeries(key, values, bins, minimum, maximum);</span>
+<span class="fc" id="L139">    }</span>
 
     /**
      * Adds a series to the dataset. Any data value less than minimum will be
@@ -153,60 +153,60 @@ public class HistogramDataset extends AbstractIntervalXYDataset
     public void addSeries(Comparable key, double[] values, int bins,
             double minimum, double maximum) {
 
-<span class="nc" id="L156">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L157">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (bins &lt; 1) {</span>
+<span class="fc" id="L156">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L157">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (bins &lt; 1) {</span>
 <span class="nc" id="L159">            throw new IllegalArgumentException(</span>
                     &quot;The 'bins' value must be at least 1.&quot;);
         }
-<span class="nc" id="L162">        double binWidth = (maximum - minimum) / bins;</span>
+<span class="fc" id="L162">        double binWidth = (maximum - minimum) / bins;</span>
 
-<span class="nc" id="L164">        double lower = minimum;</span>
+<span class="fc" id="L164">        double lower = minimum;</span>
         double upper;
-<span class="nc" id="L166">        List binList = new ArrayList(bins);</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (int i = 0; i &lt; bins; i++) {</span>
+<span class="fc" id="L166">        List binList = new ArrayList(bins);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (int i = 0; i &lt; bins; i++) {</span>
             HistogramBin bin;
             // make sure bins[bins.length]'s upper boundary ends at maximum
             // to avoid the rounding issue. the bins[0] lower boundary is
             // guaranteed start from min
-<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (i == bins - 1) {</span>
-<span class="nc" id="L173">                bin = new HistogramBin(lower, maximum);</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            if (i == bins - 1) {</span>
+<span class="fc" id="L173">                bin = new HistogramBin(lower, maximum);</span>
             }
             else {
-<span class="nc" id="L176">                upper = minimum + (i + 1) * binWidth;</span>
-<span class="nc" id="L177">                bin = new HistogramBin(lower, upper);</span>
-<span class="nc" id="L178">                lower = upper;</span>
+<span class="fc" id="L176">                upper = minimum + (i + 1) * binWidth;</span>
+<span class="fc" id="L177">                bin = new HistogramBin(lower, upper);</span>
+<span class="fc" id="L178">                lower = upper;</span>
             }
-<span class="nc" id="L180">            binList.add(bin);</span>
+<span class="fc" id="L180">            binList.add(bin);</span>
         }
         // fill the bins
-<span class="nc bnc" id="L183" title="All 2 branches missed.">        for (int i = 0; i &lt; values.length; i++) {</span>
-<span class="nc" id="L184">            int binIndex = bins - 1;</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (values[i] &lt; maximum) {</span>
-<span class="nc" id="L186">                double fraction = (values[i] - minimum) / (maximum - minimum);</span>
-<span class="nc bnc" id="L187" title="All 2 branches missed.">                if (fraction &lt; 0.0) {</span>
-<span class="nc" id="L188">                    fraction = 0.0;</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="fc" id="L184">            int binIndex = bins - 1;</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (values[i] &lt; maximum) {</span>
+<span class="fc" id="L186">                double fraction = (values[i] - minimum) / (maximum - minimum);</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">                if (fraction &lt; 0.0) {</span>
+<span class="fc" id="L188">                    fraction = 0.0;</span>
                 }
-<span class="nc" id="L190">                binIndex = (int) (fraction * bins);</span>
+<span class="fc" id="L190">                binIndex = (int) (fraction * bins);</span>
                 // rounding could result in binIndex being equal to bins
                 // which will cause an IndexOutOfBoundsException - see bug
                 // report 1553088
-<span class="nc bnc" id="L194" title="All 2 branches missed.">                if (binIndex &gt;= bins) {</span>
-<span class="nc" id="L195">                    binIndex = bins - 1;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">                if (binIndex &gt;= bins) {</span>
+<span class="fc" id="L195">                    binIndex = bins - 1;</span>
                 }
             }
-<span class="nc" id="L198">            HistogramBin bin = (HistogramBin) binList.get(binIndex);</span>
-<span class="nc" id="L199">            bin.incrementCount();</span>
+<span class="fc" id="L198">            HistogramBin bin = (HistogramBin) binList.get(binIndex);</span>
+<span class="fc" id="L199">            bin.incrementCount();</span>
         }
         // generic map for each series
-<span class="nc" id="L202">        Map map = new HashMap();</span>
-<span class="nc" id="L203">        map.put(&quot;key&quot;, key);</span>
-<span class="nc" id="L204">        map.put(&quot;bins&quot;, binList);</span>
-<span class="nc" id="L205">        map.put(&quot;values.length&quot;, new Integer(values.length));</span>
-<span class="nc" id="L206">        map.put(&quot;bin width&quot;, new Double(binWidth));</span>
-<span class="nc" id="L207">        this.list.add(map);</span>
-<span class="nc" id="L208">        fireDatasetChanged();</span>
-<span class="nc" id="L209">    }</span>
+<span class="fc" id="L202">        Map map = new HashMap();</span>
+<span class="fc" id="L203">        map.put(&quot;key&quot;, key);</span>
+<span class="fc" id="L204">        map.put(&quot;bins&quot;, binList);</span>
+<span class="fc" id="L205">        map.put(&quot;values.length&quot;, new Integer(values.length));</span>
+<span class="fc" id="L206">        map.put(&quot;bin width&quot;, new Double(binWidth));</span>
+<span class="fc" id="L207">        this.list.add(map);</span>
+<span class="fc" id="L208">        fireDatasetChanged();</span>
+<span class="fc" id="L209">    }</span>
 
     /**
      * Returns the minimum value in an array of values.
@@ -217,17 +217,17 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      * @return The minimum value.
      */
     private double getMinimum(double[] values) {
-<span class="nc bnc" id="L220" title="All 4 branches missed.">        if (values == null || values.length &lt; 1) {</span>
+<span class="pc bpc" id="L220" title="2 of 4 branches missed.">        if (values == null || values.length &lt; 1) {</span>
 <span class="nc" id="L221">            throw new IllegalArgumentException(</span>
                     &quot;Null or zero length 'values' argument.&quot;);
         }
-<span class="nc" id="L224">        double min = Double.MAX_VALUE;</span>
-<span class="nc bnc" id="L225" title="All 2 branches missed.">        for (int i = 0; i &lt; values.length; i++) {</span>
-<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (values[i] &lt; min) {</span>
-<span class="nc" id="L227">                min = values[i];</span>
+<span class="fc" id="L224">        double min = Double.MAX_VALUE;</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            if (values[i] &lt; min) {</span>
+<span class="fc" id="L227">                min = values[i];</span>
             }
         }
-<span class="nc" id="L230">        return min;</span>
+<span class="fc" id="L230">        return min;</span>
     }
 
     /**
@@ -239,17 +239,17 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      * @return The maximum value.
      */
     private double getMaximum(double[] values) {
-<span class="nc bnc" id="L242" title="All 4 branches missed.">        if (values == null || values.length &lt; 1) {</span>
+<span class="pc bpc" id="L242" title="2 of 4 branches missed.">        if (values == null || values.length &lt; 1) {</span>
 <span class="nc" id="L243">            throw new IllegalArgumentException(</span>
                     &quot;Null or zero length 'values' argument.&quot;);
         }
-<span class="nc" id="L246">        double max = -Double.MAX_VALUE;</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">        for (int i = 0; i &lt; values.length; i++) {</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">            if (values[i] &gt; max) {</span>
-<span class="nc" id="L249">                max = values[i];</span>
+<span class="fc" id="L246">        double max = -Double.MAX_VALUE;</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            if (values[i] &gt; max) {</span>
+<span class="fc" id="L249">                max = values[i];</span>
             }
         }
-<span class="nc" id="L252">        return max;</span>
+<span class="fc" id="L252">        return max;</span>
     }
 
     /**
@@ -264,8 +264,8 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      *     specified range.
      */
     List getBins(int series) {
-<span class="nc" id="L267">        Map map = (Map) this.list.get(series);</span>
-<span class="nc" id="L268">        return (List) map.get(&quot;bins&quot;);</span>
+<span class="fc" id="L267">        Map map = (Map) this.list.get(series);</span>
+<span class="fc" id="L268">        return (List) map.get(&quot;bins&quot;);</span>
     }
 
     /**
@@ -276,8 +276,8 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      * @return The total.
      */
     private int getTotal(int series) {
-<span class="nc" id="L279">        Map map = (Map) this.list.get(series);</span>
-<span class="nc" id="L280">        return ((Integer) map.get(&quot;values.length&quot;)).intValue();</span>
+<span class="fc" id="L279">        Map map = (Map) this.list.get(series);</span>
+<span class="fc" id="L280">        return ((Integer) map.get(&quot;values.length&quot;)).intValue();</span>
     }
 
     /**
@@ -288,8 +288,8 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      * @return The bin width.
      */
     private double getBinWidth(int series) {
-<span class="nc" id="L291">        Map map = (Map) this.list.get(series);</span>
-<span class="nc" id="L292">        return ((Double) map.get(&quot;bin width&quot;)).doubleValue();</span>
+<span class="fc" id="L291">        Map map = (Map) this.list.get(series);</span>
+<span class="fc" id="L292">        return ((Double) map.get(&quot;bin width&quot;)).doubleValue();</span>
     }
 
     /**
@@ -299,7 +299,7 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L302">        return this.list.size();</span>
+<span class="fc" id="L302">        return this.list.size();</span>
     }
 
     /**
@@ -315,8 +315,8 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Comparable getSeriesKey(int series) {
-<span class="nc" id="L318">        Map map = (Map) this.list.get(series);</span>
-<span class="nc" id="L319">        return (Comparable) map.get(&quot;key&quot;);</span>
+<span class="fc" id="L318">        Map map = (Map) this.list.get(series);</span>
+<span class="fc" id="L319">        return (Comparable) map.get(&quot;key&quot;);</span>
     }
 
     /**
@@ -373,13 +373,13 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getY(int series, int item) {
-<span class="nc" id="L376">        List bins = getBins(series);</span>
-<span class="nc" id="L377">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
-<span class="nc" id="L378">        double total = getTotal(series);</span>
-<span class="nc" id="L379">        double binWidth = getBinWidth(series);</span>
+<span class="fc" id="L376">        List bins = getBins(series);</span>
+<span class="fc" id="L377">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
+<span class="fc" id="L378">        double total = getTotal(series);</span>
+<span class="fc" id="L379">        double binWidth = getBinWidth(series);</span>
 
-<span class="nc bnc" id="L381" title="All 2 branches missed.">        if (this.type == HistogramType.FREQUENCY) {</span>
-<span class="nc" id="L382">            return new Double(bin.getCount());</span>
+<span class="pc bpc" id="L381" title="1 of 2 branches missed.">        if (this.type == HistogramType.FREQUENCY) {</span>
+<span class="fc" id="L382">            return new Double(bin.getCount());</span>
         }
 <span class="nc bnc" id="L384" title="All 2 branches missed.">        else if (this.type == HistogramType.RELATIVE_FREQUENCY) {</span>
 <span class="nc" id="L385">            return new Double(bin.getCount() / total);</span>
@@ -406,9 +406,9 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getStartX(int series, int item) {
-<span class="nc" id="L409">        List bins = getBins(series);</span>
-<span class="nc" id="L410">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
-<span class="nc" id="L411">        return new Double(bin.getStartBoundary());</span>
+<span class="fc" id="L409">        List bins = getBins(series);</span>
+<span class="fc" id="L410">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
+<span class="fc" id="L411">        return new Double(bin.getStartBoundary());</span>
     }
 
     /**
@@ -425,9 +425,9 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getEndX(int series, int item) {
-<span class="nc" id="L428">        List bins = getBins(series);</span>
-<span class="nc" id="L429">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
-<span class="nc" id="L430">        return new Double(bin.getEndBoundary());</span>
+<span class="fc" id="L428">        List bins = getBins(series);</span>
+<span class="fc" id="L429">        HistogramBin bin = (HistogramBin) bins.get(item);</span>
+<span class="fc" id="L430">        return new Double(bin.getEndBoundary());</span>
     }
 
     /**
@@ -477,20 +477,20 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L480" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L481">            return true;</span>
         }
-<span class="nc bnc" id="L483" title="All 2 branches missed.">        if (!(obj instanceof HistogramDataset)) {</span>
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">        if (!(obj instanceof HistogramDataset)) {</span>
 <span class="nc" id="L484">            return false;</span>
         }
-<span class="nc" id="L486">        HistogramDataset that = (HistogramDataset) obj;</span>
-<span class="nc bnc" id="L487" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.type, that.type)) {</span>
+<span class="fc" id="L486">        HistogramDataset that = (HistogramDataset) obj;</span>
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.type, that.type)) {</span>
 <span class="nc" id="L488">            return false;</span>
         }
-<span class="nc bnc" id="L490" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.list, that.list)) {</span>
-<span class="nc" id="L491">            return false;</span>
+<span class="fc bfc" id="L490" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.list, that.list)) {</span>
+<span class="fc" id="L491">            return false;</span>
         }
-<span class="nc" id="L493">        return true;</span>
+<span class="fc" id="L493">        return true;</span>
     }
 
     /**
@@ -502,14 +502,14 @@ public class HistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L505">        HistogramDataset clone = (HistogramDataset) super.clone();</span>
-<span class="nc" id="L506">        int seriesCount = getSeriesCount();</span>
-<span class="nc" id="L507">        clone.list = new java.util.ArrayList(seriesCount);</span>
-<span class="nc bnc" id="L508" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L509">            clone.list.add(new HashMap((Map) this.list.get(i)));</span>
+<span class="fc" id="L505">        HistogramDataset clone = (HistogramDataset) super.clone();</span>
+<span class="fc" id="L506">        int seriesCount = getSeriesCount();</span>
+<span class="fc" id="L507">        clone.list = new java.util.ArrayList(seriesCount);</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L509">            clone.list.add(new HashMap((Map) this.list.get(i)));</span>
         }
-<span class="nc" id="L511">        return clone;</span>
+<span class="fc" id="L511">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

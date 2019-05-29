@@ -73,18 +73,18 @@ public class StandardCategorySeriesLabelGenerator implements
      * {@link #DEFAULT_LABEL_FORMAT}).
      */
     public StandardCategorySeriesLabelGenerator() {
-<span class="nc" id="L76">        this(DEFAULT_LABEL_FORMAT);</span>
-<span class="nc" id="L77">    }</span>
+<span class="fc" id="L76">        this(DEFAULT_LABEL_FORMAT);</span>
+<span class="fc" id="L77">    }</span>
 
     /**
      * Creates a new series label generator.
      *
      * @param format  the format pattern ({@code null} not permitted).
      */
-<span class="nc" id="L84">    public StandardCategorySeriesLabelGenerator(String format) {</span>
-<span class="nc" id="L85">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
-<span class="nc" id="L86">        this.formatPattern = format;</span>
-<span class="nc" id="L87">    }</span>
+<span class="fc" id="L84">    public StandardCategorySeriesLabelGenerator(String format) {</span>
+<span class="fc" id="L85">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
+<span class="fc" id="L86">        this.formatPattern = format;</span>
+<span class="fc" id="L87">    }</span>
 
     /**
      * Generates a label for the specified series.
@@ -96,10 +96,10 @@ public class StandardCategorySeriesLabelGenerator implements
      */
     @Override
     public String generateLabel(CategoryDataset dataset, int series) {
-<span class="nc" id="L99">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L100">        String label = MessageFormat.format(this.formatPattern,</span>
-<span class="nc" id="L101">                createItemArray(dataset, series));</span>
-<span class="nc" id="L102">        return label;</span>
+<span class="fc" id="L99">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L100">        String label = MessageFormat.format(this.formatPattern,</span>
+<span class="fc" id="L101">                createItemArray(dataset, series));</span>
+<span class="fc" id="L102">        return label;</span>
     }
 
     /**
@@ -112,9 +112,9 @@ public class StandardCategorySeriesLabelGenerator implements
      * @return The items (never {@code null}).
      */
     protected Object[] createItemArray(CategoryDataset dataset, int series) {
-<span class="nc" id="L115">        Object[] result = new Object[1];</span>
-<span class="nc" id="L116">        result[0] = dataset.getRowKey(series).toString();</span>
-<span class="nc" id="L117">        return result;</span>
+<span class="fc" id="L115">        Object[] result = new Object[1];</span>
+<span class="fc" id="L116">        result[0] = dataset.getRowKey(series).toString();</span>
+<span class="fc" id="L117">        return result;</span>
     }
 
     /**
@@ -126,7 +126,7 @@ public class StandardCategorySeriesLabelGenerator implements
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L129">        return super.clone();</span>
+<span class="fc" id="L129">        return super.clone();</span>
     }
 
     /**
@@ -138,18 +138,18 @@ public class StandardCategorySeriesLabelGenerator implements
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L142">            return true;</span>
         }
-<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (!(obj instanceof StandardCategorySeriesLabelGenerator)) {</span>
-<span class="nc" id="L145">            return false;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (!(obj instanceof StandardCategorySeriesLabelGenerator)) {</span>
+<span class="fc" id="L145">            return false;</span>
         }
-<span class="nc" id="L147">        StandardCategorySeriesLabelGenerator that</span>
+<span class="fc" id="L147">        StandardCategorySeriesLabelGenerator that</span>
                 = (StandardCategorySeriesLabelGenerator) obj;
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (!this.formatPattern.equals(that.formatPattern)) {</span>
-<span class="nc" id="L150">            return false;</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (!this.formatPattern.equals(that.formatPattern)) {</span>
+<span class="fc" id="L150">            return false;</span>
         }
-<span class="nc" id="L152">        return true;</span>
+<span class="fc" id="L152">        return true;</span>
     }
 
     /**
@@ -159,10 +159,10 @@ public class StandardCategorySeriesLabelGenerator implements
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L162">        int result = 127;</span>
-<span class="nc" id="L163">        result = HashUtils.hashCode(result, this.formatPattern);</span>
-<span class="nc" id="L164">        return result;</span>
+<span class="fc" id="L162">        int result = 127;</span>
+<span class="fc" id="L163">        result = HashUtils.hashCode(result, this.formatPattern);</span>
+<span class="fc" id="L164">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -133,17 +133,17 @@ public class XYLineAnnotation extends AbstractXYAnnotation
     public XYLineAnnotation(double x1, double y1, double x2, double y2,
                             Stroke stroke, Paint paint) {
 
-<span class="nc" id="L136">        super();</span>
-<span class="nc" id="L137">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L138">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L139">        this.x1 = x1;</span>
-<span class="nc" id="L140">        this.y1 = y1;</span>
-<span class="nc" id="L141">        this.x2 = x2;</span>
-<span class="nc" id="L142">        this.y2 = y2;</span>
-<span class="nc" id="L143">        this.stroke = stroke;</span>
-<span class="nc" id="L144">        this.paint = paint;</span>
+<span class="fc" id="L136">        super();</span>
+<span class="fc" id="L137">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L138">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L139">        this.x1 = x1;</span>
+<span class="fc" id="L140">        this.y1 = y1;</span>
+<span class="fc" id="L141">        this.x2 = x2;</span>
+<span class="fc" id="L142">        this.y2 = y2;</span>
+<span class="fc" id="L143">        this.stroke = stroke;</span>
+<span class="fc" id="L144">        this.paint = paint;</span>
 
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Draws the annotation.  This method is called by the {@link XYPlot}
@@ -220,36 +220,36 @@ public class XYLineAnnotation extends AbstractXYAnnotation
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L224">            return true;</span>
         }
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L227">            return false;</span>
         }
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (!(obj instanceof XYLineAnnotation)) {</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (!(obj instanceof XYLineAnnotation)) {</span>
 <span class="nc" id="L230">            return false;</span>
         }
-<span class="nc" id="L232">        XYLineAnnotation that = (XYLineAnnotation) obj;</span>
-<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (this.x1 != that.x1) {</span>
-<span class="nc" id="L234">            return false;</span>
+<span class="fc" id="L232">        XYLineAnnotation that = (XYLineAnnotation) obj;</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (this.x1 != that.x1) {</span>
+<span class="fc" id="L234">            return false;</span>
         }
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (this.y1 != that.y1) {</span>
-<span class="nc" id="L237">            return false;</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (this.y1 != that.y1) {</span>
+<span class="fc" id="L237">            return false;</span>
         }
-<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (this.x2 != that.x2) {</span>
-<span class="nc" id="L240">            return false;</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (this.x2 != that.x2) {</span>
+<span class="fc" id="L240">            return false;</span>
         }
-<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (this.y2 != that.y2) {</span>
-<span class="nc" id="L243">            return false;</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (this.y2 != that.y2) {</span>
+<span class="fc" id="L243">            return false;</span>
         }
-<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L246">            return false;</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L246">            return false;</span>
         }
-<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
 <span class="nc" id="L249">            return false;</span>
         }
         // seems to be the same...
-<span class="nc" id="L252">        return true;</span>
+<span class="fc" id="L252">        return true;</span>
     }
 
     /**
@@ -261,15 +261,15 @@ public class XYLineAnnotation extends AbstractXYAnnotation
     public int hashCode() {
         int result;
         long temp;
-<span class="nc" id="L264">        temp = Double.doubleToLongBits(this.x1);</span>
-<span class="nc" id="L265">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L266">        temp = Double.doubleToLongBits(this.x2);</span>
-<span class="nc" id="L267">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L268">        temp = Double.doubleToLongBits(this.y1);</span>
-<span class="nc" id="L269">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L270">        temp = Double.doubleToLongBits(this.y2);</span>
-<span class="nc" id="L271">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L272">        return result;</span>
+<span class="fc" id="L264">        temp = Double.doubleToLongBits(this.x1);</span>
+<span class="fc" id="L265">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L266">        temp = Double.doubleToLongBits(this.x2);</span>
+<span class="fc" id="L267">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L268">        temp = Double.doubleToLongBits(this.y1);</span>
+<span class="fc" id="L269">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L270">        temp = Double.doubleToLongBits(this.y2);</span>
+<span class="fc" id="L271">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L272">        return result;</span>
     }
 
     /**
@@ -281,7 +281,7 @@ public class XYLineAnnotation extends AbstractXYAnnotation
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L284">        return super.clone();</span>
+<span class="fc" id="L284">        return super.clone();</span>
     }
 
     /**
@@ -292,10 +292,10 @@ public class XYLineAnnotation extends AbstractXYAnnotation
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L295">        stream.defaultWriteObject();</span>
-<span class="nc" id="L296">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L297">        SerialUtils.writeStroke(this.stroke, stream);</span>
-<span class="nc" id="L298">    }</span>
+<span class="fc" id="L295">        stream.defaultWriteObject();</span>
+<span class="fc" id="L296">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L297">        SerialUtils.writeStroke(this.stroke, stream);</span>
+<span class="fc" id="L298">    }</span>
 
     /**
      * Provides serialization support.
@@ -307,10 +307,10 @@ public class XYLineAnnotation extends AbstractXYAnnotation
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L310">        stream.defaultReadObject();</span>
-<span class="nc" id="L311">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L312">        this.stroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L313">    }</span>
+<span class="fc" id="L310">        stream.defaultReadObject();</span>
+<span class="fc" id="L311">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L312">        this.stroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L313">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

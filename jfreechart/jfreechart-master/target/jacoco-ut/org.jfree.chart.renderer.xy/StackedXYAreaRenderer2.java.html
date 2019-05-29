@@ -109,8 +109,8 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      * Creates a new renderer.
      */
     public StackedXYAreaRenderer2() {
-<span class="nc" id="L112">        this(null, null);</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        this(null, null);</span>
+<span class="fc" id="L113">    }</span>
 
     /**
      * Constructs a new renderer.
@@ -121,9 +121,9 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      */
     public StackedXYAreaRenderer2(XYToolTipGenerator labelGenerator,
                                   XYURLGenerator urlGenerator) {
-<span class="nc" id="L124">        super(labelGenerator, urlGenerator);</span>
-<span class="nc" id="L125">        this.roundXCoordinates = true;</span>
-<span class="nc" id="L126">    }</span>
+<span class="fc" id="L124">        super(labelGenerator, urlGenerator);</span>
+<span class="fc" id="L125">        this.roundXCoordinates = true;</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Returns the flag that controls whether or not the x-coordinates (in
@@ -136,7 +136,7 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      * @see #setRoundXCoordinates(boolean)
      */
     public boolean getRoundXCoordinates() {
-<span class="nc" id="L139">        return this.roundXCoordinates;</span>
+<span class="fc" id="L139">        return this.roundXCoordinates;</span>
     }
 
     /**
@@ -151,9 +151,9 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      * @see #getRoundXCoordinates()
      */
     public void setRoundXCoordinates(boolean round) {
-<span class="nc" id="L154">        this.roundXCoordinates = round;</span>
-<span class="nc" id="L155">        fireChangeEvent();</span>
-<span class="nc" id="L156">    }</span>
+<span class="fc" id="L154">        this.roundXCoordinates = round;</span>
+<span class="fc" id="L155">        fireChangeEvent();</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Returns the range of values the renderer requires to display all the
@@ -166,23 +166,23 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      */
     @Override
     public Range findRangeBounds(XYDataset dataset) {
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L170">            return null;</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L170">            return null;</span>
         }
-<span class="nc" id="L172">        double min = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L173">        double max = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L174">        TableXYDataset d = (TableXYDataset) dataset;</span>
-<span class="nc" id="L175">        int itemCount = d.getItemCount();</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">        for (int i = 0; i &lt; itemCount; i++) {</span>
-<span class="nc" id="L177">            double[] stackValues = getStackValues((TableXYDataset) dataset,</span>
-<span class="nc" id="L178">                    d.getSeriesCount(), i);</span>
-<span class="nc" id="L179">            min = Math.min(min, stackValues[0]);</span>
-<span class="nc" id="L180">            max = Math.max(max, stackValues[1]);</span>
+<span class="fc" id="L172">        double min = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L173">        double max = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L174">        TableXYDataset d = (TableXYDataset) dataset;</span>
+<span class="fc" id="L175">        int itemCount = d.getItemCount();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        for (int i = 0; i &lt; itemCount; i++) {</span>
+<span class="fc" id="L177">            double[] stackValues = getStackValues((TableXYDataset) dataset,</span>
+<span class="fc" id="L178">                    d.getSeriesCount(), i);</span>
+<span class="fc" id="L179">            min = Math.min(min, stackValues[0]);</span>
+<span class="fc" id="L180">            max = Math.max(max, stackValues[1]);</span>
         }
-<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (min == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L183">            return null;</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (min == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L183">            return null;</span>
         }
-<span class="nc" id="L185">        return new Range(min, max);</span>
+<span class="fc" id="L185">        return new Range(min, max);</span>
     }
 
     /**
@@ -461,19 +461,19 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      */
     private double[] getStackValues(TableXYDataset dataset,
                                     int series, int index) {
-<span class="nc" id="L464">        double[] result = new double[2];</span>
-<span class="nc bnc" id="L465" title="All 2 branches missed.">        for (int i = 0; i &lt; series; i++) {</span>
-<span class="nc" id="L466">            double v = dataset.getYValue(i, index);</span>
-<span class="nc bnc" id="L467" title="All 2 branches missed.">            if (!Double.isNaN(v)) {</span>
-<span class="nc bnc" id="L468" title="All 2 branches missed.">                if (v &gt;= 0.0) {</span>
-<span class="nc" id="L469">                    result[1] += v;</span>
+<span class="fc" id="L464">        double[] result = new double[2];</span>
+<span class="fc bfc" id="L465" title="All 2 branches covered.">        for (int i = 0; i &lt; series; i++) {</span>
+<span class="fc" id="L466">            double v = dataset.getYValue(i, index);</span>
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">            if (!Double.isNaN(v)) {</span>
+<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                if (v &gt;= 0.0) {</span>
+<span class="fc" id="L469">                    result[1] += v;</span>
                 }
                 else {
 <span class="nc" id="L472">                    result[0] += v;</span>
                 }
             }
         }
-<span class="nc" id="L476">        return result;</span>
+<span class="fc" id="L476">        return result;</span>
     }
 
     /**
@@ -528,17 +528,17 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L531" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L531" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L532">            return true;</span>
         }
-<span class="nc bnc" id="L534" title="All 2 branches missed.">        if (!(obj instanceof StackedXYAreaRenderer2)) {</span>
+<span class="pc bpc" id="L534" title="1 of 2 branches missed.">        if (!(obj instanceof StackedXYAreaRenderer2)) {</span>
 <span class="nc" id="L535">            return false;</span>
         }
-<span class="nc" id="L537">        StackedXYAreaRenderer2 that = (StackedXYAreaRenderer2) obj;</span>
-<span class="nc bnc" id="L538" title="All 2 branches missed.">        if (this.roundXCoordinates != that.roundXCoordinates) {</span>
-<span class="nc" id="L539">            return false;</span>
+<span class="fc" id="L537">        StackedXYAreaRenderer2 that = (StackedXYAreaRenderer2) obj;</span>
+<span class="fc bfc" id="L538" title="All 2 branches covered.">        if (this.roundXCoordinates != that.roundXCoordinates) {</span>
+<span class="fc" id="L539">            return false;</span>
         }
-<span class="nc" id="L541">        return super.equals(obj);</span>
+<span class="fc" id="L541">        return super.equals(obj);</span>
     }
 
     /**
@@ -550,8 +550,8 @@ public class StackedXYAreaRenderer2 extends XYAreaRenderer2
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L553">        return super.clone();</span>
+<span class="fc" id="L553">        return super.clone();</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

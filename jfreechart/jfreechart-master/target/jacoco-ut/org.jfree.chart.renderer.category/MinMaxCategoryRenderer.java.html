@@ -107,32 +107,32 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
     private static final long serialVersionUID = 2935615937671064911L;
 
     /** A flag indicating whether or not lines are drawn between XY points. */
-<span class="nc" id="L110">    private boolean plotLines = false;</span>
+<span class="fc" id="L110">    private boolean plotLines = false;</span>
 
     /**
      * The paint of the line between the minimum value and the maximum value.
      */
-<span class="nc" id="L115">    private transient Paint groupPaint = Color.BLACK;</span>
+<span class="fc" id="L115">    private transient Paint groupPaint = Color.BLACK;</span>
 
     /**
      * The stroke of the line between the minimum value and the maximum value.
      */
-<span class="nc" id="L120">    private transient Stroke groupStroke = new BasicStroke(1.0f);</span>
+<span class="fc" id="L120">    private transient Stroke groupStroke = new BasicStroke(1.0f);</span>
 
     /** The icon used to indicate the minimum value.*/
-<span class="nc" id="L123">    private transient Icon minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,</span>
+<span class="fc" id="L123">    private transient Icon minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,</span>
             360, Arc2D.OPEN), null, Color.BLACK);
 
     /** The icon used to indicate the maximum value.*/
-<span class="nc" id="L127">    private transient Icon maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,</span>
+<span class="fc" id="L127">    private transient Icon maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0,</span>
             360, Arc2D.OPEN), null, Color.BLACK);
 
     /** The icon used to indicate the values.*/
-<span class="nc" id="L131">    private transient Icon objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0),</span>
+<span class="fc" id="L131">    private transient Icon objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0),</span>
             false, true);
 
     /** The last category. */
-<span class="nc" id="L135">    private int lastCategory = -1;</span>
+<span class="fc" id="L135">    private int lastCategory = -1;</span>
 
     /** The minimum. */
     private double min;
@@ -144,8 +144,8 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * Default constructor.
      */
     public MinMaxCategoryRenderer() {
-<span class="nc" id="L147">        super();</span>
-<span class="nc" id="L148">    }</span>
+<span class="fc" id="L147">        super();</span>
+<span class="fc" id="L148">    }</span>
 
     /**
      * Gets whether or not lines are drawn between category points.
@@ -169,11 +169,11 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * @see #isDrawLines()
      */
     public void setDrawLines(boolean draw) {
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (this.plotLines != draw) {</span>
-<span class="nc" id="L173">            this.plotLines = draw;</span>
-<span class="nc" id="L174">            fireChangeEvent();</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if (this.plotLines != draw) {</span>
+<span class="fc" id="L173">            this.plotLines = draw;</span>
+<span class="fc" id="L174">            fireChangeEvent();</span>
         }
-<span class="nc" id="L176">    }</span>
+<span class="fc" id="L176">    }</span>
 
     /**
      * Returns the paint used to draw the line between the minimum and maximum
@@ -197,10 +197,10 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * @see #getGroupPaint()
      */
     public void setGroupPaint(Paint paint) {
-<span class="nc" id="L200">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L201">        this.groupPaint = paint;</span>
-<span class="nc" id="L202">        fireChangeEvent();</span>
-<span class="nc" id="L203">    }</span>
+<span class="fc" id="L200">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L201">        this.groupPaint = paint;</span>
+<span class="fc" id="L202">        fireChangeEvent();</span>
+<span class="fc" id="L203">    }</span>
 
     /**
      * Returns the stroke used to draw the line between the minimum and maximum
@@ -222,10 +222,10 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * @param stroke the new stroke ({@code null} not permitted).
      */
     public void setGroupStroke(Stroke stroke) {
-<span class="nc" id="L225">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L226">        this.groupStroke = stroke;</span>
-<span class="nc" id="L227">        fireChangeEvent();</span>
-<span class="nc" id="L228">    }</span>
+<span class="fc" id="L225">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L226">        this.groupStroke = stroke;</span>
+<span class="fc" id="L227">        fireChangeEvent();</span>
+<span class="fc" id="L228">    }</span>
 
     /**
      * Returns the icon drawn for each data item.
@@ -327,27 +327,27 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
             int pass) {
 
         // first check the number we are plotting...
-<span class="nc" id="L330">        Number value = dataset.getValue(row, column);</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="fc" id="L330">        Number value = dataset.getValue(row, column);</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        if (value != null) {</span>
             // current data point...
-<span class="nc" id="L333">            double x1 = domainAxis.getCategoryMiddle(column, getColumnCount(),</span>
-<span class="nc" id="L334">                    dataArea, plot.getDomainAxisEdge());</span>
-<span class="nc" id="L335">            double y1 = rangeAxis.valueToJava2D(value.doubleValue(), dataArea,</span>
-<span class="nc" id="L336">                    plot.getRangeAxisEdge());</span>
-<span class="nc" id="L337">            Shape hotspot = new Rectangle2D.Double(x1 - 4, y1 - 4, 8.0, 8.0);</span>
+<span class="fc" id="L333">            double x1 = domainAxis.getCategoryMiddle(column, getColumnCount(),</span>
+<span class="fc" id="L334">                    dataArea, plot.getDomainAxisEdge());</span>
+<span class="fc" id="L335">            double y1 = rangeAxis.valueToJava2D(value.doubleValue(), dataArea,</span>
+<span class="fc" id="L336">                    plot.getRangeAxisEdge());</span>
+<span class="fc" id="L337">            Shape hotspot = new Rectangle2D.Double(x1 - 4, y1 - 4, 8.0, 8.0);</span>
 
-<span class="nc" id="L339">            g2.setPaint(getItemPaint(row, column));</span>
-<span class="nc" id="L340">            g2.setStroke(getItemStroke(row, column));</span>
+<span class="fc" id="L339">            g2.setPaint(getItemPaint(row, column));</span>
+<span class="fc" id="L340">            g2.setStroke(getItemStroke(row, column));</span>
 
-<span class="nc" id="L342">            PlotOrientation orient = plot.getOrientation();</span>
-<span class="nc bnc" id="L343" title="All 2 branches missed.">            if (orient == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L344">                this.objectIcon.paintIcon(null, g2, (int) x1, (int) y1);</span>
+<span class="fc" id="L342">            PlotOrientation orient = plot.getOrientation();</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">            if (orient == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L344">                this.objectIcon.paintIcon(null, g2, (int) x1, (int) y1);</span>
             }
             else {
 <span class="nc" id="L347">                this.objectIcon.paintIcon(null, g2, (int) y1, (int) x1);</span>
             }
 
-<span class="nc bnc" id="L350" title="All 2 branches missed.">            if (this.lastCategory == column) {</span>
+<span class="pc bpc" id="L350" title="1 of 2 branches missed.">            if (this.lastCategory == column) {</span>
 <span class="nc bnc" id="L351" title="All 2 branches missed.">                if (this.min &gt; value.doubleValue()) {</span>
 <span class="nc" id="L352">                    this.min = value.doubleValue();</span>
                 }
@@ -377,13 +377,13 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
 <span class="nc" id="L377">                }</span>
             }
             else {  // reset the min and max
-<span class="nc" id="L380">                this.lastCategory = column;</span>
-<span class="nc" id="L381">                this.min = value.doubleValue();</span>
-<span class="nc" id="L382">                this.max = value.doubleValue();</span>
+<span class="fc" id="L380">                this.lastCategory = column;</span>
+<span class="fc" id="L381">                this.min = value.doubleValue();</span>
+<span class="fc" id="L382">                this.max = value.doubleValue();</span>
             }
 
             // connect to the previous point
-<span class="nc bnc" id="L386" title="All 2 branches missed.">            if (this.plotLines) {</span>
+<span class="pc bpc" id="L386" title="1 of 2 branches missed.">            if (this.plotLines) {</span>
 <span class="nc bnc" id="L387" title="All 2 branches missed.">                if (column != 0) {</span>
 <span class="nc" id="L388">                    Number previousValue = dataset.getValue(row, column - 1);</span>
 <span class="nc bnc" id="L389" title="All 2 branches missed.">                    if (previousValue != null) {</span>
@@ -409,12 +409,12 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
             }
 
             // add an item entity, if this information is being collected
-<span class="nc" id="L412">            EntityCollection entities = state.getEntityCollection();</span>
-<span class="nc bnc" id="L413" title="All 2 branches missed.">            if (entities != null) {</span>
+<span class="fc" id="L412">            EntityCollection entities = state.getEntityCollection();</span>
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">            if (entities != null) {</span>
 <span class="nc" id="L414">                addItemEntity(entities, dataset, row, column, hotspot);</span>
             }
         }
-<span class="nc" id="L417">    }</span>
+<span class="fc" id="L417">    }</span>
 
     /**
      * Tests this instance for equality with an arbitrary object.  The icon
@@ -429,23 +429,23 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L432" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L433">            return true;</span>
         }
-<span class="nc bnc" id="L435" title="All 2 branches missed.">        if (!(obj instanceof MinMaxCategoryRenderer)) {</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">        if (!(obj instanceof MinMaxCategoryRenderer)) {</span>
 <span class="nc" id="L436">            return false;</span>
         }
-<span class="nc" id="L438">        MinMaxCategoryRenderer that = (MinMaxCategoryRenderer) obj;</span>
-<span class="nc bnc" id="L439" title="All 2 branches missed.">        if (this.plotLines != that.plotLines) {</span>
-<span class="nc" id="L440">            return false;</span>
+<span class="fc" id="L438">        MinMaxCategoryRenderer that = (MinMaxCategoryRenderer) obj;</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">        if (this.plotLines != that.plotLines) {</span>
+<span class="fc" id="L440">            return false;</span>
         }
-<span class="nc bnc" id="L442" title="All 2 branches missed.">        if (!PaintUtils.equal(this.groupPaint, that.groupPaint)) {</span>
-<span class="nc" id="L443">            return false;</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">        if (!PaintUtils.equal(this.groupPaint, that.groupPaint)) {</span>
+<span class="fc" id="L443">            return false;</span>
         }
-<span class="nc bnc" id="L445" title="All 2 branches missed.">        if (!this.groupStroke.equals(that.groupStroke)) {</span>
-<span class="nc" id="L446">            return false;</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (!this.groupStroke.equals(that.groupStroke)) {</span>
+<span class="fc" id="L446">            return false;</span>
         }
-<span class="nc" id="L448">        return super.equals(obj);</span>
+<span class="fc" id="L448">        return super.equals(obj);</span>
     }
 
     /**
@@ -459,10 +459,10 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      */
     private Icon getIcon(Shape shape, final Paint fillPaint, final Paint outlinePaint) {
 
-<span class="nc" id="L462">        final int width = shape.getBounds().width;</span>
-<span class="nc" id="L463">        final int height = shape.getBounds().height;</span>
-<span class="nc" id="L464">        final GeneralPath path = new GeneralPath(shape);</span>
-<span class="nc" id="L465">        return new Icon() {</span>
+<span class="fc" id="L462">        final int width = shape.getBounds().width;</span>
+<span class="fc" id="L463">        final int height = shape.getBounds().height;</span>
+<span class="fc" id="L464">        final GeneralPath path = new GeneralPath(shape);</span>
+<span class="fc" id="L465">        return new Icon() {</span>
             @Override
             public void paintIcon(Component c, Graphics g, int x, int y) {
 <span class="nc" id="L468">                Graphics2D g2 = (Graphics2D) g;</span>
@@ -500,22 +500,22 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * @return The icon.
      */
     private Icon getIcon(Shape shape, final boolean fill, final boolean outline) {
-<span class="nc" id="L503">        final int width = shape.getBounds().width;</span>
-<span class="nc" id="L504">        final int height = shape.getBounds().height;</span>
-<span class="nc" id="L505">        final GeneralPath path = new GeneralPath(shape);</span>
-<span class="nc" id="L506">        return new Icon() {</span>
+<span class="fc" id="L503">        final int width = shape.getBounds().width;</span>
+<span class="fc" id="L504">        final int height = shape.getBounds().height;</span>
+<span class="fc" id="L505">        final GeneralPath path = new GeneralPath(shape);</span>
+<span class="fc" id="L506">        return new Icon() {</span>
             @Override
             public void paintIcon(Component c, Graphics g, int x, int y) {
-<span class="nc" id="L509">                Graphics2D g2 = (Graphics2D) g;</span>
-<span class="nc" id="L510">                path.transform(AffineTransform.getTranslateInstance(x, y));</span>
-<span class="nc bnc" id="L511" title="All 2 branches missed.">                if (fill) {</span>
+<span class="fc" id="L509">                Graphics2D g2 = (Graphics2D) g;</span>
+<span class="fc" id="L510">                path.transform(AffineTransform.getTranslateInstance(x, y));</span>
+<span class="pc bpc" id="L511" title="1 of 2 branches missed.">                if (fill) {</span>
 <span class="nc" id="L512">                    g2.fill(path);</span>
                 }
-<span class="nc bnc" id="L514" title="All 2 branches missed.">                if (outline) {</span>
-<span class="nc" id="L515">                    g2.draw(path);</span>
+<span class="pc bpc" id="L514" title="1 of 2 branches missed.">                if (outline) {</span>
+<span class="fc" id="L515">                    g2.draw(path);</span>
                 }
-<span class="nc" id="L517">                path.transform(AffineTransform.getTranslateInstance(-x, -y));</span>
-<span class="nc" id="L518">            }</span>
+<span class="fc" id="L517">                path.transform(AffineTransform.getTranslateInstance(-x, -y));</span>
+<span class="fc" id="L518">            }</span>
 
             @Override
             public int getIconWidth() {
@@ -537,10 +537,10 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L540">        stream.defaultWriteObject();</span>
-<span class="nc" id="L541">        SerialUtils.writeStroke(this.groupStroke, stream);</span>
-<span class="nc" id="L542">        SerialUtils.writePaint(this.groupPaint, stream);</span>
-<span class="nc" id="L543">    }</span>
+<span class="fc" id="L540">        stream.defaultWriteObject();</span>
+<span class="fc" id="L541">        SerialUtils.writeStroke(this.groupStroke, stream);</span>
+<span class="fc" id="L542">        SerialUtils.writePaint(this.groupPaint, stream);</span>
+<span class="fc" id="L543">    }</span>
 
     /**
      * Provides serialization support.
@@ -552,16 +552,16 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L555">        stream.defaultReadObject();</span>
-<span class="nc" id="L556">        this.groupStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L557">        this.groupPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L555">        stream.defaultReadObject();</span>
+<span class="fc" id="L556">        this.groupStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L557">        this.groupPaint = SerialUtils.readPaint(stream);</span>
 
-<span class="nc" id="L559">        this.minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360,</span>
+<span class="fc" id="L559">        this.minIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360,</span>
                 Arc2D.OPEN), null, Color.BLACK);
-<span class="nc" id="L561">        this.maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360,</span>
+<span class="fc" id="L561">        this.maxIcon = getIcon(new Arc2D.Double(-4, -4, 8, 8, 0, 360,</span>
                 Arc2D.OPEN), null, Color.BLACK);
-<span class="nc" id="L563">        this.objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0), false, true);</span>
-<span class="nc" id="L564">    }</span>
+<span class="fc" id="L563">        this.objectIcon = getIcon(new Line2D.Double(-4, 0, 4, 0), false, true);</span>
+<span class="fc" id="L564">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -117,10 +117,10 @@ public class AreaRenderer extends AbstractCategoryItemRenderer
      * Creates a new renderer.
      */
     public AreaRenderer() {
-<span class="nc" id="L120">        super();</span>
-<span class="nc" id="L121">        this.endType = AreaRendererEndType.TAPER;</span>
-<span class="nc" id="L122">        setDefaultLegendShape(new Rectangle2D.Double(-4.0, -4.0, 8.0, 8.0));</span>
-<span class="nc" id="L123">    }</span>
+<span class="fc" id="L120">        super();</span>
+<span class="fc" id="L121">        this.endType = AreaRendererEndType.TAPER;</span>
+<span class="fc" id="L122">        setDefaultLegendShape(new Rectangle2D.Double(-4.0, -4.0, 8.0, 8.0));</span>
+<span class="fc" id="L123">    }</span>
 
     /**
      * Returns a token that controls how the renderer draws the end points.
@@ -143,10 +143,10 @@ public class AreaRenderer extends AbstractCategoryItemRenderer
      * @see #getEndType()
      */
     public void setEndType(AreaRendererEndType type) {
-<span class="nc" id="L146">        Args.nullNotPermitted(type, &quot;type&quot;);</span>
-<span class="nc" id="L147">        this.endType = type;</span>
-<span class="nc" id="L148">        fireChangeEvent();</span>
-<span class="nc" id="L149">    }</span>
+<span class="fc" id="L146">        Args.nullNotPermitted(type, &quot;type&quot;);</span>
+<span class="fc" id="L147">        this.endType = type;</span>
+<span class="fc" id="L148">        fireChangeEvent();</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Returns a legend item for a series.
@@ -160,47 +160,47 @@ public class AreaRenderer extends AbstractCategoryItemRenderer
     public LegendItem getLegendItem(int datasetIndex, int series) {
 
         // if there is no plot, there is no dataset to access...
-<span class="nc" id="L163">        CategoryPlot cp = getPlot();</span>
-<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (cp == null) {</span>
+<span class="fc" id="L163">        CategoryPlot cp = getPlot();</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (cp == null) {</span>
 <span class="nc" id="L165">            return null;</span>
         }
 
         // check that a legend item needs to be displayed...
-<span class="nc bnc" id="L169" title="All 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
+<span class="pc bpc" id="L169" title="2 of 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
 <span class="nc" id="L170">            return null;</span>
         }
 
-<span class="nc" id="L173">        CategoryDataset dataset = cp.getDataset(datasetIndex);</span>
-<span class="nc" id="L174">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
+<span class="fc" id="L173">        CategoryDataset dataset = cp.getDataset(datasetIndex);</span>
+<span class="fc" id="L174">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
                 series);
-<span class="nc" id="L176">        String description = label;</span>
-<span class="nc" id="L177">        String toolTipText = null;</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L176">        String description = label;</span>
+<span class="fc" id="L177">        String toolTipText = null;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L179">            toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                     dataset, series);
         }
-<span class="nc" id="L182">        String urlText = null;</span>
-<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L182">        String urlText = null;</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L184">            urlText = getLegendItemURLGenerator().generateLabel(dataset,</span>
                     series);
         }
-<span class="nc" id="L187">        Shape shape = lookupLegendShape(series);</span>
-<span class="nc" id="L188">        Paint paint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L189">        Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
-<span class="nc" id="L190">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
+<span class="fc" id="L187">        Shape shape = lookupLegendShape(series);</span>
+<span class="fc" id="L188">        Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L189">        Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
+<span class="fc" id="L190">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
 
-<span class="nc" id="L192">        LegendItem result = new LegendItem(label, description, toolTipText,</span>
+<span class="fc" id="L192">        LegendItem result = new LegendItem(label, description, toolTipText,</span>
                 urlText, shape, paint, outlineStroke, outlinePaint);
-<span class="nc" id="L194">        result.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L195">        Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (labelPaint != null) {</span>
+<span class="fc" id="L194">        result.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L195">        Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (labelPaint != null) {</span>
 <span class="nc" id="L197">            result.setLabelPaint(labelPaint);</span>
         }
-<span class="nc" id="L199">        result.setDataset(dataset);</span>
-<span class="nc" id="L200">        result.setDatasetIndex(datasetIndex);</span>
-<span class="nc" id="L201">        result.setSeriesKey(dataset.getRowKey(series));</span>
-<span class="nc" id="L202">        result.setSeriesIndex(series);</span>
-<span class="nc" id="L203">        return result;</span>
+<span class="fc" id="L199">        result.setDataset(dataset);</span>
+<span class="fc" id="L200">        result.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L201">        result.setSeriesKey(dataset.getRowKey(series));</span>
+<span class="fc" id="L202">        result.setSeriesIndex(series);</span>
+<span class="fc" id="L203">        return result;</span>
 
     }
 
@@ -342,17 +342,17 @@ public class AreaRenderer extends AbstractCategoryItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L346">            return true;</span>
         }
-<span class="nc bnc" id="L348" title="All 2 branches missed.">        if (!(obj instanceof AreaRenderer)) {</span>
-<span class="nc" id="L349">            return false;</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (!(obj instanceof AreaRenderer)) {</span>
+<span class="fc" id="L349">            return false;</span>
         }
-<span class="nc" id="L351">        AreaRenderer that = (AreaRenderer) obj;</span>
-<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (!this.endType.equals(that.endType)) {</span>
-<span class="nc" id="L353">            return false;</span>
+<span class="fc" id="L351">        AreaRenderer that = (AreaRenderer) obj;</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (!this.endType.equals(that.endType)) {</span>
+<span class="fc" id="L353">            return false;</span>
         }
-<span class="nc" id="L355">        return super.equals(obj);</span>
+<span class="fc" id="L355">        return super.equals(obj);</span>
     }
 
     /**
@@ -364,8 +364,8 @@ public class AreaRenderer extends AbstractCategoryItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L367">        return super.clone();</span>
+<span class="fc" id="L367">        return super.clone();</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

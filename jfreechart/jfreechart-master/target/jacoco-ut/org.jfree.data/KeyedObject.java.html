@@ -66,10 +66,10 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
      * @param key  the key.
      * @param object  the object ({@code null} permitted).
      */
-<span class="nc" id="L69">    public KeyedObject(Comparable key, Object object) {</span>
-<span class="nc" id="L70">        this.key = key;</span>
-<span class="nc" id="L71">        this.object = object;</span>
-<span class="nc" id="L72">    }</span>
+<span class="fc" id="L69">    public KeyedObject(Comparable key, Object object) {</span>
+<span class="fc" id="L70">        this.key = key;</span>
+<span class="fc" id="L71">        this.object = object;</span>
+<span class="fc" id="L72">    }</span>
 
     /**
      * Returns the key.
@@ -77,7 +77,7 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
      * @return The key.
      */
     public Comparable getKey() {
-<span class="nc" id="L80">        return this.key;</span>
+<span class="fc" id="L80">        return this.key;</span>
     }
 
     /**
@@ -86,7 +86,7 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
      * @return The object (possibly {@code null}).
      */
     public Object getObject() {
-<span class="nc" id="L89">        return this.object;</span>
+<span class="fc" id="L89">        return this.object;</span>
     }
 
     /**
@@ -95,8 +95,8 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
      * @param object  the object ({@code null} permitted).
      */
     public void setObject(Object object) {
-<span class="nc" id="L98">        this.object = object;</span>
-<span class="nc" id="L99">    }</span>
+<span class="fc" id="L98">        this.object = object;</span>
+<span class="fc" id="L99">    }</span>
 
     /**
      * Returns a clone of this object.  It is assumed that the key is an
@@ -110,12 +110,12 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L113">        KeyedObject clone = (KeyedObject) super.clone();</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (this.object instanceof PublicCloneable) {</span>
-<span class="nc" id="L115">            PublicCloneable pc = (PublicCloneable) this.object;</span>
-<span class="nc" id="L116">            clone.object = pc.clone();</span>
+<span class="fc" id="L113">        KeyedObject clone = (KeyedObject) super.clone();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (this.object instanceof PublicCloneable) {</span>
+<span class="fc" id="L115">            PublicCloneable pc = (PublicCloneable) this.object;</span>
+<span class="fc" id="L116">            clone.object = pc.clone();</span>
         }
-<span class="nc" id="L118">        return clone;</span>
+<span class="fc" id="L118">        return clone;</span>
     }
 
     /**
@@ -128,24 +128,24 @@ public class KeyedObject implements Cloneable, PublicCloneable, Serializable {
     @Override
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L132">            return true;</span>
         }
 
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (!(obj instanceof KeyedObject)) {</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (!(obj instanceof KeyedObject)) {</span>
 <span class="nc" id="L136">            return false;</span>
         }
-<span class="nc" id="L138">        KeyedObject that = (KeyedObject) obj;</span>
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.key, that.key)) {</span>
-<span class="nc" id="L140">            return false;</span>
+<span class="fc" id="L138">        KeyedObject that = (KeyedObject) obj;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.key, that.key)) {</span>
+<span class="fc" id="L140">            return false;</span>
         }
 
-<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.object, that.object)) {</span>
-<span class="nc" id="L144">            return false;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.object, that.object)) {</span>
+<span class="fc" id="L144">            return false;</span>
         }
 
-<span class="nc" id="L147">        return true;</span>
+<span class="fc" id="L147">        return true;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

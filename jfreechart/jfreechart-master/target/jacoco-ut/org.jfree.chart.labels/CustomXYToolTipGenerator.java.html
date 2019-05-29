@@ -63,14 +63,14 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
     private static final long serialVersionUID = 8636030004670141362L;
 
     /** Storage for the tooltip lists. */
-<span class="nc" id="L66">    private List toolTipSeries = new java.util.ArrayList();</span>
+<span class="fc" id="L66">    private List toolTipSeries = new java.util.ArrayList();</span>
 
     /**
      * Default constructor.
      */
     public CustomXYToolTipGenerator() {
-<span class="nc" id="L72">        super();</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L72">        super();</span>
+<span class="fc" id="L73">    }</span>
 
     /**
      * Returns the number of tool tip lists stored by the renderer.
@@ -78,7 +78,7 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      * @return The list count.
      */
     public int getListCount() {
-<span class="nc" id="L81">        return this.toolTipSeries.size();</span>
+<span class="fc" id="L81">        return this.toolTipSeries.size();</span>
     }
 
     /**
@@ -90,12 +90,12 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      */
     public int getToolTipCount(int list) {
 
-<span class="nc" id="L93">        int result = 0;</span>
-<span class="nc" id="L94">        List tooltips = (List) this.toolTipSeries.get(list);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (tooltips != null) {</span>
-<span class="nc" id="L96">            result = tooltips.size();</span>
+<span class="fc" id="L93">        int result = 0;</span>
+<span class="fc" id="L94">        List tooltips = (List) this.toolTipSeries.get(list);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">        if (tooltips != null) {</span>
+<span class="fc" id="L96">            result = tooltips.size();</span>
         }
-<span class="nc" id="L98">        return result;</span>
+<span class="fc" id="L98">        return result;</span>
     }
 
     /**
@@ -108,18 +108,18 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      */
     public String getToolTipText(int series, int item) {
 
-<span class="nc" id="L111">        String result = null;</span>
+<span class="fc" id="L111">        String result = null;</span>
 
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (series &lt; getListCount()) {</span>
-<span class="nc" id="L114">            List tooltips = (List) this.toolTipSeries.get(series);</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (tooltips != null) {</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (item &lt; tooltips.size()) {</span>
-<span class="nc" id="L117">                    result = (String) tooltips.get(item);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (series &lt; getListCount()) {</span>
+<span class="fc" id="L114">            List tooltips = (List) this.toolTipSeries.get(series);</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">            if (tooltips != null) {</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">                if (item &lt; tooltips.size()) {</span>
+<span class="fc" id="L117">                    result = (String) tooltips.get(item);</span>
                 }
             }
         }
 
-<span class="nc" id="L122">        return result;</span>
+<span class="fc" id="L122">        return result;</span>
     }
 
     /**
@@ -128,8 +128,8 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      * @param toolTips  the list of tool tips.
      */
     public void addToolTipSeries(List toolTips) {
-<span class="nc" id="L131">        this.toolTipSeries.add(toolTips);</span>
-<span class="nc" id="L132">    }</span>
+<span class="fc" id="L131">        this.toolTipSeries.add(toolTips);</span>
+<span class="fc" id="L132">    }</span>
 
     /**
      * Generates a tool tip text item for a particular item within a series.
@@ -154,12 +154,12 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L157">        CustomXYToolTipGenerator clone</span>
-<span class="nc" id="L158">            = (CustomXYToolTipGenerator) super.clone();</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (this.toolTipSeries != null) {</span>
-<span class="nc" id="L160">            clone.toolTipSeries = new java.util.ArrayList(this.toolTipSeries);</span>
+<span class="fc" id="L157">        CustomXYToolTipGenerator clone</span>
+<span class="fc" id="L158">            = (CustomXYToolTipGenerator) super.clone();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (this.toolTipSeries != null) {</span>
+<span class="fc" id="L160">            clone.toolTipSeries = new java.util.ArrayList(this.toolTipSeries);</span>
         }
-<span class="nc" id="L162">        return clone;</span>
+<span class="fc" id="L162">        return clone;</span>
     }
 
     /**
@@ -171,28 +171,28 @@ public class CustomXYToolTipGenerator implements XYToolTipGenerator,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L175">            return true;</span>
         }
-<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (obj instanceof CustomXYToolTipGenerator) {</span>
-<span class="nc" id="L178">            CustomXYToolTipGenerator generator = (CustomXYToolTipGenerator) obj;</span>
-<span class="nc" id="L179">            boolean result = true;</span>
-<span class="nc bnc" id="L180" title="All 2 branches missed.">            for (int series = 0; series &lt; getListCount(); series++) {</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">                for (int item = 0; item &lt; getToolTipCount(series); item++) {</span>
-<span class="nc" id="L182">                    String t1 = getToolTipText(series, item);</span>
-<span class="nc" id="L183">                    String t2 = generator.getToolTipText(series, item);</span>
-<span class="nc bnc" id="L184" title="All 2 branches missed.">                    if (t1 != null) {</span>
-<span class="nc bnc" id="L185" title="All 4 branches missed.">                        result = result &amp;&amp; t1.equals(t2);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if (obj instanceof CustomXYToolTipGenerator) {</span>
+<span class="fc" id="L178">            CustomXYToolTipGenerator generator = (CustomXYToolTipGenerator) obj;</span>
+<span class="fc" id="L179">            boolean result = true;</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">            for (int series = 0; series &lt; getListCount(); series++) {</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                for (int item = 0; item &lt; getToolTipCount(series); item++) {</span>
+<span class="fc" id="L182">                    String t1 = getToolTipText(series, item);</span>
+<span class="fc" id="L183">                    String t2 = generator.getToolTipText(series, item);</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">                    if (t1 != null) {</span>
+<span class="pc bpc" id="L185" title="2 of 4 branches missed.">                        result = result &amp;&amp; t1.equals(t2);</span>
                     }
                     else {
 <span class="nc bnc" id="L188" title="All 4 branches missed.">                        result = result &amp;&amp; (t2 == null);</span>
                     }
                 }
             }
-<span class="nc" id="L192">            return result;</span>
+<span class="fc" id="L192">            return result;</span>
         }
 <span class="nc" id="L194">        return false;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

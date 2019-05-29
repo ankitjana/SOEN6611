@@ -116,14 +116,14 @@ public class CategoryStepRenderer extends AbstractCategoryItemRenderer
      * A flag that controls whether or not the steps for multiple series are
      * staggered.
      */
-<span class="nc" id="L119">    private boolean stagger = false;</span>
+<span class="fc" id="L119">    private boolean stagger = false;</span>
 
     /**
      * Creates a new renderer (stagger defaults to {@code false}).
      */
     public CategoryStepRenderer() {
-<span class="nc" id="L125">        this(false);</span>
-<span class="nc" id="L126">    }</span>
+<span class="fc" id="L125">        this(false);</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Creates a new renderer.
@@ -131,10 +131,10 @@ public class CategoryStepRenderer extends AbstractCategoryItemRenderer
      * @param stagger  should the horizontal part of the step be staggered by
      *                 series?
      */
-<span class="nc" id="L134">    public CategoryStepRenderer(boolean stagger) {</span>
-<span class="nc" id="L135">        this.stagger = stagger;</span>
-<span class="nc" id="L136">        setDefaultLegendShape(new Rectangle2D.Double(-4.0, -3.0, 8.0, 6.0));</span>
-<span class="nc" id="L137">    }</span>
+<span class="fc" id="L134">    public CategoryStepRenderer(boolean stagger) {</span>
+<span class="fc" id="L135">        this.stagger = stagger;</span>
+<span class="fc" id="L136">        setDefaultLegendShape(new Rectangle2D.Double(-4.0, -3.0, 8.0, 6.0));</span>
+<span class="fc" id="L137">    }</span>
 
     /**
      * Returns the flag that controls whether the series steps are staggered.
@@ -168,45 +168,45 @@ public class CategoryStepRenderer extends AbstractCategoryItemRenderer
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
 
-<span class="nc" id="L171">        CategoryPlot p = getPlot();</span>
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (p == null) {</span>
+<span class="fc" id="L171">        CategoryPlot p = getPlot();</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if (p == null) {</span>
 <span class="nc" id="L173">            return null;</span>
         }
 
         // check that a legend item needs to be displayed...
-<span class="nc bnc" id="L177" title="All 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
+<span class="pc bpc" id="L177" title="2 of 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
 <span class="nc" id="L178">            return null;</span>
         }
 
-<span class="nc" id="L181">        CategoryDataset dataset = p.getDataset(datasetIndex);</span>
-<span class="nc" id="L182">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
+<span class="fc" id="L181">        CategoryDataset dataset = p.getDataset(datasetIndex);</span>
+<span class="fc" id="L182">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
                 series);
-<span class="nc" id="L184">        String description = label;</span>
-<span class="nc" id="L185">        String toolTipText = null;</span>
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L184">        String description = label;</span>
+<span class="fc" id="L185">        String toolTipText = null;</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L187">            toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                     dataset, series);
         }
-<span class="nc" id="L190">        String urlText = null;</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L190">        String urlText = null;</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L192">            urlText = getLegendItemURLGenerator().generateLabel(dataset,</span>
                     series);
         }
-<span class="nc" id="L195">        Shape shape = lookupLegendShape(series);</span>
-<span class="nc" id="L196">        Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L195">        Shape shape = lookupLegendShape(series);</span>
+<span class="fc" id="L196">        Paint paint = lookupSeriesPaint(series);</span>
 
-<span class="nc" id="L198">        LegendItem item = new LegendItem(label, description, toolTipText,</span>
+<span class="fc" id="L198">        LegendItem item = new LegendItem(label, description, toolTipText,</span>
                 urlText, shape, paint);
-<span class="nc" id="L200">        item.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L201">        Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (labelPaint != null) {</span>
+<span class="fc" id="L200">        item.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L201">        Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (labelPaint != null) {</span>
 <span class="nc" id="L203">            item.setLabelPaint(labelPaint);</span>
         }
-<span class="nc" id="L205">        item.setSeriesKey(dataset.getRowKey(series));</span>
-<span class="nc" id="L206">        item.setSeriesIndex(series);</span>
-<span class="nc" id="L207">        item.setDataset(dataset);</span>
-<span class="nc" id="L208">        item.setDatasetIndex(datasetIndex);</span>
-<span class="nc" id="L209">        return item;</span>
+<span class="fc" id="L205">        item.setSeriesKey(dataset.getRowKey(series));</span>
+<span class="fc" id="L206">        item.setSeriesIndex(series);</span>
+<span class="fc" id="L207">        item.setDataset(dataset);</span>
+<span class="fc" id="L208">        item.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L209">        return item;</span>
     }
 
     /**
@@ -357,18 +357,18 @@ public class CategoryStepRenderer extends AbstractCategoryItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L360" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L361">            return true;</span>
         }
-<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (!(obj instanceof CategoryStepRenderer)) {</span>
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">        if (!(obj instanceof CategoryStepRenderer)) {</span>
 <span class="nc" id="L364">            return false;</span>
         }
-<span class="nc" id="L366">        CategoryStepRenderer that = (CategoryStepRenderer) obj;</span>
-<span class="nc bnc" id="L367" title="All 2 branches missed.">        if (this.stagger != that.stagger) {</span>
-<span class="nc" id="L368">            return false;</span>
+<span class="fc" id="L366">        CategoryStepRenderer that = (CategoryStepRenderer) obj;</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">        if (this.stagger != that.stagger) {</span>
+<span class="fc" id="L368">            return false;</span>
         }
-<span class="nc" id="L370">        return super.equals(obj);</span>
+<span class="fc" id="L370">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

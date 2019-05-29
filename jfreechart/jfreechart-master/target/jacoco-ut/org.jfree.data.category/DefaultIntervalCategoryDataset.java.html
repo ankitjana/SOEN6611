@@ -92,9 +92,9 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      *                permitted).
      */
     public DefaultIntervalCategoryDataset(double[][] starts, double[][] ends) {
-<span class="nc" id="L95">        this(DataUtils.createNumberArray2D(starts),</span>
-<span class="nc" id="L96">                DataUtils.createNumberArray2D(ends));</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L95">        this(DataUtils.createNumberArray2D(starts),</span>
+<span class="fc" id="L96">                DataUtils.createNumberArray2D(ends));</span>
+<span class="fc" id="L97">    }</span>
 
     /**
      * Constructs a dataset and populates it with data from the array.
@@ -108,8 +108,8 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @param ends  the end values data.
      */
     public DefaultIntervalCategoryDataset(Number[][] starts, Number[][] ends) {
-<span class="nc" id="L111">        this(null, null, starts, ends);</span>
-<span class="nc" id="L112">    }</span>
+<span class="fc" id="L111">        this(null, null, starts, ends);</span>
+<span class="fc" id="L112">    }</span>
 
     /**
      * Constructs a DefaultIntervalCategoryDataset, populates it with data
@@ -146,75 +146,75 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public DefaultIntervalCategoryDataset(Comparable[] seriesKeys,
                                           Comparable[] categoryKeys,
                                           Number[][] starts,
-<span class="nc" id="L149">                                          Number[][] ends) {</span>
+<span class="fc" id="L149">                                          Number[][] ends) {</span>
 
-<span class="nc" id="L151">        this.startData = starts;</span>
-<span class="nc" id="L152">        this.endData = ends;</span>
+<span class="fc" id="L151">        this.startData = starts;</span>
+<span class="fc" id="L152">        this.endData = ends;</span>
 
-<span class="nc bnc" id="L154" title="All 4 branches missed.">        if (starts != null &amp;&amp; ends != null) {</span>
+<span class="pc bpc" id="L154" title="2 of 4 branches missed.">        if (starts != null &amp;&amp; ends != null) {</span>
 
-<span class="nc" id="L156">            String baseName = &quot;org.jfree.data.resources.DataPackageResources&quot;;</span>
-<span class="nc" id="L157">            ResourceBundle resources = ResourceBundleWrapper.getBundle(</span>
+<span class="fc" id="L156">            String baseName = &quot;org.jfree.data.resources.DataPackageResources&quot;;</span>
+<span class="fc" id="L157">            ResourceBundle resources = ResourceBundleWrapper.getBundle(</span>
                     baseName);
 
-<span class="nc" id="L160">            int seriesCount = starts.length;</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (seriesCount != ends.length) {</span>
+<span class="fc" id="L160">            int seriesCount = starts.length;</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">            if (seriesCount != ends.length) {</span>
 <span class="nc" id="L162">                String errMsg = &quot;DefaultIntervalCategoryDataset: the number &quot;</span>
                     + &quot;of series in the start value dataset does &quot;
                     + &quot;not match the number of series in the end &quot;
                     + &quot;value dataset.&quot;;
 <span class="nc" id="L166">                throw new IllegalArgumentException(errMsg);</span>
             }
-<span class="nc bnc" id="L168" title="All 2 branches missed.">            if (seriesCount &gt; 0) {</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            if (seriesCount &gt; 0) {</span>
 
                 // set up the series names...
-<span class="nc bnc" id="L171" title="All 2 branches missed.">                if (seriesKeys != null) {</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">                if (seriesKeys != null) {</span>
 
-<span class="nc bnc" id="L173" title="All 2 branches missed.">                    if (seriesKeys.length != seriesCount) {</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">                    if (seriesKeys.length != seriesCount) {</span>
 <span class="nc" id="L174">                        throw new IllegalArgumentException(</span>
                                 &quot;The number of series keys does not &quot;
                                 + &quot;match the number of series in the data.&quot;);
                     }
 
-<span class="nc" id="L179">                    this.seriesKeys = seriesKeys;</span>
+<span class="fc" id="L179">                    this.seriesKeys = seriesKeys;</span>
                 }
                 else {
-<span class="nc" id="L182">                    String prefix = resources.getString(</span>
+<span class="fc" id="L182">                    String prefix = resources.getString(</span>
                             &quot;series.default-prefix&quot;) + &quot; &quot;;
-<span class="nc" id="L184">                    this.seriesKeys = generateKeys(seriesCount, prefix);</span>
+<span class="fc" id="L184">                    this.seriesKeys = generateKeys(seriesCount, prefix);</span>
                 }
 
                 // set up the category names...
-<span class="nc" id="L188">                int categoryCount = starts[0].length;</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">                if (categoryCount != ends[0].length) {</span>
+<span class="fc" id="L188">                int categoryCount = starts[0].length;</span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">                if (categoryCount != ends[0].length) {</span>
 <span class="nc" id="L190">                    String errMsg = &quot;DefaultIntervalCategoryDataset: the &quot;</span>
                                 + &quot;number of categories in the start value &quot;
                                 + &quot;dataset does not match the number of &quot;
                                 + &quot;categories in the end value dataset.&quot;;
 <span class="nc" id="L194">                    throw new IllegalArgumentException(errMsg);</span>
                 }
-<span class="nc bnc" id="L196" title="All 2 branches missed.">                if (categoryKeys != null) {</span>
-<span class="nc bnc" id="L197" title="All 2 branches missed.">                    if (categoryKeys.length != categoryCount) {</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                if (categoryKeys != null) {</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                    if (categoryKeys.length != categoryCount) {</span>
 <span class="nc" id="L198">                        throw new IllegalArgumentException(</span>
                                 &quot;The number of category keys does not match &quot;
                                 + &quot;the number of categories in the data.&quot;);
                     }
-<span class="nc" id="L202">                    this.categoryKeys = categoryKeys;</span>
+<span class="fc" id="L202">                    this.categoryKeys = categoryKeys;</span>
                 }
                 else {
-<span class="nc" id="L205">                    String prefix = resources.getString(</span>
+<span class="fc" id="L205">                    String prefix = resources.getString(</span>
                             &quot;categories.default-prefix&quot;) + &quot; &quot;;
-<span class="nc" id="L207">                    this.categoryKeys = generateKeys(categoryCount, prefix);</span>
+<span class="fc" id="L207">                    this.categoryKeys = generateKeys(categoryCount, prefix);</span>
                 }
 
-<span class="nc" id="L210">            }</span>
+<span class="fc" id="L210">            }</span>
             else {
-<span class="nc" id="L212">                this.seriesKeys = new Comparable[0];</span>
-<span class="nc" id="L213">                this.categoryKeys = new Comparable[0];</span>
+<span class="fc" id="L212">                this.seriesKeys = new Comparable[0];</span>
+<span class="fc" id="L213">                this.categoryKeys = new Comparable[0];</span>
             }
         }
 
-<span class="nc" id="L217">    }</span>
+<span class="fc" id="L217">    }</span>
 
     /**
      * Returns the number of series in the dataset (possibly zero).
@@ -226,11 +226,11 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L229">        int result = 0;</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (this.startData != null) {</span>
-<span class="nc" id="L231">            result = this.startData.length;</span>
+<span class="fc" id="L229">        int result = 0;</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">        if (this.startData != null) {</span>
+<span class="fc" id="L231">            result = this.startData.length;</span>
         }
-<span class="nc" id="L233">        return result;</span>
+<span class="fc" id="L233">        return result;</span>
     }
 
     /**
@@ -244,14 +244,14 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @see #getSeriesKey(int)
      */
     public int getSeriesIndex(Comparable seriesKey) {
-<span class="nc" id="L247">        int result = -1;</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">        for (int i = 0; i &lt; this.seriesKeys.length; i++) {</span>
-<span class="nc bnc" id="L249" title="All 2 branches missed.">            if (seriesKey.equals(this.seriesKeys[i])) {</span>
-<span class="nc" id="L250">                result = i;</span>
-<span class="nc" id="L251">                break;</span>
+<span class="fc" id="L247">        int result = -1;</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        for (int i = 0; i &lt; this.seriesKeys.length; i++) {</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if (seriesKey.equals(this.seriesKeys[i])) {</span>
+<span class="fc" id="L250">                result = i;</span>
+<span class="fc" id="L251">                break;</span>
             }
         }
-<span class="nc" id="L254">        return result;</span>
+<span class="fc" id="L254">        return result;</span>
     }
 
     /**
@@ -281,14 +281,14 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @see #setCategoryKeys(Comparable[])
      */
     public void setSeriesKeys(Comparable[] seriesKeys) {
-<span class="nc" id="L284">        Args.nullNotPermitted(seriesKeys, &quot;seriesKeys&quot;);</span>
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (seriesKeys.length != getSeriesCount()) {</span>
+<span class="fc" id="L284">        Args.nullNotPermitted(seriesKeys, &quot;seriesKeys&quot;);</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">        if (seriesKeys.length != getSeriesCount()) {</span>
 <span class="nc" id="L286">            throw new IllegalArgumentException(</span>
                     &quot;The number of series keys does not match the data.&quot;);
         }
-<span class="nc" id="L289">        this.seriesKeys = seriesKeys;</span>
-<span class="nc" id="L290">        fireDatasetChanged();</span>
-<span class="nc" id="L291">    }</span>
+<span class="fc" id="L289">        this.seriesKeys = seriesKeys;</span>
+<span class="fc" id="L290">        fireDatasetChanged();</span>
+<span class="fc" id="L291">    }</span>
 
     /**
      * Returns the number of categories in the dataset.
@@ -298,13 +298,13 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @see #getColumnCount()
      */
     public int getCategoryCount() {
-<span class="nc" id="L301">        int result = 0;</span>
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (this.startData != null) {</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (getSeriesCount() &gt; 0) {</span>
-<span class="nc" id="L304">                result = this.startData[0].length;</span>
+<span class="fc" id="L301">        int result = 0;</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (this.startData != null) {</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            if (getSeriesCount() &gt; 0) {</span>
+<span class="fc" id="L304">                result = this.startData[0].length;</span>
             }
         }
-<span class="nc" id="L307">        return result;</span>
+<span class="fc" id="L307">        return result;</span>
     }
 
     /**
@@ -319,11 +319,11 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public List getColumnKeys() {
         // the CategoryDataset interface expects a list of categories, but
         // we've stored them in an array...
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (this.categoryKeys == null) {</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        if (this.categoryKeys == null) {</span>
 <span class="nc" id="L323">            return new ArrayList();</span>
         }
         else {
-<span class="nc" id="L326">            return Collections.unmodifiableList(Arrays.asList(</span>
+<span class="fc" id="L326">            return Collections.unmodifiableList(Arrays.asList(</span>
                     this.categoryKeys));
         }
     }
@@ -338,21 +338,21 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @see #setSeriesKeys(Comparable[])
      */
     public void setCategoryKeys(Comparable[] categoryKeys) {
-<span class="nc" id="L341">        Args.nullNotPermitted(categoryKeys, &quot;categoryKeys&quot;);</span>
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (categoryKeys.length != getCategoryCount()) {</span>
+<span class="fc" id="L341">        Args.nullNotPermitted(categoryKeys, &quot;categoryKeys&quot;);</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">        if (categoryKeys.length != getCategoryCount()) {</span>
 <span class="nc" id="L343">            throw new IllegalArgumentException(</span>
                     &quot;The number of categories does not match the data.&quot;);
         }
-<span class="nc bnc" id="L346" title="All 2 branches missed.">        for (int i = 0; i &lt; categoryKeys.length; i++) {</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">        for (int i = 0; i &lt; categoryKeys.length; i++) {</span>
 <span class="nc bnc" id="L347" title="All 2 branches missed.">            if (categoryKeys[i] == null) {</span>
 <span class="nc" id="L348">                throw new IllegalArgumentException(</span>
                     &quot;DefaultIntervalCategoryDataset.setCategoryKeys(): &quot;
                     + &quot;null category not permitted.&quot;);
             }
         }
-<span class="nc" id="L353">        this.categoryKeys = categoryKeys;</span>
-<span class="nc" id="L354">        fireDatasetChanged();</span>
-<span class="nc" id="L355">    }</span>
+<span class="fc" id="L353">        this.categoryKeys = categoryKeys;</span>
+<span class="fc" id="L354">        fireDatasetChanged();</span>
+<span class="fc" id="L355">    }</span>
 
     /**
      * Returns the data value for one category in a series.
@@ -369,13 +369,13 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Number getValue(Comparable series, Comparable category) {
-<span class="nc" id="L372">        int seriesIndex = getSeriesIndex(series);</span>
-<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (seriesIndex &lt; 0) {</span>
-<span class="nc" id="L374">            throw new UnknownKeyException(&quot;Unknown 'series' key.&quot;);</span>
+<span class="fc" id="L372">        int seriesIndex = getSeriesIndex(series);</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (seriesIndex &lt; 0) {</span>
+<span class="fc" id="L374">            throw new UnknownKeyException(&quot;Unknown 'series' key.&quot;);</span>
         }
-<span class="nc" id="L376">        int itemIndex = getColumnIndex(category);</span>
-<span class="nc bnc" id="L377" title="All 2 branches missed.">        if (itemIndex &lt; 0) {</span>
-<span class="nc" id="L378">            throw new UnknownKeyException(&quot;Unknown 'category' key.&quot;);</span>
+<span class="fc" id="L376">        int itemIndex = getColumnIndex(category);</span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">        if (itemIndex &lt; 0) {</span>
+<span class="fc" id="L378">            throw new UnknownKeyException(&quot;Unknown 'category' key.&quot;);</span>
         }
 <span class="nc" id="L380">        return getValue(seriesIndex, itemIndex);</span>
     }
@@ -395,7 +395,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Number getValue(int series, int category) {
-<span class="nc" id="L398">        return getEndValue(series, category);</span>
+<span class="fc" id="L398">        return getEndValue(series, category);</span>
     }
 
     /**
@@ -411,15 +411,15 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Number getStartValue(Comparable series, Comparable category) {
-<span class="nc" id="L414">        int seriesIndex = getSeriesIndex(series);</span>
-<span class="nc bnc" id="L415" title="All 2 branches missed.">        if (seriesIndex &lt; 0) {</span>
+<span class="fc" id="L414">        int seriesIndex = getSeriesIndex(series);</span>
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (seriesIndex &lt; 0) {</span>
 <span class="nc" id="L416">            throw new UnknownKeyException(&quot;Unknown 'series' key.&quot;);</span>
         }
-<span class="nc" id="L418">        int itemIndex = getColumnIndex(category);</span>
-<span class="nc bnc" id="L419" title="All 2 branches missed.">        if (itemIndex &lt; 0) {</span>
+<span class="fc" id="L418">        int itemIndex = getColumnIndex(category);</span>
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">        if (itemIndex &lt; 0) {</span>
 <span class="nc" id="L420">            throw new UnknownKeyException(&quot;Unknown 'category' key.&quot;);</span>
         }
-<span class="nc" id="L422">        return getStartValue(seriesIndex, itemIndex);</span>
+<span class="fc" id="L422">        return getStartValue(seriesIndex, itemIndex);</span>
     }
 
     /**
@@ -437,20 +437,20 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public Number getStartValue(int series, int category) {
 
         // check arguments...
-<span class="nc bnc" id="L440" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="pc bpc" id="L440" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
 <span class="nc" id="L441">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.getValue(): &quot;
                 + &quot;series index out of range.&quot;);
         }
 
-<span class="nc bnc" id="L446" title="All 4 branches missed.">        if ((category &lt; 0) || (category &gt;= getCategoryCount())) {</span>
+<span class="pc bpc" id="L446" title="2 of 4 branches missed.">        if ((category &lt; 0) || (category &gt;= getCategoryCount())) {</span>
 <span class="nc" id="L447">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.getValue(): &quot;
                 + &quot;category index out of range.&quot;);
         }
 
         // fetch the value...
-<span class="nc" id="L453">        return this.startData[series][category];</span>
+<span class="fc" id="L453">        return this.startData[series][category];</span>
 
     }
 
@@ -466,15 +466,15 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Number getEndValue(Comparable series, Comparable category) {
-<span class="nc" id="L469">        int seriesIndex = getSeriesIndex(series);</span>
-<span class="nc bnc" id="L470" title="All 2 branches missed.">        if (seriesIndex &lt; 0) {</span>
+<span class="fc" id="L469">        int seriesIndex = getSeriesIndex(series);</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">        if (seriesIndex &lt; 0) {</span>
 <span class="nc" id="L471">            throw new UnknownKeyException(&quot;Unknown 'series' key.&quot;);</span>
         }
-<span class="nc" id="L473">        int itemIndex = getColumnIndex(category);</span>
-<span class="nc bnc" id="L474" title="All 2 branches missed.">        if (itemIndex &lt; 0) {</span>
+<span class="fc" id="L473">        int itemIndex = getColumnIndex(category);</span>
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">        if (itemIndex &lt; 0) {</span>
 <span class="nc" id="L475">            throw new UnknownKeyException(&quot;Unknown 'category' key.&quot;);</span>
         }
-<span class="nc" id="L477">        return getEndValue(seriesIndex, itemIndex);</span>
+<span class="fc" id="L477">        return getEndValue(seriesIndex, itemIndex);</span>
     }
 
     /**
@@ -489,19 +489,19 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Number getEndValue(int series, int category) {
-<span class="nc bnc" id="L492" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="pc bpc" id="L492" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
 <span class="nc" id="L493">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.getValue(): &quot;
                 + &quot;series index out of range.&quot;);
         }
 
-<span class="nc bnc" id="L498" title="All 4 branches missed.">        if ((category &lt; 0) || (category &gt;= getCategoryCount())) {</span>
+<span class="pc bpc" id="L498" title="2 of 4 branches missed.">        if ((category &lt; 0) || (category &gt;= getCategoryCount())) {</span>
 <span class="nc" id="L499">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.getValue(): &quot;
                 + &quot;category index out of range.&quot;);
         }
 
-<span class="nc" id="L504">        return this.endData[series][category];</span>
+<span class="fc" id="L504">        return this.endData[series][category];</span>
     }
 
     /**
@@ -517,25 +517,25 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public void setStartValue(int series, Comparable category, Number value) {
 
         // does the series exist?
-<span class="nc bnc" id="L520" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt; getSeriesCount() - 1)) {</span>
-<span class="nc" id="L521">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L520" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt; getSeriesCount() - 1)) {</span>
+<span class="fc" id="L521">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.setValue: &quot;
                 + &quot;series outside valid range.&quot;);
         }
 
         // is the category valid?
-<span class="nc" id="L527">        int categoryIndex = getCategoryIndex(category);</span>
-<span class="nc bnc" id="L528" title="All 2 branches missed.">        if (categoryIndex &lt; 0) {</span>
+<span class="fc" id="L527">        int categoryIndex = getCategoryIndex(category);</span>
+<span class="pc bpc" id="L528" title="1 of 2 branches missed.">        if (categoryIndex &lt; 0) {</span>
 <span class="nc" id="L529">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.setValue: &quot;
                 + &quot;unrecognised category.&quot;);
         }
 
         // update the data...
-<span class="nc" id="L535">        this.startData[series][categoryIndex] = value;</span>
-<span class="nc" id="L536">        fireDatasetChanged();</span>
+<span class="fc" id="L535">        this.startData[series][categoryIndex] = value;</span>
+<span class="fc" id="L536">        fireDatasetChanged();</span>
 
-<span class="nc" id="L538">    }</span>
+<span class="fc" id="L538">    }</span>
 
     /**
      * Sets the end data value for one category in a series.
@@ -550,25 +550,25 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public void setEndValue(int series, Comparable category, Number value) {
 
         // does the series exist?
-<span class="nc bnc" id="L553" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt; getSeriesCount() - 1)) {</span>
-<span class="nc" id="L554">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L553" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt; getSeriesCount() - 1)) {</span>
+<span class="fc" id="L554">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.setValue: &quot;
                 + &quot;series outside valid range.&quot;);
         }
 
         // is the category valid?
-<span class="nc" id="L560">        int categoryIndex = getCategoryIndex(category);</span>
-<span class="nc bnc" id="L561" title="All 2 branches missed.">        if (categoryIndex &lt; 0) {</span>
+<span class="fc" id="L560">        int categoryIndex = getCategoryIndex(category);</span>
+<span class="pc bpc" id="L561" title="1 of 2 branches missed.">        if (categoryIndex &lt; 0) {</span>
 <span class="nc" id="L562">            throw new IllegalArgumentException(</span>
                 &quot;DefaultIntervalCategoryDataset.setValue: &quot;
                 + &quot;unrecognised category.&quot;);
         }
 
         // update the data...
-<span class="nc" id="L568">        this.endData[series][categoryIndex] = value;</span>
-<span class="nc" id="L569">        fireDatasetChanged();</span>
+<span class="fc" id="L568">        this.endData[series][categoryIndex] = value;</span>
+<span class="fc" id="L569">        fireDatasetChanged();</span>
 
-<span class="nc" id="L571">    }</span>
+<span class="fc" id="L571">    }</span>
 
     /**
      * Returns the index for the given category.
@@ -580,14 +580,14 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @see #getColumnIndex(Comparable)
      */
     public int getCategoryIndex(Comparable category) {
-<span class="nc" id="L583">        int result = -1;</span>
-<span class="nc bnc" id="L584" title="All 2 branches missed.">        for (int i = 0; i &lt; this.categoryKeys.length; i++) {</span>
-<span class="nc bnc" id="L585" title="All 2 branches missed.">            if (category.equals(this.categoryKeys[i])) {</span>
-<span class="nc" id="L586">                result = i;</span>
-<span class="nc" id="L587">                break;</span>
+<span class="fc" id="L583">        int result = -1;</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">        for (int i = 0; i &lt; this.categoryKeys.length; i++) {</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">            if (category.equals(this.categoryKeys[i])) {</span>
+<span class="fc" id="L586">                result = i;</span>
+<span class="fc" id="L587">                break;</span>
             }
         }
-<span class="nc" id="L590">        return result;</span>
+<span class="fc" id="L590">        return result;</span>
     }
 
     /**
@@ -600,13 +600,13 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @return An array of &lt;i&gt;prefixN&lt;/i&gt; with N = { 1 .. count}.
      */
     private Comparable[] generateKeys(int count, String prefix) {
-<span class="nc" id="L603">        Comparable[] result = new Comparable[count];</span>
+<span class="fc" id="L603">        Comparable[] result = new Comparable[count];</span>
         String name;
-<span class="nc bnc" id="L605" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L606">            name = prefix + (i + 1);</span>
-<span class="nc" id="L607">            result[i] = name;</span>
+<span class="fc bfc" id="L605" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L606">            name = prefix + (i + 1);</span>
+<span class="fc" id="L607">            result[i] = name;</span>
         }
-<span class="nc" id="L609">        return result;</span>
+<span class="fc" id="L609">        return result;</span>
     }
 
     /**
@@ -620,7 +620,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Comparable getColumnKey(int column) {
-<span class="nc" id="L623">        return this.categoryKeys[column];</span>
+<span class="fc" id="L623">        return this.categoryKeys[column];</span>
     }
 
     /**
@@ -634,8 +634,8 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public int getColumnIndex(Comparable columnKey) {
-<span class="nc" id="L637">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
-<span class="nc" id="L638">        return getCategoryIndex(columnKey);</span>
+<span class="fc" id="L637">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
+<span class="fc" id="L638">        return getCategoryIndex(columnKey);</span>
     }
 
     /**
@@ -649,7 +649,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public int getRowIndex(Comparable rowKey) {
-<span class="nc" id="L652">        return getSeriesIndex(rowKey);</span>
+<span class="fc" id="L652">        return getSeriesIndex(rowKey);</span>
     }
 
     /**
@@ -664,11 +664,11 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
     public List getRowKeys() {
         // the CategoryDataset interface expects a list of series, but
         // we've stored them in an array...
-<span class="nc bnc" id="L667" title="All 2 branches missed.">        if (this.seriesKeys == null) {</span>
+<span class="pc bpc" id="L667" title="1 of 2 branches missed.">        if (this.seriesKeys == null) {</span>
 <span class="nc" id="L668">            return new java.util.ArrayList();</span>
         }
         else {
-<span class="nc" id="L671">            return Collections.unmodifiableList(Arrays.asList(this.seriesKeys));</span>
+<span class="fc" id="L671">            return Collections.unmodifiableList(Arrays.asList(this.seriesKeys));</span>
         }
     }
 
@@ -683,11 +683,11 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Comparable getRowKey(int row) {
-<span class="nc bnc" id="L686" title="All 4 branches missed.">        if ((row &gt;= getRowCount()) || (row &lt; 0)) {</span>
+<span class="pc bpc" id="L686" title="2 of 4 branches missed.">        if ((row &gt;= getRowCount()) || (row &lt; 0)) {</span>
 <span class="nc" id="L687">            throw new IllegalArgumentException(</span>
                     &quot;The 'row' argument is out of bounds.&quot;);
         }
-<span class="nc" id="L690">        return this.seriesKeys[row];</span>
+<span class="fc" id="L690">        return this.seriesKeys[row];</span>
     }
 
     /**
@@ -701,7 +701,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public int getColumnCount() {
-<span class="nc" id="L704">        return this.categoryKeys.length;</span>
+<span class="fc" id="L704">        return this.categoryKeys.length;</span>
     }
 
     /**
@@ -714,7 +714,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public int getRowCount() {
-<span class="nc" id="L717">        return this.seriesKeys.length;</span>
+<span class="fc" id="L717">        return this.seriesKeys.length;</span>
     }
 
     /**
@@ -726,28 +726,28 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L729" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L729" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L730">            return true;</span>
         }
-<span class="nc bnc" id="L732" title="All 2 branches missed.">        if (!(obj instanceof DefaultIntervalCategoryDataset)) {</span>
+<span class="pc bpc" id="L732" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultIntervalCategoryDataset)) {</span>
 <span class="nc" id="L733">            return false;</span>
         }
-<span class="nc" id="L735">        DefaultIntervalCategoryDataset that</span>
+<span class="fc" id="L735">        DefaultIntervalCategoryDataset that</span>
                 = (DefaultIntervalCategoryDataset) obj;
-<span class="nc bnc" id="L737" title="All 2 branches missed.">        if (!Arrays.equals(this.seriesKeys, that.seriesKeys)) {</span>
+<span class="pc bpc" id="L737" title="1 of 2 branches missed.">        if (!Arrays.equals(this.seriesKeys, that.seriesKeys)) {</span>
 <span class="nc" id="L738">            return false;</span>
         }
-<span class="nc bnc" id="L740" title="All 2 branches missed.">        if (!Arrays.equals(this.categoryKeys, that.categoryKeys)) {</span>
+<span class="pc bpc" id="L740" title="1 of 2 branches missed.">        if (!Arrays.equals(this.categoryKeys, that.categoryKeys)) {</span>
 <span class="nc" id="L741">            return false;</span>
         }
-<span class="nc bnc" id="L743" title="All 2 branches missed.">        if (!equal(this.startData, that.startData)) {</span>
-<span class="nc" id="L744">            return false;</span>
+<span class="fc bfc" id="L743" title="All 2 branches covered.">        if (!equal(this.startData, that.startData)) {</span>
+<span class="fc" id="L744">            return false;</span>
         }
-<span class="nc bnc" id="L746" title="All 2 branches missed.">        if (!equal(this.endData, that.endData)) {</span>
+<span class="pc bpc" id="L746" title="1 of 2 branches missed.">        if (!equal(this.endData, that.endData)) {</span>
 <span class="nc" id="L747">            return false;</span>
         }
         // seem to be the same...
-<span class="nc" id="L750">        return true;</span>
+<span class="fc" id="L750">        return true;</span>
     }
 
     /**
@@ -760,13 +760,13 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L763">        DefaultIntervalCategoryDataset clone</span>
-<span class="nc" id="L764">                = (DefaultIntervalCategoryDataset) super.clone();</span>
-<span class="nc" id="L765">        clone.categoryKeys = (Comparable[]) this.categoryKeys.clone();</span>
-<span class="nc" id="L766">        clone.seriesKeys = (Comparable[]) this.seriesKeys.clone();</span>
-<span class="nc" id="L767">        clone.startData = clone(this.startData);</span>
-<span class="nc" id="L768">        clone.endData = clone(this.endData);</span>
-<span class="nc" id="L769">        return clone;</span>
+<span class="fc" id="L763">        DefaultIntervalCategoryDataset clone</span>
+<span class="fc" id="L764">                = (DefaultIntervalCategoryDataset) super.clone();</span>
+<span class="fc" id="L765">        clone.categoryKeys = (Comparable[]) this.categoryKeys.clone();</span>
+<span class="fc" id="L766">        clone.seriesKeys = (Comparable[]) this.seriesKeys.clone();</span>
+<span class="fc" id="L767">        clone.startData = clone(this.startData);</span>
+<span class="fc" id="L768">        clone.endData = clone(this.endData);</span>
+<span class="fc" id="L769">        return clone;</span>
     }
 
     /**
@@ -778,21 +778,21 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @return A boolean.
      */
     private static boolean equal(Number[][] array1, Number[][] array2) {
-<span class="nc bnc" id="L781" title="All 2 branches missed.">        if (array1 == null) {</span>
+<span class="pc bpc" id="L781" title="1 of 2 branches missed.">        if (array1 == null) {</span>
 <span class="nc bnc" id="L782" title="All 2 branches missed.">            return (array2 == null);</span>
         }
-<span class="nc bnc" id="L784" title="All 2 branches missed.">        if (array2 == null) {</span>
+<span class="pc bpc" id="L784" title="1 of 2 branches missed.">        if (array2 == null) {</span>
 <span class="nc" id="L785">            return false;</span>
         }
-<span class="nc bnc" id="L787" title="All 2 branches missed.">        if (array1.length != array2.length) {</span>
+<span class="pc bpc" id="L787" title="1 of 2 branches missed.">        if (array1.length != array2.length) {</span>
 <span class="nc" id="L788">            return false;</span>
         }
-<span class="nc bnc" id="L790" title="All 2 branches missed.">        for (int i = 0; i &lt; array1.length; i++) {</span>
-<span class="nc bnc" id="L791" title="All 2 branches missed.">            if (!Arrays.equals(array1[i], array2[i])) {</span>
-<span class="nc" id="L792">                return false;</span>
+<span class="fc bfc" id="L790" title="All 2 branches covered.">        for (int i = 0; i &lt; array1.length; i++) {</span>
+<span class="fc bfc" id="L791" title="All 2 branches covered.">            if (!Arrays.equals(array1[i], array2[i])) {</span>
+<span class="fc" id="L792">                return false;</span>
             }
         }
-<span class="nc" id="L795">        return true;</span>
+<span class="fc" id="L795">        return true;</span>
     }
 
     /**
@@ -803,16 +803,16 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
      * @return A clone of the array.
      */
     private static Number[][] clone(Number[][] array) {
-<span class="nc" id="L806">        Args.nullNotPermitted(array, &quot;array&quot;);</span>
-<span class="nc" id="L807">        Number[][] result = new Number[array.length][];</span>
-<span class="nc bnc" id="L808" title="All 2 branches missed.">        for (int i = 0; i &lt; array.length; i++) {</span>
-<span class="nc" id="L809">            Number[] child = array[i];</span>
-<span class="nc" id="L810">            Number[] copychild = new Number[child.length];</span>
-<span class="nc" id="L811">            System.arraycopy(child, 0, copychild, 0, child.length);</span>
-<span class="nc" id="L812">            result[i] = copychild;</span>
+<span class="fc" id="L806">        Args.nullNotPermitted(array, &quot;array&quot;);</span>
+<span class="fc" id="L807">        Number[][] result = new Number[array.length][];</span>
+<span class="fc bfc" id="L808" title="All 2 branches covered.">        for (int i = 0; i &lt; array.length; i++) {</span>
+<span class="fc" id="L809">            Number[] child = array[i];</span>
+<span class="fc" id="L810">            Number[] copychild = new Number[child.length];</span>
+<span class="fc" id="L811">            System.arraycopy(child, 0, copychild, 0, child.length);</span>
+<span class="fc" id="L812">            result[i] = copychild;</span>
         }
-<span class="nc" id="L814">        return result;</span>
+<span class="fc" id="L814">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

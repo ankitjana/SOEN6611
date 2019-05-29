@@ -72,10 +72,10 @@ public class DefaultWindDataset extends AbstractXYDataset
      * to add data to an existing dataset, you should probably use a different
      * constructor.
      */
-<span class="nc" id="L75">    public DefaultWindDataset() {</span>
-<span class="nc" id="L76">        this.seriesKeys = new java.util.ArrayList();</span>
-<span class="nc" id="L77">        this.allSeriesData = new java.util.ArrayList();</span>
-<span class="nc" id="L78">    }</span>
+<span class="fc" id="L75">    public DefaultWindDataset() {</span>
+<span class="fc" id="L76">        this.seriesKeys = new java.util.ArrayList();</span>
+<span class="fc" id="L77">        this.allSeriesData = new java.util.ArrayList();</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Constructs a dataset based on the specified data array.
@@ -85,8 +85,8 @@ public class DefaultWindDataset extends AbstractXYDataset
      * @throws NullPointerException if {@code data} is {@code null}.
      */
     public DefaultWindDataset(Object[][][] data) {
-<span class="nc" id="L88">        this(seriesNameListFromDataArray(data), data);</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        this(seriesNameListFromDataArray(data), data);</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * Constructs a dataset based on the specified data array.
@@ -125,25 +125,25 @@ public class DefaultWindDataset extends AbstractXYDataset
      *     match the number of series in the array.
      * @throws NullPointerException if {@code data} is {@code null}.
      */
-<span class="nc" id="L128">    public DefaultWindDataset(List seriesKeys, Object[][][] data) {</span>
-<span class="nc" id="L129">        Args.nullNotPermitted(seriesKeys, &quot;seriesKeys&quot;);</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (seriesKeys.size() != data.length) {</span>
+<span class="fc" id="L128">    public DefaultWindDataset(List seriesKeys, Object[][][] data) {</span>
+<span class="fc" id="L129">        Args.nullNotPermitted(seriesKeys, &quot;seriesKeys&quot;);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (seriesKeys.size() != data.length) {</span>
 <span class="nc" id="L131">            throw new IllegalArgumentException(&quot;The number of series keys does &quot;</span>
                     + &quot;not match the number of series in the data array.&quot;);
         }
-<span class="nc" id="L134">        this.seriesKeys = seriesKeys;</span>
-<span class="nc" id="L135">        int seriesCount = data.length;</span>
-<span class="nc" id="L136">        this.allSeriesData = new java.util.ArrayList(seriesCount);</span>
+<span class="fc" id="L134">        this.seriesKeys = seriesKeys;</span>
+<span class="fc" id="L135">        int seriesCount = data.length;</span>
+<span class="fc" id="L136">        this.allSeriesData = new java.util.ArrayList(seriesCount);</span>
 
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (int seriesIndex = 0; seriesIndex &lt; seriesCount; seriesIndex++) {</span>
-<span class="nc" id="L139">            List oneSeriesData = new java.util.ArrayList();</span>
-<span class="nc" id="L140">            int maxItemCount = data[seriesIndex].length;</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">            for (int itemIndex = 0; itemIndex &lt; maxItemCount; itemIndex++) {</span>
-<span class="nc" id="L142">                Object xObject = data[seriesIndex][itemIndex][0];</span>
-<span class="nc bnc" id="L143" title="All 2 branches missed.">                if (xObject != null) {</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (int seriesIndex = 0; seriesIndex &lt; seriesCount; seriesIndex++) {</span>
+<span class="fc" id="L139">            List oneSeriesData = new java.util.ArrayList();</span>
+<span class="fc" id="L140">            int maxItemCount = data[seriesIndex].length;</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            for (int itemIndex = 0; itemIndex &lt; maxItemCount; itemIndex++) {</span>
+<span class="fc" id="L142">                Object xObject = data[seriesIndex][itemIndex][0];</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                if (xObject != null) {</span>
                     Number xNumber;
-<span class="nc bnc" id="L145" title="All 2 branches missed.">                    if (xObject instanceof Number) {</span>
-<span class="nc" id="L146">                        xNumber = (Number) xObject;</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                    if (xObject instanceof Number) {</span>
+<span class="fc" id="L146">                        xNumber = (Number) xObject;</span>
                     }
                     else {
 <span class="nc bnc" id="L149" title="All 2 branches missed.">                        if (xObject instanceof Date) {</span>
@@ -154,17 +154,17 @@ public class DefaultWindDataset extends AbstractXYDataset
 <span class="nc" id="L154">                            xNumber = new Integer(0);</span>
                         }
                     }
-<span class="nc" id="L157">                    Number windDir = (Number) data[seriesIndex][itemIndex][1];</span>
-<span class="nc" id="L158">                    Number windForce = (Number) data[seriesIndex][itemIndex][2];</span>
-<span class="nc" id="L159">                    oneSeriesData.add(new WindDataItem(xNumber, windDir,</span>
+<span class="fc" id="L157">                    Number windDir = (Number) data[seriesIndex][itemIndex][1];</span>
+<span class="fc" id="L158">                    Number windForce = (Number) data[seriesIndex][itemIndex][2];</span>
+<span class="fc" id="L159">                    oneSeriesData.add(new WindDataItem(xNumber, windDir,</span>
                             windForce));
                 }
             }
-<span class="nc" id="L163">            Collections.sort(oneSeriesData);</span>
-<span class="nc" id="L164">            this.allSeriesData.add(seriesIndex, oneSeriesData);</span>
+<span class="fc" id="L163">            Collections.sort(oneSeriesData);</span>
+<span class="fc" id="L164">            this.allSeriesData.add(seriesIndex, oneSeriesData);</span>
         }
 
-<span class="nc" id="L167">    }</span>
+<span class="fc" id="L167">    }</span>
 
     /**
      * Returns the number of series in the dataset.
@@ -173,7 +173,7 @@ public class DefaultWindDataset extends AbstractXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L176">        return this.allSeriesData.size();</span>
+<span class="fc" id="L176">        return this.allSeriesData.size();</span>
     }
 
     /**
@@ -202,11 +202,11 @@ public class DefaultWindDataset extends AbstractXYDataset
      */
     @Override
     public Comparable getSeriesKey(int series) {
-<span class="nc bnc" id="L205" title="All 4 branches missed.">        if (series &lt; 0 || series &gt;= getSeriesCount()) {</span>
-<span class="nc" id="L206">            throw new IllegalArgumentException(&quot;Invalid series index: &quot;</span>
+<span class="fc bfc" id="L205" title="All 4 branches covered.">        if (series &lt; 0 || series &gt;= getSeriesCount()) {</span>
+<span class="fc" id="L206">            throw new IllegalArgumentException(&quot;Invalid series index: &quot;</span>
                     + series);
         }
-<span class="nc" id="L209">        return (Comparable) this.seriesKeys.get(series);</span>
+<span class="fc" id="L209">        return (Comparable) this.seriesKeys.get(series);</span>
     }
 
     /**
@@ -283,12 +283,12 @@ public class DefaultWindDataset extends AbstractXYDataset
      * @throws NullPointerException if {@code data} is {@code null}.
      */
     public static List seriesNameListFromDataArray(Object[][] data) {
-<span class="nc" id="L286">        int seriesCount = data.length;</span>
-<span class="nc" id="L287">        List seriesNameList = new java.util.ArrayList(seriesCount);</span>
-<span class="nc bnc" id="L288" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L289">            seriesNameList.add(&quot;Series &quot; + (i + 1));</span>
+<span class="fc" id="L286">        int seriesCount = data.length;</span>
+<span class="fc" id="L287">        List seriesNameList = new java.util.ArrayList(seriesCount);</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L289">            seriesNameList.add(&quot;Series &quot; + (i + 1));</span>
         }
-<span class="nc" id="L291">        return seriesNameList;</span>
+<span class="fc" id="L291">        return seriesNameList;</span>
     }
 
     /**
@@ -307,20 +307,20 @@ public class DefaultWindDataset extends AbstractXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        if (this == obj) {</span>
 <span class="nc" id="L311">            return true;</span>
         }
-<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (!(obj instanceof DefaultWindDataset)) {</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultWindDataset)) {</span>
 <span class="nc" id="L314">            return false;</span>
         }
-<span class="nc" id="L316">        DefaultWindDataset that = (DefaultWindDataset) obj;</span>
-<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (!this.seriesKeys.equals(that.seriesKeys)) {</span>
-<span class="nc" id="L318">            return false;</span>
+<span class="fc" id="L316">        DefaultWindDataset that = (DefaultWindDataset) obj;</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        if (!this.seriesKeys.equals(that.seriesKeys)) {</span>
+<span class="fc" id="L318">            return false;</span>
         }
-<span class="nc bnc" id="L320" title="All 2 branches missed.">        if (!this.allSeriesData.equals(that.allSeriesData)) {</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if (!this.allSeriesData.equals(that.allSeriesData)) {</span>
 <span class="nc" id="L321">            return false;</span>
         }
-<span class="nc" id="L323">        return true;</span>
+<span class="fc" id="L323">        return true;</span>
     }
 
 }
@@ -346,11 +346,11 @@ class WindDataItem implements Comparable, Serializable {
      * @param windDir  the direction.
      * @param windForce  the force.
      */
-<span class="nc" id="L349">    public WindDataItem(Number x, Number windDir, Number windForce) {</span>
-<span class="nc" id="L350">        this.x = x;</span>
-<span class="nc" id="L351">        this.windDir = windDir;</span>
-<span class="nc" id="L352">        this.windForce = windForce;</span>
-<span class="nc" id="L353">    }</span>
+<span class="fc" id="L349">    public WindDataItem(Number x, Number windDir, Number windForce) {</span>
+<span class="fc" id="L350">        this.x = x;</span>
+<span class="fc" id="L351">        this.windDir = windDir;</span>
+<span class="fc" id="L352">        this.windForce = windForce;</span>
+<span class="fc" id="L353">    }</span>
 
     /**
      * Returns the x-value.
@@ -388,13 +388,13 @@ class WindDataItem implements Comparable, Serializable {
      */
     @Override
     public int compareTo(Object object) {
-<span class="nc bnc" id="L391" title="All 2 branches missed.">        if (object instanceof WindDataItem) {</span>
-<span class="nc" id="L392">            WindDataItem item = (WindDataItem) object;</span>
-<span class="nc bnc" id="L393" title="All 2 branches missed.">            if (this.x.doubleValue() &gt; item.x.doubleValue()) {</span>
-<span class="nc" id="L394">                return 1;</span>
+<span class="pc bpc" id="L391" title="1 of 2 branches missed.">        if (object instanceof WindDataItem) {</span>
+<span class="fc" id="L392">            WindDataItem item = (WindDataItem) object;</span>
+<span class="fc bfc" id="L393" title="All 2 branches covered.">            if (this.x.doubleValue() &gt; item.x.doubleValue()) {</span>
+<span class="fc" id="L394">                return 1;</span>
             }
-<span class="nc bnc" id="L396" title="All 2 branches missed.">            else if (this.x.equals(item.x)) {</span>
-<span class="nc" id="L397">                return 0;</span>
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">            else if (this.x.equals(item.x)) {</span>
+<span class="fc" id="L397">                return 0;</span>
             }
             else {
 <span class="nc" id="L400">                return -1;</span>
@@ -415,24 +415,24 @@ class WindDataItem implements Comparable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L418" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">        if (this == obj) {</span>
 <span class="nc" id="L419">            return false;</span>
         }
-<span class="nc bnc" id="L421" title="All 2 branches missed.">        if (!(obj instanceof WindDataItem)) {</span>
+<span class="pc bpc" id="L421" title="1 of 2 branches missed.">        if (!(obj instanceof WindDataItem)) {</span>
 <span class="nc" id="L422">            return false;</span>
         }
-<span class="nc" id="L424">        WindDataItem that = (WindDataItem) obj;</span>
-<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (!this.x.equals(that.x)) {</span>
+<span class="fc" id="L424">        WindDataItem that = (WindDataItem) obj;</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        if (!this.x.equals(that.x)) {</span>
 <span class="nc" id="L426">            return false;</span>
         }
-<span class="nc bnc" id="L428" title="All 2 branches missed.">        if (!this.windDir.equals(that.windDir)) {</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">        if (!this.windDir.equals(that.windDir)) {</span>
 <span class="nc" id="L429">            return false;</span>
         }
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (!this.windForce.equals(that.windForce)) {</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">        if (!this.windForce.equals(that.windForce)) {</span>
 <span class="nc" id="L432">            return false;</span>
         }
-<span class="nc" id="L434">        return true;</span>
+<span class="fc" id="L434">        return true;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

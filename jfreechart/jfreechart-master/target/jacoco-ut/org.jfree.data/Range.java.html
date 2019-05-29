@@ -86,15 +86,15 @@ public strictfp class Range implements Serializable {
      * @param lower  the lower bound (must be &amp;lt;= upper bound).
      * @param upper  the upper bound (must be &amp;gt;= lower bound).
      */
-<span class="nc" id="L89">    public Range(double lower, double upper) {</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (lower &gt; upper) {</span>
-<span class="nc" id="L91">            String msg = &quot;Range(double, double): require lower (&quot; + lower</span>
+<span class="fc" id="L89">    public Range(double lower, double upper) {</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (lower &gt; upper) {</span>
+<span class="fc" id="L91">            String msg = &quot;Range(double, double): require lower (&quot; + lower</span>
                 + &quot;) &lt;= upper (&quot; + upper + &quot;).&quot;;
-<span class="nc" id="L93">            throw new IllegalArgumentException(msg);</span>
+<span class="fc" id="L93">            throw new IllegalArgumentException(msg);</span>
         }
-<span class="nc" id="L95">        this.lower = lower;</span>
-<span class="nc" id="L96">        this.upper = upper;</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L95">        this.lower = lower;</span>
+<span class="fc" id="L96">        this.upper = upper;</span>
+<span class="fc" id="L97">    }</span>
 
     /**
      * Returns the lower bound for the range.
@@ -102,7 +102,7 @@ public strictfp class Range implements Serializable {
      * @return The lower bound.
      */
     public double getLowerBound() {
-<span class="nc" id="L105">        return this.lower;</span>
+<span class="fc" id="L105">        return this.lower;</span>
     }
 
     /**
@@ -111,7 +111,7 @@ public strictfp class Range implements Serializable {
      * @return The upper bound.
      */
     public double getUpperBound() {
-<span class="nc" id="L114">        return this.upper;</span>
+<span class="fc" id="L114">        return this.upper;</span>
     }
 
     /**
@@ -120,7 +120,7 @@ public strictfp class Range implements Serializable {
      * @return The length.
      */
     public double getLength() {
-<span class="nc" id="L123">        return this.upper - this.lower;</span>
+<span class="fc" id="L123">        return this.upper - this.lower;</span>
     }
 
     /**
@@ -129,7 +129,7 @@ public strictfp class Range implements Serializable {
      * @return The central value.
      */
     public double getCentralValue() {
-<span class="nc" id="L132">        return this.lower / 2.0 + this.upper / 2.0;</span>
+<span class="fc" id="L132">        return this.lower / 2.0 + this.upper / 2.0;</span>
     }
 
     /**
@@ -141,7 +141,7 @@ public strictfp class Range implements Serializable {
      * @return {@code true} if the range contains the specified value.
      */
     public boolean contains(double value) {
-<span class="nc bnc" id="L144" title="All 4 branches missed.">        return (value &gt;= this.lower &amp;&amp; value &lt;= this.upper);</span>
+<span class="fc bfc" id="L144" title="All 4 branches covered.">        return (value &gt;= this.lower &amp;&amp; value &lt;= this.upper);</span>
     }
 
     /**
@@ -154,11 +154,11 @@ public strictfp class Range implements Serializable {
      * @return A boolean.
      */
     public boolean intersects(double b0, double b1) {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (b0 &lt;= this.lower) {</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">            return (b1 &gt; this.lower);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (b0 &lt;= this.lower) {</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            return (b1 &gt; this.lower);</span>
         }
         else {
-<span class="nc bnc" id="L161" title="All 4 branches missed.">            return (b0 &lt; this.upper &amp;&amp; b1 &gt;= b0);</span>
+<span class="pc bpc" id="L161" title="1 of 4 branches missed.">            return (b0 &lt; this.upper &amp;&amp; b1 &gt;= b0);</span>
         }
     }
 
@@ -185,16 +185,16 @@ public strictfp class Range implements Serializable {
      * @return The constrained value.
      */
     public double constrain(double value) {
-<span class="nc" id="L188">        double result = value;</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (!contains(value)) {</span>
-<span class="nc bnc" id="L190" title="All 2 branches missed.">            if (value &gt; this.upper) {</span>
-<span class="nc" id="L191">                result = this.upper;</span>
+<span class="fc" id="L188">        double result = value;</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (!contains(value)) {</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (value &gt; this.upper) {</span>
+<span class="fc" id="L191">                result = this.upper;</span>
             }
-<span class="nc bnc" id="L193" title="All 2 branches missed.">            else if (value &lt; this.lower) {</span>
-<span class="nc" id="L194">                result = this.lower;</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            else if (value &lt; this.lower) {</span>
+<span class="fc" id="L194">                result = this.lower;</span>
             }
         }
-<span class="nc" id="L197">        return result;</span>
+<span class="fc" id="L197">        return result;</span>
     }
 
     /**
@@ -214,15 +214,15 @@ public strictfp class Range implements Serializable {
      * @return A new range (possibly {@code null}).
      */
     public static Range combine(Range range1, Range range2) {
-<span class="nc bnc" id="L217" title="All 2 branches missed.">        if (range1 == null) {</span>
-<span class="nc" id="L218">            return range2;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (range1 == null) {</span>
+<span class="fc" id="L218">            return range2;</span>
         }
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (range2 == null) {</span>
-<span class="nc" id="L221">            return range1;</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (range2 == null) {</span>
+<span class="fc" id="L221">            return range1;</span>
         }
-<span class="nc" id="L223">        double l = Math.min(range1.getLowerBound(), range2.getLowerBound());</span>
-<span class="nc" id="L224">        double u = Math.max(range1.getUpperBound(), range2.getUpperBound());</span>
-<span class="nc" id="L225">        return new Range(l, u);</span>
+<span class="fc" id="L223">        double l = Math.min(range1.getLowerBound(), range2.getLowerBound());</span>
+<span class="fc" id="L224">        double u = Math.max(range1.getUpperBound(), range2.getUpperBound());</span>
+<span class="fc" id="L225">        return new Range(l, u);</span>
     }
 
     /**
@@ -238,24 +238,24 @@ public strictfp class Range implements Serializable {
      * @since 1.0.15
      */
     public static Range combineIgnoringNaN(Range range1, Range range2) {
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (range1 == null) {</span>
-<span class="nc bnc" id="L242" title="All 4 branches missed.">            if (range2 != null &amp;&amp; range2.isNaNRange()) {</span>
-<span class="nc" id="L243">                return null;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (range1 == null) {</span>
+<span class="fc bfc" id="L242" title="All 4 branches covered.">            if (range2 != null &amp;&amp; range2.isNaNRange()) {</span>
+<span class="fc" id="L243">                return null;</span>
             }
-<span class="nc" id="L245">            return range2;</span>
+<span class="fc" id="L245">            return range2;</span>
         }
-<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (range2 == null) {</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">            if (range1.isNaNRange()) {</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (range2 == null) {</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">            if (range1.isNaNRange()) {</span>
 <span class="nc" id="L249">                return null;</span>
             }
-<span class="nc" id="L251">            return range1;</span>
+<span class="fc" id="L251">            return range1;</span>
         }
-<span class="nc" id="L253">        double l = min(range1.getLowerBound(), range2.getLowerBound());</span>
-<span class="nc" id="L254">        double u = max(range1.getUpperBound(), range2.getUpperBound());</span>
-<span class="nc bnc" id="L255" title="All 4 branches missed.">        if (Double.isNaN(l) &amp;&amp; Double.isNaN(u)) {</span>
+<span class="fc" id="L253">        double l = min(range1.getLowerBound(), range2.getLowerBound());</span>
+<span class="fc" id="L254">        double u = max(range1.getUpperBound(), range2.getUpperBound());</span>
+<span class="pc bpc" id="L255" title="3 of 4 branches missed.">        if (Double.isNaN(l) &amp;&amp; Double.isNaN(u)) {</span>
 <span class="nc" id="L256">            return null;</span>
         }
-<span class="nc" id="L258">        return new Range(l, u);</span>
+<span class="fc" id="L258">        return new Range(l, u);</span>
     }
     
     /**
@@ -268,23 +268,23 @@ public strictfp class Range implements Serializable {
      * @return The minimum of the two values. 
      */
     private static double min(double d1, double d2) {
-<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (Double.isNaN(d1)) {</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">        if (Double.isNaN(d1)) {</span>
 <span class="nc" id="L272">            return d2;</span>
         }
-<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (Double.isNaN(d2)) {</span>
-<span class="nc" id="L275">            return d1;</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        if (Double.isNaN(d2)) {</span>
+<span class="fc" id="L275">            return d1;</span>
         }
-<span class="nc" id="L277">        return Math.min(d1, d2);</span>
+<span class="fc" id="L277">        return Math.min(d1, d2);</span>
     }
 
     private static double max(double d1, double d2) {
-<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (Double.isNaN(d1)) {</span>
-<span class="nc" id="L282">            return d2;</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">        if (Double.isNaN(d1)) {</span>
+<span class="fc" id="L282">            return d2;</span>
         }
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (Double.isNaN(d2)) {</span>
-<span class="nc" id="L285">            return d1;</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">        if (Double.isNaN(d2)) {</span>
+<span class="fc" id="L285">            return d1;</span>
         }
-<span class="nc" id="L287">        return Math.max(d1, d2);</span>
+<span class="fc" id="L287">        return Math.max(d1, d2);</span>
     }
 
     /**
@@ -299,17 +299,17 @@ public strictfp class Range implements Serializable {
      * @since 1.0.1
      */
     public static Range expandToInclude(Range range, double value) {
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (range == null) {</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (range == null) {</span>
 <span class="nc" id="L303">            return new Range(value, value);</span>
         }
-<span class="nc bnc" id="L305" title="All 2 branches missed.">        if (value &lt; range.getLowerBound()) {</span>
-<span class="nc" id="L306">            return new Range(value, range.getUpperBound());</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (value &lt; range.getLowerBound()) {</span>
+<span class="fc" id="L306">            return new Range(value, range.getUpperBound());</span>
         }
-<span class="nc bnc" id="L308" title="All 2 branches missed.">        else if (value &gt; range.getUpperBound()) {</span>
+<span class="pc bpc" id="L308" title="1 of 2 branches missed.">        else if (value &gt; range.getUpperBound()) {</span>
 <span class="nc" id="L309">            return new Range(range.getLowerBound(), value);</span>
         }
         else {
-<span class="nc" id="L312">            return range;</span>
+<span class="fc" id="L312">            return range;</span>
         }
     }
 
@@ -326,15 +326,15 @@ public strictfp class Range implements Serializable {
      */
     public static Range expand(Range range,
                                double lowerMargin, double upperMargin) {
-<span class="nc" id="L329">        Args.nullNotPermitted(range, &quot;range&quot;);</span>
-<span class="nc" id="L330">        double length = range.getLength();</span>
-<span class="nc" id="L331">        double lower = range.getLowerBound() - length * lowerMargin;</span>
-<span class="nc" id="L332">        double upper = range.getUpperBound() + length * upperMargin;</span>
-<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (lower &gt; upper) {</span>
-<span class="nc" id="L334">            lower = lower / 2.0 + upper / 2.0;</span>
-<span class="nc" id="L335">            upper = lower;</span>
+<span class="fc" id="L329">        Args.nullNotPermitted(range, &quot;range&quot;);</span>
+<span class="fc" id="L330">        double length = range.getLength();</span>
+<span class="fc" id="L331">        double lower = range.getLowerBound() - length * lowerMargin;</span>
+<span class="fc" id="L332">        double upper = range.getUpperBound() + length * upperMargin;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">        if (lower &gt; upper) {</span>
+<span class="fc" id="L334">            lower = lower / 2.0 + upper / 2.0;</span>
+<span class="fc" id="L335">            upper = lower;</span>
         }
-<span class="nc" id="L337">        return new Range(lower, upper);</span>
+<span class="fc" id="L337">        return new Range(lower, upper);</span>
     }
 
     /**
@@ -346,7 +346,7 @@ public strictfp class Range implements Serializable {
      * @return A new range.
      */
     public static Range shift(Range base, double delta) {
-<span class="nc" id="L349">        return shift(base, delta, false);</span>
+<span class="fc" id="L349">        return shift(base, delta, false);</span>
     }
 
     /**
@@ -362,14 +362,14 @@ public strictfp class Range implements Serializable {
      */
     public static Range shift(Range base, double delta,
                               boolean allowZeroCrossing) {
-<span class="nc" id="L365">        Args.nullNotPermitted(base, &quot;base&quot;);</span>
-<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (allowZeroCrossing) {</span>
-<span class="nc" id="L367">            return new Range(base.getLowerBound() + delta,</span>
-<span class="nc" id="L368">                    base.getUpperBound() + delta);</span>
+<span class="fc" id="L365">        Args.nullNotPermitted(base, &quot;base&quot;);</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (allowZeroCrossing) {</span>
+<span class="fc" id="L367">            return new Range(base.getLowerBound() + delta,</span>
+<span class="fc" id="L368">                    base.getUpperBound() + delta);</span>
         }
         else {
-<span class="nc" id="L371">            return new Range(shiftWithNoZeroCrossing(base.getLowerBound(),</span>
-<span class="nc" id="L372">                    delta), shiftWithNoZeroCrossing(base.getUpperBound(),</span>
+<span class="fc" id="L371">            return new Range(shiftWithNoZeroCrossing(base.getLowerBound(),</span>
+<span class="fc" id="L372">                    delta), shiftWithNoZeroCrossing(base.getUpperBound(),</span>
                     delta));
         }
     }
@@ -384,14 +384,14 @@ public strictfp class Range implements Serializable {
      * @return The adjusted value.
      */
     private static double shiftWithNoZeroCrossing(double value, double delta) {
-<span class="nc bnc" id="L387" title="All 2 branches missed.">        if (value &gt; 0.0) {</span>
-<span class="nc" id="L388">            return Math.max(value + delta, 0.0);</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">        if (value &gt; 0.0) {</span>
+<span class="fc" id="L388">            return Math.max(value + delta, 0.0);</span>
         }
-<span class="nc bnc" id="L390" title="All 2 branches missed.">        else if (value &lt; 0.0) {</span>
-<span class="nc" id="L391">            return Math.min(value + delta, 0.0);</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">        else if (value &lt; 0.0) {</span>
+<span class="fc" id="L391">            return Math.min(value + delta, 0.0);</span>
         }
         else {
-<span class="nc" id="L394">            return value + delta;</span>
+<span class="fc" id="L394">            return value + delta;</span>
         }
     }
 
@@ -406,12 +406,12 @@ public strictfp class Range implements Serializable {
      * @since 1.0.9
      */
     public static Range scale(Range base, double factor) {
-<span class="nc" id="L409">        Args.nullNotPermitted(base, &quot;base&quot;);</span>
-<span class="nc bnc" id="L410" title="All 2 branches missed.">        if (factor &lt; 0) {</span>
-<span class="nc" id="L411">            throw new IllegalArgumentException(&quot;Negative 'factor' argument.&quot;);</span>
+<span class="fc" id="L409">        Args.nullNotPermitted(base, &quot;base&quot;);</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        if (factor &lt; 0) {</span>
+<span class="fc" id="L411">            throw new IllegalArgumentException(&quot;Negative 'factor' argument.&quot;);</span>
         }
-<span class="nc" id="L413">        return new Range(base.getLowerBound() * factor,</span>
-<span class="nc" id="L414">                base.getUpperBound() * factor);</span>
+<span class="fc" id="L413">        return new Range(base.getLowerBound() * factor,</span>
+<span class="fc" id="L414">                base.getUpperBound() * factor);</span>
     }
 
     /**
@@ -423,17 +423,17 @@ public strictfp class Range implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L426" title="All 2 branches missed.">        if (!(obj instanceof Range)) {</span>
-<span class="nc" id="L427">            return false;</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        if (!(obj instanceof Range)) {</span>
+<span class="fc" id="L427">            return false;</span>
         }
-<span class="nc" id="L429">        Range range = (Range) obj;</span>
-<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (!(this.lower == range.lower)) {</span>
-<span class="nc" id="L431">            return false;</span>
+<span class="fc" id="L429">        Range range = (Range) obj;</span>
+<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (!(this.lower == range.lower)) {</span>
+<span class="fc" id="L431">            return false;</span>
         }
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (!(this.upper == range.upper)) {</span>
-<span class="nc" id="L434">            return false;</span>
+<span class="fc bfc" id="L433" title="All 2 branches covered.">        if (!(this.upper == range.upper)) {</span>
+<span class="fc" id="L434">            return false;</span>
         }
-<span class="nc" id="L436">        return true;</span>
+<span class="fc" id="L436">        return true;</span>
     }
 
     /**
@@ -445,7 +445,7 @@ public strictfp class Range implements Serializable {
      * @since 1.0.18
      */
     public boolean isNaNRange() {
-<span class="nc bnc" id="L448" title="All 4 branches missed.">        return Double.isNaN(this.lower) &amp;&amp; Double.isNaN(this.upper);</span>
+<span class="fc bfc" id="L448" title="All 4 branches covered.">        return Double.isNaN(this.lower) &amp;&amp; Double.isNaN(this.upper);</span>
     }
     
     /**
@@ -457,11 +457,11 @@ public strictfp class Range implements Serializable {
     public int hashCode() {
         int result;
         long temp;
-<span class="nc" id="L460">        temp = Double.doubleToLongBits(this.lower);</span>
-<span class="nc" id="L461">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L462">        temp = Double.doubleToLongBits(this.upper);</span>
-<span class="nc" id="L463">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L464">        return result;</span>
+<span class="fc" id="L460">        temp = Double.doubleToLongBits(this.lower);</span>
+<span class="fc" id="L461">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L462">        temp = Double.doubleToLongBits(this.upper);</span>
+<span class="fc" id="L463">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L464">        return result;</span>
     }
 
     /**
@@ -476,4 +476,4 @@ public strictfp class Range implements Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

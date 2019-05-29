@@ -137,13 +137,13 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      */
     public XYShapeAnnotation(Shape shape, Stroke stroke, Paint outlinePaint,
                              Paint fillPaint) {
-<span class="nc" id="L140">        super();</span>
-<span class="nc" id="L141">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
-<span class="nc" id="L142">        this.shape = shape;</span>
-<span class="nc" id="L143">        this.stroke = stroke;</span>
-<span class="nc" id="L144">        this.outlinePaint = outlinePaint;</span>
-<span class="nc" id="L145">        this.fillPaint = fillPaint;</span>
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L140">        super();</span>
+<span class="fc" id="L141">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
+<span class="fc" id="L142">        this.shape = shape;</span>
+<span class="fc" id="L143">        this.stroke = stroke;</span>
+<span class="fc" id="L144">        this.outlinePaint = outlinePaint;</span>
+<span class="fc" id="L145">        this.fillPaint = fillPaint;</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Draws the annotation.  This method is usually called by the
@@ -224,31 +224,31 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L228">            return true;</span>
         }
         // now try to reject equality
-<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L232">            return false;</span>
         }
-<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (!(obj instanceof XYShapeAnnotation)) {</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">        if (!(obj instanceof XYShapeAnnotation)) {</span>
 <span class="nc" id="L235">            return false;</span>
         }
-<span class="nc" id="L237">        XYShapeAnnotation that = (XYShapeAnnotation) obj;</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (!this.shape.equals(that.shape)) {</span>
-<span class="nc" id="L239">            return false;</span>
+<span class="fc" id="L237">        XYShapeAnnotation that = (XYShapeAnnotation) obj;</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (!this.shape.equals(that.shape)) {</span>
+<span class="fc" id="L239">            return false;</span>
         }
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
-<span class="nc" id="L242">            return false;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
+<span class="fc" id="L242">            return false;</span>
         }
-<span class="nc bnc" id="L244" title="All 2 branches missed.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
-<span class="nc" id="L245">            return false;</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
+<span class="fc" id="L245">            return false;</span>
         }
-<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
-<span class="nc" id="L248">            return false;</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
+<span class="fc" id="L248">            return false;</span>
         }
         // seem to be the same
-<span class="nc" id="L251">        return true;</span>
+<span class="fc" id="L251">        return true;</span>
     }
 
     /**
@@ -258,15 +258,15 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L261">        int result = 193;</span>
-<span class="nc" id="L262">        result = 37 * result + this.shape.hashCode();</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (this.stroke != null) {</span>
-<span class="nc" id="L264">            result = 37 * result + this.stroke.hashCode();</span>
+<span class="fc" id="L261">        int result = 193;</span>
+<span class="fc" id="L262">        result = 37 * result + this.shape.hashCode();</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">        if (this.stroke != null) {</span>
+<span class="fc" id="L264">            result = 37 * result + this.stroke.hashCode();</span>
         }
-<span class="nc" id="L266">        result = 37 * result + HashUtils.hashCodeForPaint(</span>
+<span class="fc" id="L266">        result = 37 * result + HashUtils.hashCodeForPaint(</span>
                 this.outlinePaint);
-<span class="nc" id="L268">        result = 37 * result + HashUtils.hashCodeForPaint(this.fillPaint);</span>
-<span class="nc" id="L269">        return result;</span>
+<span class="fc" id="L268">        result = 37 * result + HashUtils.hashCodeForPaint(this.fillPaint);</span>
+<span class="fc" id="L269">        return result;</span>
     }
 
     /**
@@ -278,7 +278,7 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L281">        return super.clone();</span>
+<span class="fc" id="L281">        return super.clone();</span>
     }
 
     /**
@@ -289,12 +289,12 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      * @throws IOException if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L292">        stream.defaultWriteObject();</span>
-<span class="nc" id="L293">        SerialUtils.writeShape(this.shape, stream);</span>
-<span class="nc" id="L294">        SerialUtils.writeStroke(this.stroke, stream);</span>
-<span class="nc" id="L295">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
-<span class="nc" id="L296">        SerialUtils.writePaint(this.fillPaint, stream);</span>
-<span class="nc" id="L297">    }</span>
+<span class="fc" id="L292">        stream.defaultWriteObject();</span>
+<span class="fc" id="L293">        SerialUtils.writeShape(this.shape, stream);</span>
+<span class="fc" id="L294">        SerialUtils.writeStroke(this.stroke, stream);</span>
+<span class="fc" id="L295">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
+<span class="fc" id="L296">        SerialUtils.writePaint(this.fillPaint, stream);</span>
+<span class="fc" id="L297">    }</span>
 
     /**
      * Provides serialization support.
@@ -306,12 +306,12 @@ public class XYShapeAnnotation extends AbstractXYAnnotation
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L309">        stream.defaultReadObject();</span>
-<span class="nc" id="L310">        this.shape = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L311">        this.stroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L312">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L313">        this.fillPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L314">    }</span>
+<span class="fc" id="L309">        stream.defaultReadObject();</span>
+<span class="fc" id="L310">        this.shape = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L311">        this.stroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L312">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L313">        this.fillPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L314">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

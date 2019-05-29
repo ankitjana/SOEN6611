@@ -70,7 +70,7 @@ import org.jfree.chart.util.Args;
      * @return The mean.
      */
     public static double calculateMean(Number[] values) {
-<span class="nc" id="L73">        return calculateMean(values, true);</span>
+<span class="fc" id="L73">        return calculateMean(values, true);</span>
     }
 
     /**
@@ -89,26 +89,26 @@ import org.jfree.chart.util.Args;
     public static double calculateMean(Number[] values,
             boolean includeNullAndNaN) {
 
-<span class="nc" id="L92">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
-<span class="nc" id="L93">        double sum = 0.0;</span>
+<span class="fc" id="L92">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
+<span class="fc" id="L93">        double sum = 0.0;</span>
         double current;
-<span class="nc" id="L95">        int counter = 0;</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">        for (int i = 0; i &lt; values.length; i++) {</span>
+<span class="fc" id="L95">        int counter = 0;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        for (int i = 0; i &lt; values.length; i++) {</span>
             // treat nulls the same as NaNs
-<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (values[i] != null) {</span>
-<span class="nc" id="L99">                current = values[i].doubleValue();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (values[i] != null) {</span>
+<span class="fc" id="L99">                current = values[i].doubleValue();</span>
             }
             else {
-<span class="nc" id="L102">                current = Double.NaN;</span>
+<span class="fc" id="L102">                current = Double.NaN;</span>
             }
             // calculate the sum and count
-<span class="nc bnc" id="L105" title="All 4 branches missed.">            if (includeNullAndNaN || !Double.isNaN(current)) {</span>
-<span class="nc" id="L106">                sum = sum + current;</span>
-<span class="nc" id="L107">                counter++;</span>
+<span class="fc bfc" id="L105" title="All 4 branches covered.">            if (includeNullAndNaN || !Double.isNaN(current)) {</span>
+<span class="fc" id="L106">                sum = sum + current;</span>
+<span class="fc" id="L107">                counter++;</span>
             }
         }
-<span class="nc" id="L110">        double result = (sum / counter);</span>
-<span class="nc" id="L111">        return result;</span>
+<span class="fc" id="L110">        double result = (sum / counter);</span>
+<span class="fc" id="L111">        return result;</span>
     }
 
     /**
@@ -119,7 +119,7 @@ import org.jfree.chart.util.Args;
      * @return The mean.
      */
     public static double calculateMean(Collection values) {
-<span class="nc" id="L122">        return calculateMean(values, true);</span>
+<span class="fc" id="L122">        return calculateMean(values, true);</span>
     }
 
     /**
@@ -138,34 +138,34 @@ import org.jfree.chart.util.Args;
     public static double calculateMean(Collection values,
             boolean includeNullAndNaN) {
 
-<span class="nc" id="L141">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
-<span class="nc" id="L142">        int count = 0;</span>
-<span class="nc" id="L143">        double total = 0.0;</span>
-<span class="nc" id="L144">        Iterator iterator = values.iterator();</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L146">            Object object = iterator.next();</span>
-<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (object == null) {</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">                if (includeNullAndNaN) {</span>
-<span class="nc" id="L149">                    return Double.NaN;</span>
+<span class="fc" id="L141">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
+<span class="fc" id="L142">        int count = 0;</span>
+<span class="fc" id="L143">        double total = 0.0;</span>
+<span class="fc" id="L144">        Iterator iterator = values.iterator();</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L146">            Object object = iterator.next();</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (object == null) {</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                if (includeNullAndNaN) {</span>
+<span class="fc" id="L149">                    return Double.NaN;</span>
                 }
             }
             else {
-<span class="nc bnc" id="L153" title="All 2 branches missed.">                if (object instanceof Number) {</span>
-<span class="nc" id="L154">                    Number number = (Number) object;</span>
-<span class="nc" id="L155">                    double value = number.doubleValue();</span>
-<span class="nc bnc" id="L156" title="All 2 branches missed.">                    if (Double.isNaN(value)) {</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">                        if (includeNullAndNaN) {</span>
-<span class="nc" id="L158">                            return Double.NaN;</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">                if (object instanceof Number) {</span>
+<span class="fc" id="L154">                    Number number = (Number) object;</span>
+<span class="fc" id="L155">                    double value = number.doubleValue();</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">                    if (Double.isNaN(value)) {</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                        if (includeNullAndNaN) {</span>
+<span class="fc" id="L158">                            return Double.NaN;</span>
                         }
                     }
                     else {
-<span class="nc" id="L162">                        total = total + number.doubleValue();</span>
-<span class="nc" id="L163">                        count = count + 1;</span>
+<span class="fc" id="L162">                        total = total + number.doubleValue();</span>
+<span class="fc" id="L163">                        count = count + 1;</span>
                     }
                 }
             }
-<span class="nc" id="L167">        }</span>
-<span class="nc" id="L168">        return total / count;</span>
+<span class="fc" id="L167">        }</span>
+<span class="fc" id="L168">        return total / count;</span>
     }
 
     /**
@@ -180,7 +180,7 @@ import org.jfree.chart.util.Args;
      * @return The median.
      */
     public static double calculateMedian(List values) {
-<span class="nc" id="L183">        return calculateMedian(values, true);</span>
+<span class="fc" id="L183">        return calculateMedian(values, true);</span>
     }
 
     /**
@@ -196,38 +196,38 @@ import org.jfree.chart.util.Args;
      */
     public static double calculateMedian(List values, boolean copyAndSort) {
 
-<span class="nc" id="L199">        double result = Double.NaN;</span>
-<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (values != null) {</span>
-<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (copyAndSort) {</span>
-<span class="nc" id="L202">                int itemCount = values.size();</span>
-<span class="nc" id="L203">                List copy = new ArrayList(itemCount);</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">                for (int i = 0; i &lt; itemCount; i++) {</span>
-<span class="nc" id="L205">                    copy.add(i, values.get(i));</span>
+<span class="fc" id="L199">        double result = Double.NaN;</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (values != null) {</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">            if (copyAndSort) {</span>
+<span class="fc" id="L202">                int itemCount = values.size();</span>
+<span class="fc" id="L203">                List copy = new ArrayList(itemCount);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">                for (int i = 0; i &lt; itemCount; i++) {</span>
+<span class="fc" id="L205">                    copy.add(i, values.get(i));</span>
                 }
-<span class="nc" id="L207">                Collections.sort(copy);</span>
-<span class="nc" id="L208">                values = copy;</span>
+<span class="fc" id="L207">                Collections.sort(copy);</span>
+<span class="fc" id="L208">                values = copy;</span>
             }
-<span class="nc" id="L210">            int count = values.size();</span>
-<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (count &gt; 0) {</span>
-<span class="nc bnc" id="L212" title="All 2 branches missed.">                if (count % 2 == 1) {</span>
-<span class="nc bnc" id="L213" title="All 2 branches missed.">                    if (count &gt; 1) {</span>
-<span class="nc" id="L214">                        Number value = (Number) values.get((count - 1) / 2);</span>
-<span class="nc" id="L215">                        result = value.doubleValue();</span>
-<span class="nc" id="L216">                    }</span>
+<span class="fc" id="L210">            int count = values.size();</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            if (count &gt; 0) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">                if (count % 2 == 1) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">                    if (count &gt; 1) {</span>
+<span class="fc" id="L214">                        Number value = (Number) values.get((count - 1) / 2);</span>
+<span class="fc" id="L215">                        result = value.doubleValue();</span>
+<span class="fc" id="L216">                    }</span>
                     else {
-<span class="nc" id="L218">                        Number value = (Number) values.get(0);</span>
-<span class="nc" id="L219">                        result = value.doubleValue();</span>
-<span class="nc" id="L220">                    }</span>
+<span class="fc" id="L218">                        Number value = (Number) values.get(0);</span>
+<span class="fc" id="L219">                        result = value.doubleValue();</span>
+<span class="fc" id="L220">                    }</span>
                 }
                 else {
-<span class="nc" id="L223">                    Number value1 = (Number) values.get(count / 2 - 1);</span>
-<span class="nc" id="L224">                    Number value2 = (Number) values.get(count / 2);</span>
-<span class="nc" id="L225">                    result = (value1.doubleValue() + value2.doubleValue())</span>
+<span class="fc" id="L223">                    Number value1 = (Number) values.get(count / 2 - 1);</span>
+<span class="fc" id="L224">                    Number value2 = (Number) values.get(count / 2);</span>
+<span class="fc" id="L225">                    result = (value1.doubleValue() + value2.doubleValue())</span>
                              / 2.0;
                 }
             }
         }
-<span class="nc" id="L230">        return result;</span>
+<span class="fc" id="L230">        return result;</span>
     }
 
     /**
@@ -241,7 +241,7 @@ import org.jfree.chart.util.Args;
      * @return The median.
      */
     public static double calculateMedian(List values, int start, int end) {
-<span class="nc" id="L244">        return calculateMedian(values, start, end, true);</span>
+<span class="fc" id="L244">        return calculateMedian(values, start, end, true);</span>
     }
 
     /**
@@ -260,15 +260,15 @@ import org.jfree.chart.util.Args;
     public static double calculateMedian(List values, int start, int end,
                                          boolean copyAndSort) {
 
-<span class="nc" id="L263">        double result = Double.NaN;</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (copyAndSort) {</span>
-<span class="nc" id="L265">            List working = new ArrayList(end - start + 1);</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">            for (int i = start; i &lt;= end; i++) {</span>
-<span class="nc" id="L267">                working.add(values.get(i));</span>
+<span class="fc" id="L263">        double result = Double.NaN;</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">        if (copyAndSort) {</span>
+<span class="fc" id="L265">            List working = new ArrayList(end - start + 1);</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">            for (int i = start; i &lt;= end; i++) {</span>
+<span class="fc" id="L267">                working.add(values.get(i));</span>
             }
-<span class="nc" id="L269">            Collections.sort(working);</span>
-<span class="nc" id="L270">            result = calculateMedian(working, false);</span>
-<span class="nc" id="L271">        }</span>
+<span class="fc" id="L269">            Collections.sort(working);</span>
+<span class="fc" id="L270">            result = calculateMedian(working, false);</span>
+<span class="fc" id="L271">        }</span>
         else {
 <span class="nc" id="L273">            int count = end - start + 1;</span>
 <span class="nc bnc" id="L274" title="All 2 branches missed.">            if (count &gt; 0) {</span>
@@ -291,7 +291,7 @@ import org.jfree.chart.util.Args;
                 }
             }
         }
-<span class="nc" id="L294">        return result;</span>
+<span class="fc" id="L294">        return result;</span>
 
     }
 
@@ -304,18 +304,18 @@ import org.jfree.chart.util.Args;
      * @return The standard deviation of a set of numbers.
      */
     public static double getStdDev(Number[] data) {
-<span class="nc" id="L307">        Args.nullNotPermitted(data, &quot;data&quot;);</span>
-<span class="nc bnc" id="L308" title="All 2 branches missed.">        if (data.length == 0) {</span>
-<span class="nc" id="L309">            throw new IllegalArgumentException(&quot;Zero length 'data' array.&quot;);</span>
+<span class="fc" id="L307">        Args.nullNotPermitted(data, &quot;data&quot;);</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        if (data.length == 0) {</span>
+<span class="fc" id="L309">            throw new IllegalArgumentException(&quot;Zero length 'data' array.&quot;);</span>
         }
-<span class="nc" id="L311">        double avg = calculateMean(data);</span>
-<span class="nc" id="L312">        double sum = 0.0;</span>
+<span class="fc" id="L311">        double avg = calculateMean(data);</span>
+<span class="fc" id="L312">        double sum = 0.0;</span>
 
-<span class="nc bnc" id="L314" title="All 2 branches missed.">        for (int counter = 0; counter &lt; data.length; counter++) {</span>
-<span class="nc" id="L315">            double diff = data[counter].doubleValue() - avg;</span>
-<span class="nc" id="L316">            sum = sum + diff * diff;</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">        for (int counter = 0; counter &lt; data.length; counter++) {</span>
+<span class="fc" id="L315">            double diff = data[counter].doubleValue() - avg;</span>
+<span class="fc" id="L316">            sum = sum + diff * diff;</span>
         }
-<span class="nc" id="L318">        return Math.sqrt(sum / (data.length - 1));</span>
+<span class="fc" id="L318">        return Math.sqrt(sum / (data.length - 1));</span>
     }
 
     /**
@@ -397,35 +397,35 @@ import org.jfree.chart.util.Args;
      * @return The correlation.
      */
     public static double getCorrelation(Number[] data1, Number[] data2) {
-<span class="nc" id="L400">        Args.nullNotPermitted(data1, &quot;data1&quot;);</span>
-<span class="nc" id="L401">        Args.nullNotPermitted(data2, &quot;data2&quot;);</span>
-<span class="nc bnc" id="L402" title="All 2 branches missed.">        if (data1.length != data2.length) {</span>
+<span class="fc" id="L400">        Args.nullNotPermitted(data1, &quot;data1&quot;);</span>
+<span class="fc" id="L401">        Args.nullNotPermitted(data2, &quot;data2&quot;);</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">        if (data1.length != data2.length) {</span>
 <span class="nc" id="L403">            throw new IllegalArgumentException(</span>
                 &quot;'data1' and 'data2' arrays must have same length.&quot;
             );
         }
-<span class="nc" id="L407">        int n = data1.length;</span>
-<span class="nc" id="L408">        double sumX = 0.0;</span>
-<span class="nc" id="L409">        double sumY = 0.0;</span>
-<span class="nc" id="L410">        double sumX2 = 0.0;</span>
-<span class="nc" id="L411">        double sumY2 = 0.0;</span>
-<span class="nc" id="L412">        double sumXY = 0.0;</span>
-<span class="nc bnc" id="L413" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
-<span class="nc" id="L414">            double x = 0.0;</span>
-<span class="nc bnc" id="L415" title="All 2 branches missed.">            if (data1[i] != null) {</span>
-<span class="nc" id="L416">                x = data1[i].doubleValue();</span>
+<span class="fc" id="L407">        int n = data1.length;</span>
+<span class="fc" id="L408">        double sumX = 0.0;</span>
+<span class="fc" id="L409">        double sumY = 0.0;</span>
+<span class="fc" id="L410">        double sumX2 = 0.0;</span>
+<span class="fc" id="L411">        double sumY2 = 0.0;</span>
+<span class="fc" id="L412">        double sumXY = 0.0;</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L414">            double x = 0.0;</span>
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">            if (data1[i] != null) {</span>
+<span class="fc" id="L416">                x = data1[i].doubleValue();</span>
             }
-<span class="nc" id="L418">            double y = 0.0;</span>
-<span class="nc bnc" id="L419" title="All 2 branches missed.">            if (data2[i] != null) {</span>
-<span class="nc" id="L420">                y = data2[i].doubleValue();</span>
+<span class="fc" id="L418">            double y = 0.0;</span>
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">            if (data2[i] != null) {</span>
+<span class="fc" id="L420">                y = data2[i].doubleValue();</span>
             }
-<span class="nc" id="L422">            sumX = sumX + x;</span>
-<span class="nc" id="L423">            sumY = sumY + y;</span>
-<span class="nc" id="L424">            sumXY = sumXY + (x * y);</span>
-<span class="nc" id="L425">            sumX2 = sumX2 + (x * x);</span>
-<span class="nc" id="L426">            sumY2 = sumY2 + (y * y);</span>
+<span class="fc" id="L422">            sumX = sumX + x;</span>
+<span class="fc" id="L423">            sumY = sumY + y;</span>
+<span class="fc" id="L424">            sumXY = sumXY + (x * y);</span>
+<span class="fc" id="L425">            sumX2 = sumX2 + (x * x);</span>
+<span class="fc" id="L426">            sumY2 = sumY2 + (y * y);</span>
         }
-<span class="nc" id="L428">        return (n * sumXY - sumX * sumY) / Math.pow((n * sumX2 - sumX * sumX)</span>
+<span class="fc" id="L428">        return (n * sumXY - sumX * sumY) / Math.pow((n * sumX2 - sumX * sumX)</span>
                 * (n * sumY2 - sumY * sumY), 0.5);
     }
 
@@ -468,4 +468,4 @@ import org.jfree.chart.util.Args;
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

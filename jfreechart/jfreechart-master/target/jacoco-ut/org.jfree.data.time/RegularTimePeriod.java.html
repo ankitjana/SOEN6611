@@ -69,7 +69,7 @@ import org.jfree.chart.date.MonthConstants;
  * &lt;P&gt;
  * This class is immutable, and all subclasses should be immutable also.
  */
-<span class="nc" id="L72">public abstract class RegularTimePeriod implements TimePeriod, Comparable,</span>
+<span class="fc" id="L72">public abstract class RegularTimePeriod implements TimePeriod, Comparable,</span>
         MonthConstants {
 
     /**
@@ -85,17 +85,17 @@ import org.jfree.chart.date.MonthConstants;
      */
     public static RegularTimePeriod createInstance(Class c, Date millisecond,
             TimeZone zone, Locale locale) {
-<span class="nc" id="L88">        RegularTimePeriod result = null;</span>
+<span class="fc" id="L88">        RegularTimePeriod result = null;</span>
         try {
-<span class="nc" id="L90">            Constructor constructor = c.getDeclaredConstructor(</span>
+<span class="fc" id="L90">            Constructor constructor = c.getDeclaredConstructor(</span>
                     new Class[] {Date.class, TimeZone.class, Locale.class});
-<span class="nc" id="L92">            result = (RegularTimePeriod) constructor.newInstance(</span>
+<span class="fc" id="L92">            result = (RegularTimePeriod) constructor.newInstance(</span>
                     new Object[] {millisecond, zone, locale});
         }
 <span class="nc" id="L95">        catch (Exception e) {</span>
             // do nothing, so null is returned
-<span class="nc" id="L97">        }</span>
-<span class="nc" id="L98">        return result;</span>
+<span class="fc" id="L97">        }</span>
+<span class="fc" id="L98">        return result;</span>
     }
 
     /**
@@ -107,17 +107,17 @@ import org.jfree.chart.date.MonthConstants;
      * @return A class.
      */
     public static Class downsize(Class c) {
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (c.equals(Year.class)) {</span>
-<span class="nc" id="L111">            return Quarter.class;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (c.equals(Year.class)) {</span>
+<span class="fc" id="L111">            return Quarter.class;</span>
         }
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        else if (c.equals(Quarter.class)) {</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        else if (c.equals(Quarter.class)) {</span>
 <span class="nc" id="L114">            return Month.class;</span>
         }
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        else if (c.equals(Month.class)) {</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        else if (c.equals(Month.class)) {</span>
 <span class="nc" id="L117">            return Day.class;</span>
         }
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        else if (c.equals(Day.class)) {</span>
-<span class="nc" id="L120">            return Hour.class;</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        else if (c.equals(Day.class)) {</span>
+<span class="fc" id="L120">            return Hour.class;</span>
         }
 <span class="nc bnc" id="L122" title="All 2 branches missed.">        else if (c.equals(Hour.class)) {</span>
 <span class="nc" id="L123">            return Minute.class;</span>
@@ -178,7 +178,7 @@ import org.jfree.chart.date.MonthConstants;
      */
     @Override
     public Date getStart() {
-<span class="nc" id="L181">        return new Date(getFirstMillisecond());</span>
+<span class="fc" id="L181">        return new Date(getFirstMillisecond());</span>
     }
 
     /**
@@ -191,7 +191,7 @@ import org.jfree.chart.date.MonthConstants;
      */
     @Override
     public Date getEnd() {
-<span class="nc" id="L194">        return new Date(getLastMillisecond());</span>
+<span class="fc" id="L194">        return new Date(getLastMillisecond());</span>
     }
 
     /**
@@ -250,9 +250,9 @@ import org.jfree.chart.date.MonthConstants;
      * @return The middle millisecond.
      */
     public long getMiddleMillisecond() {
-<span class="nc" id="L253">        long m1 = getFirstMillisecond();</span>
-<span class="nc" id="L254">        long m2 = getLastMillisecond();</span>
-<span class="nc" id="L255">        return m1 + (m2 - m1) / 2;</span>
+<span class="fc" id="L253">        long m1 = getFirstMillisecond();</span>
+<span class="fc" id="L254">        long m2 = getLastMillisecond();</span>
+<span class="fc" id="L255">        return m1 + (m2 - m1) / 2;</span>
     }
 
     /**
@@ -264,9 +264,9 @@ import org.jfree.chart.date.MonthConstants;
      * @return The middle millisecond.
      */
     public long getMiddleMillisecond(Calendar calendar) {
-<span class="nc" id="L267">        long m1 = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L268">        long m2 = getLastMillisecond(calendar);</span>
-<span class="nc" id="L269">        return m1 + (m2 - m1) / 2;</span>
+<span class="fc" id="L267">        long m1 = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L268">        long m2 = getLastMillisecond(calendar);</span>
+<span class="fc" id="L269">        return m1 + (m2 - m1) / 2;</span>
     }
 
     /**
@@ -282,12 +282,12 @@ import org.jfree.chart.date.MonthConstants;
      * @since 1.0.18
      */
     public long getMillisecond(TimePeriodAnchor anchor, Calendar calendar) {
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (anchor.equals(TimePeriodAnchor.START)) {</span>
-<span class="nc" id="L286">            return getFirstMillisecond(calendar);</span>
-<span class="nc bnc" id="L287" title="All 2 branches missed.">        } else if (anchor.equals(TimePeriodAnchor.MIDDLE)) {</span>
-<span class="nc" id="L288">            return getMiddleMillisecond(calendar);</span>
-<span class="nc bnc" id="L289" title="All 2 branches missed.">        } else if (anchor.equals(TimePeriodAnchor.END)) {</span>
-<span class="nc" id="L290">            return getLastMillisecond(calendar);</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (anchor.equals(TimePeriodAnchor.START)) {</span>
+<span class="fc" id="L286">            return getFirstMillisecond(calendar);</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        } else if (anchor.equals(TimePeriodAnchor.MIDDLE)) {</span>
+<span class="fc" id="L288">            return getMiddleMillisecond(calendar);</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">        } else if (anchor.equals(TimePeriodAnchor.END)) {</span>
+<span class="fc" id="L290">            return getLastMillisecond(calendar);</span>
         } else {
 <span class="nc" id="L292">            throw new IllegalStateException(&quot;Unrecognised anchor: &quot; + anchor);</span>
         }
@@ -304,4 +304,4 @@ import org.jfree.chart.date.MonthConstants;
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

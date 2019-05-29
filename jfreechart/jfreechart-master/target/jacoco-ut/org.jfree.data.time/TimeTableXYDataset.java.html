@@ -117,8 +117,8 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     public TimeTableXYDataset() {
         // defer argument checking
-<span class="nc" id="L120">        this(TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L120">        this(TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L121">    }</span>
 
     /**
      * Creates a new dataset with the given time zone.
@@ -127,8 +127,8 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     public TimeTableXYDataset(TimeZone zone) {
         // defer argument checking
-<span class="nc" id="L130">        this(zone, Locale.getDefault());</span>
-<span class="nc" id="L131">    }</span>
+<span class="fc" id="L130">        this(zone, Locale.getDefault());</span>
+<span class="fc" id="L131">    }</span>
 
     /**
      * Creates a new dataset with the given time zone and locale.
@@ -136,13 +136,13 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @param zone  the time zone to use ({@code null} not permitted).
      * @param locale  the locale to use ({@code null} not permitted).
      */
-<span class="nc" id="L139">    public TimeTableXYDataset(TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L140">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L141">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L142">        this.values = new DefaultKeyedValues2D(true);</span>
-<span class="nc" id="L143">        this.workingCalendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L144">        this.xPosition = TimePeriodAnchor.START;</span>
-<span class="nc" id="L145">    }</span>
+<span class="fc" id="L139">    public TimeTableXYDataset(TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L140">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L141">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L142">        this.values = new DefaultKeyedValues2D(true);</span>
+<span class="fc" id="L143">        this.workingCalendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L144">        this.xPosition = TimePeriodAnchor.START;</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Returns a flag that controls whether the domain is treated as 'points in
@@ -158,7 +158,7 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @see #setDomainIsPointsInTime(boolean)
      */
     public boolean getDomainIsPointsInTime() {
-<span class="nc" id="L161">        return this.domainIsPointsInTime;</span>
+<span class="fc" id="L161">        return this.domainIsPointsInTime;</span>
     }
 
     /**
@@ -171,9 +171,9 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @see #getDomainIsPointsInTime()
      */
     public void setDomainIsPointsInTime(boolean flag) {
-<span class="nc" id="L174">        this.domainIsPointsInTime = flag;</span>
-<span class="nc" id="L175">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L176">    }</span>
+<span class="fc" id="L174">        this.domainIsPointsInTime = flag;</span>
+<span class="fc" id="L175">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L176">    }</span>
 
     /**
      * Returns the position within each time period that is used for the X
@@ -212,8 +212,8 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @see #remove(TimePeriod, Comparable)
      */
     public void add(TimePeriod period, double y, Comparable seriesName) {
-<span class="nc" id="L215">        add(period, new Double(y), seriesName, true);</span>
-<span class="nc" id="L216">    }</span>
+<span class="fc" id="L215">        add(period, new Double(y), seriesName, true);</span>
+<span class="fc" id="L216">    }</span>
 
     /**
      * Adds a new data item to the dataset and, if requested, sends a
@@ -233,15 +233,15 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
         // TimePeriod, which cannot make use of the timezone and locale
         // specified in the constructor...so we only do the time zone
         // pegging if the period is an instanceof RegularTimePeriod
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (period instanceof RegularTimePeriod) {</span>
-<span class="nc" id="L237">            RegularTimePeriod p = (RegularTimePeriod) period;</span>
-<span class="nc" id="L238">            p.peg(this.workingCalendar);</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (period instanceof RegularTimePeriod) {</span>
+<span class="fc" id="L237">            RegularTimePeriod p = (RegularTimePeriod) period;</span>
+<span class="fc" id="L238">            p.peg(this.workingCalendar);</span>
         }
-<span class="nc" id="L240">        this.values.addValue(y, period, seriesName);</span>
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L242">            fireDatasetChanged();</span>
+<span class="fc" id="L240">        this.values.addValue(y, period, seriesName);</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L242">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L244">    }</span>
+<span class="fc" id="L244">    }</span>
 
     /**
      * Removes an existing data item from the dataset.
@@ -284,11 +284,11 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @since 1.0.7
      */
     public void clear() {
-<span class="nc bnc" id="L287" title="All 2 branches missed.">        if (this.values.getRowCount() &gt; 0) {</span>
-<span class="nc" id="L288">            this.values.clear();</span>
-<span class="nc" id="L289">            fireDatasetChanged();</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">        if (this.values.getRowCount() &gt; 0) {</span>
+<span class="fc" id="L288">            this.values.clear();</span>
+<span class="fc" id="L289">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L291">    }</span>
+<span class="fc" id="L291">    }</span>
 
     /**
      * Returns the time period for the specified item.  Bear in mind that all
@@ -299,7 +299,7 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      * @return The time period.
      */
     public TimePeriod getTimePeriod(int item) {
-<span class="nc" id="L302">        return (TimePeriod) this.values.getRowKey(item);</span>
+<span class="fc" id="L302">        return (TimePeriod) this.values.getRowKey(item);</span>
     }
 
     /**
@@ -309,7 +309,7 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getItemCount() {
-<span class="nc" id="L312">        return this.values.getRowCount();</span>
+<span class="fc" id="L312">        return this.values.getRowCount();</span>
     }
 
     /**
@@ -333,7 +333,7 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L336">        return this.values.getColumnCount();</span>
+<span class="fc" id="L336">        return this.values.getColumnCount();</span>
     }
 
     /**
@@ -447,7 +447,7 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getY(int series, int item) {
-<span class="nc" id="L450">        return this.values.getValue(item, series);</span>
+<span class="fc" id="L450">        return this.values.getValue(item, series);</span>
     }
 
     /**
@@ -571,28 +571,28 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L574" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L574" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L575">            return true;</span>
         }
-<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (!(obj instanceof TimeTableXYDataset)) {</span>
+<span class="pc bpc" id="L577" title="1 of 2 branches missed.">        if (!(obj instanceof TimeTableXYDataset)) {</span>
 <span class="nc" id="L578">            return false;</span>
         }
-<span class="nc" id="L580">        TimeTableXYDataset that = (TimeTableXYDataset) obj;</span>
-<span class="nc bnc" id="L581" title="All 2 branches missed.">        if (this.domainIsPointsInTime != that.domainIsPointsInTime) {</span>
-<span class="nc" id="L582">            return false;</span>
+<span class="fc" id="L580">        TimeTableXYDataset that = (TimeTableXYDataset) obj;</span>
+<span class="fc bfc" id="L581" title="All 2 branches covered.">        if (this.domainIsPointsInTime != that.domainIsPointsInTime) {</span>
+<span class="fc" id="L582">            return false;</span>
         }
-<span class="nc bnc" id="L584" title="All 2 branches missed.">        if (this.xPosition != that.xPosition) {</span>
+<span class="pc bpc" id="L584" title="1 of 2 branches missed.">        if (this.xPosition != that.xPosition) {</span>
 <span class="nc" id="L585">            return false;</span>
         }
-<span class="nc bnc" id="L587" title="All 2 branches missed.">        if (!this.workingCalendar.getTimeZone().equals(</span>
-<span class="nc" id="L588">            that.workingCalendar.getTimeZone())</span>
+<span class="fc bfc" id="L587" title="All 2 branches covered.">        if (!this.workingCalendar.getTimeZone().equals(</span>
+<span class="fc" id="L588">            that.workingCalendar.getTimeZone())</span>
         ) {
-<span class="nc" id="L590">            return false;</span>
+<span class="fc" id="L590">            return false;</span>
         }
-<span class="nc bnc" id="L592" title="All 2 branches missed.">        if (!this.values.equals(that.values)) {</span>
-<span class="nc" id="L593">            return false;</span>
+<span class="fc bfc" id="L592" title="All 2 branches covered.">        if (!this.values.equals(that.values)) {</span>
+<span class="fc" id="L593">            return false;</span>
         }
-<span class="nc" id="L595">        return true;</span>
+<span class="fc" id="L595">        return true;</span>
     }
 
     /**
@@ -604,11 +604,11 @@ public class TimeTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L607">        TimeTableXYDataset clone = (TimeTableXYDataset) super.clone();</span>
-<span class="nc" id="L608">        clone.values = (DefaultKeyedValues2D) this.values.clone();</span>
-<span class="nc" id="L609">        clone.workingCalendar = (Calendar) this.workingCalendar.clone();</span>
-<span class="nc" id="L610">        return clone;</span>
+<span class="fc" id="L607">        TimeTableXYDataset clone = (TimeTableXYDataset) super.clone();</span>
+<span class="fc" id="L608">        clone.values = (DefaultKeyedValues2D) this.values.clone();</span>
+<span class="fc" id="L609">        clone.workingCalendar = (Calendar) this.workingCalendar.clone();</span>
+<span class="fc" id="L610">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

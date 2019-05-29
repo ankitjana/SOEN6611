@@ -77,11 +77,11 @@ public class ModuloAxis extends NumberAxis {
      * @param fixedRange  the fixed range ({@code null} not permitted).
      */
     public ModuloAxis(String label, Range fixedRange) {
-<span class="nc" id="L80">        super(label);</span>
-<span class="nc" id="L81">        this.fixedRange = fixedRange;</span>
-<span class="nc" id="L82">        this.displayStart = 270.0;</span>
-<span class="nc" id="L83">        this.displayEnd = 90.0;</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L80">        super(label);</span>
+<span class="fc" id="L81">        this.fixedRange = fixedRange;</span>
+<span class="fc" id="L82">        this.displayStart = 270.0;</span>
+<span class="fc" id="L83">        this.displayEnd = 90.0;</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Returns the display start value.
@@ -109,17 +109,17 @@ public class ModuloAxis extends NumberAxis {
      * @param end  the end value.
      */
     public void setDisplayRange(double start, double end) {
-<span class="nc" id="L112">        this.displayStart = mapValueToFixedRange(start);</span>
-<span class="nc" id="L113">        this.displayEnd = mapValueToFixedRange(end);</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (this.displayStart &lt; this.displayEnd) {</span>
-<span class="nc" id="L115">            setRange(this.displayStart, this.displayEnd);</span>
+<span class="fc" id="L112">        this.displayStart = mapValueToFixedRange(start);</span>
+<span class="fc" id="L113">        this.displayEnd = mapValueToFixedRange(end);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (this.displayStart &lt; this.displayEnd) {</span>
+<span class="fc" id="L115">            setRange(this.displayStart, this.displayEnd);</span>
         }
         else {
 <span class="nc" id="L118">            setRange(this.displayStart, this.fixedRange.getUpperBound()</span>
 <span class="nc" id="L119">                  + (this.displayEnd - this.fixedRange.getLowerBound()));</span>
         }
-<span class="nc" id="L121">        notifyListeners(new AxisChangeEvent(this));</span>
-<span class="nc" id="L122">    }</span>
+<span class="fc" id="L121">        notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * This method should calculate a range that will show all the data values.
@@ -279,13 +279,13 @@ public class ModuloAxis extends NumberAxis {
      * @return The mapped value.
      */
     private double mapValueToFixedRange(double value) {
-<span class="nc" id="L282">        double lower = this.fixedRange.getLowerBound();</span>
-<span class="nc" id="L283">        double length = this.fixedRange.getLength();</span>
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (value &lt; lower) {</span>
+<span class="fc" id="L282">        double lower = this.fixedRange.getLowerBound();</span>
+<span class="fc" id="L283">        double length = this.fixedRange.getLength();</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (value &lt; lower) {</span>
 <span class="nc" id="L285">            return lower + length + ((value - lower) % length);</span>
         }
         else {
-<span class="nc" id="L288">            return lower + ((value - lower) % length);</span>
+<span class="fc" id="L288">            return lower + ((value - lower) % length);</span>
         }
     }
 
@@ -415,24 +415,24 @@ public class ModuloAxis extends NumberAxis {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L418" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L419">            return true;</span>
         }
-<span class="nc bnc" id="L421" title="All 2 branches missed.">        if (!(obj instanceof ModuloAxis)) {</span>
+<span class="pc bpc" id="L421" title="1 of 2 branches missed.">        if (!(obj instanceof ModuloAxis)) {</span>
 <span class="nc" id="L422">            return false;</span>
         }
-<span class="nc" id="L424">        ModuloAxis that = (ModuloAxis) obj;</span>
-<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (this.displayStart != that.displayStart) {</span>
-<span class="nc" id="L426">            return false;</span>
+<span class="fc" id="L424">        ModuloAxis that = (ModuloAxis) obj;</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">        if (this.displayStart != that.displayStart) {</span>
+<span class="fc" id="L426">            return false;</span>
         }
-<span class="nc bnc" id="L428" title="All 2 branches missed.">        if (this.displayEnd != that.displayEnd) {</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">        if (this.displayEnd != that.displayEnd) {</span>
 <span class="nc" id="L429">            return false;</span>
         }
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (!this.fixedRange.equals(that.fixedRange)) {</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">        if (!this.fixedRange.equals(that.fixedRange)) {</span>
 <span class="nc" id="L432">            return false;</span>
         }
-<span class="nc" id="L434">        return super.equals(obj);</span>
+<span class="fc" id="L434">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

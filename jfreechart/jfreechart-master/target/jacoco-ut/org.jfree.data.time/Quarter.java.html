@@ -86,13 +86,13 @@ public class Quarter extends RegularTimePeriod implements Serializable {
     public static final int LAST_QUARTER = 4;
 
     /** The first month in each quarter. */
-<span class="nc" id="L89">    public static final int[] FIRST_MONTH_IN_QUARTER = {</span>
+<span class="fc" id="L89">    public static final int[] FIRST_MONTH_IN_QUARTER = {</span>
         0, MonthConstants.JANUARY, MonthConstants.APRIL, MonthConstants.JULY,
         MonthConstants.OCTOBER
     };
 
     /** The last month in each quarter. */
-<span class="nc" id="L95">    public static final int[] LAST_MONTH_IN_QUARTER = {</span>
+<span class="fc" id="L95">    public static final int[] LAST_MONTH_IN_QUARTER = {</span>
         0, MonthConstants.MARCH, MonthConstants.JUNE, MonthConstants.SEPTEMBER,
         MonthConstants.DECEMBER
     };
@@ -113,8 +113,8 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * Constructs a new Quarter, based on the current system date/time.
      */
     public Quarter() {
-<span class="nc" id="L116">        this(new Date());</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L116">        this(new Date());</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Constructs a new quarter.
@@ -122,14 +122,14 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @param year  the year (1900 to 9999).
      * @param quarter  the quarter (1 to 4).
      */
-<span class="nc" id="L125">    public Quarter(int quarter, int year) {</span>
-<span class="nc bnc" id="L126" title="All 4 branches missed.">        if ((quarter &lt; FIRST_QUARTER) || (quarter &gt; LAST_QUARTER)) {</span>
-<span class="nc" id="L127">            throw new IllegalArgumentException(&quot;Quarter outside valid range.&quot;);</span>
+<span class="fc" id="L125">    public Quarter(int quarter, int year) {</span>
+<span class="fc bfc" id="L126" title="All 4 branches covered.">        if ((quarter &lt; FIRST_QUARTER) || (quarter &gt; LAST_QUARTER)) {</span>
+<span class="fc" id="L127">            throw new IllegalArgumentException(&quot;Quarter outside valid range.&quot;);</span>
         }
-<span class="nc" id="L129">        this.year = (short) year;</span>
-<span class="nc" id="L130">        this.quarter = (byte) quarter;</span>
-<span class="nc" id="L131">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L132">    }</span>
+<span class="fc" id="L129">        this.year = (short) year;</span>
+<span class="fc" id="L130">        this.quarter = (byte) quarter;</span>
+<span class="fc" id="L131">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L132">    }</span>
 
     /**
      * Constructs a new quarter.
@@ -137,14 +137,14 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @param quarter  the quarter (1 to 4).
      * @param year  the year (1900 to 9999).
      */
-<span class="nc" id="L140">    public Quarter(int quarter, Year year) {</span>
-<span class="nc bnc" id="L141" title="All 4 branches missed.">        if ((quarter &lt; FIRST_QUARTER) || (quarter &gt; LAST_QUARTER)) {</span>
+<span class="fc" id="L140">    public Quarter(int quarter, Year year) {</span>
+<span class="pc bpc" id="L141" title="2 of 4 branches missed.">        if ((quarter &lt; FIRST_QUARTER) || (quarter &gt; LAST_QUARTER)) {</span>
 <span class="nc" id="L142">            throw new IllegalArgumentException(&quot;Quarter outside valid range.&quot;);</span>
         }
-<span class="nc" id="L144">        this.year = (short) year.getYear();</span>
-<span class="nc" id="L145">        this.quarter = (byte) quarter;</span>
-<span class="nc" id="L146">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L147">    }</span>
+<span class="fc" id="L144">        this.year = (short) year.getYear();</span>
+<span class="fc" id="L145">        this.quarter = (byte) quarter;</span>
+<span class="fc" id="L146">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Constructs a new instance, based on a date/time and the default time
@@ -155,8 +155,8 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @see #Quarter(Date, TimeZone, Locale)
      */
     public Quarter(Date time) {
-<span class="nc" id="L158">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L159">    }</span>
+<span class="fc" id="L158">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Creates a new {@code Quarter} instance, using the specified
@@ -168,14 +168,14 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      *
      * @since 1.0.12
      */
-<span class="nc" id="L171">    public Quarter(Date time, TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L172">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L173">        calendar.setTime(time);</span>
-<span class="nc" id="L174">        int month = calendar.get(Calendar.MONTH) + 1;</span>
-<span class="nc" id="L175">        this.quarter = (byte) SerialDate.monthCodeToQuarter(month);</span>
-<span class="nc" id="L176">        this.year = (short) calendar.get(Calendar.YEAR);</span>
-<span class="nc" id="L177">        peg(calendar);</span>
-<span class="nc" id="L178">    }</span>
+<span class="fc" id="L171">    public Quarter(Date time, TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L172">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L173">        calendar.setTime(time);</span>
+<span class="fc" id="L174">        int month = calendar.get(Calendar.MONTH) + 1;</span>
+<span class="fc" id="L175">        this.quarter = (byte) SerialDate.monthCodeToQuarter(month);</span>
+<span class="fc" id="L176">        this.year = (short) calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L177">        peg(calendar);</span>
+<span class="fc" id="L178">    }</span>
 
     /**
      * Returns the quarter.
@@ -183,7 +183,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @return The quarter.
      */
     public int getQuarter() {
-<span class="nc" id="L186">        return this.quarter;</span>
+<span class="fc" id="L186">        return this.quarter;</span>
     }
 
     /**
@@ -192,7 +192,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @return The year.
      */
     public Year getYear() {
-<span class="nc" id="L195">        return new Year(this.year);</span>
+<span class="fc" id="L195">        return new Year(this.year);</span>
     }
 
     /**
@@ -203,7 +203,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      * @since 1.0.3
      */
     public int getYearValue() {
-<span class="nc" id="L206">        return this.year;</span>
+<span class="fc" id="L206">        return this.year;</span>
     }
 
     /**
@@ -218,7 +218,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond() {
-<span class="nc" id="L221">        return this.firstMillisecond;</span>
+<span class="fc" id="L221">        return this.firstMillisecond;</span>
     }
 
     /**
@@ -233,7 +233,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond() {
-<span class="nc" id="L236">        return this.lastMillisecond;</span>
+<span class="fc" id="L236">        return this.lastMillisecond;</span>
     }
 
     /**
@@ -246,9 +246,9 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public void peg(Calendar calendar) {
-<span class="nc" id="L249">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L250">        this.lastMillisecond = getLastMillisecond(calendar);</span>
-<span class="nc" id="L251">    }</span>
+<span class="fc" id="L249">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L250">        this.lastMillisecond = getLastMillisecond(calendar);</span>
+<span class="fc" id="L251">    }</span>
 
     /**
      * Returns the quarter preceding this one.
@@ -259,18 +259,18 @@ public class Quarter extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod previous() {
         Quarter result;
-<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (this.quarter &gt; FIRST_QUARTER) {</span>
-<span class="nc" id="L263">            result = new Quarter(this.quarter - 1, this.year);</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if (this.quarter &gt; FIRST_QUARTER) {</span>
+<span class="fc" id="L263">            result = new Quarter(this.quarter - 1, this.year);</span>
         }
         else {
-<span class="nc bnc" id="L266" title="All 2 branches missed.">            if (this.year &gt; 1900) {</span>
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">            if (this.year &gt; 1900) {</span>
 <span class="nc" id="L267">                result = new Quarter(LAST_QUARTER, this.year - 1);</span>
             }
             else {
-<span class="nc" id="L270">                result = null;</span>
+<span class="fc" id="L270">                result = null;</span>
             }
         }
-<span class="nc" id="L273">        return result;</span>
+<span class="fc" id="L273">        return result;</span>
     }
 
     /**
@@ -281,18 +281,18 @@ public class Quarter extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod next() {
         Quarter result;
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (this.quarter &lt; LAST_QUARTER) {</span>
-<span class="nc" id="L285">            result = new Quarter(this.quarter + 1, this.year);</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">        if (this.quarter &lt; LAST_QUARTER) {</span>
+<span class="fc" id="L285">            result = new Quarter(this.quarter + 1, this.year);</span>
         }
         else {
-<span class="nc bnc" id="L288" title="All 2 branches missed.">            if (this.year &lt; 9999) {</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">            if (this.year &lt; 9999) {</span>
 <span class="nc" id="L289">                result = new Quarter(FIRST_QUARTER, this.year + 1);</span>
             }
             else {
-<span class="nc" id="L292">                result = null;</span>
+<span class="fc" id="L292">                result = null;</span>
             }
         }
-<span class="nc" id="L295">        return result;</span>
+<span class="fc" id="L295">        return result;</span>
     }
 
     /**
@@ -302,7 +302,7 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getSerialIndex() {
-<span class="nc" id="L305">        return this.year * 4L + this.quarter;</span>
+<span class="fc" id="L305">        return this.year * 4L + this.quarter;</span>
     }
 
     /**
@@ -319,11 +319,11 @@ public class Quarter extends RegularTimePeriod implements Serializable {
     @Override
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (obj != null) {</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">            if (obj instanceof Quarter) {</span>
-<span class="nc" id="L324">                Quarter target = (Quarter) obj;</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">                return (this.quarter == target.getQuarter()</span>
-<span class="nc bnc" id="L326" title="All 2 branches missed.">                        &amp;&amp; (this.year == target.getYearValue()));</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        if (obj != null) {</span>
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">            if (obj instanceof Quarter) {</span>
+<span class="fc" id="L324">                Quarter target = (Quarter) obj;</span>
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">                return (this.quarter == target.getQuarter()</span>
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">                        &amp;&amp; (this.year == target.getYearValue()));</span>
             }
             else {
 <span class="nc" id="L329">                return false;</span>
@@ -346,10 +346,10 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L349">        int result = 17;</span>
-<span class="nc" id="L350">        result = 37 * result + this.quarter;</span>
-<span class="nc" id="L351">        result = 37 * result + this.year;</span>
-<span class="nc" id="L352">        return result;</span>
+<span class="fc" id="L349">        int result = 17;</span>
+<span class="fc" id="L350">        result = 37 * result + this.quarter;</span>
+<span class="fc" id="L351">        result = 37 * result + this.year;</span>
+<span class="fc" id="L352">        return result;</span>
     }
 
     /**
@@ -418,10 +418,10 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond(Calendar calendar) {
-<span class="nc" id="L421">        int month = Quarter.FIRST_MONTH_IN_QUARTER[this.quarter];</span>
-<span class="nc" id="L422">        calendar.set(this.year, month - 1, 1, 0, 0, 0);</span>
-<span class="nc" id="L423">        calendar.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L424">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L421">        int month = Quarter.FIRST_MONTH_IN_QUARTER[this.quarter];</span>
+<span class="fc" id="L422">        calendar.set(this.year, month - 1, 1, 0, 0, 0);</span>
+<span class="fc" id="L423">        calendar.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L424">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -437,11 +437,11 @@ public class Quarter extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond(Calendar calendar) {
-<span class="nc" id="L440">        int month = Quarter.LAST_MONTH_IN_QUARTER[this.quarter];</span>
-<span class="nc" id="L441">        int eom = SerialDate.lastDayOfMonth(month, this.year);</span>
-<span class="nc" id="L442">        calendar.set(this.year, month - 1, eom, 23, 59, 59);</span>
-<span class="nc" id="L443">        calendar.set(Calendar.MILLISECOND, 999);</span>
-<span class="nc" id="L444">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L440">        int month = Quarter.LAST_MONTH_IN_QUARTER[this.quarter];</span>
+<span class="fc" id="L441">        int eom = SerialDate.lastDayOfMonth(month, this.year);</span>
+<span class="fc" id="L442">        calendar.set(this.year, month - 1, eom, 23, 59, 59);</span>
+<span class="fc" id="L443">        calendar.set(Calendar.MILLISECOND, 999);</span>
+<span class="fc" id="L444">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -457,30 +457,30 @@ public class Quarter extends RegularTimePeriod implements Serializable {
 
         // find the Q and the integer following it (remove both from the
         // string)...
-<span class="nc" id="L460">        int i = s.indexOf(&quot;Q&quot;);</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">        if (i == -1) {</span>
+<span class="fc" id="L460">        int i = s.indexOf(&quot;Q&quot;);</span>
+<span class="pc bpc" id="L461" title="1 of 2 branches missed.">        if (i == -1) {</span>
 <span class="nc" id="L462">            throw new TimePeriodFormatException(&quot;Missing Q.&quot;);</span>
         }
 
-<span class="nc bnc" id="L465" title="All 2 branches missed.">        if (i == s.length() - 1) {</span>
+<span class="pc bpc" id="L465" title="1 of 2 branches missed.">        if (i == s.length() - 1) {</span>
 <span class="nc" id="L466">            throw new TimePeriodFormatException(&quot;Q found at end of string.&quot;);</span>
         }
 
-<span class="nc" id="L469">        String qstr = s.substring(i + 1, i + 2);</span>
-<span class="nc" id="L470">        int quarter = Integer.parseInt(qstr);</span>
-<span class="nc" id="L471">        String remaining = s.substring(0, i) + s.substring(i + 2, s.length());</span>
+<span class="fc" id="L469">        String qstr = s.substring(i + 1, i + 2);</span>
+<span class="fc" id="L470">        int quarter = Integer.parseInt(qstr);</span>
+<span class="fc" id="L471">        String remaining = s.substring(0, i) + s.substring(i + 2, s.length());</span>
 
         // replace any / , or - with a space
-<span class="nc" id="L474">        remaining = remaining.replace('/', ' ');</span>
-<span class="nc" id="L475">        remaining = remaining.replace(',', ' ');</span>
-<span class="nc" id="L476">        remaining = remaining.replace('-', ' ');</span>
+<span class="fc" id="L474">        remaining = remaining.replace('/', ' ');</span>
+<span class="fc" id="L475">        remaining = remaining.replace(',', ' ');</span>
+<span class="fc" id="L476">        remaining = remaining.replace('-', ' ');</span>
 
         // parse the string...
-<span class="nc" id="L479">        Year year = Year.parseYear(remaining.trim());</span>
-<span class="nc" id="L480">        Quarter result = new Quarter(quarter, year);</span>
-<span class="nc" id="L481">        return result;</span>
+<span class="fc" id="L479">        Year year = Year.parseYear(remaining.trim());</span>
+<span class="fc" id="L480">        Quarter result = new Quarter(quarter, year);</span>
+<span class="fc" id="L481">        return result;</span>
 
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

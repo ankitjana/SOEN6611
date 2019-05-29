@@ -98,8 +98,8 @@ public class XYDrawableAnnotation extends AbstractXYAnnotation
      */
     public XYDrawableAnnotation(double x, double y, double width, double height,
                                 Drawable drawable) {
-<span class="nc" id="L101">        this(x, y, width, height, 1.0, drawable);</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L101">        this(x, y, width, height, 1.0, drawable);</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Creates a new annotation to be displayed within the given area.  If you
@@ -119,16 +119,16 @@ public class XYDrawableAnnotation extends AbstractXYAnnotation
     public XYDrawableAnnotation(double x, double y, double displayWidth,
             double displayHeight, double drawScaleFactor, Drawable drawable) {
 
-<span class="nc" id="L122">        super();</span>
-<span class="nc" id="L123">        Args.nullNotPermitted(drawable, &quot;drawable&quot;);</span>
-<span class="nc" id="L124">        this.x = x;</span>
-<span class="nc" id="L125">        this.y = y;</span>
-<span class="nc" id="L126">        this.displayWidth = displayWidth;</span>
-<span class="nc" id="L127">        this.displayHeight = displayHeight;</span>
-<span class="nc" id="L128">        this.drawScaleFactor = drawScaleFactor;</span>
-<span class="nc" id="L129">        this.drawable = drawable;</span>
+<span class="fc" id="L122">        super();</span>
+<span class="fc" id="L123">        Args.nullNotPermitted(drawable, &quot;drawable&quot;);</span>
+<span class="fc" id="L124">        this.x = x;</span>
+<span class="fc" id="L125">        this.y = y;</span>
+<span class="fc" id="L126">        this.displayWidth = displayWidth;</span>
+<span class="fc" id="L127">        this.displayHeight = displayHeight;</span>
+<span class="fc" id="L128">        this.drawScaleFactor = drawScaleFactor;</span>
+<span class="fc" id="L129">        this.drawable = drawable;</span>
 
-<span class="nc" id="L131">    }</span>
+<span class="fc" id="L131">    }</span>
 
     /**
      * Draws the annotation.
@@ -193,37 +193,37 @@ public class XYDrawableAnnotation extends AbstractXYAnnotation
     @Override
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (obj == this) { // simple case</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (obj == this) { // simple case</span>
 <span class="nc" id="L197">            return true;</span>
         }
         // now try to reject equality...
-<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L201">            return false;</span>
         }
-<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (!(obj instanceof XYDrawableAnnotation)) {</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (!(obj instanceof XYDrawableAnnotation)) {</span>
 <span class="nc" id="L204">            return false;</span>
         }
-<span class="nc" id="L206">        XYDrawableAnnotation that = (XYDrawableAnnotation) obj;</span>
-<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (this.x != that.x) {</span>
-<span class="nc" id="L208">            return false;</span>
+<span class="fc" id="L206">        XYDrawableAnnotation that = (XYDrawableAnnotation) obj;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (this.x != that.x) {</span>
+<span class="fc" id="L208">            return false;</span>
         }
-<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (this.y != that.y) {</span>
-<span class="nc" id="L211">            return false;</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (this.y != that.y) {</span>
+<span class="fc" id="L211">            return false;</span>
         }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (this.displayWidth != that.displayWidth) {</span>
-<span class="nc" id="L214">            return false;</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (this.displayWidth != that.displayWidth) {</span>
+<span class="fc" id="L214">            return false;</span>
         }
-<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (this.displayHeight != that.displayHeight) {</span>
-<span class="nc" id="L217">            return false;</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        if (this.displayHeight != that.displayHeight) {</span>
+<span class="fc" id="L217">            return false;</span>
         }
-<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (this.drawScaleFactor != that.drawScaleFactor) {</span>
-<span class="nc" id="L220">            return false;</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">        if (this.drawScaleFactor != that.drawScaleFactor) {</span>
+<span class="fc" id="L220">            return false;</span>
         }
-<span class="nc bnc" id="L222" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.drawable, that.drawable)) {</span>
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.drawable, that.drawable)) {</span>
 <span class="nc" id="L223">            return false;</span>
         }
         // seem to be the same...
-<span class="nc" id="L226">        return true;</span>
+<span class="fc" id="L226">        return true;</span>
 
     }
 
@@ -236,15 +236,15 @@ public class XYDrawableAnnotation extends AbstractXYAnnotation
     public int hashCode() {
         int result;
         long temp;
-<span class="nc" id="L239">        temp = Double.doubleToLongBits(this.x);</span>
-<span class="nc" id="L240">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L241">        temp = Double.doubleToLongBits(this.y);</span>
-<span class="nc" id="L242">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L243">        temp = Double.doubleToLongBits(this.displayWidth);</span>
-<span class="nc" id="L244">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L245">        temp = Double.doubleToLongBits(this.displayHeight);</span>
-<span class="nc" id="L246">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L247">        return result;</span>
+<span class="fc" id="L239">        temp = Double.doubleToLongBits(this.x);</span>
+<span class="fc" id="L240">        result = (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L241">        temp = Double.doubleToLongBits(this.y);</span>
+<span class="fc" id="L242">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L243">        temp = Double.doubleToLongBits(this.displayWidth);</span>
+<span class="fc" id="L244">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L245">        temp = Double.doubleToLongBits(this.displayHeight);</span>
+<span class="fc" id="L246">        result = 29 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L247">        return result;</span>
     }
 
     /**
@@ -256,8 +256,8 @@ public class XYDrawableAnnotation extends AbstractXYAnnotation
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L259">        return super.clone();</span>
+<span class="fc" id="L259">        return super.clone();</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

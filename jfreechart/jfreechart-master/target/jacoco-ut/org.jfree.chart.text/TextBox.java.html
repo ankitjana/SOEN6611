@@ -69,10 +69,10 @@ public class TextBox implements Serializable {
     private transient Paint shadowPaint;
 
     /** The shadow x-offset. */
-<span class="nc" id="L72">    private double shadowXOffset = 2.0;</span>
+<span class="fc" id="L72">    private double shadowXOffset = 2.0;</span>
 
     /** The shadow y-offset. */
-<span class="nc" id="L75">    private double shadowYOffset = 2.0;</span>
+<span class="fc" id="L75">    private double shadowYOffset = 2.0;</span>
 
     /** The text block. */
     private TextBlock textBlock;
@@ -90,29 +90,29 @@ public class TextBox implements Serializable {
      * @param text  the text.
      */
     public TextBox(String text) {
-<span class="nc" id="L93">        this((TextBlock) null);</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (text != null) {</span>
-<span class="nc" id="L95">            this.textBlock = new TextBlock();</span>
-<span class="nc" id="L96">            this.textBlock.addLine(text, new Font(&quot;SansSerif&quot;, Font.PLAIN, 10),</span>
+<span class="fc" id="L93">        this((TextBlock) null);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (text != null) {</span>
+<span class="fc" id="L95">            this.textBlock = new TextBlock();</span>
+<span class="fc" id="L96">            this.textBlock.addLine(text, new Font(&quot;SansSerif&quot;, Font.PLAIN, 10),</span>
                     Color.BLACK);
         }
-<span class="nc" id="L99">    }</span>
+<span class="fc" id="L99">    }</span>
 
     /**
      * Creates a new text box.
      *
      * @param block  the text block.
      */
-<span class="nc" id="L106">    public TextBox(TextBlock block) {</span>
-<span class="nc" id="L107">        this.outlinePaint = Color.BLACK;</span>
-<span class="nc" id="L108">        this.outlineStroke = new BasicStroke(1.0f);</span>
-<span class="nc" id="L109">        this.interiorGap = new RectangleInsets(1.0, 3.0, 1.0, 3.0);</span>
-<span class="nc" id="L110">        this.backgroundPaint = new Color(255, 255, 192);</span>
-<span class="nc" id="L111">        this.shadowPaint = Color.GRAY;</span>
-<span class="nc" id="L112">        this.shadowXOffset = 2.0;</span>
-<span class="nc" id="L113">        this.shadowYOffset = 2.0;</span>
-<span class="nc" id="L114">        this.textBlock = block;</span>
-<span class="nc" id="L115">    }</span>
+<span class="fc" id="L106">    public TextBox(TextBlock block) {</span>
+<span class="fc" id="L107">        this.outlinePaint = Color.BLACK;</span>
+<span class="fc" id="L108">        this.outlineStroke = new BasicStroke(1.0f);</span>
+<span class="fc" id="L109">        this.interiorGap = new RectangleInsets(1.0, 3.0, 1.0, 3.0);</span>
+<span class="fc" id="L110">        this.backgroundPaint = new Color(255, 255, 192);</span>
+<span class="fc" id="L111">        this.shadowPaint = Color.GRAY;</span>
+<span class="fc" id="L112">        this.shadowXOffset = 2.0;</span>
+<span class="fc" id="L113">        this.shadowYOffset = 2.0;</span>
+<span class="fc" id="L114">        this.textBlock = block;</span>
+<span class="fc" id="L115">    }</span>
 
     /**
      * Returns the outline paint.
@@ -129,8 +129,8 @@ public class TextBox implements Serializable {
      * @param paint  the paint.
      */
     public void setOutlinePaint(Paint paint) {
-<span class="nc" id="L132">        this.outlinePaint = paint;</span>
-<span class="nc" id="L133">    }</span>
+<span class="fc" id="L132">        this.outlinePaint = paint;</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Returns the outline stroke.
@@ -147,8 +147,8 @@ public class TextBox implements Serializable {
      * @param stroke  the stroke.
      */
     public void setOutlineStroke(Stroke stroke) {
-<span class="nc" id="L150">        this.outlineStroke = stroke;</span>
-<span class="nc" id="L151">    }</span>
+<span class="fc" id="L150">        this.outlineStroke = stroke;</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Returns the interior gap.
@@ -165,8 +165,8 @@ public class TextBox implements Serializable {
      * @param gap  the gap.
      */
     public void setInteriorGap(RectangleInsets gap) {
-<span class="nc" id="L168">        this.interiorGap = gap;</span>
-<span class="nc" id="L169">    }</span>
+<span class="fc" id="L168">        this.interiorGap = gap;</span>
+<span class="fc" id="L169">    }</span>
 
     /**
      * Returns the background paint.
@@ -183,8 +183,8 @@ public class TextBox implements Serializable {
      * @param paint  the paint.
      */
     public void setBackgroundPaint(Paint paint) {
-<span class="nc" id="L186">        this.backgroundPaint = paint;</span>
-<span class="nc" id="L187">    }</span>
+<span class="fc" id="L186">        this.backgroundPaint = paint;</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Returns the shadow paint.
@@ -201,8 +201,8 @@ public class TextBox implements Serializable {
      * @param paint  the paint.
      */
     public void setShadowPaint(Paint paint) {
-<span class="nc" id="L204">        this.shadowPaint = paint;</span>
-<span class="nc" id="L205">    }</span>
+<span class="fc" id="L204">        this.shadowPaint = paint;</span>
+<span class="fc" id="L205">    }</span>
 
     /**
      * Returns the x-offset for the shadow effect.
@@ -267,39 +267,39 @@ public class TextBox implements Serializable {
      * @param anchor  the anchor point.
      */
     public void draw(Graphics2D g2, float x, float y, RectangleAnchor anchor) {
-<span class="nc" id="L270">        final Size2D d1 = this.textBlock.calculateDimensions(g2);</span>
-<span class="nc" id="L271">        final double w = this.interiorGap.extendWidth(d1.getWidth());</span>
-<span class="nc" id="L272">        final double h = this.interiorGap.extendHeight(d1.getHeight());</span>
-<span class="nc" id="L273">        final Size2D d2 = new Size2D(w, h);</span>
-<span class="nc" id="L274">        final Rectangle2D bounds</span>
-<span class="nc" id="L275">                = RectangleAnchor.createRectangle(d2, x, y, anchor);</span>
-<span class="nc" id="L276">        double xx = bounds.getX();</span>
-<span class="nc" id="L277">        double yy = bounds.getY();</span>
+<span class="fc" id="L270">        final Size2D d1 = this.textBlock.calculateDimensions(g2);</span>
+<span class="fc" id="L271">        final double w = this.interiorGap.extendWidth(d1.getWidth());</span>
+<span class="fc" id="L272">        final double h = this.interiorGap.extendHeight(d1.getHeight());</span>
+<span class="fc" id="L273">        final Size2D d2 = new Size2D(w, h);</span>
+<span class="fc" id="L274">        final Rectangle2D bounds</span>
+<span class="fc" id="L275">                = RectangleAnchor.createRectangle(d2, x, y, anchor);</span>
+<span class="fc" id="L276">        double xx = bounds.getX();</span>
+<span class="fc" id="L277">        double yy = bounds.getY();</span>
 
-<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (this.shadowPaint != null) {</span>
-<span class="nc" id="L280">            final Rectangle2D shadow = new Rectangle2D.Double(</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        if (this.shadowPaint != null) {</span>
+<span class="fc" id="L280">            final Rectangle2D shadow = new Rectangle2D.Double(</span>
                 xx + this.shadowXOffset, yy + this.shadowYOffset,
-<span class="nc" id="L282">                bounds.getWidth(), bounds.getHeight());</span>
-<span class="nc" id="L283">            g2.setPaint(this.shadowPaint);</span>
-<span class="nc" id="L284">            g2.fill(shadow);</span>
+<span class="fc" id="L282">                bounds.getWidth(), bounds.getHeight());</span>
+<span class="fc" id="L283">            g2.setPaint(this.shadowPaint);</span>
+<span class="fc" id="L284">            g2.fill(shadow);</span>
         }
-<span class="nc bnc" id="L286" title="All 2 branches missed.">        if (this.backgroundPaint != null) {</span>
-<span class="nc" id="L287">            g2.setPaint(this.backgroundPaint);</span>
-<span class="nc" id="L288">            g2.fill(bounds);</span>
-        }
-
-<span class="nc bnc" id="L291" title="All 4 branches missed.">        if (this.outlinePaint != null &amp;&amp; this.outlineStroke != null) {</span>
-<span class="nc" id="L292">            g2.setPaint(this.outlinePaint);</span>
-<span class="nc" id="L293">            g2.setStroke(this.outlineStroke);</span>
-<span class="nc" id="L294">            g2.draw(bounds);</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">        if (this.backgroundPaint != null) {</span>
+<span class="fc" id="L287">            g2.setPaint(this.backgroundPaint);</span>
+<span class="fc" id="L288">            g2.fill(bounds);</span>
         }
 
-<span class="nc" id="L297">        this.textBlock.draw(g2,</span>
-<span class="nc" id="L298">                (float) (xx + this.interiorGap.calculateLeftInset(w)),</span>
-<span class="nc" id="L299">                (float) (yy + this.interiorGap.calculateTopInset(h)),</span>
+<span class="pc bpc" id="L291" title="2 of 4 branches missed.">        if (this.outlinePaint != null &amp;&amp; this.outlineStroke != null) {</span>
+<span class="fc" id="L292">            g2.setPaint(this.outlinePaint);</span>
+<span class="fc" id="L293">            g2.setStroke(this.outlineStroke);</span>
+<span class="fc" id="L294">            g2.draw(bounds);</span>
+        }
+
+<span class="fc" id="L297">        this.textBlock.draw(g2,</span>
+<span class="fc" id="L298">                (float) (xx + this.interiorGap.calculateLeftInset(w)),</span>
+<span class="fc" id="L299">                (float) (yy + this.interiorGap.calculateTopInset(h)),</span>
                 TextBlockAnchor.TOP_LEFT);
 
-<span class="nc" id="L302">    }</span>
+<span class="fc" id="L302">    }</span>
 
     /**
      * Returns the height of the text box.
@@ -309,8 +309,8 @@ public class TextBox implements Serializable {
      * @return The height (in Java2D units).
      */
     public double getHeight(Graphics2D g2) {
-<span class="nc" id="L312">        final Size2D d = this.textBlock.calculateDimensions(g2);</span>
-<span class="nc" id="L313">        return this.interiorGap.extendHeight(d.getHeight());</span>
+<span class="fc" id="L312">        final Size2D d = this.textBlock.calculateDimensions(g2);</span>
+<span class="fc" id="L313">        return this.interiorGap.extendHeight(d.getHeight());</span>
     }
 
     /**
@@ -321,40 +321,40 @@ public class TextBox implements Serializable {
      * @return A boolean.
      */
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L325">            return true;</span>
         }
-<span class="nc bnc" id="L327" title="All 2 branches missed.">        if (!(obj instanceof TextBox)) {</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">        if (!(obj instanceof TextBox)) {</span>
 <span class="nc" id="L328">            return false;</span>
         }
-<span class="nc" id="L330">        final TextBox that = (TextBox) obj;</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
+<span class="fc" id="L330">        final TextBox that = (TextBox) obj;</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
 <span class="nc" id="L332">            return false;</span>
         }
-<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
 <span class="nc" id="L335">            return false;</span>
         }
-<span class="nc bnc" id="L337" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.interiorGap, that.interiorGap)) {</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.interiorGap, that.interiorGap)) {</span>
 <span class="nc" id="L338">            return false;</span>
         }
-<span class="nc bnc" id="L340" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.backgroundPaint,</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.backgroundPaint,</span>
                 that.backgroundPaint)) {
 <span class="nc" id="L342">            return false;</span>
         }
-<span class="nc bnc" id="L344" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.shadowPaint, that.shadowPaint)) {</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.shadowPaint, that.shadowPaint)) {</span>
 <span class="nc" id="L345">            return false;</span>
         }
-<span class="nc bnc" id="L347" title="All 2 branches missed.">        if (this.shadowXOffset != that.shadowXOffset) {</span>
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">        if (this.shadowXOffset != that.shadowXOffset) {</span>
 <span class="nc" id="L348">            return false;</span>
         }
-<span class="nc bnc" id="L350" title="All 2 branches missed.">        if (this.shadowYOffset != that.shadowYOffset) {</span>
+<span class="pc bpc" id="L350" title="1 of 2 branches missed.">        if (this.shadowYOffset != that.shadowYOffset) {</span>
 <span class="nc" id="L351">            return false;</span>
         }
-<span class="nc bnc" id="L353" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.textBlock, that.textBlock)) {</span>
-<span class="nc" id="L354">            return false;</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.textBlock, that.textBlock)) {</span>
+<span class="fc" id="L354">            return false;</span>
         }
 
-<span class="nc" id="L357">        return true;</span>
+<span class="fc" id="L357">        return true;</span>
     }
 
     /**
@@ -393,12 +393,12 @@ public class TextBox implements Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L396">        stream.defaultWriteObject();</span>
-<span class="nc" id="L397">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
-<span class="nc" id="L398">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
-<span class="nc" id="L399">        SerialUtils.writePaint(this.backgroundPaint, stream);</span>
-<span class="nc" id="L400">        SerialUtils.writePaint(this.shadowPaint, stream);</span>
-<span class="nc" id="L401">    }</span>
+<span class="fc" id="L396">        stream.defaultWriteObject();</span>
+<span class="fc" id="L397">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
+<span class="fc" id="L398">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
+<span class="fc" id="L399">        SerialUtils.writePaint(this.backgroundPaint, stream);</span>
+<span class="fc" id="L400">        SerialUtils.writePaint(this.shadowPaint, stream);</span>
+<span class="fc" id="L401">    }</span>
 
     /**
      * Provides serialization support.
@@ -410,13 +410,13 @@ public class TextBox implements Serializable {
      */
     private void readObject(ObjectInputStream stream) throws IOException, 
             ClassNotFoundException {
-<span class="nc" id="L413">        stream.defaultReadObject();</span>
-<span class="nc" id="L414">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L415">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L416">        this.backgroundPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L417">        this.shadowPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L418">    }</span>
+<span class="fc" id="L413">        stream.defaultReadObject();</span>
+<span class="fc" id="L414">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L415">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L416">        this.backgroundPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L417">        this.shadowPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L418">    }</span>
 
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

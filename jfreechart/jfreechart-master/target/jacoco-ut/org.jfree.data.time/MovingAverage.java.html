@@ -110,56 +110,56 @@ import org.jfree.data.xy.XYSeriesCollection;
     public static TimeSeries createMovingAverage(TimeSeries source,
             String name, int periodCount, int skip) {
 
-<span class="nc" id="L113">        Args.nullNotPermitted(source, &quot;source&quot;);</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (periodCount &lt; 1) {</span>
+<span class="fc" id="L113">        Args.nullNotPermitted(source, &quot;source&quot;);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (periodCount &lt; 1) {</span>
 <span class="nc" id="L115">            throw new IllegalArgumentException(&quot;periodCount must be greater &quot; </span>
                     + &quot;than or equal to 1.&quot;);
         }
 
-<span class="nc" id="L119">        TimeSeries result = new TimeSeries(name);</span>
+<span class="fc" id="L119">        TimeSeries result = new TimeSeries(name);</span>
 
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (source.getItemCount() &gt; 0) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if (source.getItemCount() &gt; 0) {</span>
 
             // if the initial averaging period is to be excluded, then
             // calculate the index of the
             // first data item to have an average calculated...
-<span class="nc" id="L126">            long firstSerial = source.getTimePeriod(0).getSerialIndex() + skip;</span>
+<span class="fc" id="L126">            long firstSerial = source.getTimePeriod(0).getSerialIndex() + skip;</span>
 
-<span class="nc bnc" id="L128" title="All 2 branches missed.">            for (int i = source.getItemCount() - 1; i &gt;= 0; i--) {</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            for (int i = source.getItemCount() - 1; i &gt;= 0; i--) {</span>
 
                 // get the current data item...
-<span class="nc" id="L131">                RegularTimePeriod period = source.getTimePeriod(i);</span>
-<span class="nc" id="L132">                long serial = period.getSerialIndex();</span>
+<span class="fc" id="L131">                RegularTimePeriod period = source.getTimePeriod(i);</span>
+<span class="fc" id="L132">                long serial = period.getSerialIndex();</span>
 
-<span class="nc bnc" id="L134" title="All 2 branches missed.">                if (serial &gt;= firstSerial) {</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                if (serial &gt;= firstSerial) {</span>
                     // work out the average for the earlier values...
-<span class="nc" id="L136">                    int n = 0;</span>
-<span class="nc" id="L137">                    double sum = 0.0;</span>
-<span class="nc" id="L138">                    long serialLimit = period.getSerialIndex() - periodCount;</span>
-<span class="nc" id="L139">                    int offset = 0;</span>
-<span class="nc" id="L140">                    boolean finished = false;</span>
+<span class="fc" id="L136">                    int n = 0;</span>
+<span class="fc" id="L137">                    double sum = 0.0;</span>
+<span class="fc" id="L138">                    long serialLimit = period.getSerialIndex() - periodCount;</span>
+<span class="fc" id="L139">                    int offset = 0;</span>
+<span class="fc" id="L140">                    boolean finished = false;</span>
 
-<span class="nc bnc" id="L142" title="All 4 branches missed.">                    while ((offset &lt; periodCount) &amp;&amp; (!finished)) {</span>
-<span class="nc bnc" id="L143" title="All 2 branches missed.">                        if ((i - offset) &gt;= 0) {</span>
-<span class="nc" id="L144">                            TimeSeriesDataItem item = source.getRawDataItem(</span>
+<span class="fc bfc" id="L142" title="All 4 branches covered.">                    while ((offset &lt; periodCount) &amp;&amp; (!finished)) {</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                        if ((i - offset) &gt;= 0) {</span>
+<span class="fc" id="L144">                            TimeSeriesDataItem item = source.getRawDataItem(</span>
                                     i - offset);
-<span class="nc" id="L146">                            RegularTimePeriod p = item.getPeriod();</span>
-<span class="nc" id="L147">                            Number v = item.getValue();</span>
-<span class="nc" id="L148">                            long currentIndex = p.getSerialIndex();</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">                            if (currentIndex &gt; serialLimit) {</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">                                if (v != null) {</span>
-<span class="nc" id="L151">                                    sum = sum + v.doubleValue();</span>
-<span class="nc" id="L152">                                    n = n + 1;</span>
+<span class="fc" id="L146">                            RegularTimePeriod p = item.getPeriod();</span>
+<span class="fc" id="L147">                            Number v = item.getValue();</span>
+<span class="fc" id="L148">                            long currentIndex = p.getSerialIndex();</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                            if (currentIndex &gt; serialLimit) {</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                                if (v != null) {</span>
+<span class="fc" id="L151">                                    sum = sum + v.doubleValue();</span>
+<span class="fc" id="L152">                                    n = n + 1;</span>
                                 }
                             }
                             else {
-<span class="nc" id="L156">                                finished = true;</span>
+<span class="fc" id="L156">                                finished = true;</span>
                             }
                         }
-<span class="nc" id="L159">                        offset = offset + 1;</span>
+<span class="fc" id="L159">                        offset = offset + 1;</span>
                     }
-<span class="nc bnc" id="L161" title="All 2 branches missed.">                    if (n &gt; 0) {</span>
-<span class="nc" id="L162">                        result.add(period, sum / n);</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">                    if (n &gt; 0) {</span>
+<span class="fc" id="L162">                        result.add(period, sum / n);</span>
                     }
                     else {
 <span class="nc" id="L165">                        result.add(period, null);</span>
@@ -169,7 +169,7 @@ import org.jfree.data.xy.XYSeriesCollection;
             }
         }
 
-<span class="nc" id="L172">        return result;</span>
+<span class="fc" id="L172">        return result;</span>
 
     }
 
@@ -346,4 +346,4 @@ import org.jfree.data.xy.XYSeriesCollection;
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

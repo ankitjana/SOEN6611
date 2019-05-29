@@ -141,8 +141,8 @@ public class StackedBarRenderer extends BarRenderer
      * generators.
      */
     public StackedBarRenderer() {
-<span class="nc" id="L144">        this(false);</span>
-<span class="nc" id="L145">    }</span>
+<span class="fc" id="L144">        this(false);</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Creates a new renderer.
@@ -151,18 +151,18 @@ public class StackedBarRenderer extends BarRenderer
      *                             are rendered as percentages.
      */
     public StackedBarRenderer(boolean renderAsPercentages) {
-<span class="nc" id="L154">        super();</span>
-<span class="nc" id="L155">        this.renderAsPercentages = renderAsPercentages;</span>
+<span class="fc" id="L154">        super();</span>
+<span class="fc" id="L155">        this.renderAsPercentages = renderAsPercentages;</span>
 
         // set the default item label positions, which will only be used if
         // the user requests visible item labels...
-<span class="nc" id="L159">        ItemLabelPosition p = new ItemLabelPosition(ItemLabelAnchor.CENTER,</span>
+<span class="fc" id="L159">        ItemLabelPosition p = new ItemLabelPosition(ItemLabelAnchor.CENTER,</span>
                 TextAnchor.CENTER);
-<span class="nc" id="L161">        setDefaultPositiveItemLabelPosition(p);</span>
-<span class="nc" id="L162">        setDefaultNegativeItemLabelPosition(p);</span>
-<span class="nc" id="L163">        setPositiveItemLabelPositionFallback(null);</span>
-<span class="nc" id="L164">        setNegativeItemLabelPositionFallback(null);</span>
-<span class="nc" id="L165">    }</span>
+<span class="fc" id="L161">        setDefaultPositiveItemLabelPosition(p);</span>
+<span class="fc" id="L162">        setDefaultNegativeItemLabelPosition(p);</span>
+<span class="fc" id="L163">        setPositiveItemLabelPositionFallback(null);</span>
+<span class="fc" id="L164">        setNegativeItemLabelPositionFallback(null);</span>
+<span class="fc" id="L165">    }</span>
 
     /**
      * Returns {@code true} if the renderer displays each item value as
@@ -187,9 +187,9 @@ public class StackedBarRenderer extends BarRenderer
      * @see #getRenderAsPercentages()
      */
     public void setRenderAsPercentages(boolean asPercentages) {
-<span class="nc" id="L190">        this.renderAsPercentages = asPercentages;</span>
-<span class="nc" id="L191">        fireChangeEvent();</span>
-<span class="nc" id="L192">    }</span>
+<span class="fc" id="L190">        this.renderAsPercentages = asPercentages;</span>
+<span class="fc" id="L191">        fireChangeEvent();</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Returns the number of passes ({@code 3}) required by this renderer.
@@ -201,7 +201,7 @@ public class StackedBarRenderer extends BarRenderer
      */
     @Override
     public int getPassCount() {
-<span class="nc" id="L204">        return 3;</span>
+<span class="fc" id="L204">        return 3;</span>
     }
 
     /**
@@ -214,14 +214,14 @@ public class StackedBarRenderer extends BarRenderer
      */
     @Override
     public Range findRangeBounds(CategoryDataset dataset) {
-<span class="nc bnc" id="L217" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L218">            return null;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L218">            return null;</span>
         }
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (this.renderAsPercentages) {</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (this.renderAsPercentages) {</span>
 <span class="nc" id="L221">            return new Range(0.0, 1.0);</span>
         }
         else {
-<span class="nc" id="L224">            return DatasetUtils.findStackedRangeBounds(dataset, getBase());</span>
+<span class="fc" id="L224">            return DatasetUtils.findStackedRangeBounds(dataset, getBase());</span>
         }
     }
 
@@ -415,18 +415,18 @@ public class StackedBarRenderer extends BarRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L418" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L419">            return true;</span>
         }
-<span class="nc bnc" id="L421" title="All 2 branches missed.">        if (!(obj instanceof StackedBarRenderer)) {</span>
+<span class="pc bpc" id="L421" title="1 of 2 branches missed.">        if (!(obj instanceof StackedBarRenderer)) {</span>
 <span class="nc" id="L422">            return false;</span>
         }
-<span class="nc" id="L424">        StackedBarRenderer that = (StackedBarRenderer) obj;</span>
-<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
-<span class="nc" id="L426">            return false;</span>
+<span class="fc" id="L424">        StackedBarRenderer that = (StackedBarRenderer) obj;</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
+<span class="fc" id="L426">            return false;</span>
         }
-<span class="nc" id="L428">        return super.equals(obj);</span>
+<span class="fc" id="L428">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

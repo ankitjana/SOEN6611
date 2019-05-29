@@ -87,12 +87,12 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      *
      * @param key  the series key ({@code null} not permitted).
      */
-<span class="nc" id="L90">    public SimpleHistogramDataset(Comparable key) {</span>
-<span class="nc" id="L91">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L92">        this.key = key;</span>
-<span class="nc" id="L93">        this.bins = new ArrayList();</span>
-<span class="nc" id="L94">        this.adjustForBinSize = true;</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L90">    public SimpleHistogramDataset(Comparable key) {</span>
+<span class="fc" id="L91">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L92">        this.key = key;</span>
+<span class="fc" id="L93">        this.bins = new ArrayList();</span>
+<span class="fc" id="L94">        this.adjustForBinSize = true;</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Returns a flag that controls whether or not the bin count is divided by
@@ -163,7 +163,7 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getItemCount(int series) {
-<span class="nc" id="L166">        return this.bins.size();</span>
+<span class="fc" id="L166">        return this.bins.size();</span>
     }
 
     /**
@@ -176,17 +176,17 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      */
     public void addBin(SimpleHistogramBin bin) {
         // check that the new bin doesn't overlap with any existing bin
-<span class="nc" id="L179">        Iterator iterator = this.bins.iterator();</span>
-<span class="nc bnc" id="L180" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L181">            SimpleHistogramBin existingBin</span>
-<span class="nc" id="L182">                    = (SimpleHistogramBin) iterator.next();</span>
-<span class="nc bnc" id="L183" title="All 2 branches missed.">            if (bin.overlapsWith(existingBin)) {</span>
+<span class="fc" id="L179">        Iterator iterator = this.bins.iterator();</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L181">            SimpleHistogramBin existingBin</span>
+<span class="fc" id="L182">                    = (SimpleHistogramBin) iterator.next();</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (bin.overlapsWith(existingBin)) {</span>
 <span class="nc" id="L184">                throw new RuntimeException(&quot;Overlapping bin&quot;);</span>
             }
-<span class="nc" id="L186">        }</span>
-<span class="nc" id="L187">        this.bins.add(bin);</span>
-<span class="nc" id="L188">        Collections.sort(this.bins);</span>
-<span class="nc" id="L189">    }</span>
+<span class="fc" id="L186">        }</span>
+<span class="fc" id="L187">        this.bins.add(bin);</span>
+<span class="fc" id="L188">        Collections.sort(this.bins);</span>
+<span class="fc" id="L189">    }</span>
 
     /**
      * Adds an observation to the dataset (by incrementing the item count for
@@ -196,8 +196,8 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      * @param value  the value.
      */
     public void addObservation(double value) {
-<span class="nc" id="L199">        addObservation(value, true);</span>
-<span class="nc" id="L200">    }</span>
+<span class="fc" id="L199">        addObservation(value, true);</span>
+<span class="fc" id="L200">    }</span>
 
     /**
      * Adds an observation to the dataset (by incrementing the item count for
@@ -208,22 +208,22 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      * @param notify  send {@link DatasetChangeEvent} to listeners?
      */
     public void addObservation(double value, boolean notify) {
-<span class="nc" id="L211">        boolean placed = false;</span>
-<span class="nc" id="L212">        Iterator iterator = this.bins.iterator();</span>
-<span class="nc bnc" id="L213" title="All 4 branches missed.">        while (iterator.hasNext() &amp;&amp; !placed) {</span>
-<span class="nc" id="L214">            SimpleHistogramBin bin = (SimpleHistogramBin) iterator.next();</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (bin.accepts(value)) {</span>
-<span class="nc" id="L216">                bin.setItemCount(bin.getItemCount() + 1);</span>
-<span class="nc" id="L217">                placed = true;</span>
+<span class="fc" id="L211">        boolean placed = false;</span>
+<span class="fc" id="L212">        Iterator iterator = this.bins.iterator();</span>
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">        while (iterator.hasNext() &amp;&amp; !placed) {</span>
+<span class="fc" id="L214">            SimpleHistogramBin bin = (SimpleHistogramBin) iterator.next();</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">            if (bin.accepts(value)) {</span>
+<span class="fc" id="L216">                bin.setItemCount(bin.getItemCount() + 1);</span>
+<span class="fc" id="L217">                placed = true;</span>
             }
-<span class="nc" id="L219">        }</span>
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (!placed) {</span>
+<span class="fc" id="L219">        }</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (!placed) {</span>
 <span class="nc" id="L221">            throw new RuntimeException(&quot;No bin.&quot;);</span>
         }
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L224">            notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L224">            notifyListeners(new DatasetChangeEvent(this, this));</span>
         }
-<span class="nc" id="L226">    }</span>
+<span class="fc" id="L226">    }</span>
 
     /**
      * Adds a set of values to the dataset and sends a
@@ -250,13 +250,13 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      * @see #removeAllBins()
      */
     public void clearObservations() {
-<span class="nc" id="L253">        Iterator iterator = this.bins.iterator();</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L253">        Iterator iterator = this.bins.iterator();</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        while (iterator.hasNext()) {</span>
 <span class="nc" id="L255">            SimpleHistogramBin bin = (SimpleHistogramBin) iterator.next();</span>
 <span class="nc" id="L256">            bin.setItemCount(0);</span>
 <span class="nc" id="L257">        }</span>
-<span class="nc" id="L258">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L259">    }</span>
+<span class="fc" id="L258">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L259">    }</span>
 
     /**
      * Removes all bins and sends a {@link DatasetChangeEvent} to all
@@ -267,9 +267,9 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      * @see #addBin(SimpleHistogramBin)
      */
     public void removeAllBins() {
-<span class="nc" id="L270">        this.bins = new ArrayList();</span>
-<span class="nc" id="L271">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L272">    }</span>
+<span class="fc" id="L270">        this.bins = new ArrayList();</span>
+<span class="fc" id="L271">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L272">    }</span>
 
     /**
      * Returns the x-value for an item within a series.  The x-values may or
@@ -325,10 +325,10 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public double getYValue(int series, int item) {
-<span class="nc" id="L328">        SimpleHistogramBin bin = (SimpleHistogramBin) this.bins.get(item);</span>
-<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (this.adjustForBinSize) {</span>
-<span class="nc" id="L330">            return bin.getItemCount()</span>
-<span class="nc" id="L331">                   / (bin.getUpperBound() - bin.getLowerBound());</span>
+<span class="fc" id="L328">        SimpleHistogramBin bin = (SimpleHistogramBin) this.bins.get(item);</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">        if (this.adjustForBinSize) {</span>
+<span class="fc" id="L330">            return bin.getItemCount()</span>
+<span class="fc" id="L331">                   / (bin.getUpperBound() - bin.getLowerBound());</span>
         }
         else {
 <span class="nc" id="L334">            return bin.getItemCount();</span>
@@ -454,23 +454,23 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L457" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L458">            return true;</span>
         }
-<span class="nc bnc" id="L460" title="All 2 branches missed.">        if (!(obj instanceof SimpleHistogramDataset)) {</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (!(obj instanceof SimpleHistogramDataset)) {</span>
 <span class="nc" id="L461">            return false;</span>
         }
-<span class="nc" id="L463">        SimpleHistogramDataset that = (SimpleHistogramDataset) obj;</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">        if (!this.key.equals(that.key)) {</span>
+<span class="fc" id="L463">        SimpleHistogramDataset that = (SimpleHistogramDataset) obj;</span>
+<span class="pc bpc" id="L464" title="1 of 2 branches missed.">        if (!this.key.equals(that.key)) {</span>
 <span class="nc" id="L465">            return false;</span>
         }
-<span class="nc bnc" id="L467" title="All 2 branches missed.">        if (this.adjustForBinSize != that.adjustForBinSize) {</span>
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">        if (this.adjustForBinSize != that.adjustForBinSize) {</span>
 <span class="nc" id="L468">            return false;</span>
         }
-<span class="nc bnc" id="L470" title="All 2 branches missed.">        if (!this.bins.equals(that.bins)) {</span>
-<span class="nc" id="L471">            return false;</span>
+<span class="fc bfc" id="L470" title="All 2 branches covered.">        if (!this.bins.equals(that.bins)) {</span>
+<span class="fc" id="L471">            return false;</span>
         }
-<span class="nc" id="L473">        return true;</span>
+<span class="fc" id="L473">        return true;</span>
     }
 
     /**
@@ -483,10 +483,10 @@ public class SimpleHistogramDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L486">        SimpleHistogramDataset clone = (SimpleHistogramDataset) super.clone();</span>
-<span class="nc" id="L487">        clone.bins = (List) ObjectUtils.deepClone(this.bins);</span>
-<span class="nc" id="L488">        return clone;</span>
+<span class="fc" id="L486">        SimpleHistogramDataset clone = (SimpleHistogramDataset) super.clone();</span>
+<span class="fc" id="L487">        clone.bins = (List) ObjectUtils.deepClone(this.bins);</span>
+<span class="fc" id="L488">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

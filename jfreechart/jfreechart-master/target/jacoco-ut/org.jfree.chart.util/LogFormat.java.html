@@ -78,7 +78,7 @@ public class LogFormat extends NumberFormat {
     private boolean showBase;
 
     /** The number formatter for the exponent. */
-<span class="nc" id="L81">    private NumberFormat formatter = new DecimalFormat(&quot;0.0#&quot;);</span>
+<span class="fc" id="L81">    private NumberFormat formatter = new DecimalFormat(&quot;0.0#&quot;);</span>
 
     /**
      * Creates a new instance using base 10.
@@ -98,8 +98,8 @@ public class LogFormat extends NumberFormat {
      *                  shown.
      */
     public LogFormat(double base, String baseLabel, boolean showBase) {
-<span class="nc" id="L101">        this(base, baseLabel, &quot;^&quot;, showBase);</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L101">        this(base, baseLabel, &quot;^&quot;, showBase);</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Creates a new instance.
@@ -113,15 +113,15 @@ public class LogFormat extends NumberFormat {
      * @since 1.0.10
      */
     public LogFormat(double base, String baseLabel, String powerLabel,
-<span class="nc" id="L116">            boolean showBase) {</span>
-<span class="nc" id="L117">        Args.nullNotPermitted(baseLabel, &quot;baseLabel&quot;);</span>
-<span class="nc" id="L118">        Args.nullNotPermitted(powerLabel, &quot;powerLabel&quot;);</span>
-<span class="nc" id="L119">        this.base = base;</span>
-<span class="nc" id="L120">        this.baseLog = Math.log(this.base);</span>
-<span class="nc" id="L121">        this.baseLabel = baseLabel;</span>
-<span class="nc" id="L122">        this.showBase = showBase;</span>
-<span class="nc" id="L123">        this.powerLabel = powerLabel;</span>
-<span class="nc" id="L124">    }</span>
+<span class="fc" id="L116">            boolean showBase) {</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(baseLabel, &quot;baseLabel&quot;);</span>
+<span class="fc" id="L118">        Args.nullNotPermitted(powerLabel, &quot;powerLabel&quot;);</span>
+<span class="fc" id="L119">        this.base = base;</span>
+<span class="fc" id="L120">        this.baseLog = Math.log(this.base);</span>
+<span class="fc" id="L121">        this.baseLabel = baseLabel;</span>
+<span class="fc" id="L122">        this.showBase = showBase;</span>
+<span class="fc" id="L123">        this.powerLabel = powerLabel;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Returns the number format used for the exponent.
@@ -142,9 +142,9 @@ public class LogFormat extends NumberFormat {
      * @since 1.0.13
      */
     public void setExponentFormat(NumberFormat format) {
-<span class="nc" id="L145">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
-<span class="nc" id="L146">        this.formatter = format;</span>
-<span class="nc" id="L147">    }</span>
+<span class="fc" id="L145">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
+<span class="fc" id="L146">        this.formatter = format;</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Calculates the log of a given value.
@@ -223,29 +223,29 @@ public class LogFormat extends NumberFormat {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L227">            return true;</span>
         }
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (!(obj instanceof LogFormat)) {</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (!(obj instanceof LogFormat)) {</span>
 <span class="nc" id="L230">            return false;</span>
         }
-<span class="nc" id="L232">        LogFormat that = (LogFormat) obj;</span>
-<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (this.base != that.base) {</span>
-<span class="nc" id="L234">            return false;</span>
+<span class="fc" id="L232">        LogFormat that = (LogFormat) obj;</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (this.base != that.base) {</span>
+<span class="fc" id="L234">            return false;</span>
         }
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (!this.baseLabel.equals(that.baseLabel)) {</span>
-<span class="nc" id="L237">            return false;</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (!this.baseLabel.equals(that.baseLabel)) {</span>
+<span class="fc" id="L237">            return false;</span>
         }
-<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (this.baseLog != that.baseLog) {</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (this.baseLog != that.baseLog) {</span>
 <span class="nc" id="L240">            return false;</span>
         }
-<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (this.showBase != that.showBase) {</span>
-<span class="nc" id="L243">            return false;</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (this.showBase != that.showBase) {</span>
+<span class="fc" id="L243">            return false;</span>
         }
-<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (!this.formatter.equals(that.formatter)) {</span>
-<span class="nc" id="L246">            return false;</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (!this.formatter.equals(that.formatter)) {</span>
+<span class="fc" id="L246">            return false;</span>
         }
-<span class="nc" id="L248">        return super.equals(obj);</span>
+<span class="fc" id="L248">        return super.equals(obj);</span>
     }
 
     /**
@@ -255,10 +255,10 @@ public class LogFormat extends NumberFormat {
      */
     @Override
     public Object clone() {
-<span class="nc" id="L258">        LogFormat clone = (LogFormat) super.clone();</span>
-<span class="nc" id="L259">        clone.formatter = (NumberFormat) this.formatter.clone();</span>
-<span class="nc" id="L260">        return clone;</span>
+<span class="fc" id="L258">        LogFormat clone = (LogFormat) super.clone();</span>
+<span class="fc" id="L259">        clone.formatter = (NumberFormat) this.formatter.clone();</span>
+<span class="fc" id="L260">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

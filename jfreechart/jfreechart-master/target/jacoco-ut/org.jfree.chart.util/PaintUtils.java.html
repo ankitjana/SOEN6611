@@ -45,8 +45,8 @@ public class PaintUtils {
     /**
      * Private constructor prevents object creation.
      */
-<span class="nc" id="L48">    private PaintUtils() {</span>
-<span class="nc" id="L49">    }</span>
+    private PaintUtils() {
+    }
 
     /**
      * Returns {@code true} if the two {@code Paint} objects are equal 
@@ -61,29 +61,29 @@ public class PaintUtils {
      * @return A boolean.
      */
     public static boolean equal(Paint p1, Paint p2) {
-<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (p1 == p2) {</span>
-<span class="nc" id="L65">            return true;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (p1 == p2) {</span>
+<span class="fc" id="L65">            return true;</span>
         }
             
         // handle cases where either or both arguments are null
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (p1 == null) {</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">            return (p2 == null);   </span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (p1 == null) {</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            return (p2 == null);   </span>
         }
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (p2 == null) {</span>
-<span class="nc" id="L73">            return false;   </span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (p2 == null) {</span>
+<span class="fc" id="L73">            return false;   </span>
         }
 
         // handle GradientPaint as a special case...
-<span class="nc bnc" id="L77" title="All 4 branches missed.">        if (p1 instanceof GradientPaint &amp;&amp; p2 instanceof GradientPaint) {</span>
-<span class="nc" id="L78">            GradientPaint gp1 = (GradientPaint) p1;</span>
-<span class="nc" id="L79">            GradientPaint gp2 = (GradientPaint) p2;</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">            return gp1.getColor1().equals(gp2.getColor1()) </span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">                    &amp;&amp; gp1.getColor2().equals(gp2.getColor2())</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">                    &amp;&amp; gp1.getPoint1().equals(gp2.getPoint1())    </span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">                    &amp;&amp; gp1.getPoint2().equals(gp2.getPoint2())</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">                    &amp;&amp; gp1.isCyclic() == gp2.isCyclic()</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">                    &amp;&amp; gp1.getTransparency() == gp1.getTransparency(); </span>
-<span class="nc bnc" id="L86" title="All 4 branches missed.">        } else if (p1 instanceof LinearGradientPaint </span>
+<span class="fc bfc" id="L77" title="All 4 branches covered.">        if (p1 instanceof GradientPaint &amp;&amp; p2 instanceof GradientPaint) {</span>
+<span class="fc" id="L78">            GradientPaint gp1 = (GradientPaint) p1;</span>
+<span class="fc" id="L79">            GradientPaint gp2 = (GradientPaint) p2;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            return gp1.getColor1().equals(gp2.getColor1()) </span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">                    &amp;&amp; gp1.getColor2().equals(gp2.getColor2())</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">                    &amp;&amp; gp1.getPoint1().equals(gp2.getPoint1())    </span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">                    &amp;&amp; gp1.getPoint2().equals(gp2.getPoint2())</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">                    &amp;&amp; gp1.isCyclic() == gp2.isCyclic()</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">                    &amp;&amp; gp1.getTransparency() == gp1.getTransparency(); </span>
+<span class="pc bpc" id="L86" title="3 of 4 branches missed.">        } else if (p1 instanceof LinearGradientPaint </span>
                 &amp;&amp; p2 instanceof LinearGradientPaint) {
 <span class="nc" id="L88">            LinearGradientPaint lgp1 = (LinearGradientPaint) p1;</span>
 <span class="nc" id="L89">            LinearGradientPaint lgp2 = (LinearGradientPaint) p2;</span>
@@ -94,7 +94,7 @@ public class PaintUtils {
 <span class="nc bnc" id="L94" title="All 2 branches missed.">                    &amp;&amp; lgp1.getCycleMethod() == lgp2.getCycleMethod()</span>
 <span class="nc bnc" id="L95" title="All 2 branches missed.">                    &amp;&amp; lgp1.getColorSpace() == lgp2.getColorSpace()</span>
 <span class="nc bnc" id="L96" title="All 2 branches missed.">                    &amp;&amp; lgp1.getTransform().equals(lgp2.getTransform());</span>
-<span class="nc bnc" id="L97" title="All 4 branches missed.">        } else if (p1 instanceof RadialGradientPaint </span>
+<span class="pc bpc" id="L97" title="3 of 4 branches missed.">        } else if (p1 instanceof RadialGradientPaint </span>
                 &amp;&amp; p2 instanceof RadialGradientPaint) {
 <span class="nc" id="L99">            RadialGradientPaint rgp1 = (RadialGradientPaint) p1;</span>
 <span class="nc" id="L100">            RadialGradientPaint rgp2 = (RadialGradientPaint) p2;</span>
@@ -107,7 +107,7 @@ public class PaintUtils {
 <span class="nc bnc" id="L107" title="All 2 branches missed.">                    &amp;&amp; rgp1.getColorSpace() == rgp2.getColorSpace()</span>
 <span class="nc bnc" id="L108" title="All 2 branches missed.">                    &amp;&amp; rgp1.getTransform().equals(rgp2.getTransform());</span>
         } else {
-<span class="nc" id="L110">            return p1.equals(p2);</span>
+<span class="fc" id="L110">            return p1.equals(p2);</span>
         }
     }
 
@@ -181,4 +181,4 @@ public class PaintUtils {
     }
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

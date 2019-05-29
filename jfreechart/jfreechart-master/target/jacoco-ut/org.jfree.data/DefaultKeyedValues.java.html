@@ -95,11 +95,11 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
   /**
      * Creates a new collection (initially empty).
      */
-<span class="nc" id="L98">    public DefaultKeyedValues() {</span>
-<span class="nc" id="L99">        this.keys = new ArrayList();</span>
-<span class="nc" id="L100">        this.values = new ArrayList();</span>
-<span class="nc" id="L101">        this.indexMap = new HashMap();</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L98">    public DefaultKeyedValues() {</span>
+<span class="fc" id="L99">        this.keys = new ArrayList();</span>
+<span class="fc" id="L100">        this.values = new ArrayList();</span>
+<span class="fc" id="L101">        this.indexMap = new HashMap();</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Returns the number of items (values) in the collection.
@@ -108,7 +108,7 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public int getItemCount() {
-<span class="nc" id="L111">        return this.indexMap.size();</span>
+<span class="fc" id="L111">        return this.indexMap.size();</span>
     }
 
     /**
@@ -122,7 +122,7 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public Number getValue(int item) {
-<span class="nc" id="L125">        return (Number) this.values.get(item);</span>
+<span class="fc" id="L125">        return (Number) this.values.get(item);</span>
     }
 
     /**
@@ -136,7 +136,7 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public Comparable getKey(int index) {
-<span class="nc" id="L139">        return (Comparable) this.keys.get(index);</span>
+<span class="fc" id="L139">        return (Comparable) this.keys.get(index);</span>
     }
 
     /**
@@ -151,12 +151,12 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public int getIndex(Comparable key) {
-<span class="nc" id="L154">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L155">        final Integer i = (Integer) this.indexMap.get(key);</span>
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (i == null) {</span>
-<span class="nc" id="L157">            return -1;  // key not found</span>
+<span class="fc" id="L154">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L155">        final Integer i = (Integer) this.indexMap.get(key);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (i == null) {</span>
+<span class="fc" id="L157">            return -1;  // key not found</span>
         }
-<span class="nc" id="L159">        return i.intValue();</span>
+<span class="fc" id="L159">        return i.intValue();</span>
     }
 
     /**
@@ -166,7 +166,7 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public List getKeys() {
-<span class="nc" id="L169">        return (List) this.keys.clone();</span>
+<span class="fc" id="L169">        return (List) this.keys.clone();</span>
     }
 
     /**
@@ -182,11 +182,11 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public Number getValue(Comparable key) {
-<span class="nc" id="L185">        int index = getIndex(key);</span>
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L187">            throw new UnknownKeyException(&quot;Key not found: &quot; + key);</span>
+<span class="fc" id="L185">        int index = getIndex(key);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L187">            throw new UnknownKeyException(&quot;Key not found: &quot; + key);</span>
         }
-<span class="nc" id="L189">        return getValue(index);</span>
+<span class="fc" id="L189">        return getValue(index);</span>
     }
 
     /**
@@ -198,8 +198,8 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @see #addValue(Comparable, Number)
      */
     public void addValue(Comparable key, double value) {
-<span class="nc" id="L201">        addValue(key, new Double(value));</span>
-<span class="nc" id="L202">    }</span>
+<span class="fc" id="L201">        addValue(key, new Double(value));</span>
+<span class="fc" id="L202">    }</span>
 
     /**
      * Adds a new value to the collection, or updates an existing value.
@@ -210,8 +210,8 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @param value  the value ({@code null} permitted).
      */
     public void addValue(Comparable key, Number value) {
-<span class="nc" id="L213">        setValue(key, value);</span>
-<span class="nc" id="L214">    }</span>
+<span class="fc" id="L213">        setValue(key, value);</span>
+<span class="fc" id="L214">    }</span>
 
     /**
      * Updates an existing value, or adds a new value to the collection.
@@ -230,18 +230,18 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @param value  the value ({@code null} permitted).
      */
     public void setValue(Comparable key, Number value) {
-<span class="nc" id="L233">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L234">        int keyIndex = getIndex(key);</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (keyIndex &gt;= 0) {</span>
-<span class="nc" id="L236">            this.keys.set(keyIndex, key);</span>
-<span class="nc" id="L237">            this.values.set(keyIndex, value);</span>
+<span class="fc" id="L233">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L234">        int keyIndex = getIndex(key);</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (keyIndex &gt;= 0) {</span>
+<span class="fc" id="L236">            this.keys.set(keyIndex, key);</span>
+<span class="fc" id="L237">            this.values.set(keyIndex, value);</span>
         }
         else {
-<span class="nc" id="L240">            this.keys.add(key);</span>
-<span class="nc" id="L241">            this.values.add(value);</span>
-<span class="nc" id="L242">            this.indexMap.put(key, new Integer(this.keys.size() - 1));</span>
+<span class="fc" id="L240">            this.keys.add(key);</span>
+<span class="fc" id="L241">            this.values.add(value);</span>
+<span class="fc" id="L242">            this.indexMap.put(key, new Integer(this.keys.size() - 1));</span>
         }
-<span class="nc" id="L244">    }</span>
+<span class="fc" id="L244">    }</span>
 
     /**
      * Inserts a new value at the specified position in the dataset or, if
@@ -255,8 +255,8 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @since 1.0.6
      */
     public void insertValue(int position, Comparable key, double value) {
-<span class="nc" id="L258">        insertValue(position, key, new Double(value));</span>
-<span class="nc" id="L259">    }</span>
+<span class="fc" id="L258">        insertValue(position, key, new Double(value));</span>
+<span class="fc" id="L259">    }</span>
 
     /**
      * Inserts a new value at the specified position in the dataset or, if
@@ -270,38 +270,38 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @since 1.0.6
      */
     public void insertValue(int position, Comparable key, Number value) {
-<span class="nc bnc" id="L273" title="All 4 branches missed.">        if (position &lt; 0 || position &gt; getItemCount()) {</span>
+<span class="pc bpc" id="L273" title="2 of 4 branches missed.">        if (position &lt; 0 || position &gt; getItemCount()) {</span>
 <span class="nc" id="L274">            throw new IllegalArgumentException(&quot;'position' out of bounds.&quot;);</span>
         }
-<span class="nc" id="L276">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L277">        int pos = getIndex(key);</span>
-<span class="nc bnc" id="L278" title="All 2 branches missed.">        if (pos == position) {</span>
+<span class="fc" id="L276">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L277">        int pos = getIndex(key);</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        if (pos == position) {</span>
 <span class="nc" id="L279">            this.keys.set(pos, key);</span>
 <span class="nc" id="L280">            this.values.set(pos, value);</span>
         }
         else {
-<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (pos &gt;= 0) {</span>
-<span class="nc" id="L284">                this.keys.remove(pos);</span>
-<span class="nc" id="L285">                this.values.remove(pos);</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            if (pos &gt;= 0) {</span>
+<span class="fc" id="L284">                this.keys.remove(pos);</span>
+<span class="fc" id="L285">                this.values.remove(pos);</span>
             }
 
-<span class="nc" id="L288">            this.keys.add(position, key);</span>
-<span class="nc" id="L289">            this.values.add(position, value);</span>
-<span class="nc" id="L290">            rebuildIndex();</span>
+<span class="fc" id="L288">            this.keys.add(position, key);</span>
+<span class="fc" id="L289">            this.values.add(position, value);</span>
+<span class="fc" id="L290">            rebuildIndex();</span>
         }
-<span class="nc" id="L292">    }</span>
+<span class="fc" id="L292">    }</span>
 
     /**
      * Rebuilds the key to indexed-position mapping after an positioned insert
      * or a remove operation.
      */
     private void rebuildIndex () {
-<span class="nc" id="L299">        this.indexMap.clear();</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">        for (int i = 0; i &lt; this.keys.size(); i++) {</span>
-<span class="nc" id="L301">            final Object key = this.keys.get(i);</span>
-<span class="nc" id="L302">            this.indexMap.put(key, new Integer(i));</span>
+<span class="fc" id="L299">        this.indexMap.clear();</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        for (int i = 0; i &lt; this.keys.size(); i++) {</span>
+<span class="fc" id="L301">            final Object key = this.keys.get(i);</span>
+<span class="fc" id="L302">            this.indexMap.put(key, new Integer(i));</span>
         }
-<span class="nc" id="L304">    }</span>
+<span class="fc" id="L304">    }</span>
 
     /**
      * Removes a value from the collection.
@@ -313,10 +313,10 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      *     the specified range.
      */
     public void removeValue(int index) {
-<span class="nc" id="L316">        this.keys.remove(index);</span>
-<span class="nc" id="L317">        this.values.remove(index);</span>
-<span class="nc" id="L318">        rebuildIndex();</span>
-<span class="nc" id="L319">    }</span>
+<span class="fc" id="L316">        this.keys.remove(index);</span>
+<span class="fc" id="L317">        this.values.remove(index);</span>
+<span class="fc" id="L318">        rebuildIndex();</span>
+<span class="fc" id="L319">    }</span>
 
     /**
      * Removes a value from the collection.
@@ -328,13 +328,13 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @throws UnknownKeyException if {@code key} is not recognised.
      */
     public void removeValue(Comparable key) {
-<span class="nc" id="L331">        int index = getIndex(key);</span>
-<span class="nc bnc" id="L332" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L333">            throw new UnknownKeyException(&quot;The key (&quot; + key</span>
+<span class="fc" id="L331">        int index = getIndex(key);</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L333">            throw new UnknownKeyException(&quot;The key (&quot; + key</span>
                     + &quot;) is not recognised.&quot;);
         }
-<span class="nc" id="L336">        removeValue(index);</span>
-<span class="nc" id="L337">    }</span>
+<span class="fc" id="L336">        removeValue(index);</span>
+<span class="fc" id="L337">    }</span>
 
     /**
      * Clears all values from the collection.
@@ -342,10 +342,10 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @since 1.0.2
      */
     public void clear() {
-<span class="nc" id="L345">        this.keys.clear();</span>
-<span class="nc" id="L346">        this.values.clear();</span>
-<span class="nc" id="L347">        this.indexMap.clear();</span>
-<span class="nc" id="L348">    }</span>
+<span class="fc" id="L345">        this.keys.clear();</span>
+<span class="fc" id="L346">        this.values.clear();</span>
+<span class="fc" id="L347">        this.indexMap.clear();</span>
+<span class="fc" id="L348">    }</span>
 
     /**
      * Sorts the items in the list by key.
@@ -353,24 +353,24 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @param order  the sort order ({@code null} not permitted).
      */
     public void sortByKeys(SortOrder order) {
-<span class="nc" id="L356">        final int size = this.keys.size();</span>
-<span class="nc" id="L357">        final DefaultKeyedValue[] data = new DefaultKeyedValue[size];</span>
+<span class="fc" id="L356">        final int size = this.keys.size();</span>
+<span class="fc" id="L357">        final DefaultKeyedValue[] data = new DefaultKeyedValue[size];</span>
 
-<span class="nc bnc" id="L359" title="All 2 branches missed.">        for (int i = 0; i &lt; size; i++) {</span>
-<span class="nc" id="L360">            data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i),</span>
-<span class="nc" id="L361">                    (Number) this.values.get(i));</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L360">            data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i),</span>
+<span class="fc" id="L361">                    (Number) this.values.get(i));</span>
         }
 
-<span class="nc" id="L364">        Comparator comparator = new KeyedValueComparator(</span>
+<span class="fc" id="L364">        Comparator comparator = new KeyedValueComparator(</span>
                 KeyedValueComparatorType.BY_KEY, order);
-<span class="nc" id="L366">        Arrays.sort(data, comparator);</span>
-<span class="nc" id="L367">        clear();</span>
+<span class="fc" id="L366">        Arrays.sort(data, comparator);</span>
+<span class="fc" id="L367">        clear();</span>
 
-<span class="nc bnc" id="L369" title="All 2 branches missed.">        for (int i = 0; i &lt; data.length; i++) {</span>
-<span class="nc" id="L370">            final DefaultKeyedValue value = data[i];</span>
-<span class="nc" id="L371">            addValue(value.getKey(), value.getValue());</span>
+<span class="fc bfc" id="L369" title="All 2 branches covered.">        for (int i = 0; i &lt; data.length; i++) {</span>
+<span class="fc" id="L370">            final DefaultKeyedValue value = data[i];</span>
+<span class="fc" id="L371">            addValue(value.getKey(), value.getValue());</span>
         }
-<span class="nc" id="L373">    }</span>
+<span class="fc" id="L373">    }</span>
 
     /**
      * Sorts the items in the list by value.  If the list contains
@@ -380,23 +380,23 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      * @param order  the sort order ({@code null} not permitted).
      */
     public void sortByValues(SortOrder order) {
-<span class="nc" id="L383">        final int size = this.keys.size();</span>
-<span class="nc" id="L384">        final DefaultKeyedValue[] data = new DefaultKeyedValue[size];</span>
-<span class="nc bnc" id="L385" title="All 2 branches missed.">        for (int i = 0; i &lt; size; i++) {</span>
-<span class="nc" id="L386">            data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i),</span>
-<span class="nc" id="L387">                    (Number) this.values.get(i));</span>
+<span class="fc" id="L383">        final int size = this.keys.size();</span>
+<span class="fc" id="L384">        final DefaultKeyedValue[] data = new DefaultKeyedValue[size];</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L386">            data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i),</span>
+<span class="fc" id="L387">                    (Number) this.values.get(i));</span>
         }
 
-<span class="nc" id="L390">        Comparator comparator = new KeyedValueComparator(</span>
+<span class="fc" id="L390">        Comparator comparator = new KeyedValueComparator(</span>
                 KeyedValueComparatorType.BY_VALUE, order);
-<span class="nc" id="L392">        Arrays.sort(data, comparator);</span>
+<span class="fc" id="L392">        Arrays.sort(data, comparator);</span>
 
-<span class="nc" id="L394">        clear();</span>
-<span class="nc bnc" id="L395" title="All 2 branches missed.">        for (int i = 0; i &lt; data.length; i++) {</span>
-<span class="nc" id="L396">            final DefaultKeyedValue value = data[i];</span>
-<span class="nc" id="L397">            addValue(value.getKey(), value.getValue());</span>
+<span class="fc" id="L394">        clear();</span>
+<span class="fc bfc" id="L395" title="All 2 branches covered.">        for (int i = 0; i &lt; data.length; i++) {</span>
+<span class="fc" id="L396">            final DefaultKeyedValue value = data[i];</span>
+<span class="fc" id="L397">            addValue(value.getKey(), value.getValue());</span>
         }
-<span class="nc" id="L399">    }</span>
+<span class="fc" id="L399">    }</span>
 
     /**
      * Tests if this object is equal to another.
@@ -407,40 +407,40 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L410" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L410" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L411">            return true;</span>
         }
 
-<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (!(obj instanceof KeyedValues)) {</span>
+<span class="pc bpc" id="L414" title="1 of 2 branches missed.">        if (!(obj instanceof KeyedValues)) {</span>
 <span class="nc" id="L415">            return false;</span>
         }
 
-<span class="nc" id="L418">        KeyedValues that = (KeyedValues) obj;</span>
-<span class="nc" id="L419">        int count = getItemCount();</span>
-<span class="nc bnc" id="L420" title="All 2 branches missed.">        if (count != that.getItemCount()) {</span>
+<span class="fc" id="L418">        KeyedValues that = (KeyedValues) obj;</span>
+<span class="fc" id="L419">        int count = getItemCount();</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        if (count != that.getItemCount()) {</span>
 <span class="nc" id="L421">            return false;</span>
         }
 
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L425">            Comparable k1 = getKey(i);</span>
-<span class="nc" id="L426">            Comparable k2 = that.getKey(i);</span>
-<span class="nc bnc" id="L427" title="All 2 branches missed.">            if (!k1.equals(k2)) {</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L425">            Comparable k1 = getKey(i);</span>
+<span class="fc" id="L426">            Comparable k2 = that.getKey(i);</span>
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">            if (!k1.equals(k2)) {</span>
 <span class="nc" id="L428">                return false;</span>
             }
-<span class="nc" id="L430">            Number v1 = getValue(i);</span>
-<span class="nc" id="L431">            Number v2 = that.getValue(i);</span>
-<span class="nc bnc" id="L432" title="All 2 branches missed.">            if (v1 == null) {</span>
-<span class="nc bnc" id="L433" title="All 2 branches missed.">                if (v2 != null) {</span>
+<span class="fc" id="L430">            Number v1 = getValue(i);</span>
+<span class="fc" id="L431">            Number v2 = that.getValue(i);</span>
+<span class="fc bfc" id="L432" title="All 2 branches covered.">            if (v1 == null) {</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">                if (v2 != null) {</span>
 <span class="nc" id="L434">                    return false;</span>
                 }
             }
             else {
-<span class="nc bnc" id="L438" title="All 2 branches missed.">                if (!v1.equals(v2)) {</span>
-<span class="nc" id="L439">                    return false;</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">                if (!v1.equals(v2)) {</span>
+<span class="fc" id="L439">                    return false;</span>
                 }
             }
         }
-<span class="nc" id="L443">        return true;</span>
+<span class="fc" id="L443">        return true;</span>
     }
 
     /**
@@ -463,12 +463,12 @@ public class DefaultKeyedValues implements KeyedValues, Cloneable,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L466">        DefaultKeyedValues clone = (DefaultKeyedValues) super.clone();</span>
-<span class="nc" id="L467">        clone.keys = (ArrayList) this.keys.clone();</span>
-<span class="nc" id="L468">        clone.values = (ArrayList) this.values.clone();</span>
-<span class="nc" id="L469">        clone.indexMap = (HashMap) this.indexMap.clone();</span>
-<span class="nc" id="L470">        return clone;</span>
+<span class="fc" id="L466">        DefaultKeyedValues clone = (DefaultKeyedValues) super.clone();</span>
+<span class="fc" id="L467">        clone.keys = (ArrayList) this.keys.clone();</span>
+<span class="fc" id="L468">        clone.values = (ArrayList) this.values.clone();</span>
+<span class="fc" id="L469">        clone.indexMap = (HashMap) this.indexMap.clone();</span>
+<span class="fc" id="L470">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

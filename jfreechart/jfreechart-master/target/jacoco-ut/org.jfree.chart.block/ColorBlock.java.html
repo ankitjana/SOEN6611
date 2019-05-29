@@ -75,12 +75,12 @@ public class ColorBlock extends AbstractBlock implements Block {
      * @param width  the width.
      * @param height  the height.
      */
-<span class="nc" id="L78">    public ColorBlock(Paint paint, double width, double height) {</span>
-<span class="nc" id="L79">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L80">        this.paint = paint;</span>
-<span class="nc" id="L81">        setWidth(width);</span>
-<span class="nc" id="L82">        setHeight(height);</span>
-<span class="nc" id="L83">    }</span>
+<span class="fc" id="L78">    public ColorBlock(Paint paint, double width, double height) {</span>
+<span class="fc" id="L79">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L80">        this.paint = paint;</span>
+<span class="fc" id="L81">        setWidth(width);</span>
+<span class="fc" id="L82">        setHeight(height);</span>
+<span class="fc" id="L83">    }</span>
 
     /**
      * Returns the paint.
@@ -148,17 +148,17 @@ public class ColorBlock extends AbstractBlock implements Block {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L152">            return true;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L152">            return true;</span>
         }
-<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (!(obj instanceof ColorBlock)) {</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (!(obj instanceof ColorBlock)) {</span>
 <span class="nc" id="L155">            return false;</span>
         }
-<span class="nc" id="L157">        ColorBlock that = (ColorBlock) obj;</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L159">            return false;</span>
+<span class="fc" id="L157">        ColorBlock that = (ColorBlock) obj;</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L159">            return false;</span>
         }
-<span class="nc" id="L161">        return super.equals(obj);</span>
+<span class="fc" id="L161">        return super.equals(obj);</span>
     }
 
     /**
@@ -169,9 +169,9 @@ public class ColorBlock extends AbstractBlock implements Block {
      * @throws IOException if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L172">        stream.defaultWriteObject();</span>
-<span class="nc" id="L173">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L174">    }</span>
+<span class="fc" id="L172">        stream.defaultWriteObject();</span>
+<span class="fc" id="L173">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L174">    }</span>
 
     /**
      * Provides serialization support.
@@ -183,9 +183,9 @@ public class ColorBlock extends AbstractBlock implements Block {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L186">        stream.defaultReadObject();</span>
-<span class="nc" id="L187">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L188">    }</span>
+<span class="fc" id="L186">        stream.defaultReadObject();</span>
+<span class="fc" id="L187">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L188">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

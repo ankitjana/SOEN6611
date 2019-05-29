@@ -90,7 +90,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
     private DateFormat yDateFormat;
 
     /** The string used to represent 'null' for the y-value. */
-<span class="nc" id="L93">    private String nullYString = &quot;null&quot;;</span>
+<span class="fc" id="L93">    private String nullYString = &quot;null&quot;;</span>
 
     /**
      * Creates an item label generator using default number formatters.
@@ -111,15 +111,15 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      *                 not permitted).
      */
     protected AbstractXYItemLabelGenerator(String formatString, 
-<span class="nc" id="L114">            NumberFormat xFormat, NumberFormat yFormat) {</span>
+<span class="fc" id="L114">            NumberFormat xFormat, NumberFormat yFormat) {</span>
 
-<span class="nc" id="L116">        Args.nullNotPermitted(formatString, &quot;formatString&quot;);</span>
-<span class="nc" id="L117">        Args.nullNotPermitted(xFormat, &quot;xFormat&quot;);</span>
-<span class="nc" id="L118">        Args.nullNotPermitted(yFormat, &quot;yFormat&quot;);</span>
-<span class="nc" id="L119">        this.formatString = formatString;</span>
-<span class="nc" id="L120">        this.xFormat = xFormat;</span>
-<span class="nc" id="L121">        this.yFormat = yFormat;</span>
-<span class="nc" id="L122">    }</span>
+<span class="fc" id="L116">        Args.nullNotPermitted(formatString, &quot;formatString&quot;);</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(xFormat, &quot;xFormat&quot;);</span>
+<span class="fc" id="L118">        Args.nullNotPermitted(yFormat, &quot;yFormat&quot;);</span>
+<span class="fc" id="L119">        this.formatString = formatString;</span>
+<span class="fc" id="L120">        this.xFormat = xFormat;</span>
+<span class="fc" id="L121">        this.yFormat = yFormat;</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * Creates an item label generator using the specified number formatters.
@@ -134,9 +134,9 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
     protected AbstractXYItemLabelGenerator(String formatString, 
             DateFormat xFormat, NumberFormat yFormat) {
 
-<span class="nc" id="L137">        this(formatString, NumberFormat.getInstance(), yFormat);</span>
-<span class="nc" id="L138">        this.xDateFormat = xFormat;</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L137">        this(formatString, NumberFormat.getInstance(), yFormat);</span>
+<span class="fc" id="L138">        this.xDateFormat = xFormat;</span>
+<span class="fc" id="L139">    }</span>
 
     /**
      * Creates an item label generator using the specified formatters (a
@@ -172,11 +172,11 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
     protected AbstractXYItemLabelGenerator(String formatString, 
             DateFormat xFormat, DateFormat yFormat) {
 
-<span class="nc" id="L175">        this(formatString, NumberFormat.getInstance(),</span>
-<span class="nc" id="L176">                NumberFormat.getInstance());</span>
-<span class="nc" id="L177">        this.xDateFormat = xFormat;</span>
-<span class="nc" id="L178">        this.yDateFormat = yFormat;</span>
-<span class="nc" id="L179">    }</span>
+<span class="fc" id="L175">        this(formatString, NumberFormat.getInstance(),</span>
+<span class="fc" id="L176">                NumberFormat.getInstance());</span>
+<span class="fc" id="L177">        this.xDateFormat = xFormat;</span>
+<span class="fc" id="L178">        this.yDateFormat = yFormat;</span>
+<span class="fc" id="L179">    }</span>
 
     /**
      * Returns the format string (this controls the overall structure of the
@@ -185,7 +185,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      * @return The format string (never {@code null}).
      */
     public String getFormatString() {
-<span class="nc" id="L188">        return this.formatString;</span>
+<span class="fc" id="L188">        return this.formatString;</span>
     }
 
     /**
@@ -194,7 +194,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      * @return The number formatter (possibly {@code null}).
      */
     public NumberFormat getXFormat() {
-<span class="nc" id="L197">        return this.xFormat;</span>
+<span class="fc" id="L197">        return this.xFormat;</span>
     }
 
     /**
@@ -203,7 +203,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      * @return The date formatter (possibly {@code null}).
      */
     public DateFormat getXDateFormat() {
-<span class="nc" id="L206">        return this.xDateFormat;</span>
+<span class="fc" id="L206">        return this.xDateFormat;</span>
     }
 
     /**
@@ -212,7 +212,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      * @return The number formatter (possibly {@code null}).
      */
     public NumberFormat getYFormat() {
-<span class="nc" id="L215">        return this.yFormat;</span>
+<span class="fc" id="L215">        return this.yFormat;</span>
     }
 
     /**
@@ -221,7 +221,7 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      * @return The date formatter (possibly {@code null}).
      */
     public DateFormat getYDateFormat() {
-<span class="nc" id="L224">        return this.yDateFormat;</span>
+<span class="fc" id="L224">        return this.yDateFormat;</span>
     }
 
     /**
@@ -264,30 +264,30 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      */
     protected Object[] createItemArray(XYDataset dataset, int series,
                                        int item) {
-<span class="nc" id="L267">        Object[] result = new Object[3];</span>
-<span class="nc" id="L268">        result[0] = dataset.getSeriesKey(series).toString();</span>
+<span class="fc" id="L267">        Object[] result = new Object[3];</span>
+<span class="fc" id="L268">        result[0] = dataset.getSeriesKey(series).toString();</span>
 
-<span class="nc" id="L270">        double x = dataset.getXValue(series, item);</span>
-<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (this.xDateFormat != null) {</span>
+<span class="fc" id="L270">        double x = dataset.getXValue(series, item);</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">        if (this.xDateFormat != null) {</span>
 <span class="nc" id="L272">            result[1] = this.xDateFormat.format(new Date((long) x));</span>
         }
         else {
-<span class="nc" id="L275">            result[1] = this.xFormat.format(x);</span>
+<span class="fc" id="L275">            result[1] = this.xFormat.format(x);</span>
         }
 
-<span class="nc" id="L278">        double y = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L279" title="All 4 branches missed.">        if (Double.isNaN(y) &amp;&amp; dataset.getY(series, item) == null) {</span>
+<span class="fc" id="L278">        double y = dataset.getYValue(series, item);</span>
+<span class="pc bpc" id="L279" title="3 of 4 branches missed.">        if (Double.isNaN(y) &amp;&amp; dataset.getY(series, item) == null) {</span>
 <span class="nc" id="L280">            result[2] = this.nullYString;</span>
         }
         else {
-<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (this.yDateFormat != null) {</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            if (this.yDateFormat != null) {</span>
 <span class="nc" id="L284">                result[2] = this.yDateFormat.format(new Date((long) y));</span>
             }
             else {
-<span class="nc" id="L287">                result[2] = this.yFormat.format(y);</span>
+<span class="fc" id="L287">                result[2] = this.yFormat.format(y);</span>
             }
         }
-<span class="nc" id="L290">        return result;</span>
+<span class="fc" id="L290">        return result;</span>
     }
 
     /**
@@ -299,32 +299,32 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L303">            return true;</span>
         }
-<span class="nc bnc" id="L305" title="All 2 branches missed.">        if (!(obj instanceof AbstractXYItemLabelGenerator)) {</span>
+<span class="pc bpc" id="L305" title="1 of 2 branches missed.">        if (!(obj instanceof AbstractXYItemLabelGenerator)) {</span>
 <span class="nc" id="L306">            return false;</span>
         }
-<span class="nc" id="L308">        AbstractXYItemLabelGenerator that = (AbstractXYItemLabelGenerator) obj;</span>
-<span class="nc bnc" id="L309" title="All 2 branches missed.">        if (!this.formatString.equals(that.formatString)) {</span>
-<span class="nc" id="L310">            return false;</span>
+<span class="fc" id="L308">        AbstractXYItemLabelGenerator that = (AbstractXYItemLabelGenerator) obj;</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        if (!this.formatString.equals(that.formatString)) {</span>
+<span class="fc" id="L310">            return false;</span>
         }
-<span class="nc bnc" id="L312" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.xFormat, that.xFormat)) {</span>
-<span class="nc" id="L313">            return false;</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.xFormat, that.xFormat)) {</span>
+<span class="fc" id="L313">            return false;</span>
         }
-<span class="nc bnc" id="L315" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.xDateFormat, that.xDateFormat)) {</span>
-<span class="nc" id="L316">            return false;</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.xDateFormat, that.xDateFormat)) {</span>
+<span class="fc" id="L316">            return false;</span>
         }
-<span class="nc bnc" id="L318" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.yFormat, that.yFormat)) {</span>
-<span class="nc" id="L319">            return false;</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.yFormat, that.yFormat)) {</span>
+<span class="fc" id="L319">            return false;</span>
         }
-<span class="nc bnc" id="L321" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.yDateFormat, that.yDateFormat)) {</span>
-<span class="nc" id="L322">            return false;</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.yDateFormat, that.yDateFormat)) {</span>
+<span class="fc" id="L322">            return false;</span>
         }
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (!this.nullYString.equals(that.nullYString)) {</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (!this.nullYString.equals(that.nullYString)) {</span>
 <span class="nc" id="L325">            return false;</span>
         }
-<span class="nc" id="L327">        return true;</span>
+<span class="fc" id="L327">        return true;</span>
     }
 
     /**
@@ -334,13 +334,13 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L337">        int result = 127;</span>
-<span class="nc" id="L338">        result = HashUtils.hashCode(result, this.formatString);</span>
-<span class="nc" id="L339">        result = HashUtils.hashCode(result, this.xFormat);</span>
-<span class="nc" id="L340">        result = HashUtils.hashCode(result, this.xDateFormat);</span>
-<span class="nc" id="L341">        result = HashUtils.hashCode(result, this.yFormat);</span>
-<span class="nc" id="L342">        result = HashUtils.hashCode(result, this.yDateFormat);</span>
-<span class="nc" id="L343">        return result;</span>
+<span class="fc" id="L337">        int result = 127;</span>
+<span class="fc" id="L338">        result = HashUtils.hashCode(result, this.formatString);</span>
+<span class="fc" id="L339">        result = HashUtils.hashCode(result, this.xFormat);</span>
+<span class="fc" id="L340">        result = HashUtils.hashCode(result, this.xDateFormat);</span>
+<span class="fc" id="L341">        result = HashUtils.hashCode(result, this.yFormat);</span>
+<span class="fc" id="L342">        result = HashUtils.hashCode(result, this.yDateFormat);</span>
+<span class="fc" id="L343">        return result;</span>
     }
 
     /**
@@ -352,22 +352,22 @@ public class AbstractXYItemLabelGenerator implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L355">        AbstractXYItemLabelGenerator clone</span>
-<span class="nc" id="L356">                = (AbstractXYItemLabelGenerator) super.clone();</span>
-<span class="nc bnc" id="L357" title="All 2 branches missed.">        if (this.xFormat != null) {</span>
-<span class="nc" id="L358">            clone.xFormat = (NumberFormat) this.xFormat.clone();</span>
+<span class="fc" id="L355">        AbstractXYItemLabelGenerator clone</span>
+<span class="fc" id="L356">                = (AbstractXYItemLabelGenerator) super.clone();</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if (this.xFormat != null) {</span>
+<span class="fc" id="L358">            clone.xFormat = (NumberFormat) this.xFormat.clone();</span>
         }
-<span class="nc bnc" id="L360" title="All 2 branches missed.">        if (this.yFormat != null) {</span>
-<span class="nc" id="L361">            clone.yFormat = (NumberFormat) this.yFormat.clone();</span>
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (this.yFormat != null) {</span>
+<span class="fc" id="L361">            clone.yFormat = (NumberFormat) this.yFormat.clone();</span>
         }
-<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (this.xDateFormat != null) {</span>
-<span class="nc" id="L364">            clone.xDateFormat = (DateFormat) this.xDateFormat.clone();</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        if (this.xDateFormat != null) {</span>
+<span class="fc" id="L364">            clone.xDateFormat = (DateFormat) this.xDateFormat.clone();</span>
         }
-<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (this.yDateFormat != null) {</span>
-<span class="nc" id="L367">            clone.yDateFormat = (DateFormat) this.yDateFormat.clone();</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (this.yDateFormat != null) {</span>
+<span class="fc" id="L367">            clone.yDateFormat = (DateFormat) this.yDateFormat.clone();</span>
         }
-<span class="nc" id="L369">        return clone;</span>
+<span class="fc" id="L369">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

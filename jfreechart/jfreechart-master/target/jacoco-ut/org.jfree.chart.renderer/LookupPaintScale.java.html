@@ -87,10 +87,10 @@ public class LookupPaintScale
          * @param value  the value.
          * @param paint  the paint.
          */
-<span class="nc" id="L90">        public PaintItem(double value, Paint paint) {</span>
-<span class="nc" id="L91">            this.value = value;</span>
-<span class="nc" id="L92">            this.paint = paint;</span>
-<span class="nc" id="L93">        }</span>
+<span class="fc" id="L90">        public PaintItem(double value, Paint paint) {</span>
+<span class="fc" id="L91">            this.value = value;</span>
+<span class="fc" id="L92">            this.paint = paint;</span>
+<span class="fc" id="L93">        }</span>
 
         /**
          * Compares this item to an arbitrary object.
@@ -101,16 +101,16 @@ public class LookupPaintScale
          */
         @Override
         public int compareTo(Object obj) {
-<span class="nc" id="L104">            PaintItem that = (PaintItem) obj;</span>
-<span class="nc" id="L105">            double d1 = this.value;</span>
-<span class="nc" id="L106">            double d2 = that.value;</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">            if (d1 &gt; d2) {</span>
-<span class="nc" id="L108">                return 1;</span>
+<span class="fc" id="L104">            PaintItem that = (PaintItem) obj;</span>
+<span class="fc" id="L105">            double d1 = this.value;</span>
+<span class="fc" id="L106">            double d2 = that.value;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (d1 &gt; d2) {</span>
+<span class="fc" id="L108">                return 1;</span>
             }
-<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (d1 &lt; d2) {</span>
-<span class="nc" id="L111">                return -1;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">            if (d1 &lt; d2) {</span>
+<span class="fc" id="L111">                return -1;</span>
             }
-<span class="nc" id="L113">            return 0;</span>
+<span class="fc" id="L113">            return 0;</span>
         }
 
         /**
@@ -122,20 +122,20 @@ public class LookupPaintScale
          */
         @Override
         public boolean equals(Object obj) {
-<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (obj == this) {</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            if (obj == this) {</span>
 <span class="nc" id="L126">                return true;</span>
             }
-<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (!(obj instanceof PaintItem)) {</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if (!(obj instanceof PaintItem)) {</span>
 <span class="nc" id="L129">                return false;</span>
             }
-<span class="nc" id="L131">            PaintItem that = (PaintItem) obj;</span>
-<span class="nc bnc" id="L132" title="All 2 branches missed.">            if (this.value != that.value) {</span>
+<span class="fc" id="L131">            PaintItem that = (PaintItem) obj;</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">            if (this.value != that.value) {</span>
 <span class="nc" id="L133">                return false;</span>
             }
-<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">            if (!PaintUtils.equal(this.paint, that.paint)) {</span>
 <span class="nc" id="L136">                return false;</span>
             }
-<span class="nc" id="L138">            return true;</span>
+<span class="fc" id="L138">            return true;</span>
         }
 
         /**
@@ -146,9 +146,9 @@ public class LookupPaintScale
          * @throws IOException  if there is an I/O error.
          */
         private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L149">            stream.defaultWriteObject();</span>
-<span class="nc" id="L150">            SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L151">        }</span>
+<span class="fc" id="L149">            stream.defaultWriteObject();</span>
+<span class="fc" id="L150">            SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L151">        }</span>
 
         /**
          * Provides serialization support.
@@ -160,9 +160,9 @@ public class LookupPaintScale
          */
         private void readObject(ObjectInputStream stream)
                 throws IOException, ClassNotFoundException {
-<span class="nc" id="L163">            stream.defaultReadObject();</span>
-<span class="nc" id="L164">            this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L165">        }</span>
+<span class="fc" id="L163">            stream.defaultReadObject();</span>
+<span class="fc" id="L164">            this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L165">        }</span>
 
     }
 
@@ -185,8 +185,8 @@ public class LookupPaintScale
      * Creates a new paint scale.
      */
     public LookupPaintScale() {
-<span class="nc" id="L188">        this(0.0, 1.0, Color.lightGray);</span>
-<span class="nc" id="L189">    }</span>
+<span class="fc" id="L188">        this(0.0, 1.0, Color.lightGray);</span>
+<span class="fc" id="L189">    }</span>
 
     /**
      * Creates a new paint scale with the specified default paint.
@@ -197,17 +197,17 @@ public class LookupPaintScale
      *     permitted).
      */
     public LookupPaintScale(double lowerBound, double upperBound,
-<span class="nc" id="L200">            Paint defaultPaint) {</span>
-<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (lowerBound &gt;= upperBound) {</span>
+<span class="fc" id="L200">            Paint defaultPaint) {</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (lowerBound &gt;= upperBound) {</span>
 <span class="nc" id="L202">            throw new IllegalArgumentException(</span>
                     &quot;Requires lowerBound &lt; upperBound.&quot;);
         }
-<span class="nc" id="L205">        Args.nullNotPermitted(defaultPaint, &quot;defaultPaint&quot;);</span>
-<span class="nc" id="L206">        this.lowerBound = lowerBound;</span>
-<span class="nc" id="L207">        this.upperBound = upperBound;</span>
-<span class="nc" id="L208">        this.defaultPaint = defaultPaint;</span>
-<span class="nc" id="L209">        this.lookupTable = new java.util.ArrayList();</span>
-<span class="nc" id="L210">    }</span>
+<span class="fc" id="L205">        Args.nullNotPermitted(defaultPaint, &quot;defaultPaint&quot;);</span>
+<span class="fc" id="L206">        this.lowerBound = lowerBound;</span>
+<span class="fc" id="L207">        this.upperBound = upperBound;</span>
+<span class="fc" id="L208">        this.defaultPaint = defaultPaint;</span>
+<span class="fc" id="L209">        this.lookupTable = new java.util.ArrayList();</span>
+<span class="fc" id="L210">    }</span>
 
     /**
      * Returns the default paint (never {@code null}).
@@ -215,7 +215,7 @@ public class LookupPaintScale
      * @return The default paint.
      */
     public Paint getDefaultPaint() {
-<span class="nc" id="L218">        return this.defaultPaint;</span>
+<span class="fc" id="L218">        return this.defaultPaint;</span>
     }
 
     /**
@@ -227,7 +227,7 @@ public class LookupPaintScale
      */
     @Override
     public double getLowerBound() {
-<span class="nc" id="L230">        return this.lowerBound;</span>
+<span class="fc" id="L230">        return this.lowerBound;</span>
     }
 
     /**
@@ -239,7 +239,7 @@ public class LookupPaintScale
      */
     @Override
     public double getUpperBound() {
-<span class="nc" id="L242">        return this.upperBound;</span>
+<span class="fc" id="L242">        return this.upperBound;</span>
     }
 
     /**
@@ -253,15 +253,15 @@ public class LookupPaintScale
      * @since 1.0.6
      */
     public void add(double value, Paint paint) {
-<span class="nc" id="L256">        PaintItem item = new PaintItem(value, paint);</span>
-<span class="nc" id="L257">        int index = Collections.binarySearch(this.lookupTable, item);</span>
-<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (index &gt;= 0) {</span>
-<span class="nc" id="L259">            this.lookupTable.set(index, item);</span>
+<span class="fc" id="L256">        PaintItem item = new PaintItem(value, paint);</span>
+<span class="fc" id="L257">        int index = Collections.binarySearch(this.lookupTable, item);</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        if (index &gt;= 0) {</span>
+<span class="fc" id="L259">            this.lookupTable.set(index, item);</span>
         }
         else {
-<span class="nc" id="L262">            this.lookupTable.add(-(index + 1), item);</span>
+<span class="fc" id="L262">            this.lookupTable.add(-(index + 1), item);</span>
         }
-<span class="nc" id="L264">    }</span>
+<span class="fc" id="L264">    }</span>
 
     /**
      * Returns the paint associated with the specified value.
@@ -276,44 +276,44 @@ public class LookupPaintScale
     public Paint getPaint(double value) {
 
         // handle value outside bounds...
-<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (value &lt; this.lowerBound) {</span>
-<span class="nc" id="L280">            return this.defaultPaint;</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (value &lt; this.lowerBound) {</span>
+<span class="fc" id="L280">            return this.defaultPaint;</span>
         }
-<span class="nc bnc" id="L282" title="All 2 branches missed.">        if (value &gt; this.upperBound) {</span>
-<span class="nc" id="L283">            return this.defaultPaint;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (value &gt; this.upperBound) {</span>
+<span class="fc" id="L283">            return this.defaultPaint;</span>
         }
 
-<span class="nc" id="L286">        int count = this.lookupTable.size();</span>
-<span class="nc bnc" id="L287" title="All 2 branches missed.">        if (count == 0) {</span>
-<span class="nc" id="L288">            return this.defaultPaint;</span>
+<span class="fc" id="L286">        int count = this.lookupTable.size();</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (count == 0) {</span>
+<span class="fc" id="L288">            return this.defaultPaint;</span>
         }
 
         // handle special case where value is less that item zero
-<span class="nc" id="L292">        PaintItem item = (PaintItem) this.lookupTable.get(0);</span>
-<span class="nc bnc" id="L293" title="All 2 branches missed.">        if (value &lt; item.value) {</span>
-<span class="nc" id="L294">            return this.defaultPaint;</span>
+<span class="fc" id="L292">        PaintItem item = (PaintItem) this.lookupTable.get(0);</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">        if (value &lt; item.value) {</span>
+<span class="fc" id="L294">            return this.defaultPaint;</span>
         }
 
         // for value in bounds, do the lookup...
-<span class="nc" id="L298">        int low = 0;</span>
-<span class="nc" id="L299">        int high = this.lookupTable.size() - 1;</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">        while (high - low &gt; 1) {</span>
-<span class="nc" id="L301">            int current = (low + high) / 2;</span>
-<span class="nc" id="L302">            item = (PaintItem) this.lookupTable.get(current);</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (value &gt;= item.value) {</span>
-<span class="nc" id="L304">                low = current;</span>
+<span class="fc" id="L298">        int low = 0;</span>
+<span class="fc" id="L299">        int high = this.lookupTable.size() - 1;</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        while (high - low &gt; 1) {</span>
+<span class="fc" id="L301">            int current = (low + high) / 2;</span>
+<span class="fc" id="L302">            item = (PaintItem) this.lookupTable.get(current);</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            if (value &gt;= item.value) {</span>
+<span class="fc" id="L304">                low = current;</span>
             }
             else {
-<span class="nc" id="L307">                high = current;</span>
+<span class="fc" id="L307">                high = current;</span>
             }
-<span class="nc" id="L309">        }</span>
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (high &gt; low) {</span>
-<span class="nc" id="L311">            item = (PaintItem) this.lookupTable.get(high);</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">            if (value &lt; item.value) {</span>
-<span class="nc" id="L313">                item = (PaintItem) this.lookupTable.get(low);</span>
+<span class="fc" id="L309">        }</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (high &gt; low) {</span>
+<span class="fc" id="L311">            item = (PaintItem) this.lookupTable.get(high);</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">            if (value &lt; item.value) {</span>
+<span class="fc" id="L313">                item = (PaintItem) this.lookupTable.get(low);</span>
             }
         }
-<span class="nc bnc" id="L316" title="All 2 branches missed.">        return (item != null ? item.paint : this.defaultPaint);</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        return (item != null ? item.paint : this.defaultPaint);</span>
     }
 
 
@@ -326,26 +326,26 @@ public class LookupPaintScale
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L330">            return true;</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L330">            return true;</span>
         }
-<span class="nc bnc" id="L332" title="All 2 branches missed.">        if (!(obj instanceof LookupPaintScale)) {</span>
-<span class="nc" id="L333">            return false;</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (!(obj instanceof LookupPaintScale)) {</span>
+<span class="fc" id="L333">            return false;</span>
         }
-<span class="nc" id="L335">        LookupPaintScale that = (LookupPaintScale) obj;</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">        if (this.lowerBound != that.lowerBound) {</span>
-<span class="nc" id="L337">            return false;</span>
+<span class="fc" id="L335">        LookupPaintScale that = (LookupPaintScale) obj;</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        if (this.lowerBound != that.lowerBound) {</span>
+<span class="fc" id="L337">            return false;</span>
         }
-<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (this.upperBound != that.upperBound) {</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (this.upperBound != that.upperBound) {</span>
 <span class="nc" id="L340">            return false;</span>
         }
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (!PaintUtils.equal(this.defaultPaint, that.defaultPaint)) {</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">        if (!PaintUtils.equal(this.defaultPaint, that.defaultPaint)) {</span>
 <span class="nc" id="L343">            return false;</span>
         }
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (!this.lookupTable.equals(that.lookupTable)) {</span>
-<span class="nc" id="L346">            return false;</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (!this.lookupTable.equals(that.lookupTable)) {</span>
+<span class="fc" id="L346">            return false;</span>
         }
-<span class="nc" id="L348">        return true;</span>
+<span class="fc" id="L348">        return true;</span>
     }
 
     /**
@@ -358,9 +358,9 @@ public class LookupPaintScale
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L361">        LookupPaintScale clone = (LookupPaintScale) super.clone();</span>
-<span class="nc" id="L362">        clone.lookupTable = new java.util.ArrayList(this.lookupTable);</span>
-<span class="nc" id="L363">        return clone;</span>
+<span class="fc" id="L361">        LookupPaintScale clone = (LookupPaintScale) super.clone();</span>
+<span class="fc" id="L362">        clone.lookupTable = new java.util.ArrayList(this.lookupTable);</span>
+<span class="fc" id="L363">        return clone;</span>
     }
 
     /**
@@ -371,9 +371,9 @@ public class LookupPaintScale
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L374">        stream.defaultWriteObject();</span>
-<span class="nc" id="L375">        SerialUtils.writePaint(this.defaultPaint, stream);</span>
-<span class="nc" id="L376">    }</span>
+<span class="fc" id="L374">        stream.defaultWriteObject();</span>
+<span class="fc" id="L375">        SerialUtils.writePaint(this.defaultPaint, stream);</span>
+<span class="fc" id="L376">    }</span>
 
     /**
      * Provides serialization support.
@@ -385,9 +385,9 @@ public class LookupPaintScale
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L388">        stream.defaultReadObject();</span>
-<span class="nc" id="L389">        this.defaultPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L390">    }</span>
+<span class="fc" id="L388">        stream.defaultReadObject();</span>
+<span class="fc" id="L389">        this.defaultPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L390">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

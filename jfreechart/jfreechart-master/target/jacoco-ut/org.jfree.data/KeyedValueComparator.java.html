@@ -68,12 +68,12 @@ public class KeyedValueComparator implements Comparator, Serializable {
      * @param order  the order ({@code null} not permitted).
      */
     public KeyedValueComparator(KeyedValueComparatorType type,
-<span class="nc" id="L71">                                SortOrder order) {</span>
-<span class="nc" id="L72">        Args.nullNotPermitted(type, &quot;type&quot;);</span>
-<span class="nc" id="L73">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
-<span class="nc" id="L74">        this.type = type;</span>
-<span class="nc" id="L75">        this.order = order;</span>
-<span class="nc" id="L76">    }</span>
+<span class="fc" id="L71">                                SortOrder order) {</span>
+<span class="fc" id="L72">        Args.nullNotPermitted(type, &quot;type&quot;);</span>
+<span class="fc" id="L73">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
+<span class="fc" id="L74">        this.type = type;</span>
+<span class="fc" id="L75">        this.order = order;</span>
+<span class="fc" id="L76">    }</span>
 
     /**
      * Returns the type.
@@ -105,57 +105,57 @@ public class KeyedValueComparator implements Comparator, Serializable {
     @Override
     public int compare(Object o1, Object o2) {
 
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (o2 == null) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (o2 == null) {</span>
 <span class="nc" id="L109">            return -1;</span>
         }
-<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (o1 == null) {</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (o1 == null) {</span>
 <span class="nc" id="L112">            return 1;</span>
         }
 
         int result;
 
-<span class="nc" id="L117">        KeyedValue kv1 = (KeyedValue) o1;</span>
-<span class="nc" id="L118">        KeyedValue kv2 = (KeyedValue) o2;</span>
+<span class="fc" id="L117">        KeyedValue kv1 = (KeyedValue) o1;</span>
+<span class="fc" id="L118">        KeyedValue kv2 = (KeyedValue) o2;</span>
 
-<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (this.type == KeyedValueComparatorType.BY_KEY) {</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (this.order.equals(SortOrder.ASCENDING)) {</span>
-<span class="nc" id="L122">                result = kv1.getKey().compareTo(kv2.getKey());</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (this.type == KeyedValueComparatorType.BY_KEY) {</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            if (this.order.equals(SortOrder.ASCENDING)) {</span>
+<span class="fc" id="L122">                result = kv1.getKey().compareTo(kv2.getKey());</span>
             }
-<span class="nc bnc" id="L124" title="All 2 branches missed.">            else if (this.order.equals(SortOrder.DESCENDING)) {</span>
-<span class="nc" id="L125">                result = kv2.getKey().compareTo(kv1.getKey());</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">            else if (this.order.equals(SortOrder.DESCENDING)) {</span>
+<span class="fc" id="L125">                result = kv2.getKey().compareTo(kv1.getKey());</span>
             }
             else {
 <span class="nc" id="L128">                throw new IllegalArgumentException(&quot;Unrecognised sort order.&quot;);</span>
             }
         }
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        else if (this.type == KeyedValueComparatorType.BY_VALUE) {</span>
-<span class="nc" id="L132">            Number n1 = kv1.getValue();</span>
-<span class="nc" id="L133">            Number n2 = kv2.getValue();</span>
-<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (n2 == null) {</span>
-<span class="nc" id="L135">                return -1;</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        else if (this.type == KeyedValueComparatorType.BY_VALUE) {</span>
+<span class="fc" id="L132">            Number n1 = kv1.getValue();</span>
+<span class="fc" id="L133">            Number n2 = kv2.getValue();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            if (n2 == null) {</span>
+<span class="fc" id="L135">                return -1;</span>
             }
-<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (n1 == null) {</span>
-<span class="nc" id="L138">                return 1;</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (n1 == null) {</span>
+<span class="fc" id="L138">                return 1;</span>
             }
-<span class="nc" id="L140">            double d1 = n1.doubleValue();</span>
-<span class="nc" id="L141">            double d2 = n2.doubleValue();</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (this.order.equals(SortOrder.ASCENDING)) {</span>
-<span class="nc bnc" id="L143" title="All 2 branches missed.">                if (d1 &gt; d2) {</span>
-<span class="nc" id="L144">                    result = 1;</span>
+<span class="fc" id="L140">            double d1 = n1.doubleValue();</span>
+<span class="fc" id="L141">            double d2 = n2.doubleValue();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">            if (this.order.equals(SortOrder.ASCENDING)) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                if (d1 &gt; d2) {</span>
+<span class="fc" id="L144">                    result = 1;</span>
                 }
-<span class="nc bnc" id="L146" title="All 2 branches missed.">                else if (d1 &lt; d2) {</span>
-<span class="nc" id="L147">                    result = -1;</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                else if (d1 &lt; d2) {</span>
+<span class="fc" id="L147">                    result = -1;</span>
                 }
                 else {
 <span class="nc" id="L150">                    result = 0;</span>
                 }
             }
-<span class="nc bnc" id="L153" title="All 2 branches missed.">            else if (this.order.equals(SortOrder.DESCENDING)) {</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">                if (d1 &gt; d2) {</span>
-<span class="nc" id="L155">                    result = -1;</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">            else if (this.order.equals(SortOrder.DESCENDING)) {</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">                if (d1 &gt; d2) {</span>
+<span class="fc" id="L155">                    result = -1;</span>
                 }
-<span class="nc bnc" id="L157" title="All 2 branches missed.">                else if (d1 &lt; d2) {</span>
-<span class="nc" id="L158">                    result = 1;</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                else if (d1 &lt; d2) {</span>
+<span class="fc" id="L158">                    result = 1;</span>
                 }
                 else {
 <span class="nc" id="L161">                    result = 0;</span>
@@ -164,13 +164,13 @@ public class KeyedValueComparator implements Comparator, Serializable {
             else {
 <span class="nc" id="L165">                throw new IllegalArgumentException(&quot;Unrecognised sort order.&quot;);</span>
             }
-<span class="nc" id="L167">        }</span>
+<span class="fc" id="L167">        }</span>
         else {
 <span class="nc" id="L169">            throw new IllegalArgumentException(&quot;Unrecognised type.&quot;);</span>
         }
 
-<span class="nc" id="L172">        return result;</span>
+<span class="fc" id="L172">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

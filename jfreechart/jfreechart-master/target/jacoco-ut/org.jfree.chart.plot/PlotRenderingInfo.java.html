@@ -86,11 +86,11 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      *
      * @param owner  the owner ({@code null} permitted).
      */
-<span class="nc" id="L89">    public PlotRenderingInfo(ChartRenderingInfo owner) {</span>
-<span class="nc" id="L90">        this.owner = owner;</span>
-<span class="nc" id="L91">        this.dataArea = new Rectangle2D.Double();</span>
-<span class="nc" id="L92">        this.subplotInfo = new java.util.ArrayList();</span>
-<span class="nc" id="L93">    }</span>
+<span class="fc" id="L89">    public PlotRenderingInfo(ChartRenderingInfo owner) {</span>
+<span class="fc" id="L90">        this.owner = owner;</span>
+<span class="fc" id="L91">        this.dataArea = new Rectangle2D.Double();</span>
+<span class="fc" id="L92">        this.subplotInfo = new java.util.ArrayList();</span>
+<span class="fc" id="L93">    }</span>
 
     /**
      * Returns the owner (as specified in the constructor).
@@ -98,7 +98,7 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @return The owner (possibly {@code null}).
      */
     public ChartRenderingInfo getOwner() {
-<span class="nc" id="L101">        return this.owner;</span>
+<span class="fc" id="L101">        return this.owner;</span>
     }
 
     /**
@@ -109,7 +109,7 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #setPlotArea(Rectangle2D)
      */
     public Rectangle2D getPlotArea() {
-<span class="nc" id="L112">        return this.plotArea;</span>
+<span class="fc" id="L112">        return this.plotArea;</span>
     }
 
     /**
@@ -121,8 +121,8 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #getPlotArea()
      */
     public void setPlotArea(Rectangle2D area) {
-<span class="nc" id="L124">        this.plotArea = area;</span>
-<span class="nc" id="L125">    }</span>
+<span class="fc" id="L124">        this.plotArea = area;</span>
+<span class="fc" id="L125">    }</span>
 
     /**
      * Returns the plot's data area (in Java2D space).
@@ -132,7 +132,7 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #setDataArea(Rectangle2D)
      */
     public Rectangle2D getDataArea() {
-<span class="nc" id="L135">        return this.dataArea;</span>
+<span class="fc" id="L135">        return this.dataArea;</span>
     }
 
     /**
@@ -144,8 +144,8 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #getDataArea()
      */
     public void setDataArea(Rectangle2D area) {
-<span class="nc" id="L147">        this.dataArea = area;</span>
-<span class="nc" id="L148">    }</span>
+<span class="fc" id="L147">        this.dataArea = area;</span>
+<span class="fc" id="L148">    }</span>
 
     /**
      * Returns the number of subplots (possibly zero).
@@ -153,7 +153,7 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @return The subplot count.
      */
     public int getSubplotCount() {
-<span class="nc" id="L156">        return this.subplotInfo.size();</span>
+<span class="fc" id="L156">        return this.subplotInfo.size();</span>
     }
 
     /**
@@ -164,8 +164,8 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #getSubplotInfo(int)
      */
     public void addSubplotInfo(PlotRenderingInfo info) {
-<span class="nc" id="L167">        this.subplotInfo.add(info);</span>
-<span class="nc" id="L168">    }</span>
+<span class="fc" id="L167">        this.subplotInfo.add(info);</span>
+<span class="fc" id="L168">    }</span>
 
     /**
      * Returns the info for a subplot.
@@ -177,7 +177,7 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @see #addSubplotInfo(PlotRenderingInfo)
      */
     public PlotRenderingInfo getSubplotInfo(int index) {
-<span class="nc" id="L180">        return (PlotRenderingInfo) this.subplotInfo.get(index);</span>
+<span class="fc" id="L180">        return (PlotRenderingInfo) this.subplotInfo.get(index);</span>
     }
 
     /**
@@ -214,23 +214,23 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L217" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">        if (this == obj) {</span>
 <span class="nc" id="L218">            return true;</span>
         }
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (!(obj instanceof PlotRenderingInfo)) {</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (!(obj instanceof PlotRenderingInfo)) {</span>
 <span class="nc" id="L221">            return false;</span>
         }
-<span class="nc" id="L223">        PlotRenderingInfo that = (PlotRenderingInfo) obj;</span>
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.dataArea, that.dataArea)) {</span>
-<span class="nc" id="L225">            return false;</span>
+<span class="fc" id="L223">        PlotRenderingInfo that = (PlotRenderingInfo) obj;</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.dataArea, that.dataArea)) {</span>
+<span class="fc" id="L225">            return false;</span>
         }
-<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.plotArea, that.plotArea)) {</span>
-<span class="nc" id="L228">            return false;</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.plotArea, that.plotArea)) {</span>
+<span class="fc" id="L228">            return false;</span>
         }
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.subplotInfo, that.subplotInfo)) {</span>
-<span class="nc" id="L231">            return false;</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.subplotInfo, that.subplotInfo)) {</span>
+<span class="fc" id="L231">            return false;</span>
         }
-<span class="nc" id="L233">        return true;</span>
+<span class="fc" id="L233">        return true;</span>
     }
 
     /**
@@ -242,20 +242,20 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L245">        PlotRenderingInfo clone = (PlotRenderingInfo) super.clone();</span>
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (this.plotArea != null) {</span>
-<span class="nc" id="L247">            clone.plotArea = (Rectangle2D) this.plotArea.clone();</span>
+<span class="fc" id="L245">        PlotRenderingInfo clone = (PlotRenderingInfo) super.clone();</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (this.plotArea != null) {</span>
+<span class="fc" id="L247">            clone.plotArea = (Rectangle2D) this.plotArea.clone();</span>
         }
-<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (this.dataArea != null) {</span>
-<span class="nc" id="L250">            clone.dataArea = (Rectangle2D) this.dataArea.clone();</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if (this.dataArea != null) {</span>
+<span class="fc" id="L250">            clone.dataArea = (Rectangle2D) this.dataArea.clone();</span>
         }
-<span class="nc" id="L252">        clone.subplotInfo = new java.util.ArrayList(this.subplotInfo.size());</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">        for (int i = 0; i &lt; this.subplotInfo.size(); i++) {</span>
+<span class="fc" id="L252">        clone.subplotInfo = new java.util.ArrayList(this.subplotInfo.size());</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        for (int i = 0; i &lt; this.subplotInfo.size(); i++) {</span>
 <span class="nc" id="L254">            PlotRenderingInfo info</span>
 <span class="nc" id="L255">                    = (PlotRenderingInfo) this.subplotInfo.get(i);</span>
 <span class="nc" id="L256">            clone.subplotInfo.add(info.clone());</span>
         }
-<span class="nc" id="L258">        return clone;</span>
+<span class="fc" id="L258">        return clone;</span>
     }
 
     /**
@@ -266,10 +266,10 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L269">        stream.defaultWriteObject();</span>
-<span class="nc" id="L270">        SerialUtils.writeShape(this.dataArea, stream);</span>
-<span class="nc" id="L271">        SerialUtils.writeShape(this.plotArea, stream);</span>
-<span class="nc" id="L272">    }</span>
+<span class="fc" id="L269">        stream.defaultWriteObject();</span>
+<span class="fc" id="L270">        SerialUtils.writeShape(this.dataArea, stream);</span>
+<span class="fc" id="L271">        SerialUtils.writeShape(this.plotArea, stream);</span>
+<span class="fc" id="L272">    }</span>
 
     /**
      * Provides serialization support.
@@ -281,10 +281,10 @@ public class PlotRenderingInfo implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L284">        stream.defaultReadObject();</span>
-<span class="nc" id="L285">        this.dataArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
-<span class="nc" id="L286">        this.plotArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
-<span class="nc" id="L287">    }</span>
+<span class="fc" id="L284">        stream.defaultReadObject();</span>
+<span class="fc" id="L285">        this.dataArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
+<span class="fc" id="L286">        this.plotArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
+<span class="fc" id="L287">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

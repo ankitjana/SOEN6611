@@ -109,11 +109,11 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * Constructs a new renderer.
      */
     public XYDotRenderer() {
-<span class="nc" id="L112">        super();</span>
-<span class="nc" id="L113">        this.dotWidth = 1;</span>
-<span class="nc" id="L114">        this.dotHeight = 1;</span>
-<span class="nc" id="L115">        this.legendShape = new Rectangle2D.Double(-3.0, -3.0, 6.0, 6.0);</span>
-<span class="nc" id="L116">    }</span>
+<span class="fc" id="L112">        super();</span>
+<span class="fc" id="L113">        this.dotWidth = 1;</span>
+<span class="fc" id="L114">        this.dotHeight = 1;</span>
+<span class="fc" id="L115">        this.legendShape = new Rectangle2D.Double(-3.0, -3.0, 6.0, 6.0);</span>
+<span class="fc" id="L116">    }</span>
 
     /**
      * Returns the dot width (the default value is 1).
@@ -139,12 +139,12 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * @see #getDotWidth()
      */
     public void setDotWidth(int w) {
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (w &lt; 1) {</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (w &lt; 1) {</span>
 <span class="nc" id="L143">            throw new IllegalArgumentException(&quot;Requires w &gt; 0.&quot;);</span>
         }
-<span class="nc" id="L145">        this.dotWidth = w;</span>
-<span class="nc" id="L146">        fireChangeEvent();</span>
-<span class="nc" id="L147">    }</span>
+<span class="fc" id="L145">        this.dotWidth = w;</span>
+<span class="fc" id="L146">        fireChangeEvent();</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Returns the dot height (the default value is 1).
@@ -170,12 +170,12 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * @see #getDotHeight()
      */
     public void setDotHeight(int h) {
-<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (h &lt; 1) {</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if (h &lt; 1) {</span>
 <span class="nc" id="L174">            throw new IllegalArgumentException(&quot;Requires h &gt; 0.&quot;);</span>
         }
-<span class="nc" id="L176">        this.dotHeight = h;</span>
-<span class="nc" id="L177">        fireChangeEvent();</span>
-<span class="nc" id="L178">    }</span>
+<span class="fc" id="L176">        this.dotHeight = h;</span>
+<span class="fc" id="L177">        fireChangeEvent();</span>
+<span class="fc" id="L178">    }</span>
 
     /**
      * Returns the shape used to represent an item in the legend.
@@ -187,7 +187,7 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * @since 1.0.7
      */
     public Shape getLegendShape() {
-<span class="nc" id="L190">        return this.legendShape;</span>
+<span class="fc" id="L190">        return this.legendShape;</span>
     }
 
     /**
@@ -201,10 +201,10 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * @since 1.0.7
      */
     public void setLegendShape(Shape shape) {
-<span class="nc" id="L204">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
-<span class="nc" id="L205">        this.legendShape = shape;</span>
-<span class="nc" id="L206">        fireChangeEvent();</span>
-<span class="nc" id="L207">    }</span>
+<span class="fc" id="L204">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
+<span class="fc" id="L205">        this.legendShape = shape;</span>
+<span class="fc" id="L206">        fireChangeEvent();</span>
+<span class="fc" id="L207">    }</span>
 
     /**
      * Draws the visual representation of a single data item.
@@ -279,46 +279,46 @@ public class XYDotRenderer extends AbstractXYItemRenderer
 
         // if the renderer isn't assigned to a plot, then we don't have a
         // dataset...
-<span class="nc" id="L282">        XYPlot plot = getPlot();</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L282">        XYPlot plot = getPlot();</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">        if (plot == null) {</span>
 <span class="nc" id="L284">            return null;</span>
         }
 
-<span class="nc" id="L287">        XYDataset dataset = plot.getDataset(datasetIndex);</span>
-<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (dataset == null) {</span>
+<span class="fc" id="L287">        XYDataset dataset = plot.getDataset(datasetIndex);</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if (dataset == null) {</span>
 <span class="nc" id="L289">            return null;</span>
         }
 
-<span class="nc" id="L292">        LegendItem result = null;</span>
-<span class="nc bnc" id="L293" title="All 2 branches missed.">        if (getItemVisible(series, 0)) {</span>
-<span class="nc" id="L294">            String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
+<span class="fc" id="L292">        LegendItem result = null;</span>
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">        if (getItemVisible(series, 0)) {</span>
+<span class="fc" id="L294">            String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
                     series);
-<span class="nc" id="L296">            String description = label;</span>
-<span class="nc" id="L297">            String toolTipText = null;</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">            if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L296">            String description = label;</span>
+<span class="fc" id="L297">            String toolTipText = null;</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">            if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L299">                toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                         dataset, series);
             }
-<span class="nc" id="L302">            String urlText = null;</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L302">            String urlText = null;</span>
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">            if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L304">                urlText = getLegendItemURLGenerator().generateLabel(</span>
                         dataset, series);
             }
-<span class="nc" id="L307">            Paint fillPaint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L308">            result = new LegendItem(label, description, toolTipText, urlText,</span>
-<span class="nc" id="L309">                    getLegendShape(), fillPaint);</span>
-<span class="nc" id="L310">            result.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L311">            Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">            if (labelPaint != null) {</span>
+<span class="fc" id="L307">            Paint fillPaint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L308">            result = new LegendItem(label, description, toolTipText, urlText,</span>
+<span class="fc" id="L309">                    getLegendShape(), fillPaint);</span>
+<span class="fc" id="L310">            result.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L311">            Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">            if (labelPaint != null) {</span>
 <span class="nc" id="L313">                result.setLabelPaint(labelPaint);</span>
             }
-<span class="nc" id="L315">            result.setSeriesKey(dataset.getSeriesKey(series));</span>
-<span class="nc" id="L316">            result.setSeriesIndex(series);</span>
-<span class="nc" id="L317">            result.setDataset(dataset);</span>
-<span class="nc" id="L318">            result.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L315">            result.setSeriesKey(dataset.getSeriesKey(series));</span>
+<span class="fc" id="L316">            result.setSeriesIndex(series);</span>
+<span class="fc" id="L317">            result.setDataset(dataset);</span>
+<span class="fc" id="L318">            result.setDatasetIndex(datasetIndex);</span>
         }
 
-<span class="nc" id="L321">        return result;</span>
+<span class="fc" id="L321">        return result;</span>
 
     }
 
@@ -338,23 +338,23 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L341" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L342">            return true;</span>
         }
-<span class="nc bnc" id="L344" title="All 2 branches missed.">        if (!(obj instanceof XYDotRenderer)) {</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (!(obj instanceof XYDotRenderer)) {</span>
 <span class="nc" id="L345">            return false;</span>
         }
-<span class="nc" id="L347">        XYDotRenderer that = (XYDotRenderer) obj;</span>
-<span class="nc bnc" id="L348" title="All 2 branches missed.">        if (this.dotWidth != that.dotWidth) {</span>
-<span class="nc" id="L349">            return false;</span>
+<span class="fc" id="L347">        XYDotRenderer that = (XYDotRenderer) obj;</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (this.dotWidth != that.dotWidth) {</span>
+<span class="fc" id="L349">            return false;</span>
         }
-<span class="nc bnc" id="L351" title="All 2 branches missed.">        if (this.dotHeight != that.dotHeight) {</span>
-<span class="nc" id="L352">            return false;</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (this.dotHeight != that.dotHeight) {</span>
+<span class="fc" id="L352">            return false;</span>
         }
-<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendShape, that.legendShape)) {</span>
-<span class="nc" id="L355">            return false;</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendShape, that.legendShape)) {</span>
+<span class="fc" id="L355">            return false;</span>
         }
-<span class="nc" id="L357">        return super.equals(obj);</span>
+<span class="fc" id="L357">        return super.equals(obj);</span>
     }
 
     /**
@@ -366,7 +366,7 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L369">        return super.clone();</span>
+<span class="fc" id="L369">        return super.clone();</span>
     }
 
     /**
@@ -379,9 +379,9 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L382">        stream.defaultReadObject();</span>
-<span class="nc" id="L383">        this.legendShape = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L384">    }</span>
+<span class="fc" id="L382">        stream.defaultReadObject();</span>
+<span class="fc" id="L383">        this.legendShape = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L384">    }</span>
 
     /**
      * Provides serialization support.
@@ -391,9 +391,9 @@ public class XYDotRenderer extends AbstractXYItemRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L394">        stream.defaultWriteObject();</span>
-<span class="nc" id="L395">        SerialUtils.writeShape(this.legendShape, stream);</span>
-<span class="nc" id="L396">    }</span>
+<span class="fc" id="L394">        stream.defaultWriteObject();</span>
+<span class="fc" id="L395">        SerialUtils.writeShape(this.legendShape, stream);</span>
+<span class="fc" id="L396">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

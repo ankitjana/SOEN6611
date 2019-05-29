@@ -73,11 +73,11 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      *     permitted).
      * @param barWidth  the width of the bars.
      */
-<span class="nc" id="L76">    public XYBarDataset(XYDataset underlying, double barWidth) {</span>
-<span class="nc" id="L77">        this.underlying = underlying;</span>
-<span class="nc" id="L78">        this.underlying.addChangeListener(this);</span>
-<span class="nc" id="L79">        this.barWidth = barWidth;</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L76">    public XYBarDataset(XYDataset underlying, double barWidth) {</span>
+<span class="fc" id="L77">        this.underlying = underlying;</span>
+<span class="fc" id="L78">        this.underlying.addChangeListener(this);</span>
+<span class="fc" id="L79">        this.barWidth = barWidth;</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Returns the underlying dataset that was specified via the constructor.
@@ -87,7 +87,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      * @since 1.0.4
      */
     public XYDataset getUnderlyingDataset() {
-<span class="nc" id="L90">        return this.underlying;</span>
+<span class="fc" id="L90">        return this.underlying;</span>
     }
 
     /**
@@ -123,7 +123,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L126">        return this.underlying.getSeriesCount();</span>
+<span class="fc" id="L126">        return this.underlying.getSeriesCount();</span>
     }
 
     /**
@@ -136,7 +136,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Comparable getSeriesKey(int series) {
-<span class="nc" id="L139">        return this.underlying.getSeriesKey(series);</span>
+<span class="fc" id="L139">        return this.underlying.getSeriesKey(series);</span>
     }
 
     /**
@@ -148,7 +148,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getItemCount(int series) {
-<span class="nc" id="L151">        return this.underlying.getItemCount(series);</span>
+<span class="fc" id="L151">        return this.underlying.getItemCount(series);</span>
     }
 
     /**
@@ -178,7 +178,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public double getXValue(int series, int item) {
-<span class="nc" id="L181">        return this.underlying.getXValue(series, item);</span>
+<span class="fc" id="L181">        return this.underlying.getXValue(series, item);</span>
     }
 
     /**
@@ -208,7 +208,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public double getYValue(int series, int item) {
-<span class="nc" id="L211">        return this.underlying.getYValue(series, item);</span>
+<span class="fc" id="L211">        return this.underlying.getYValue(series, item);</span>
     }
 
     /**
@@ -242,7 +242,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public double getStartXValue(int series, int item) {
-<span class="nc" id="L245">        return getXValue(series, item) - this.barWidth / 2.0;</span>
+<span class="fc" id="L245">        return getXValue(series, item) - this.barWidth / 2.0;</span>
     }
 
     /**
@@ -276,7 +276,7 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public double getEndXValue(int series, int item) {
-<span class="nc" id="L279">        return getXValue(series, item) + this.barWidth / 2.0;</span>
+<span class="fc" id="L279">        return getXValue(series, item) + this.barWidth / 2.0;</span>
     }
 
     /**
@@ -344,8 +344,8 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public void datasetChanged(DatasetChangeEvent event) {
-<span class="nc" id="L347">        notifyListeners(event);</span>
-<span class="nc" id="L348">    }</span>
+<span class="fc" id="L347">        notifyListeners(event);</span>
+<span class="fc" id="L348">    }</span>
 
     /**
      * Tests this dataset for equality with an arbitrary object.
@@ -356,20 +356,20 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L359" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L359" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L360">            return true;</span>
         }
-<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (!(obj instanceof XYBarDataset)) {</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">        if (!(obj instanceof XYBarDataset)) {</span>
 <span class="nc" id="L363">            return false;</span>
         }
-<span class="nc" id="L365">        XYBarDataset that = (XYBarDataset) obj;</span>
-<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (!this.underlying.equals(that.underlying)) {</span>
-<span class="nc" id="L367">            return false;</span>
+<span class="fc" id="L365">        XYBarDataset that = (XYBarDataset) obj;</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (!this.underlying.equals(that.underlying)) {</span>
+<span class="fc" id="L367">            return false;</span>
         }
-<span class="nc bnc" id="L369" title="All 2 branches missed.">        if (this.barWidth != that.barWidth) {</span>
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">        if (this.barWidth != that.barWidth) {</span>
 <span class="nc" id="L370">            return false;</span>
         }
-<span class="nc" id="L372">        return true;</span>
+<span class="fc" id="L372">        return true;</span>
     }
 
     /**
@@ -388,13 +388,13 @@ public class XYBarDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L391">        XYBarDataset clone = (XYBarDataset) super.clone();</span>
-<span class="nc bnc" id="L392" title="All 2 branches missed.">        if (this.underlying instanceof PublicCloneable) {</span>
-<span class="nc" id="L393">            PublicCloneable pc = (PublicCloneable) this.underlying;</span>
-<span class="nc" id="L394">            clone.underlying = (XYDataset) pc.clone();</span>
+<span class="fc" id="L391">        XYBarDataset clone = (XYBarDataset) super.clone();</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">        if (this.underlying instanceof PublicCloneable) {</span>
+<span class="fc" id="L393">            PublicCloneable pc = (PublicCloneable) this.underlying;</span>
+<span class="fc" id="L394">            clone.underlying = (XYDataset) pc.clone();</span>
         }
-<span class="nc" id="L396">        return clone;</span>
+<span class="fc" id="L396">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

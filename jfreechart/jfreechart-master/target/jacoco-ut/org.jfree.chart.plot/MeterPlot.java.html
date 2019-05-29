@@ -139,16 +139,16 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     private static final long serialVersionUID = 2987472457734470962L;
 
     /** The default background paint. */
-<span class="nc" id="L142">    static final Paint DEFAULT_DIAL_BACKGROUND_PAINT = Color.BLACK;</span>
+<span class="fc" id="L142">    static final Paint DEFAULT_DIAL_BACKGROUND_PAINT = Color.BLACK;</span>
 
     /** The default needle paint. */
-<span class="nc" id="L145">    static final Paint DEFAULT_NEEDLE_PAINT = Color.GREEN;</span>
+<span class="fc" id="L145">    static final Paint DEFAULT_NEEDLE_PAINT = Color.GREEN;</span>
 
     /** The default value font. */
-<span class="nc" id="L148">    static final Font DEFAULT_VALUE_FONT = new Font(&quot;SansSerif&quot;, Font.BOLD, 12);</span>
+<span class="fc" id="L148">    static final Font DEFAULT_VALUE_FONT = new Font(&quot;SansSerif&quot;, Font.BOLD, 12);</span>
 
     /** The default value paint. */
-<span class="nc" id="L151">    static final Paint DEFAULT_VALUE_PAINT = Color.YELLOW;</span>
+<span class="fc" id="L151">    static final Paint DEFAULT_VALUE_PAINT = Color.YELLOW;</span>
 
     /** The default meter angle. */
     public static final int DEFAULT_METER_ANGLE = 270;
@@ -160,7 +160,7 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     public static final float DEFAULT_CIRCLE_SIZE = 10f;
 
     /** The default label font. */
-<span class="nc" id="L163">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
+<span class="fc" id="L163">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
             Font.BOLD, 10);
 
     /** The dataset (contains a single value). */
@@ -215,8 +215,8 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     private NumberFormat tickLabelFormat;
 
     /** The resourceBundle for the localization. */
-<span class="nc" id="L218">    protected static ResourceBundle localizationResources</span>
-<span class="nc" id="L219">            = ResourceBundleWrapper.getBundle(</span>
+<span class="fc" id="L218">    protected static ResourceBundle localizationResources</span>
+<span class="fc" id="L219">            = ResourceBundleWrapper.getBundle(</span>
                     &quot;org.jfree.chart.plot.LocalizationBundle&quot;);
 
     /**
@@ -230,8 +230,8 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * no value to display.
      */
     public MeterPlot() {
-<span class="nc" id="L233">        this(null);</span>
-<span class="nc" id="L234">    }</span>
+<span class="fc" id="L233">        this(null);</span>
+<span class="fc" id="L234">    }</span>
 
     /**
      * Creates a new plot that displays the value from the supplied dataset.
@@ -239,24 +239,24 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @param dataset  the dataset ({@code null} permitted).
      */
     public MeterPlot(ValueDataset dataset) {
-<span class="nc" id="L242">        super();</span>
-<span class="nc" id="L243">        this.shape = DialShape.CIRCLE;</span>
-<span class="nc" id="L244">        this.meterAngle = DEFAULT_METER_ANGLE;</span>
-<span class="nc" id="L245">        this.range = new Range(0.0, 100.0);</span>
-<span class="nc" id="L246">        this.tickSize = 10.0;</span>
-<span class="nc" id="L247">        this.tickPaint = Color.WHITE;</span>
-<span class="nc" id="L248">        this.units = &quot;Units&quot;;</span>
-<span class="nc" id="L249">        this.needlePaint = MeterPlot.DEFAULT_NEEDLE_PAINT;</span>
-<span class="nc" id="L250">        this.tickLabelsVisible = true;</span>
-<span class="nc" id="L251">        this.tickLabelFont = MeterPlot.DEFAULT_LABEL_FONT;</span>
-<span class="nc" id="L252">        this.tickLabelPaint = Color.BLACK;</span>
-<span class="nc" id="L253">        this.tickLabelFormat = NumberFormat.getInstance();</span>
-<span class="nc" id="L254">        this.valueFont = MeterPlot.DEFAULT_VALUE_FONT;</span>
-<span class="nc" id="L255">        this.valuePaint = MeterPlot.DEFAULT_VALUE_PAINT;</span>
-<span class="nc" id="L256">        this.dialBackgroundPaint = MeterPlot.DEFAULT_DIAL_BACKGROUND_PAINT;</span>
-<span class="nc" id="L257">        this.intervals = new java.util.ArrayList();</span>
-<span class="nc" id="L258">        setDataset(dataset);</span>
-<span class="nc" id="L259">    }</span>
+<span class="fc" id="L242">        super();</span>
+<span class="fc" id="L243">        this.shape = DialShape.CIRCLE;</span>
+<span class="fc" id="L244">        this.meterAngle = DEFAULT_METER_ANGLE;</span>
+<span class="fc" id="L245">        this.range = new Range(0.0, 100.0);</span>
+<span class="fc" id="L246">        this.tickSize = 10.0;</span>
+<span class="fc" id="L247">        this.tickPaint = Color.WHITE;</span>
+<span class="fc" id="L248">        this.units = &quot;Units&quot;;</span>
+<span class="fc" id="L249">        this.needlePaint = MeterPlot.DEFAULT_NEEDLE_PAINT;</span>
+<span class="fc" id="L250">        this.tickLabelsVisible = true;</span>
+<span class="fc" id="L251">        this.tickLabelFont = MeterPlot.DEFAULT_LABEL_FONT;</span>
+<span class="fc" id="L252">        this.tickLabelPaint = Color.BLACK;</span>
+<span class="fc" id="L253">        this.tickLabelFormat = NumberFormat.getInstance();</span>
+<span class="fc" id="L254">        this.valueFont = MeterPlot.DEFAULT_VALUE_FONT;</span>
+<span class="fc" id="L255">        this.valuePaint = MeterPlot.DEFAULT_VALUE_PAINT;</span>
+<span class="fc" id="L256">        this.dialBackgroundPaint = MeterPlot.DEFAULT_DIAL_BACKGROUND_PAINT;</span>
+<span class="fc" id="L257">        this.intervals = new java.util.ArrayList();</span>
+<span class="fc" id="L258">        setDataset(dataset);</span>
+<span class="fc" id="L259">    }</span>
 
     /**
      * Returns the dial shape.  The default is {@link DialShape#CIRCLE}).
@@ -278,10 +278,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getDialShape()
      */
     public void setDialShape(DialShape shape) {
-<span class="nc" id="L281">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
-<span class="nc" id="L282">        this.shape = shape;</span>
-<span class="nc" id="L283">        fireChangeEvent();</span>
-<span class="nc" id="L284">    }</span>
+<span class="fc" id="L281">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
+<span class="fc" id="L282">        this.shape = shape;</span>
+<span class="fc" id="L283">        fireChangeEvent();</span>
+<span class="fc" id="L284">    }</span>
 
     /**
      * Returns the meter angle in degrees.  This defines, in part, the shape
@@ -304,13 +304,13 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getMeterAngle()
      */
     public void setMeterAngle(int angle) {
-<span class="nc bnc" id="L307" title="All 4 branches missed.">        if (angle &lt; 1 || angle &gt; 360) {</span>
+<span class="pc bpc" id="L307" title="2 of 4 branches missed.">        if (angle &lt; 1 || angle &gt; 360) {</span>
 <span class="nc" id="L308">            throw new IllegalArgumentException(&quot;Invalid 'angle' (&quot; + angle</span>
                     + &quot;)&quot;);
         }
-<span class="nc" id="L311">        this.meterAngle = angle;</span>
-<span class="nc" id="L312">        fireChangeEvent();</span>
-<span class="nc" id="L313">    }</span>
+<span class="fc" id="L311">        this.meterAngle = angle;</span>
+<span class="fc" id="L312">        fireChangeEvent();</span>
+<span class="fc" id="L313">    }</span>
 
     /**
      * Returns the overall range for the dial.
@@ -333,14 +333,14 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getRange()
      */
     public void setRange(Range range) {
-<span class="nc" id="L336">        Args.nullNotPermitted(range, &quot;range&quot;);</span>
-<span class="nc bnc" id="L337" title="All 2 branches missed.">        if (!(range.getLength() &gt; 0.0)) {</span>
+<span class="fc" id="L336">        Args.nullNotPermitted(range, &quot;range&quot;);</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (!(range.getLength() &gt; 0.0)) {</span>
 <span class="nc" id="L338">            throw new IllegalArgumentException(</span>
                     &quot;Range length must be positive.&quot;);
         }
-<span class="nc" id="L341">        this.range = range;</span>
-<span class="nc" id="L342">        fireChangeEvent();</span>
-<span class="nc" id="L343">    }</span>
+<span class="fc" id="L341">        this.range = range;</span>
+<span class="fc" id="L342">        fireChangeEvent();</span>
+<span class="fc" id="L343">    }</span>
 
     /**
      * Returns the tick size (the interval between ticks on the dial).
@@ -362,12 +362,12 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickSize()
      */
     public void setTickSize(double size) {
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (size &lt;= 0) {</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if (size &lt;= 0) {</span>
 <span class="nc" id="L366">            throw new IllegalArgumentException(&quot;Requires 'size' &gt; 0.&quot;);</span>
         }
-<span class="nc" id="L368">        this.tickSize = size;</span>
-<span class="nc" id="L369">        fireChangeEvent();</span>
-<span class="nc" id="L370">    }</span>
+<span class="fc" id="L368">        this.tickSize = size;</span>
+<span class="fc" id="L369">        fireChangeEvent();</span>
+<span class="fc" id="L370">    }</span>
 
     /**
      * Returns the paint used to draw the ticks around the dial.
@@ -390,10 +390,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickPaint()
      */
     public void setTickPaint(Paint paint) {
-<span class="nc" id="L393">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L394">        this.tickPaint = paint;</span>
-<span class="nc" id="L395">        fireChangeEvent();</span>
-<span class="nc" id="L396">    }</span>
+<span class="fc" id="L393">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L394">        this.tickPaint = paint;</span>
+<span class="fc" id="L395">        fireChangeEvent();</span>
+<span class="fc" id="L396">    }</span>
 
     /**
      * Returns a string describing the units for the dial.
@@ -415,9 +415,9 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getUnits()
      */
     public void setUnits(String units) {
-<span class="nc" id="L418">        this.units = units;</span>
-<span class="nc" id="L419">        fireChangeEvent();</span>
-<span class="nc" id="L420">    }</span>
+<span class="fc" id="L418">        this.units = units;</span>
+<span class="fc" id="L419">        fireChangeEvent();</span>
+<span class="fc" id="L420">    }</span>
 
     /**
      * Returns the paint for the needle.
@@ -439,10 +439,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getNeedlePaint()
      */
     public void setNeedlePaint(Paint paint) {
-<span class="nc" id="L442">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L443">        this.needlePaint = paint;</span>
-<span class="nc" id="L444">        fireChangeEvent();</span>
-<span class="nc" id="L445">    }</span>
+<span class="fc" id="L442">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L443">        this.needlePaint = paint;</span>
+<span class="fc" id="L444">        fireChangeEvent();</span>
+<span class="fc" id="L445">    }</span>
 
     /**
      * Returns the flag that determines whether or not tick labels are visible.
@@ -464,11 +464,11 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickLabelsVisible()
      */
     public void setTickLabelsVisible(boolean visible) {
-<span class="nc bnc" id="L467" title="All 2 branches missed.">        if (this.tickLabelsVisible != visible) {</span>
-<span class="nc" id="L468">            this.tickLabelsVisible = visible;</span>
-<span class="nc" id="L469">            fireChangeEvent();</span>
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">        if (this.tickLabelsVisible != visible) {</span>
+<span class="fc" id="L468">            this.tickLabelsVisible = visible;</span>
+<span class="fc" id="L469">            fireChangeEvent();</span>
         }
-<span class="nc" id="L471">    }</span>
+<span class="fc" id="L471">    }</span>
 
     /**
      * Returns the tick label font.
@@ -490,12 +490,12 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickLabelFont()
      */
     public void setTickLabelFont(Font font) {
-<span class="nc" id="L493">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc bnc" id="L494" title="All 2 branches missed.">        if (!this.tickLabelFont.equals(font)) {</span>
-<span class="nc" id="L495">            this.tickLabelFont = font;</span>
-<span class="nc" id="L496">            fireChangeEvent();</span>
+<span class="fc" id="L493">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">        if (!this.tickLabelFont.equals(font)) {</span>
+<span class="fc" id="L495">            this.tickLabelFont = font;</span>
+<span class="fc" id="L496">            fireChangeEvent();</span>
         }
-<span class="nc" id="L498">    }</span>
+<span class="fc" id="L498">    }</span>
 
     /**
      * Returns the tick label paint.
@@ -517,12 +517,12 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickLabelPaint()
      */
     public void setTickLabelPaint(Paint paint) {
-<span class="nc" id="L520">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc bnc" id="L521" title="All 2 branches missed.">        if (!this.tickLabelPaint.equals(paint)) {</span>
-<span class="nc" id="L522">            this.tickLabelPaint = paint;</span>
-<span class="nc" id="L523">            fireChangeEvent();</span>
+<span class="fc" id="L520">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="pc bpc" id="L521" title="1 of 2 branches missed.">        if (!this.tickLabelPaint.equals(paint)) {</span>
+<span class="fc" id="L522">            this.tickLabelPaint = paint;</span>
+<span class="fc" id="L523">            fireChangeEvent();</span>
         }
-<span class="nc" id="L525">    }</span>
+<span class="fc" id="L525">    }</span>
 
     /**
      * Returns the tick label format.
@@ -532,7 +532,7 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #setTickLabelFormat(NumberFormat)
      */
     public NumberFormat getTickLabelFormat() {
-<span class="nc" id="L535">        return this.tickLabelFormat;</span>
+<span class="fc" id="L535">        return this.tickLabelFormat;</span>
     }
 
     /**
@@ -544,10 +544,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getTickLabelFormat()
      */
     public void setTickLabelFormat(NumberFormat format) {
-<span class="nc" id="L547">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
-<span class="nc" id="L548">        this.tickLabelFormat = format;</span>
-<span class="nc" id="L549">        fireChangeEvent();</span>
-<span class="nc" id="L550">    }</span>
+<span class="fc" id="L547">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
+<span class="fc" id="L548">        this.tickLabelFormat = format;</span>
+<span class="fc" id="L549">        fireChangeEvent();</span>
+<span class="fc" id="L550">    }</span>
 
     /**
      * Returns the font for the value label.
@@ -569,10 +569,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getValueFont()
      */
     public void setValueFont(Font font) {
-<span class="nc" id="L572">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc" id="L573">        this.valueFont = font;</span>
-<span class="nc" id="L574">        fireChangeEvent();</span>
-<span class="nc" id="L575">    }</span>
+<span class="fc" id="L572">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="fc" id="L573">        this.valueFont = font;</span>
+<span class="fc" id="L574">        fireChangeEvent();</span>
+<span class="fc" id="L575">    }</span>
 
     /**
      * Returns the paint for the value label.
@@ -594,10 +594,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getValuePaint()
      */
     public void setValuePaint(Paint paint) {
-<span class="nc" id="L597">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L598">        this.valuePaint = paint;</span>
-<span class="nc" id="L599">        fireChangeEvent();</span>
-<span class="nc" id="L600">    }</span>
+<span class="fc" id="L597">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L598">        this.valuePaint = paint;</span>
+<span class="fc" id="L599">        fireChangeEvent();</span>
+<span class="fc" id="L600">    }</span>
 
     /**
      * Returns the paint for the dial background.
@@ -619,9 +619,9 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getDialBackgroundPaint()
      */
     public void setDialBackgroundPaint(Paint paint) {
-<span class="nc" id="L622">        this.dialBackgroundPaint = paint;</span>
-<span class="nc" id="L623">        fireChangeEvent();</span>
-<span class="nc" id="L624">    }</span>
+<span class="fc" id="L622">        this.dialBackgroundPaint = paint;</span>
+<span class="fc" id="L623">        fireChangeEvent();</span>
+<span class="fc" id="L624">    }</span>
 
     /**
      * Returns a flag that controls whether or not a rectangular border is
@@ -632,7 +632,7 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #setDrawBorder(boolean)
      */
     public boolean getDrawBorder() {
-<span class="nc" id="L635">        return this.drawBorder;</span>
+<span class="fc" id="L635">        return this.drawBorder;</span>
     }
 
     /**
@@ -646,9 +646,9 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     public void setDrawBorder(boolean draw) {
         // TODO: fix output when this flag is set to true
-<span class="nc" id="L649">        this.drawBorder = draw;</span>
-<span class="nc" id="L650">        fireChangeEvent();</span>
-<span class="nc" id="L651">    }</span>
+<span class="fc" id="L649">        this.drawBorder = draw;</span>
+<span class="fc" id="L650">        fireChangeEvent();</span>
+<span class="fc" id="L651">    }</span>
 
     /**
      * Returns the dial outline paint.
@@ -670,9 +670,9 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #getDialOutlinePaint()
      */
     public void setDialOutlinePaint(Paint paint) {
-<span class="nc" id="L673">        this.dialOutlinePaint = paint;</span>
-<span class="nc" id="L674">        fireChangeEvent();</span>
-<span class="nc" id="L675">    }</span>
+<span class="fc" id="L673">        this.dialOutlinePaint = paint;</span>
+<span class="fc" id="L674">        fireChangeEvent();</span>
+<span class="fc" id="L675">    }</span>
 
     /**
      * Returns the dataset for the plot.
@@ -682,7 +682,7 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #setDataset(ValueDataset)
      */
     public ValueDataset getDataset() {
-<span class="nc" id="L685">        return this.dataset;</span>
+<span class="fc" id="L685">        return this.dataset;</span>
     }
 
     /**
@@ -697,23 +697,23 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
 
         // if there is an existing dataset, remove the plot from the list of
         // change listeners...
-<span class="nc" id="L700">        ValueDataset existing = this.dataset;</span>
-<span class="nc bnc" id="L701" title="All 2 branches missed.">        if (existing != null) {</span>
+<span class="fc" id="L700">        ValueDataset existing = this.dataset;</span>
+<span class="pc bpc" id="L701" title="1 of 2 branches missed.">        if (existing != null) {</span>
 <span class="nc" id="L702">            existing.removeChangeListener(this);</span>
         }
 
         // set the new dataset, and register the chart as a change listener...
-<span class="nc" id="L706">        this.dataset = dataset;</span>
-<span class="nc bnc" id="L707" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L708">            setDatasetGroup(dataset.getGroup());</span>
-<span class="nc" id="L709">            dataset.addChangeListener(this);</span>
+<span class="fc" id="L706">        this.dataset = dataset;</span>
+<span class="fc bfc" id="L707" title="All 2 branches covered.">        if (dataset != null) {</span>
+<span class="fc" id="L708">            setDatasetGroup(dataset.getGroup());</span>
+<span class="fc" id="L709">            dataset.addChangeListener(this);</span>
         }
 
         // send a dataset change event to self...
-<span class="nc" id="L713">        DatasetChangeEvent event = new DatasetChangeEvent(this, dataset);</span>
-<span class="nc" id="L714">        datasetChanged(event);</span>
+<span class="fc" id="L713">        DatasetChangeEvent event = new DatasetChangeEvent(this, dataset);</span>
+<span class="fc" id="L714">        datasetChanged(event);</span>
 
-<span class="nc" id="L716">    }</span>
+<span class="fc" id="L716">    }</span>
 
     /**
      * Returns an unmodifiable list of the intervals for the plot.
@@ -736,10 +736,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @see #clearIntervals()
      */
     public void addInterval(MeterInterval interval) {
-<span class="nc" id="L739">        Args.nullNotPermitted(interval, &quot;interval&quot;);</span>
-<span class="nc" id="L740">        this.intervals.add(interval);</span>
-<span class="nc" id="L741">        fireChangeEvent();</span>
-<span class="nc" id="L742">    }</span>
+<span class="fc" id="L739">        Args.nullNotPermitted(interval, &quot;interval&quot;);</span>
+<span class="fc" id="L740">        this.intervals.add(interval);</span>
+<span class="fc" id="L741">        fireChangeEvent();</span>
+<span class="fc" id="L742">    }</span>
 
     /**
      * Clears the intervals for the plot and sends a {@link PlotChangeEvent} to
@@ -759,21 +759,21 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     @Override
     public LegendItemCollection getLegendItems() {
-<span class="nc" id="L762">        LegendItemCollection result = new LegendItemCollection();</span>
-<span class="nc" id="L763">        Iterator iterator = this.intervals.iterator();</span>
-<span class="nc bnc" id="L764" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L765">            MeterInterval mi = (MeterInterval) iterator.next();</span>
-<span class="nc" id="L766">            Paint color = mi.getBackgroundPaint();</span>
-<span class="nc bnc" id="L767" title="All 2 branches missed.">            if (color == null) {</span>
-<span class="nc" id="L768">                color = mi.getOutlinePaint();</span>
+<span class="fc" id="L762">        LegendItemCollection result = new LegendItemCollection();</span>
+<span class="fc" id="L763">        Iterator iterator = this.intervals.iterator();</span>
+<span class="fc bfc" id="L764" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L765">            MeterInterval mi = (MeterInterval) iterator.next();</span>
+<span class="fc" id="L766">            Paint color = mi.getBackgroundPaint();</span>
+<span class="pc bpc" id="L767" title="1 of 2 branches missed.">            if (color == null) {</span>
+<span class="fc" id="L768">                color = mi.getOutlinePaint();</span>
             }
-<span class="nc" id="L770">            LegendItem item = new LegendItem(mi.getLabel(), mi.getLabel(),</span>
+<span class="fc" id="L770">            LegendItem item = new LegendItem(mi.getLabel(), mi.getLabel(),</span>
                     null, null, new Rectangle2D.Double(-4.0, -4.0, 8.0, 8.0),
                     color);
-<span class="nc" id="L773">            item.setDataset(getDataset());</span>
-<span class="nc" id="L774">            result.add(item);</span>
-<span class="nc" id="L775">        }</span>
-<span class="nc" id="L776">        return result;</span>
+<span class="fc" id="L773">            item.setDataset(getDataset());</span>
+<span class="fc" id="L774">            result.add(item);</span>
+<span class="fc" id="L775">        }</span>
+<span class="fc" id="L776">        return result;</span>
     }
 
     /**
@@ -790,93 +790,93 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     public void draw(Graphics2D g2, Rectangle2D area, Point2D anchor,
                      PlotState parentState, PlotRenderingInfo info) {
 
-<span class="nc bnc" id="L793" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L793" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L794">            info.setPlotArea(area);</span>
         }
 
         // adjust for insets...
-<span class="nc" id="L798">        RectangleInsets insets = getInsets();</span>
-<span class="nc" id="L799">        insets.trim(area);</span>
+<span class="fc" id="L798">        RectangleInsets insets = getInsets();</span>
+<span class="fc" id="L799">        insets.trim(area);</span>
 
-<span class="nc" id="L801">        area.setRect(area.getX() + 4, area.getY() + 4, area.getWidth() - 8,</span>
-<span class="nc" id="L802">                area.getHeight() - 8);</span>
+<span class="fc" id="L801">        area.setRect(area.getX() + 4, area.getY() + 4, area.getWidth() - 8,</span>
+<span class="fc" id="L802">                area.getHeight() - 8);</span>
 
         // draw the background
-<span class="nc bnc" id="L805" title="All 2 branches missed.">        if (this.drawBorder) {</span>
+<span class="pc bpc" id="L805" title="1 of 2 branches missed.">        if (this.drawBorder) {</span>
 <span class="nc" id="L806">            drawBackground(g2, area);</span>
         }
 
         // adjust the plot area by the interior spacing value
-<span class="nc" id="L810">        double gapHorizontal = (2 * DEFAULT_BORDER_SIZE);</span>
-<span class="nc" id="L811">        double gapVertical = (2 * DEFAULT_BORDER_SIZE);</span>
-<span class="nc" id="L812">        double meterX = area.getX() + gapHorizontal / 2;</span>
-<span class="nc" id="L813">        double meterY = area.getY() + gapVertical / 2;</span>
-<span class="nc" id="L814">        double meterW = area.getWidth() - gapHorizontal;</span>
-<span class="nc" id="L815">        double meterH = area.getHeight() - gapVertical</span>
-<span class="nc bnc" id="L816" title="All 4 branches missed.">                + ((this.meterAngle &lt;= 180) &amp;&amp; (this.shape != DialShape.CIRCLE)</span>
-<span class="nc" id="L817">                ? area.getHeight() / 1.25 : 0);</span>
+<span class="fc" id="L810">        double gapHorizontal = (2 * DEFAULT_BORDER_SIZE);</span>
+<span class="fc" id="L811">        double gapVertical = (2 * DEFAULT_BORDER_SIZE);</span>
+<span class="fc" id="L812">        double meterX = area.getX() + gapHorizontal / 2;</span>
+<span class="fc" id="L813">        double meterY = area.getY() + gapVertical / 2;</span>
+<span class="fc" id="L814">        double meterW = area.getWidth() - gapHorizontal;</span>
+<span class="fc" id="L815">        double meterH = area.getHeight() - gapVertical</span>
+<span class="pc bpc" id="L816" title="3 of 4 branches missed.">                + ((this.meterAngle &lt;= 180) &amp;&amp; (this.shape != DialShape.CIRCLE)</span>
+<span class="pc" id="L817">                ? area.getHeight() / 1.25 : 0);</span>
 
-<span class="nc" id="L819">        double min = Math.min(meterW, meterH) / 2;</span>
-<span class="nc" id="L820">        meterX = (meterX + meterX + meterW) / 2 - min;</span>
-<span class="nc" id="L821">        meterY = (meterY + meterY + meterH) / 2 - min;</span>
-<span class="nc" id="L822">        meterW = 2 * min;</span>
-<span class="nc" id="L823">        meterH = 2 * min;</span>
+<span class="fc" id="L819">        double min = Math.min(meterW, meterH) / 2;</span>
+<span class="fc" id="L820">        meterX = (meterX + meterX + meterW) / 2 - min;</span>
+<span class="fc" id="L821">        meterY = (meterY + meterY + meterH) / 2 - min;</span>
+<span class="fc" id="L822">        meterW = 2 * min;</span>
+<span class="fc" id="L823">        meterH = 2 * min;</span>
 
-<span class="nc" id="L825">        Rectangle2D meterArea = new Rectangle2D.Double(meterX, meterY, meterW,</span>
+<span class="fc" id="L825">        Rectangle2D meterArea = new Rectangle2D.Double(meterX, meterY, meterW,</span>
                 meterH);
 
-<span class="nc" id="L828">        Rectangle2D.Double originalArea = new Rectangle2D.Double(</span>
-<span class="nc" id="L829">                meterArea.getX() - 4, meterArea.getY() - 4,</span>
-<span class="nc" id="L830">                meterArea.getWidth() + 8, meterArea.getHeight() + 8);</span>
+<span class="fc" id="L828">        Rectangle2D.Double originalArea = new Rectangle2D.Double(</span>
+<span class="fc" id="L829">                meterArea.getX() - 4, meterArea.getY() - 4,</span>
+<span class="fc" id="L830">                meterArea.getWidth() + 8, meterArea.getHeight() + 8);</span>
 
-<span class="nc" id="L832">        double meterMiddleX = meterArea.getCenterX();</span>
-<span class="nc" id="L833">        double meterMiddleY = meterArea.getCenterY();</span>
+<span class="fc" id="L832">        double meterMiddleX = meterArea.getCenterX();</span>
+<span class="fc" id="L833">        double meterMiddleY = meterArea.getCenterY();</span>
 
         // plot the data (unless the dataset is null)...
-<span class="nc" id="L836">        ValueDataset data = getDataset();</span>
-<span class="nc bnc" id="L837" title="All 2 branches missed.">        if (data != null) {</span>
-<span class="nc" id="L838">            double dataMin = this.range.getLowerBound();</span>
-<span class="nc" id="L839">            double dataMax = this.range.getUpperBound();</span>
+<span class="fc" id="L836">        ValueDataset data = getDataset();</span>
+<span class="pc bpc" id="L837" title="1 of 2 branches missed.">        if (data != null) {</span>
+<span class="fc" id="L838">            double dataMin = this.range.getLowerBound();</span>
+<span class="fc" id="L839">            double dataMax = this.range.getUpperBound();</span>
 
-<span class="nc" id="L841">            Shape savedClip = g2.getClip();</span>
-<span class="nc" id="L842">            g2.clip(originalArea);</span>
-<span class="nc" id="L843">            Composite originalComposite = g2.getComposite();</span>
-<span class="nc" id="L844">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
-<span class="nc" id="L845">                    getForegroundAlpha()));</span>
+<span class="fc" id="L841">            Shape savedClip = g2.getClip();</span>
+<span class="fc" id="L842">            g2.clip(originalArea);</span>
+<span class="fc" id="L843">            Composite originalComposite = g2.getComposite();</span>
+<span class="fc" id="L844">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
+<span class="fc" id="L845">                    getForegroundAlpha()));</span>
 
-<span class="nc bnc" id="L847" title="All 2 branches missed.">            if (this.dialBackgroundPaint != null) {</span>
-<span class="nc" id="L848">                fillArc(g2, originalArea, dataMin, dataMax,</span>
+<span class="pc bpc" id="L847" title="1 of 2 branches missed.">            if (this.dialBackgroundPaint != null) {</span>
+<span class="fc" id="L848">                fillArc(g2, originalArea, dataMin, dataMax,</span>
                         this.dialBackgroundPaint, true);
             }
-<span class="nc" id="L851">            drawTicks(g2, meterArea, dataMin, dataMax);</span>
-<span class="nc" id="L852">            drawArcForInterval(g2, meterArea, new MeterInterval(&quot;&quot;, this.range,</span>
+<span class="fc" id="L851">            drawTicks(g2, meterArea, dataMin, dataMax);</span>
+<span class="fc" id="L852">            drawArcForInterval(g2, meterArea, new MeterInterval(&quot;&quot;, this.range,</span>
                     this.dialOutlinePaint, new BasicStroke(1.0f), null));
 
-<span class="nc" id="L855">            Iterator iterator = this.intervals.iterator();</span>
-<span class="nc bnc" id="L856" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L857">                MeterInterval interval = (MeterInterval) iterator.next();</span>
-<span class="nc" id="L858">                drawArcForInterval(g2, meterArea, interval);</span>
-<span class="nc" id="L859">            }</span>
+<span class="fc" id="L855">            Iterator iterator = this.intervals.iterator();</span>
+<span class="fc bfc" id="L856" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L857">                MeterInterval interval = (MeterInterval) iterator.next();</span>
+<span class="fc" id="L858">                drawArcForInterval(g2, meterArea, interval);</span>
+<span class="fc" id="L859">            }</span>
 
-<span class="nc" id="L861">            Number n = data.getValue();</span>
-<span class="nc bnc" id="L862" title="All 2 branches missed.">            if (n != null) {</span>
-<span class="nc" id="L863">                double value = n.doubleValue();</span>
-<span class="nc" id="L864">                drawValueLabel(g2, meterArea);</span>
+<span class="fc" id="L861">            Number n = data.getValue();</span>
+<span class="pc bpc" id="L862" title="1 of 2 branches missed.">            if (n != null) {</span>
+<span class="fc" id="L863">                double value = n.doubleValue();</span>
+<span class="fc" id="L864">                drawValueLabel(g2, meterArea);</span>
 
-<span class="nc bnc" id="L866" title="All 2 branches missed.">                if (this.range.contains(value)) {</span>
-<span class="nc" id="L867">                    g2.setPaint(this.needlePaint);</span>
-<span class="nc" id="L868">                    g2.setStroke(new BasicStroke(2.0f));</span>
+<span class="pc bpc" id="L866" title="1 of 2 branches missed.">                if (this.range.contains(value)) {</span>
+<span class="fc" id="L867">                    g2.setPaint(this.needlePaint);</span>
+<span class="fc" id="L868">                    g2.setStroke(new BasicStroke(2.0f));</span>
 
-<span class="nc" id="L870">                    double radius = (meterArea.getWidth() / 2)</span>
+<span class="fc" id="L870">                    double radius = (meterArea.getWidth() / 2)</span>
                                     + DEFAULT_BORDER_SIZE + 15;
-<span class="nc" id="L872">                    double valueAngle = valueToAngle(value);</span>
-<span class="nc" id="L873">                    double valueP1 = meterMiddleX</span>
-<span class="nc" id="L874">                            + (radius * Math.cos(Math.PI * (valueAngle / 180)));</span>
-<span class="nc" id="L875">                    double valueP2 = meterMiddleY</span>
-<span class="nc" id="L876">                            - (radius * Math.sin(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L872">                    double valueAngle = valueToAngle(value);</span>
+<span class="fc" id="L873">                    double valueP1 = meterMiddleX</span>
+<span class="fc" id="L874">                            + (radius * Math.cos(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L875">                    double valueP2 = meterMiddleY</span>
+<span class="fc" id="L876">                            - (radius * Math.sin(Math.PI * (valueAngle / 180)));</span>
 
-<span class="nc" id="L878">                    Polygon arrow = new Polygon();</span>
-<span class="nc bnc" id="L879" title="All 8 branches missed.">                    if ((valueAngle &gt; 135 &amp;&amp; valueAngle &lt; 225)</span>
+<span class="fc" id="L878">                    Polygon arrow = new Polygon();</span>
+<span class="pc bpc" id="L879" title="6 of 8 branches missed.">                    if ((valueAngle &gt; 135 &amp;&amp; valueAngle &lt; 225)</span>
                         || (valueAngle &lt; 45 &amp;&amp; valueAngle &gt; -45)) {
 
 <span class="nc" id="L882">                        double valueP3 = (meterMiddleY</span>
@@ -888,31 +888,31 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
 
 <span class="nc" id="L889">                    }</span>
                     else {
-<span class="nc" id="L891">                        arrow.addPoint((int) (meterMiddleX</span>
+<span class="fc" id="L891">                        arrow.addPoint((int) (meterMiddleX</span>
                                 - DEFAULT_CIRCLE_SIZE / 4), (int) meterMiddleY);
-<span class="nc" id="L893">                        arrow.addPoint((int) (meterMiddleX</span>
+<span class="fc" id="L893">                        arrow.addPoint((int) (meterMiddleX</span>
                                 + DEFAULT_CIRCLE_SIZE / 4), (int) meterMiddleY);
                     }
-<span class="nc" id="L896">                    arrow.addPoint((int) valueP1, (int) valueP2);</span>
-<span class="nc" id="L897">                    g2.fill(arrow);</span>
+<span class="fc" id="L896">                    arrow.addPoint((int) valueP1, (int) valueP2);</span>
+<span class="fc" id="L897">                    g2.fill(arrow);</span>
 
-<span class="nc" id="L899">                    Ellipse2D circle = new Ellipse2D.Double(meterMiddleX</span>
+<span class="fc" id="L899">                    Ellipse2D circle = new Ellipse2D.Double(meterMiddleX</span>
                             - DEFAULT_CIRCLE_SIZE / 2, meterMiddleY
                             - DEFAULT_CIRCLE_SIZE / 2, DEFAULT_CIRCLE_SIZE,
                             DEFAULT_CIRCLE_SIZE);
-<span class="nc" id="L903">                    g2.fill(circle);</span>
+<span class="fc" id="L903">                    g2.fill(circle);</span>
                 }
             }
 
-<span class="nc" id="L907">            g2.setClip(savedClip);</span>
-<span class="nc" id="L908">            g2.setComposite(originalComposite);</span>
+<span class="fc" id="L907">            g2.setClip(savedClip);</span>
+<span class="fc" id="L908">            g2.setComposite(originalComposite);</span>
 
         }
-<span class="nc bnc" id="L911" title="All 2 branches missed.">        if (this.drawBorder) {</span>
+<span class="pc bpc" id="L911" title="1 of 2 branches missed.">        if (this.drawBorder) {</span>
 <span class="nc" id="L912">            drawOutline(g2, area);</span>
         }
 
-<span class="nc" id="L915">    }</span>
+<span class="fc" id="L915">    }</span>
 
     /**
      * Draws the arc to represent an interval.
@@ -924,24 +924,24 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     protected void drawArcForInterval(Graphics2D g2, Rectangle2D meterArea,
                                       MeterInterval interval) {
 
-<span class="nc" id="L927">        double minValue = interval.getRange().getLowerBound();</span>
-<span class="nc" id="L928">        double maxValue = interval.getRange().getUpperBound();</span>
-<span class="nc" id="L929">        Paint outlinePaint = interval.getOutlinePaint();</span>
-<span class="nc" id="L930">        Stroke outlineStroke = interval.getOutlineStroke();</span>
-<span class="nc" id="L931">        Paint backgroundPaint = interval.getBackgroundPaint();</span>
+<span class="fc" id="L927">        double minValue = interval.getRange().getLowerBound();</span>
+<span class="fc" id="L928">        double maxValue = interval.getRange().getUpperBound();</span>
+<span class="fc" id="L929">        Paint outlinePaint = interval.getOutlinePaint();</span>
+<span class="fc" id="L930">        Stroke outlineStroke = interval.getOutlineStroke();</span>
+<span class="fc" id="L931">        Paint backgroundPaint = interval.getBackgroundPaint();</span>
 
-<span class="nc bnc" id="L933" title="All 2 branches missed.">        if (backgroundPaint != null) {</span>
+<span class="pc bpc" id="L933" title="1 of 2 branches missed.">        if (backgroundPaint != null) {</span>
 <span class="nc" id="L934">            fillArc(g2, meterArea, minValue, maxValue, backgroundPaint, false);</span>
         }
-<span class="nc bnc" id="L936" title="All 2 branches missed.">        if (outlinePaint != null) {</span>
-<span class="nc bnc" id="L937" title="All 2 branches missed.">            if (outlineStroke != null) {</span>
-<span class="nc" id="L938">                drawArc(g2, meterArea, minValue, maxValue, outlinePaint,</span>
+<span class="fc bfc" id="L936" title="All 2 branches covered.">        if (outlinePaint != null) {</span>
+<span class="pc bpc" id="L937" title="1 of 2 branches missed.">            if (outlineStroke != null) {</span>
+<span class="fc" id="L938">                drawArc(g2, meterArea, minValue, maxValue, outlinePaint,</span>
                         outlineStroke);
             }
-<span class="nc" id="L941">            drawTick(g2, meterArea, minValue, true);</span>
-<span class="nc" id="L942">            drawTick(g2, meterArea, maxValue, true);</span>
+<span class="fc" id="L941">            drawTick(g2, meterArea, minValue, true);</span>
+<span class="fc" id="L942">            drawTick(g2, meterArea, maxValue, true);</span>
         }
-<span class="nc" id="L944">    }</span>
+<span class="fc" id="L944">    }</span>
 
     /**
      * Draws an arc.
@@ -956,26 +956,26 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     protected void drawArc(Graphics2D g2, Rectangle2D area, double minValue,
                            double maxValue, Paint paint, Stroke stroke) {
 
-<span class="nc" id="L959">        double startAngle = valueToAngle(maxValue);</span>
-<span class="nc" id="L960">        double endAngle = valueToAngle(minValue);</span>
-<span class="nc" id="L961">        double extent = endAngle - startAngle;</span>
+<span class="fc" id="L959">        double startAngle = valueToAngle(maxValue);</span>
+<span class="fc" id="L960">        double endAngle = valueToAngle(minValue);</span>
+<span class="fc" id="L961">        double extent = endAngle - startAngle;</span>
 
-<span class="nc" id="L963">        double x = area.getX();</span>
-<span class="nc" id="L964">        double y = area.getY();</span>
-<span class="nc" id="L965">        double w = area.getWidth();</span>
-<span class="nc" id="L966">        double h = area.getHeight();</span>
-<span class="nc" id="L967">        g2.setPaint(paint);</span>
-<span class="nc" id="L968">        g2.setStroke(stroke);</span>
+<span class="fc" id="L963">        double x = area.getX();</span>
+<span class="fc" id="L964">        double y = area.getY();</span>
+<span class="fc" id="L965">        double w = area.getWidth();</span>
+<span class="fc" id="L966">        double h = area.getHeight();</span>
+<span class="fc" id="L967">        g2.setPaint(paint);</span>
+<span class="fc" id="L968">        g2.setStroke(stroke);</span>
 
-<span class="nc bnc" id="L970" title="All 4 branches missed.">        if (paint != null &amp;&amp; stroke != null) {</span>
-<span class="nc" id="L971">            Arc2D.Double arc = new Arc2D.Double(x, y, w, h, startAngle,</span>
+<span class="pc bpc" id="L970" title="2 of 4 branches missed.">        if (paint != null &amp;&amp; stroke != null) {</span>
+<span class="fc" id="L971">            Arc2D.Double arc = new Arc2D.Double(x, y, w, h, startAngle,</span>
                     extent, Arc2D.OPEN);
-<span class="nc" id="L973">            g2.setPaint(paint);</span>
-<span class="nc" id="L974">            g2.setStroke(stroke);</span>
-<span class="nc" id="L975">            g2.draw(arc);</span>
+<span class="fc" id="L973">            g2.setPaint(paint);</span>
+<span class="fc" id="L974">            g2.setStroke(stroke);</span>
+<span class="fc" id="L975">            g2.draw(arc);</span>
         }
 
-<span class="nc" id="L978">    }</span>
+<span class="fc" id="L978">    }</span>
 
     /**
      * Fills an arc on the dial between the given values.
@@ -991,20 +991,20 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     protected void fillArc(Graphics2D g2, Rectangle2D area,
             double minValue, double maxValue, Paint paint, boolean dial) {
 
-<span class="nc" id="L994">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L995">        double startAngle = valueToAngle(maxValue);</span>
-<span class="nc" id="L996">        double endAngle = valueToAngle(minValue);</span>
-<span class="nc" id="L997">        double extent = endAngle - startAngle;</span>
+<span class="fc" id="L994">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L995">        double startAngle = valueToAngle(maxValue);</span>
+<span class="fc" id="L996">        double endAngle = valueToAngle(minValue);</span>
+<span class="fc" id="L997">        double extent = endAngle - startAngle;</span>
 
-<span class="nc" id="L999">        double x = area.getX();</span>
-<span class="nc" id="L1000">        double y = area.getY();</span>
-<span class="nc" id="L1001">        double w = area.getWidth();</span>
-<span class="nc" id="L1002">        double h = area.getHeight();</span>
-<span class="nc" id="L1003">        int joinType = Arc2D.OPEN;</span>
-<span class="nc bnc" id="L1004" title="All 2 branches missed.">        if (this.shape == DialShape.PIE) {</span>
+<span class="fc" id="L999">        double x = area.getX();</span>
+<span class="fc" id="L1000">        double y = area.getY();</span>
+<span class="fc" id="L1001">        double w = area.getWidth();</span>
+<span class="fc" id="L1002">        double h = area.getHeight();</span>
+<span class="fc" id="L1003">        int joinType = Arc2D.OPEN;</span>
+<span class="pc bpc" id="L1004" title="1 of 2 branches missed.">        if (this.shape == DialShape.PIE) {</span>
 <span class="nc" id="L1005">            joinType = Arc2D.PIE;</span>
         }
-<span class="nc bnc" id="L1007" title="All 2 branches missed.">        else if (this.shape == DialShape.CHORD) {</span>
+<span class="pc bpc" id="L1007" title="1 of 2 branches missed.">        else if (this.shape == DialShape.CHORD) {</span>
 <span class="nc bnc" id="L1008" title="All 4 branches missed.">            if (dial &amp;&amp; this.meterAngle &gt; 180) {</span>
 <span class="nc" id="L1009">                joinType = Arc2D.CHORD;</span>
             }
@@ -1012,21 +1012,21 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
 <span class="nc" id="L1012">                joinType = Arc2D.PIE;</span>
             }
         }
-<span class="nc bnc" id="L1015" title="All 2 branches missed.">        else if (this.shape == DialShape.CIRCLE) {</span>
-<span class="nc" id="L1016">            joinType = Arc2D.PIE;</span>
-<span class="nc bnc" id="L1017" title="All 2 branches missed.">            if (dial) {</span>
-<span class="nc" id="L1018">                extent = 360;</span>
+<span class="pc bpc" id="L1015" title="1 of 2 branches missed.">        else if (this.shape == DialShape.CIRCLE) {</span>
+<span class="fc" id="L1016">            joinType = Arc2D.PIE;</span>
+<span class="pc bpc" id="L1017" title="1 of 2 branches missed.">            if (dial) {</span>
+<span class="fc" id="L1018">                extent = 360;</span>
             }
         }
         else {
 <span class="nc" id="L1022">            throw new IllegalStateException(&quot;DialShape not recognised.&quot;);</span>
         }
 
-<span class="nc" id="L1025">        g2.setPaint(paint);</span>
-<span class="nc" id="L1026">        Arc2D.Double arc = new Arc2D.Double(x, y, w, h, startAngle, extent,</span>
+<span class="fc" id="L1025">        g2.setPaint(paint);</span>
+<span class="fc" id="L1026">        Arc2D.Double arc = new Arc2D.Double(x, y, w, h, startAngle, extent,</span>
                 joinType);
-<span class="nc" id="L1028">        g2.fill(arc);</span>
-<span class="nc" id="L1029">    }</span>
+<span class="fc" id="L1028">        g2.fill(arc);</span>
+<span class="fc" id="L1029">    }</span>
 
     /**
      * Translates a data value to an angle on the dial.
@@ -1036,9 +1036,9 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @return The angle on the dial.
      */
     public double valueToAngle(double value) {
-<span class="nc" id="L1039">        value = value - this.range.getLowerBound();</span>
-<span class="nc" id="L1040">        double baseAngle = 180 + ((this.meterAngle - 180) / 2);</span>
-<span class="nc" id="L1041">        return baseAngle - ((value / this.range.getLength()) * this.meterAngle);</span>
+<span class="fc" id="L1039">        value = value - this.range.getLowerBound();</span>
+<span class="fc" id="L1040">        double baseAngle = 180 + ((this.meterAngle - 180) / 2);</span>
+<span class="fc" id="L1041">        return baseAngle - ((value / this.range.getLength()) * this.meterAngle);</span>
     }
 
     /**
@@ -1051,10 +1051,10 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     protected void drawTicks(Graphics2D g2, Rectangle2D meterArea,
                              double minValue, double maxValue) {
-<span class="nc bnc" id="L1054" title="All 2 branches missed.">        for (double v = minValue; v &lt;= maxValue; v += this.tickSize) {</span>
-<span class="nc" id="L1055">            drawTick(g2, meterArea, v);</span>
+<span class="fc bfc" id="L1054" title="All 2 branches covered.">        for (double v = minValue; v &lt;= maxValue; v += this.tickSize) {</span>
+<span class="fc" id="L1055">            drawTick(g2, meterArea, v);</span>
         }
-<span class="nc" id="L1057">    }</span>
+<span class="fc" id="L1057">    }</span>
 
     /**
      * Draws a tick.
@@ -1065,8 +1065,8 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     protected void drawTick(Graphics2D g2, Rectangle2D meterArea,
             double value) {
-<span class="nc" id="L1068">        drawTick(g2, meterArea, value, false);</span>
-<span class="nc" id="L1069">    }</span>
+<span class="fc" id="L1068">        drawTick(g2, meterArea, value, false);</span>
+<span class="fc" id="L1069">    }</span>
 
     /**
      * Draws a tick on the dial.
@@ -1079,62 +1079,62 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
     protected void drawTick(Graphics2D g2, Rectangle2D meterArea,
                             double value, boolean label) {
 
-<span class="nc" id="L1082">        double valueAngle = valueToAngle(value);</span>
+<span class="fc" id="L1082">        double valueAngle = valueToAngle(value);</span>
 
-<span class="nc" id="L1084">        double meterMiddleX = meterArea.getCenterX();</span>
-<span class="nc" id="L1085">        double meterMiddleY = meterArea.getCenterY();</span>
+<span class="fc" id="L1084">        double meterMiddleX = meterArea.getCenterX();</span>
+<span class="fc" id="L1085">        double meterMiddleY = meterArea.getCenterY();</span>
 
-<span class="nc" id="L1087">        g2.setPaint(this.tickPaint);</span>
-<span class="nc" id="L1088">        g2.setStroke(new BasicStroke(2.0f));</span>
+<span class="fc" id="L1087">        g2.setPaint(this.tickPaint);</span>
+<span class="fc" id="L1088">        g2.setStroke(new BasicStroke(2.0f));</span>
 
         double valueP2X;
         double valueP2Y;
 
-<span class="nc" id="L1093">        double radius = (meterArea.getWidth() / 2) + DEFAULT_BORDER_SIZE;</span>
-<span class="nc" id="L1094">        double radius1 = radius - 15;</span>
+<span class="fc" id="L1093">        double radius = (meterArea.getWidth() / 2) + DEFAULT_BORDER_SIZE;</span>
+<span class="fc" id="L1094">        double radius1 = radius - 15;</span>
 
-<span class="nc" id="L1096">        double valueP1X = meterMiddleX</span>
-<span class="nc" id="L1097">                + (radius * Math.cos(Math.PI * (valueAngle / 180)));</span>
-<span class="nc" id="L1098">        double valueP1Y = meterMiddleY</span>
-<span class="nc" id="L1099">                - (radius * Math.sin(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L1096">        double valueP1X = meterMiddleX</span>
+<span class="fc" id="L1097">                + (radius * Math.cos(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L1098">        double valueP1Y = meterMiddleY</span>
+<span class="fc" id="L1099">                - (radius * Math.sin(Math.PI * (valueAngle / 180)));</span>
 
-<span class="nc" id="L1101">        valueP2X = meterMiddleX</span>
-<span class="nc" id="L1102">                + (radius1 * Math.cos(Math.PI * (valueAngle / 180)));</span>
-<span class="nc" id="L1103">        valueP2Y = meterMiddleY</span>
-<span class="nc" id="L1104">                - (radius1 * Math.sin(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L1101">        valueP2X = meterMiddleX</span>
+<span class="fc" id="L1102">                + (radius1 * Math.cos(Math.PI * (valueAngle / 180)));</span>
+<span class="fc" id="L1103">        valueP2Y = meterMiddleY</span>
+<span class="fc" id="L1104">                - (radius1 * Math.sin(Math.PI * (valueAngle / 180)));</span>
 
-<span class="nc" id="L1106">        Line2D.Double line = new Line2D.Double(valueP1X, valueP1Y, valueP2X,</span>
+<span class="fc" id="L1106">        Line2D.Double line = new Line2D.Double(valueP1X, valueP1Y, valueP2X,</span>
                 valueP2Y);
-<span class="nc" id="L1108">        g2.draw(line);</span>
+<span class="fc" id="L1108">        g2.draw(line);</span>
 
-<span class="nc bnc" id="L1110" title="All 4 branches missed.">        if (this.tickLabelsVisible &amp;&amp; label) {</span>
+<span class="pc bpc" id="L1110" title="1 of 4 branches missed.">        if (this.tickLabelsVisible &amp;&amp; label) {</span>
 
-<span class="nc" id="L1112">            String tickLabel =  this.tickLabelFormat.format(value);</span>
-<span class="nc" id="L1113">            g2.setFont(this.tickLabelFont);</span>
-<span class="nc" id="L1114">            g2.setPaint(this.tickLabelPaint);</span>
+<span class="fc" id="L1112">            String tickLabel =  this.tickLabelFormat.format(value);</span>
+<span class="fc" id="L1113">            g2.setFont(this.tickLabelFont);</span>
+<span class="fc" id="L1114">            g2.setPaint(this.tickLabelPaint);</span>
 
-<span class="nc" id="L1116">            FontMetrics fm = g2.getFontMetrics();</span>
-<span class="nc" id="L1117">            Rectangle2D tickLabelBounds</span>
-<span class="nc" id="L1118">                = TextUtils.getTextBounds(tickLabel, g2, fm);</span>
+<span class="fc" id="L1116">            FontMetrics fm = g2.getFontMetrics();</span>
+<span class="fc" id="L1117">            Rectangle2D tickLabelBounds</span>
+<span class="fc" id="L1118">                = TextUtils.getTextBounds(tickLabel, g2, fm);</span>
 
-<span class="nc" id="L1120">            double x = valueP2X;</span>
-<span class="nc" id="L1121">            double y = valueP2Y;</span>
-<span class="nc bnc" id="L1122" title="All 4 branches missed.">            if (valueAngle == 90 || valueAngle == 270) {</span>
+<span class="fc" id="L1120">            double x = valueP2X;</span>
+<span class="fc" id="L1121">            double y = valueP2Y;</span>
+<span class="pc bpc" id="L1122" title="2 of 4 branches missed.">            if (valueAngle == 90 || valueAngle == 270) {</span>
 <span class="nc" id="L1123">                x = x - tickLabelBounds.getWidth() / 2;</span>
             }
-<span class="nc bnc" id="L1125" title="All 4 branches missed.">            else if (valueAngle &lt; 90 || valueAngle &gt; 270) {</span>
-<span class="nc" id="L1126">                x = x - tickLabelBounds.getWidth();</span>
+<span class="pc bpc" id="L1125" title="1 of 4 branches missed.">            else if (valueAngle &lt; 90 || valueAngle &gt; 270) {</span>
+<span class="fc" id="L1126">                x = x - tickLabelBounds.getWidth();</span>
             }
-<span class="nc bnc" id="L1128" title="All 8 branches missed.">            if ((valueAngle &gt; 135 &amp;&amp; valueAngle &lt; 225)</span>
+<span class="pc bpc" id="L1128" title="2 of 8 branches missed.">            if ((valueAngle &gt; 135 &amp;&amp; valueAngle &lt; 225)</span>
                     || valueAngle &gt; 315 || valueAngle &lt; 45) {
-<span class="nc" id="L1130">                y = y - tickLabelBounds.getHeight() / 2;</span>
+<span class="fc" id="L1130">                y = y - tickLabelBounds.getHeight() / 2;</span>
             }
             else {
-<span class="nc" id="L1133">                y = y + tickLabelBounds.getHeight() / 2;</span>
+<span class="fc" id="L1133">                y = y + tickLabelBounds.getHeight() / 2;</span>
             }
-<span class="nc" id="L1135">            g2.drawString(tickLabel, (float) x, (float) y);</span>
+<span class="fc" id="L1135">            g2.drawString(tickLabel, (float) x, (float) y);</span>
         }
-<span class="nc" id="L1137">    }</span>
+<span class="fc" id="L1137">    }</span>
 
     /**
      * Draws the value label just below the center of the dial.
@@ -1143,21 +1143,21 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @param area  the plot area.
      */
     protected void drawValueLabel(Graphics2D g2, Rectangle2D area) {
-<span class="nc" id="L1146">        g2.setFont(this.valueFont);</span>
-<span class="nc" id="L1147">        g2.setPaint(this.valuePaint);</span>
-<span class="nc" id="L1148">        String valueStr = &quot;No value&quot;;</span>
-<span class="nc bnc" id="L1149" title="All 2 branches missed.">        if (this.dataset != null) {</span>
-<span class="nc" id="L1150">            Number n = this.dataset.getValue();</span>
-<span class="nc bnc" id="L1151" title="All 2 branches missed.">            if (n != null) {</span>
-<span class="nc" id="L1152">                valueStr = this.tickLabelFormat.format(n.doubleValue()) + &quot; &quot;</span>
+<span class="fc" id="L1146">        g2.setFont(this.valueFont);</span>
+<span class="fc" id="L1147">        g2.setPaint(this.valuePaint);</span>
+<span class="fc" id="L1148">        String valueStr = &quot;No value&quot;;</span>
+<span class="pc bpc" id="L1149" title="1 of 2 branches missed.">        if (this.dataset != null) {</span>
+<span class="fc" id="L1150">            Number n = this.dataset.getValue();</span>
+<span class="pc bpc" id="L1151" title="1 of 2 branches missed.">            if (n != null) {</span>
+<span class="fc" id="L1152">                valueStr = this.tickLabelFormat.format(n.doubleValue()) + &quot; &quot;</span>
                          + this.units;
             }
         }
-<span class="nc" id="L1156">        float x = (float) area.getCenterX();</span>
-<span class="nc" id="L1157">        float y = (float) area.getCenterY() + DEFAULT_CIRCLE_SIZE;</span>
-<span class="nc" id="L1158">        TextUtils.drawAlignedString(valueStr, g2, x, y,</span>
+<span class="fc" id="L1156">        float x = (float) area.getCenterX();</span>
+<span class="fc" id="L1157">        float y = (float) area.getCenterY() + DEFAULT_CIRCLE_SIZE;</span>
+<span class="fc" id="L1158">        TextUtils.drawAlignedString(valueStr, g2, x, y,</span>
                 TextAnchor.TOP_CENTER);
-<span class="nc" id="L1160">    }</span>
+<span class="fc" id="L1160">    }</span>
 
     /**
      * Returns a short string describing the type of plot.
@@ -1191,71 +1191,71 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1194" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1194" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1195">            return true;</span>
         }
-<span class="nc bnc" id="L1197" title="All 2 branches missed.">        if (!(obj instanceof MeterPlot)) {</span>
+<span class="pc bpc" id="L1197" title="1 of 2 branches missed.">        if (!(obj instanceof MeterPlot)) {</span>
 <span class="nc" id="L1198">            return false;</span>
         }
-<span class="nc bnc" id="L1200" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L1200" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L1201">            return false;</span>
         }
-<span class="nc" id="L1203">        MeterPlot that = (MeterPlot) obj;</span>
-<span class="nc bnc" id="L1204" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.units, that.units)) {</span>
-<span class="nc" id="L1205">            return false;</span>
+<span class="fc" id="L1203">        MeterPlot that = (MeterPlot) obj;</span>
+<span class="fc bfc" id="L1204" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.units, that.units)) {</span>
+<span class="fc" id="L1205">            return false;</span>
         }
-<span class="nc bnc" id="L1207" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.range, that.range)) {</span>
-<span class="nc" id="L1208">            return false;</span>
+<span class="fc bfc" id="L1207" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.range, that.range)) {</span>
+<span class="fc" id="L1208">            return false;</span>
         }
-<span class="nc bnc" id="L1210" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.intervals, that.intervals)) {</span>
-<span class="nc" id="L1211">            return false;</span>
+<span class="fc bfc" id="L1210" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.intervals, that.intervals)) {</span>
+<span class="fc" id="L1211">            return false;</span>
         }
-<span class="nc bnc" id="L1213" title="All 2 branches missed.">        if (!PaintUtils.equal(this.dialOutlinePaint,</span>
+<span class="fc bfc" id="L1213" title="All 2 branches covered.">        if (!PaintUtils.equal(this.dialOutlinePaint,</span>
                 that.dialOutlinePaint)) {
-<span class="nc" id="L1215">            return false;</span>
+<span class="fc" id="L1215">            return false;</span>
         }
-<span class="nc bnc" id="L1217" title="All 2 branches missed.">        if (this.shape != that.shape) {</span>
-<span class="nc" id="L1218">            return false;</span>
+<span class="fc bfc" id="L1217" title="All 2 branches covered.">        if (this.shape != that.shape) {</span>
+<span class="fc" id="L1218">            return false;</span>
         }
-<span class="nc bnc" id="L1220" title="All 2 branches missed.">        if (!PaintUtils.equal(this.dialBackgroundPaint,</span>
+<span class="fc bfc" id="L1220" title="All 2 branches covered.">        if (!PaintUtils.equal(this.dialBackgroundPaint,</span>
                 that.dialBackgroundPaint)) {
-<span class="nc" id="L1222">            return false;</span>
+<span class="fc" id="L1222">            return false;</span>
         }
-<span class="nc bnc" id="L1224" title="All 2 branches missed.">        if (!PaintUtils.equal(this.needlePaint, that.needlePaint)) {</span>
-<span class="nc" id="L1225">            return false;</span>
+<span class="fc bfc" id="L1224" title="All 2 branches covered.">        if (!PaintUtils.equal(this.needlePaint, that.needlePaint)) {</span>
+<span class="fc" id="L1225">            return false;</span>
         }
-<span class="nc bnc" id="L1227" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.valueFont, that.valueFont)) {</span>
-<span class="nc" id="L1228">            return false;</span>
+<span class="fc bfc" id="L1227" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.valueFont, that.valueFont)) {</span>
+<span class="fc" id="L1228">            return false;</span>
         }
-<span class="nc bnc" id="L1230" title="All 2 branches missed.">        if (!PaintUtils.equal(this.valuePaint, that.valuePaint)) {</span>
-<span class="nc" id="L1231">            return false;</span>
+<span class="fc bfc" id="L1230" title="All 2 branches covered.">        if (!PaintUtils.equal(this.valuePaint, that.valuePaint)) {</span>
+<span class="fc" id="L1231">            return false;</span>
         }
-<span class="nc bnc" id="L1233" title="All 2 branches missed.">        if (!PaintUtils.equal(this.tickPaint, that.tickPaint)) {</span>
-<span class="nc" id="L1234">            return false;</span>
+<span class="fc bfc" id="L1233" title="All 2 branches covered.">        if (!PaintUtils.equal(this.tickPaint, that.tickPaint)) {</span>
+<span class="fc" id="L1234">            return false;</span>
         }
-<span class="nc bnc" id="L1236" title="All 2 branches missed.">        if (this.tickSize != that.tickSize) {</span>
-<span class="nc" id="L1237">            return false;</span>
+<span class="fc bfc" id="L1236" title="All 2 branches covered.">        if (this.tickSize != that.tickSize) {</span>
+<span class="fc" id="L1237">            return false;</span>
         }
-<span class="nc bnc" id="L1239" title="All 2 branches missed.">        if (this.tickLabelsVisible != that.tickLabelsVisible) {</span>
-<span class="nc" id="L1240">            return false;</span>
+<span class="fc bfc" id="L1239" title="All 2 branches covered.">        if (this.tickLabelsVisible != that.tickLabelsVisible) {</span>
+<span class="fc" id="L1240">            return false;</span>
         }
-<span class="nc bnc" id="L1242" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.tickLabelFont, that.tickLabelFont)) {</span>
-<span class="nc" id="L1243">            return false;</span>
+<span class="fc bfc" id="L1242" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.tickLabelFont, that.tickLabelFont)) {</span>
+<span class="fc" id="L1243">            return false;</span>
         }
-<span class="nc bnc" id="L1245" title="All 2 branches missed.">        if (!PaintUtils.equal(this.tickLabelPaint, that.tickLabelPaint)) {</span>
-<span class="nc" id="L1246">            return false;</span>
+<span class="fc bfc" id="L1245" title="All 2 branches covered.">        if (!PaintUtils.equal(this.tickLabelPaint, that.tickLabelPaint)) {</span>
+<span class="fc" id="L1246">            return false;</span>
         }
-<span class="nc bnc" id="L1248" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.tickLabelFormat,</span>
+<span class="fc bfc" id="L1248" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.tickLabelFormat,</span>
                 that.tickLabelFormat)) {
-<span class="nc" id="L1250">            return false;</span>
+<span class="fc" id="L1250">            return false;</span>
         }
-<span class="nc bnc" id="L1252" title="All 2 branches missed.">        if (this.drawBorder != that.drawBorder) {</span>
-<span class="nc" id="L1253">            return false;</span>
+<span class="fc bfc" id="L1252" title="All 2 branches covered.">        if (this.drawBorder != that.drawBorder) {</span>
+<span class="fc" id="L1253">            return false;</span>
         }
-<span class="nc bnc" id="L1255" title="All 2 branches missed.">        if (this.meterAngle != that.meterAngle) {</span>
-<span class="nc" id="L1256">            return false;</span>
+<span class="fc bfc" id="L1255" title="All 2 branches covered.">        if (this.meterAngle != that.meterAngle) {</span>
+<span class="fc" id="L1256">            return false;</span>
         }
-<span class="nc" id="L1258">        return true;</span>
+<span class="fc" id="L1258">        return true;</span>
     }
 
     /**
@@ -1266,14 +1266,14 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1269">        stream.defaultWriteObject();</span>
-<span class="nc" id="L1270">        SerialUtils.writePaint(this.dialBackgroundPaint, stream);</span>
-<span class="nc" id="L1271">        SerialUtils.writePaint(this.dialOutlinePaint, stream);</span>
-<span class="nc" id="L1272">        SerialUtils.writePaint(this.needlePaint, stream);</span>
-<span class="nc" id="L1273">        SerialUtils.writePaint(this.valuePaint, stream);</span>
-<span class="nc" id="L1274">        SerialUtils.writePaint(this.tickPaint, stream);</span>
-<span class="nc" id="L1275">        SerialUtils.writePaint(this.tickLabelPaint, stream);</span>
-<span class="nc" id="L1276">    }</span>
+<span class="fc" id="L1269">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1270">        SerialUtils.writePaint(this.dialBackgroundPaint, stream);</span>
+<span class="fc" id="L1271">        SerialUtils.writePaint(this.dialOutlinePaint, stream);</span>
+<span class="fc" id="L1272">        SerialUtils.writePaint(this.needlePaint, stream);</span>
+<span class="fc" id="L1273">        SerialUtils.writePaint(this.valuePaint, stream);</span>
+<span class="fc" id="L1274">        SerialUtils.writePaint(this.tickPaint, stream);</span>
+<span class="fc" id="L1275">        SerialUtils.writePaint(this.tickLabelPaint, stream);</span>
+<span class="fc" id="L1276">    }</span>
 
     /**
      * Provides serialization support.
@@ -1285,17 +1285,17 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L1288">        stream.defaultReadObject();</span>
-<span class="nc" id="L1289">        this.dialBackgroundPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1290">        this.dialOutlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1291">        this.needlePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1292">        this.valuePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1293">        this.tickPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1294">        this.tickLabelPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc bnc" id="L1295" title="All 2 branches missed.">        if (this.dataset != null) {</span>
-<span class="nc" id="L1296">            this.dataset.addChangeListener(this);</span>
+<span class="fc" id="L1288">        stream.defaultReadObject();</span>
+<span class="fc" id="L1289">        this.dialBackgroundPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1290">        this.dialOutlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1291">        this.needlePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1292">        this.valuePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1293">        this.tickPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1294">        this.tickLabelPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc bfc" id="L1295" title="All 2 branches covered.">        if (this.dataset != null) {</span>
+<span class="fc" id="L1296">            this.dataset.addChangeListener(this);</span>
         }
-<span class="nc" id="L1298">    }</span>
+<span class="fc" id="L1298">    }</span>
 
     /**
      * Returns an independent copy (clone) of the plot.  The dataset is NOT
@@ -1309,15 +1309,15 @@ public class MeterPlot extends Plot implements Serializable, Cloneable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1312">        MeterPlot clone = (MeterPlot) super.clone();</span>
-<span class="nc" id="L1313">        clone.tickLabelFormat = (NumberFormat) this.tickLabelFormat.clone();</span>
+<span class="fc" id="L1312">        MeterPlot clone = (MeterPlot) super.clone();</span>
+<span class="fc" id="L1313">        clone.tickLabelFormat = (NumberFormat) this.tickLabelFormat.clone();</span>
         // the following relies on the fact that the intervals are immutable
-<span class="nc" id="L1315">        clone.intervals = new java.util.ArrayList(this.intervals);</span>
-<span class="nc bnc" id="L1316" title="All 2 branches missed.">        if (clone.dataset != null) {</span>
+<span class="fc" id="L1315">        clone.intervals = new java.util.ArrayList(this.intervals);</span>
+<span class="pc bpc" id="L1316" title="1 of 2 branches missed.">        if (clone.dataset != null) {</span>
 <span class="nc" id="L1317">            clone.dataset.addChangeListener(clone);</span>
         }
-<span class="nc" id="L1319">        return clone;</span>
+<span class="fc" id="L1319">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

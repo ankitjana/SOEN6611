@@ -85,10 +85,10 @@ public class CrosshairOverlay extends AbstractOverlay implements Overlay,
      * Creates a new overlay that initially contains no crosshairs.
      */
     public CrosshairOverlay() {
-<span class="nc" id="L88">        super();</span>
-<span class="nc" id="L89">        this.xCrosshairs = new java.util.ArrayList&lt;Crosshair&gt;();</span>
-<span class="nc" id="L90">        this.yCrosshairs = new java.util.ArrayList&lt;Crosshair&gt;();</span>
-<span class="nc" id="L91">    }</span>
+<span class="fc" id="L88">        super();</span>
+<span class="fc" id="L89">        this.xCrosshairs = new java.util.ArrayList&lt;Crosshair&gt;();</span>
+<span class="fc" id="L90">        this.yCrosshairs = new java.util.ArrayList&lt;Crosshair&gt;();</span>
+<span class="fc" id="L91">    }</span>
 
     /**
      * Adds a crosshair against the domain axis (x-axis) and sends an
@@ -100,11 +100,11 @@ public class CrosshairOverlay extends AbstractOverlay implements Overlay,
      * @see #addRangeCrosshair(org.jfree.chart.plot.Crosshair)
      */
     public void addDomainCrosshair(Crosshair crosshair) {
-<span class="nc" id="L103">        Args.nullNotPermitted(crosshair, &quot;crosshair&quot;);</span>
-<span class="nc" id="L104">        this.xCrosshairs.add(crosshair);</span>
-<span class="nc" id="L105">        crosshair.addPropertyChangeListener(this);</span>
-<span class="nc" id="L106">        fireOverlayChanged();</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L103">        Args.nullNotPermitted(crosshair, &quot;crosshair&quot;);</span>
+<span class="fc" id="L104">        this.xCrosshairs.add(crosshair);</span>
+<span class="fc" id="L105">        crosshair.addPropertyChangeListener(this);</span>
+<span class="fc" id="L106">        fireOverlayChanged();</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Removes a domain axis crosshair and sends an {@link OverlayChangeEvent}
@@ -153,11 +153,11 @@ public class CrosshairOverlay extends AbstractOverlay implements Overlay,
      * @param crosshair  the crosshair ({@code null} not permitted).
      */
     public void addRangeCrosshair(Crosshair crosshair) {
-<span class="nc" id="L156">        Args.nullNotPermitted(crosshair, &quot;crosshair&quot;);</span>
-<span class="nc" id="L157">        this.yCrosshairs.add(crosshair);</span>
-<span class="nc" id="L158">        crosshair.addPropertyChangeListener(this);</span>
-<span class="nc" id="L159">        fireOverlayChanged();</span>
-<span class="nc" id="L160">    }</span>
+<span class="fc" id="L156">        Args.nullNotPermitted(crosshair, &quot;crosshair&quot;);</span>
+<span class="fc" id="L157">        this.yCrosshairs.add(crosshair);</span>
+<span class="fc" id="L158">        crosshair.addPropertyChangeListener(this);</span>
+<span class="fc" id="L159">        fireOverlayChanged();</span>
+<span class="fc" id="L160">    }</span>
 
     /**
      * Removes a range axis crosshair and sends an {@link OverlayChangeEvent}
@@ -562,20 +562,20 @@ public class CrosshairOverlay extends AbstractOverlay implements Overlay,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L565" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L565" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L566">            return true;</span>
         }
-<span class="nc bnc" id="L568" title="All 2 branches missed.">        if (!(obj instanceof CrosshairOverlay)) {</span>
+<span class="pc bpc" id="L568" title="1 of 2 branches missed.">        if (!(obj instanceof CrosshairOverlay)) {</span>
 <span class="nc" id="L569">            return false;</span>
         }
-<span class="nc" id="L571">        CrosshairOverlay that = (CrosshairOverlay) obj;</span>
-<span class="nc bnc" id="L572" title="All 2 branches missed.">        if (!this.xCrosshairs.equals(that.xCrosshairs)) {</span>
-<span class="nc" id="L573">            return false;</span>
+<span class="fc" id="L571">        CrosshairOverlay that = (CrosshairOverlay) obj;</span>
+<span class="fc bfc" id="L572" title="All 2 branches covered.">        if (!this.xCrosshairs.equals(that.xCrosshairs)) {</span>
+<span class="fc" id="L573">            return false;</span>
         }
-<span class="nc bnc" id="L575" title="All 2 branches missed.">        if (!this.yCrosshairs.equals(that.yCrosshairs)) {</span>
+<span class="pc bpc" id="L575" title="1 of 2 branches missed.">        if (!this.yCrosshairs.equals(that.yCrosshairs)) {</span>
 <span class="nc" id="L576">            return false;</span>
         }
-<span class="nc" id="L578">        return true;</span>
+<span class="fc" id="L578">        return true;</span>
     }
 
     /**
@@ -588,11 +588,11 @@ public class CrosshairOverlay extends AbstractOverlay implements Overlay,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L591">        CrosshairOverlay clone = (CrosshairOverlay) super.clone();</span>
-<span class="nc" id="L592">        clone.xCrosshairs = (List) ObjectUtils.deepClone(this.xCrosshairs);</span>
-<span class="nc" id="L593">        clone.yCrosshairs = (List) ObjectUtils.deepClone(this.yCrosshairs);</span>
-<span class="nc" id="L594">        return clone;</span>
+<span class="fc" id="L591">        CrosshairOverlay clone = (CrosshairOverlay) super.clone();</span>
+<span class="fc" id="L592">        clone.xCrosshairs = (List) ObjectUtils.deepClone(this.xCrosshairs);</span>
+<span class="fc" id="L593">        clone.yCrosshairs = (List) ObjectUtils.deepClone(this.yCrosshairs);</span>
+<span class="fc" id="L594">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

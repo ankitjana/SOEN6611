@@ -249,16 +249,16 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * both {@code null}.
      */
     protected AbstractXYItemRenderer() {
-<span class="nc" id="L252">        super();</span>
-<span class="nc" id="L253">        this.itemLabelGeneratorMap </span>
+<span class="fc" id="L252">        super();</span>
+<span class="fc" id="L253">        this.itemLabelGeneratorMap </span>
                 = new HashMap&lt;Integer, XYItemLabelGenerator&gt;();
-<span class="nc" id="L255">        this.toolTipGeneratorMap = new HashMap&lt;Integer, XYToolTipGenerator&gt;();</span>
-<span class="nc" id="L256">        this.urlGenerator = null;</span>
-<span class="nc" id="L257">        this.backgroundAnnotations = new ArrayList&lt;XYAnnotation&gt;();</span>
-<span class="nc" id="L258">        this.foregroundAnnotations = new ArrayList&lt;XYAnnotation&gt;();</span>
-<span class="nc" id="L259">        this.legendItemLabelGenerator = new StandardXYSeriesLabelGenerator(</span>
+<span class="fc" id="L255">        this.toolTipGeneratorMap = new HashMap&lt;Integer, XYToolTipGenerator&gt;();</span>
+<span class="fc" id="L256">        this.urlGenerator = null;</span>
+<span class="fc" id="L257">        this.backgroundAnnotations = new ArrayList&lt;XYAnnotation&gt;();</span>
+<span class="fc" id="L258">        this.foregroundAnnotations = new ArrayList&lt;XYAnnotation&gt;();</span>
+<span class="fc" id="L259">        this.legendItemLabelGenerator = new StandardXYSeriesLabelGenerator(</span>
                 &quot;{0}&quot;);
-<span class="nc" id="L261">    }</span>
+<span class="fc" id="L261">    }</span>
 
     /**
      * Returns the number of passes through the data that the renderer requires
@@ -269,7 +269,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public int getPassCount() {
-<span class="nc" id="L272">        return 1;</span>
+<span class="fc" id="L272">        return 1;</span>
     }
 
     /**
@@ -279,7 +279,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public XYPlot getPlot() {
-<span class="nc" id="L282">        return this.plot;</span>
+<span class="fc" id="L282">        return this.plot;</span>
     }
 
     /**
@@ -289,8 +289,8 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void setPlot(XYPlot plot) {
-<span class="nc" id="L292">        this.plot = plot;</span>
-<span class="nc" id="L293">    }</span>
+<span class="fc" id="L292">        this.plot = plot;</span>
+<span class="fc" id="L293">    }</span>
 
     /**
      * Initialises the renderer and returns a state object that should be
@@ -312,7 +312,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     @Override
     public XYItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea,
             XYPlot plot, XYDataset dataset, PlotRenderingInfo info) {
-<span class="nc" id="L315">        return new XYItemRendererState(info);</span>
+<span class="fc" id="L315">        return new XYItemRendererState(info);</span>
     }
 
     /**
@@ -379,9 +379,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesItemLabelGenerator(int series,
             XYItemLabelGenerator generator) {
-<span class="nc" id="L382">        this.itemLabelGeneratorMap.put(series, generator);</span>
-<span class="nc" id="L383">        fireChangeEvent();</span>
-<span class="nc" id="L384">    }</span>
+<span class="fc" id="L382">        this.itemLabelGeneratorMap.put(series, generator);</span>
+<span class="fc" id="L383">        fireChangeEvent();</span>
+<span class="fc" id="L384">    }</span>
 
     /**
      * Returns the default item label generator.
@@ -401,9 +401,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultItemLabelGenerator(XYItemLabelGenerator generator) {
-<span class="nc" id="L404">        this.defaultItemLabelGenerator = generator;</span>
-<span class="nc" id="L405">        fireChangeEvent();</span>
-<span class="nc" id="L406">    }</span>
+<span class="fc" id="L404">        this.defaultItemLabelGenerator = generator;</span>
+<span class="fc" id="L405">        fireChangeEvent();</span>
+<span class="fc" id="L406">    }</span>
 
     // TOOL TIP GENERATOR
 
@@ -421,12 +421,12 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     public XYToolTipGenerator getToolTipGenerator(int series, int item) {
 
         // otherwise look up the generator table
-<span class="nc" id="L424">        XYToolTipGenerator generator</span>
-<span class="nc" id="L425">                = (XYToolTipGenerator) this.toolTipGeneratorMap.get(series);</span>
-<span class="nc bnc" id="L426" title="All 2 branches missed.">        if (generator == null) {</span>
+<span class="fc" id="L424">        XYToolTipGenerator generator</span>
+<span class="fc" id="L425">                = (XYToolTipGenerator) this.toolTipGeneratorMap.get(series);</span>
+<span class="pc bpc" id="L426" title="1 of 2 branches missed.">        if (generator == null) {</span>
 <span class="nc" id="L427">            generator = this.defaultToolTipGenerator;</span>
         }
-<span class="nc" id="L429">        return generator;</span>
+<span class="fc" id="L429">        return generator;</span>
     }
 
     /**
@@ -451,9 +451,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesToolTipGenerator(int series,
             XYToolTipGenerator generator) {
-<span class="nc" id="L454">        this.toolTipGeneratorMap.put(series, generator);</span>
-<span class="nc" id="L455">        fireChangeEvent();</span>
-<span class="nc" id="L456">    }</span>
+<span class="fc" id="L454">        this.toolTipGeneratorMap.put(series, generator);</span>
+<span class="fc" id="L455">        fireChangeEvent();</span>
+<span class="fc" id="L456">    }</span>
 
     /**
      * Returns the default tool tip generator.
@@ -477,9 +477,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultToolTipGenerator(XYToolTipGenerator generator) {
-<span class="nc" id="L480">        this.defaultToolTipGenerator = generator;</span>
-<span class="nc" id="L481">        fireChangeEvent();</span>
-<span class="nc" id="L482">    }</span>
+<span class="fc" id="L480">        this.defaultToolTipGenerator = generator;</span>
+<span class="fc" id="L481">        fireChangeEvent();</span>
+<span class="fc" id="L482">    }</span>
 
     // URL GENERATOR
 
@@ -501,9 +501,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void setURLGenerator(XYURLGenerator urlGenerator) {
-<span class="nc" id="L504">        this.urlGenerator = urlGenerator;</span>
-<span class="nc" id="L505">        fireChangeEvent();</span>
-<span class="nc" id="L506">    }</span>
+<span class="fc" id="L504">        this.urlGenerator = urlGenerator;</span>
+<span class="fc" id="L505">        fireChangeEvent();</span>
+<span class="fc" id="L506">    }</span>
 
     /**
      * Adds an annotation and sends a {@link RendererChangeEvent} to all
@@ -527,22 +527,22 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void addAnnotation(XYAnnotation annotation, Layer layer) {
-<span class="nc" id="L530">        Args.nullNotPermitted(annotation, &quot;annotation&quot;);</span>
-<span class="nc bnc" id="L531" title="All 2 branches missed.">        if (layer.equals(Layer.FOREGROUND)) {</span>
-<span class="nc" id="L532">            this.foregroundAnnotations.add(annotation);</span>
-<span class="nc" id="L533">            annotation.addChangeListener(this);</span>
-<span class="nc" id="L534">            fireChangeEvent();</span>
+<span class="fc" id="L530">        Args.nullNotPermitted(annotation, &quot;annotation&quot;);</span>
+<span class="fc bfc" id="L531" title="All 2 branches covered.">        if (layer.equals(Layer.FOREGROUND)) {</span>
+<span class="fc" id="L532">            this.foregroundAnnotations.add(annotation);</span>
+<span class="fc" id="L533">            annotation.addChangeListener(this);</span>
+<span class="fc" id="L534">            fireChangeEvent();</span>
         }
-<span class="nc bnc" id="L536" title="All 2 branches missed.">        else if (layer.equals(Layer.BACKGROUND)) {</span>
-<span class="nc" id="L537">            this.backgroundAnnotations.add(annotation);</span>
-<span class="nc" id="L538">            annotation.addChangeListener(this);</span>
-<span class="nc" id="L539">            fireChangeEvent();</span>
+<span class="pc bpc" id="L536" title="1 of 2 branches missed.">        else if (layer.equals(Layer.BACKGROUND)) {</span>
+<span class="fc" id="L537">            this.backgroundAnnotations.add(annotation);</span>
+<span class="fc" id="L538">            annotation.addChangeListener(this);</span>
+<span class="fc" id="L539">            fireChangeEvent();</span>
         }
         else {
             // should never get here
 <span class="nc" id="L543">            throw new RuntimeException(&quot;Unknown layer.&quot;);</span>
         }
-<span class="nc" id="L545">    }</span>
+<span class="fc" id="L545">    }</span>
     /**
      * Removes the specified annotation and sends a {@link RendererChangeEvent}
      * to all registered listeners.
@@ -603,10 +603,10 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @since 1.0.13
      */
     public Collection&lt;XYAnnotation&gt; getAnnotations() {
-<span class="nc" id="L606">        List&lt;XYAnnotation&gt; result </span>
+<span class="fc" id="L606">        List&lt;XYAnnotation&gt; result </span>
                 = new ArrayList&lt;XYAnnotation&gt;(this.foregroundAnnotations);
-<span class="nc" id="L608">        result.addAll(this.backgroundAnnotations);</span>
-<span class="nc" id="L609">        return result;</span>
+<span class="fc" id="L608">        result.addAll(this.backgroundAnnotations);</span>
+<span class="fc" id="L609">        return result;</span>
     }
 
     /**
@@ -618,7 +618,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public XYSeriesLabelGenerator getLegendItemLabelGenerator() {
-<span class="nc" id="L621">        return this.legendItemLabelGenerator;</span>
+<span class="fc" id="L621">        return this.legendItemLabelGenerator;</span>
     }
 
     /**
@@ -631,10 +631,10 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public void setLegendItemLabelGenerator(XYSeriesLabelGenerator generator) {
-<span class="nc" id="L634">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
-<span class="nc" id="L635">        this.legendItemLabelGenerator = generator;</span>
-<span class="nc" id="L636">        fireChangeEvent();</span>
-<span class="nc" id="L637">    }</span>
+<span class="fc" id="L634">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
+<span class="fc" id="L635">        this.legendItemLabelGenerator = generator;</span>
+<span class="fc" id="L636">        fireChangeEvent();</span>
+<span class="fc" id="L637">    }</span>
 
     /**
      * Returns the legend item tool tip generator.
@@ -644,7 +644,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @see #setLegendItemToolTipGenerator(XYSeriesLabelGenerator)
      */
     public XYSeriesLabelGenerator getLegendItemToolTipGenerator() {
-<span class="nc" id="L647">        return this.legendItemToolTipGenerator;</span>
+<span class="fc" id="L647">        return this.legendItemToolTipGenerator;</span>
     }
 
     /**
@@ -657,9 +657,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     public void setLegendItemToolTipGenerator(
             XYSeriesLabelGenerator generator) {
-<span class="nc" id="L660">        this.legendItemToolTipGenerator = generator;</span>
-<span class="nc" id="L661">        fireChangeEvent();</span>
-<span class="nc" id="L662">    }</span>
+<span class="fc" id="L660">        this.legendItemToolTipGenerator = generator;</span>
+<span class="fc" id="L661">        fireChangeEvent();</span>
+<span class="fc" id="L662">    }</span>
 
     /**
      * Returns the legend item URL generator.
@@ -669,7 +669,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @see #setLegendItemURLGenerator(XYSeriesLabelGenerator)
      */
     public XYSeriesLabelGenerator getLegendItemURLGenerator() {
-<span class="nc" id="L672">        return this.legendItemURLGenerator;</span>
+<span class="fc" id="L672">        return this.legendItemURLGenerator;</span>
     }
 
     /**
@@ -681,9 +681,9 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @see #getLegendItemURLGenerator()
      */
     public void setLegendItemURLGenerator(XYSeriesLabelGenerator generator) {
-<span class="nc" id="L684">        this.legendItemURLGenerator = generator;</span>
-<span class="nc" id="L685">        fireChangeEvent();</span>
-<span class="nc" id="L686">    }</span>
+<span class="fc" id="L684">        this.legendItemURLGenerator = generator;</span>
+<span class="fc" id="L685">        fireChangeEvent();</span>
+<span class="fc" id="L686">    }</span>
 
     /**
      * Returns the lower and upper bounds (range) of the x-values in the
@@ -698,7 +698,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public Range findDomainBounds(XYDataset dataset) {
-<span class="nc" id="L701">        return findDomainBounds(dataset, false);</span>
+<span class="fc" id="L701">        return findDomainBounds(dataset, false);</span>
     }
 
     /**
@@ -715,18 +715,18 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     protected Range findDomainBounds(XYDataset dataset,
             boolean includeInterval) {
-<span class="nc bnc" id="L718" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L719">            return null;</span>
+<span class="fc bfc" id="L718" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L719">            return null;</span>
         }
-<span class="nc bnc" id="L721" title="All 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
-<span class="nc" id="L722">            List visibleSeriesKeys = new ArrayList();</span>
-<span class="nc" id="L723">            int seriesCount = dataset.getSeriesCount();</span>
-<span class="nc bnc" id="L724" title="All 2 branches missed.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc bnc" id="L725" title="All 2 branches missed.">                if (isSeriesVisible(s)) {</span>
-<span class="nc" id="L726">                    visibleSeriesKeys.add(dataset.getSeriesKey(s));</span>
+<span class="pc bpc" id="L721" title="1 of 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
+<span class="fc" id="L722">            List visibleSeriesKeys = new ArrayList();</span>
+<span class="fc" id="L723">            int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc bfc" id="L724" title="All 2 branches covered.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc bfc" id="L725" title="All 2 branches covered.">                if (isSeriesVisible(s)) {</span>
+<span class="fc" id="L726">                    visibleSeriesKeys.add(dataset.getSeriesKey(s));</span>
                 }
             }
-<span class="nc" id="L729">            return DatasetUtils.findDomainBounds(dataset,</span>
+<span class="fc" id="L729">            return DatasetUtils.findDomainBounds(dataset,</span>
                     visibleSeriesKeys, includeInterval);
         }
 <span class="nc" id="L732">        return DatasetUtils.findDomainBounds(dataset, includeInterval);</span>
@@ -745,7 +745,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public Range findRangeBounds(XYDataset dataset) {
-<span class="nc" id="L748">        return findRangeBounds(dataset, false);</span>
+<span class="fc" id="L748">        return findRangeBounds(dataset, false);</span>
     }
 
     /**
@@ -762,36 +762,36 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     protected Range findRangeBounds(XYDataset dataset,
             boolean includeInterval) {
-<span class="nc bnc" id="L765" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L766">            return null;</span>
+<span class="fc bfc" id="L765" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L766">            return null;</span>
         }
-<span class="nc bnc" id="L768" title="All 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
-<span class="nc" id="L769">            List visibleSeriesKeys = new ArrayList();</span>
-<span class="nc" id="L770">            int seriesCount = dataset.getSeriesCount();</span>
-<span class="nc bnc" id="L771" title="All 2 branches missed.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc bnc" id="L772" title="All 2 branches missed.">                if (isSeriesVisible(s)) {</span>
-<span class="nc" id="L773">                    visibleSeriesKeys.add(dataset.getSeriesKey(s));</span>
+<span class="pc bpc" id="L768" title="1 of 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
+<span class="fc" id="L769">            List visibleSeriesKeys = new ArrayList();</span>
+<span class="fc" id="L770">            int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc bfc" id="L771" title="All 2 branches covered.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc bfc" id="L772" title="All 2 branches covered.">                if (isSeriesVisible(s)) {</span>
+<span class="fc" id="L773">                    visibleSeriesKeys.add(dataset.getSeriesKey(s));</span>
                 }
             }
             // the bounds should be calculated using just the items within
             // the current range of the x-axis...if there is one
-<span class="nc" id="L778">            Range xRange = null;</span>
-<span class="nc" id="L779">            XYPlot p = getPlot();</span>
-<span class="nc bnc" id="L780" title="All 2 branches missed.">            if (p != null) {</span>
-<span class="nc" id="L781">                ValueAxis xAxis = null;</span>
-<span class="nc" id="L782">                int index = p.getIndexOf(this);</span>
-<span class="nc bnc" id="L783" title="All 2 branches missed.">                if (index &gt;= 0) {</span>
-<span class="nc" id="L784">                    xAxis = this.plot.getDomainAxisForDataset(index);</span>
+<span class="fc" id="L778">            Range xRange = null;</span>
+<span class="fc" id="L779">            XYPlot p = getPlot();</span>
+<span class="fc bfc" id="L780" title="All 2 branches covered.">            if (p != null) {</span>
+<span class="fc" id="L781">                ValueAxis xAxis = null;</span>
+<span class="fc" id="L782">                int index = p.getIndexOf(this);</span>
+<span class="pc bpc" id="L783" title="1 of 2 branches missed.">                if (index &gt;= 0) {</span>
+<span class="fc" id="L784">                    xAxis = this.plot.getDomainAxisForDataset(index);</span>
                 }
-<span class="nc bnc" id="L786" title="All 2 branches missed.">                if (xAxis != null) {</span>
-<span class="nc" id="L787">                    xRange = xAxis.getRange();</span>
+<span class="fc bfc" id="L786" title="All 2 branches covered.">                if (xAxis != null) {</span>
+<span class="fc" id="L787">                    xRange = xAxis.getRange();</span>
                 }
             }
-<span class="nc bnc" id="L790" title="All 2 branches missed.">            if (xRange == null) {</span>
-<span class="nc" id="L791">                xRange = new Range(Double.NEGATIVE_INFINITY,</span>
+<span class="fc bfc" id="L790" title="All 2 branches covered.">            if (xRange == null) {</span>
+<span class="fc" id="L791">                xRange = new Range(Double.NEGATIVE_INFINITY,</span>
                         Double.POSITIVE_INFINITY);
             }
-<span class="nc" id="L794">            return DatasetUtils.findRangeBounds(dataset,</span>
+<span class="fc" id="L794">            return DatasetUtils.findRangeBounds(dataset,</span>
                     visibleSeriesKeys, xRange, includeInterval);
         }
 <span class="nc" id="L797">        return DatasetUtils.findRangeBounds(dataset, includeInterval);</span>
@@ -837,55 +837,55 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
-<span class="nc" id="L840">        XYPlot xyplot = getPlot();</span>
-<span class="nc bnc" id="L841" title="All 2 branches missed.">        if (xyplot == null) {</span>
+<span class="fc" id="L840">        XYPlot xyplot = getPlot();</span>
+<span class="pc bpc" id="L841" title="1 of 2 branches missed.">        if (xyplot == null) {</span>
 <span class="nc" id="L842">            return null;</span>
         }
-<span class="nc" id="L844">        XYDataset dataset = xyplot.getDataset(datasetIndex);</span>
-<span class="nc bnc" id="L845" title="All 2 branches missed.">        if (dataset == null) {</span>
+<span class="fc" id="L844">        XYDataset dataset = xyplot.getDataset(datasetIndex);</span>
+<span class="pc bpc" id="L845" title="1 of 2 branches missed.">        if (dataset == null) {</span>
 <span class="nc" id="L846">            return null;</span>
         }
-<span class="nc" id="L848">        String label = this.legendItemLabelGenerator.generateLabel(dataset,</span>
+<span class="fc" id="L848">        String label = this.legendItemLabelGenerator.generateLabel(dataset,</span>
                 series);
-<span class="nc" id="L850">        String description = label;</span>
-<span class="nc" id="L851">        String toolTipText = null;</span>
-<span class="nc bnc" id="L852" title="All 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L850">        String description = label;</span>
+<span class="fc" id="L851">        String toolTipText = null;</span>
+<span class="pc bpc" id="L852" title="1 of 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L853">            toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                     dataset, series);
         }
-<span class="nc" id="L856">        String urlText = null;</span>
-<span class="nc bnc" id="L857" title="All 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L856">        String urlText = null;</span>
+<span class="pc bpc" id="L857" title="1 of 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L858">            urlText = getLegendItemURLGenerator().generateLabel(dataset,</span>
                     series);
         }
-<span class="nc" id="L861">        Shape shape = lookupLegendShape(series);</span>
-<span class="nc" id="L862">        Paint paint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L863">        LegendItem item = new LegendItem(label, paint);</span>
-<span class="nc" id="L864">        item.setToolTipText(toolTipText);</span>
-<span class="nc" id="L865">        item.setURLText(urlText);</span>
-<span class="nc" id="L866">        item.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L867">        Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L868" title="All 2 branches missed.">        if (labelPaint != null) {</span>
+<span class="fc" id="L861">        Shape shape = lookupLegendShape(series);</span>
+<span class="fc" id="L862">        Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L863">        LegendItem item = new LegendItem(label, paint);</span>
+<span class="fc" id="L864">        item.setToolTipText(toolTipText);</span>
+<span class="fc" id="L865">        item.setURLText(urlText);</span>
+<span class="fc" id="L866">        item.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L867">        Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L868" title="1 of 2 branches missed.">        if (labelPaint != null) {</span>
 <span class="nc" id="L869">            item.setLabelPaint(labelPaint);</span>
         }
-<span class="nc" id="L871">        item.setSeriesKey(dataset.getSeriesKey(series));</span>
-<span class="nc" id="L872">        item.setSeriesIndex(series);</span>
-<span class="nc" id="L873">        item.setDataset(dataset);</span>
-<span class="nc" id="L874">        item.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L871">        item.setSeriesKey(dataset.getSeriesKey(series));</span>
+<span class="fc" id="L872">        item.setSeriesIndex(series);</span>
+<span class="fc" id="L873">        item.setDataset(dataset);</span>
+<span class="fc" id="L874">        item.setDatasetIndex(datasetIndex);</span>
 
-<span class="nc bnc" id="L876" title="All 2 branches missed.">        if (getTreatLegendShapeAsLine()) {</span>
+<span class="pc bpc" id="L876" title="1 of 2 branches missed.">        if (getTreatLegendShapeAsLine()) {</span>
 <span class="nc" id="L877">            item.setLineVisible(true);</span>
 <span class="nc" id="L878">            item.setLine(shape);</span>
 <span class="nc" id="L879">            item.setLinePaint(paint);</span>
 <span class="nc" id="L880">            item.setShapeVisible(false);</span>
         }
         else {
-<span class="nc" id="L883">            Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
-<span class="nc" id="L884">            Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
-<span class="nc" id="L885">            item.setOutlinePaint(outlinePaint);</span>
-<span class="nc" id="L886">            item.setOutlineStroke(outlineStroke);</span>
+<span class="fc" id="L883">            Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
+<span class="fc" id="L884">            Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
+<span class="fc" id="L885">            item.setOutlinePaint(outlinePaint);</span>
+<span class="fc" id="L886">            item.setOutlineStroke(outlineStroke);</span>
         }
-<span class="nc" id="L888">        return item;</span>
+<span class="fc" id="L888">        return item;</span>
     }
 
     /**
@@ -978,31 +978,31 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     public void drawDomainLine(Graphics2D g2, XYPlot plot, ValueAxis axis,
             Rectangle2D dataArea, double value, Paint paint, Stroke stroke) {
 
-<span class="nc" id="L981">        Range range = axis.getRange();</span>
-<span class="nc bnc" id="L982" title="All 2 branches missed.">        if (!range.contains(value)) {</span>
+<span class="fc" id="L981">        Range range = axis.getRange();</span>
+<span class="pc bpc" id="L982" title="1 of 2 branches missed.">        if (!range.contains(value)) {</span>
 <span class="nc" id="L983">            return;</span>
         }
 
-<span class="nc" id="L986">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L987">        Line2D line = null;</span>
-<span class="nc" id="L988">        double v = axis.valueToJava2D(value, dataArea, </span>
-<span class="nc" id="L989">                plot.getDomainAxisEdge());</span>
-<span class="nc bnc" id="L990" title="All 2 branches missed.">        if (orientation.isHorizontal()) {</span>
+<span class="fc" id="L986">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L987">        Line2D line = null;</span>
+<span class="fc" id="L988">        double v = axis.valueToJava2D(value, dataArea, </span>
+<span class="fc" id="L989">                plot.getDomainAxisEdge());</span>
+<span class="pc bpc" id="L990" title="1 of 2 branches missed.">        if (orientation.isHorizontal()) {</span>
 <span class="nc" id="L991">            line = new Line2D.Double(dataArea.getMinX(), v, dataArea.getMaxX(),</span>
                     v);
-<span class="nc bnc" id="L993" title="All 2 branches missed.">        } else if (orientation.isVertical()) {</span>
-<span class="nc" id="L994">            line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
-<span class="nc" id="L995">                    dataArea.getMaxY());</span>
+<span class="pc bpc" id="L993" title="1 of 2 branches missed.">        } else if (orientation.isVertical()) {</span>
+<span class="fc" id="L994">            line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
+<span class="fc" id="L995">                    dataArea.getMaxY());</span>
         }
 
-<span class="nc" id="L998">        g2.setPaint(paint);</span>
-<span class="nc" id="L999">        g2.setStroke(stroke);</span>
-<span class="nc" id="L1000">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
-<span class="nc" id="L1001">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
+<span class="fc" id="L998">        g2.setPaint(paint);</span>
+<span class="fc" id="L999">        g2.setStroke(stroke);</span>
+<span class="fc" id="L1000">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
+<span class="fc" id="L1001">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
                 RenderingHints.VALUE_STROKE_NORMALIZE);
-<span class="nc" id="L1003">        g2.draw(line);</span>
-<span class="nc" id="L1004">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
-<span class="nc" id="L1005">    }</span>
+<span class="fc" id="L1003">        g2.draw(line);</span>
+<span class="fc" id="L1004">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
+<span class="fc" id="L1005">    }</span>
 
     /**
      * Draws a line perpendicular to the range axis.
@@ -1020,30 +1020,30 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     public void drawRangeLine(Graphics2D g2, XYPlot plot, ValueAxis axis,
             Rectangle2D dataArea, double value, Paint paint, Stroke stroke) {
 
-<span class="nc" id="L1023">        Range range = axis.getRange();</span>
-<span class="nc bnc" id="L1024" title="All 2 branches missed.">        if (!range.contains(value)) {</span>
+<span class="fc" id="L1023">        Range range = axis.getRange();</span>
+<span class="pc bpc" id="L1024" title="1 of 2 branches missed.">        if (!range.contains(value)) {</span>
 <span class="nc" id="L1025">            return;</span>
         }
 
-<span class="nc" id="L1028">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L1029">        Line2D line = null;</span>
-<span class="nc" id="L1030">        double v = axis.valueToJava2D(value, dataArea, plot.getRangeAxisEdge());      </span>
-<span class="nc bnc" id="L1031" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L1028">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L1029">        Line2D line = null;</span>
+<span class="fc" id="L1030">        double v = axis.valueToJava2D(value, dataArea, plot.getRangeAxisEdge());      </span>
+<span class="pc bpc" id="L1031" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L1032">            line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
 <span class="nc" id="L1033">                    dataArea.getMaxY());</span>
-<span class="nc bnc" id="L1034" title="All 2 branches missed.">        } else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L1035">            line = new Line2D.Double(dataArea.getMinX(), v,</span>
-<span class="nc" id="L1036">                    dataArea.getMaxX(), v);</span>
+<span class="pc bpc" id="L1034" title="1 of 2 branches missed.">        } else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L1035">            line = new Line2D.Double(dataArea.getMinX(), v,</span>
+<span class="fc" id="L1036">                    dataArea.getMaxX(), v);</span>
         }
 
-<span class="nc" id="L1039">        g2.setPaint(paint);</span>
-<span class="nc" id="L1040">        g2.setStroke(stroke);</span>
-<span class="nc" id="L1041">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
-<span class="nc" id="L1042">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
+<span class="fc" id="L1039">        g2.setPaint(paint);</span>
+<span class="fc" id="L1040">        g2.setStroke(stroke);</span>
+<span class="fc" id="L1041">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
+<span class="fc" id="L1042">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
                 RenderingHints.VALUE_STROKE_NORMALIZE);
-<span class="nc" id="L1044">        g2.draw(line);</span>
-<span class="nc" id="L1045">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
-<span class="nc" id="L1046">    }</span>
+<span class="fc" id="L1044">        g2.draw(line);</span>
+<span class="fc" id="L1045">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
+<span class="fc" id="L1046">    }</span>
 
     /**
      * Draws a line on the chart perpendicular to the x-axis to mark
@@ -1059,38 +1059,38 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     public void drawDomainMarker(Graphics2D g2, XYPlot plot, 
             ValueAxis domainAxis, Marker marker, Rectangle2D dataArea) {
 
-<span class="nc bnc" id="L1062" title="All 2 branches missed.">        if (marker instanceof ValueMarker) {</span>
-<span class="nc" id="L1063">            ValueMarker vm = (ValueMarker) marker;</span>
-<span class="nc" id="L1064">            double value = vm.getValue();</span>
-<span class="nc" id="L1065">            Range range = domainAxis.getRange();</span>
-<span class="nc bnc" id="L1066" title="All 2 branches missed.">            if (!range.contains(value)) {</span>
+<span class="fc bfc" id="L1062" title="All 2 branches covered.">        if (marker instanceof ValueMarker) {</span>
+<span class="fc" id="L1063">            ValueMarker vm = (ValueMarker) marker;</span>
+<span class="fc" id="L1064">            double value = vm.getValue();</span>
+<span class="fc" id="L1065">            Range range = domainAxis.getRange();</span>
+<span class="pc bpc" id="L1066" title="1 of 2 branches missed.">            if (!range.contains(value)) {</span>
 <span class="nc" id="L1067">                return;</span>
             }
 
-<span class="nc" id="L1070">            double v = domainAxis.valueToJava2D(value, dataArea,</span>
-<span class="nc" id="L1071">                    plot.getDomainAxisEdge());</span>
-<span class="nc" id="L1072">            PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L1073">            Line2D line = null;</span>
-<span class="nc bnc" id="L1074" title="All 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L1070">            double v = domainAxis.valueToJava2D(value, dataArea,</span>
+<span class="fc" id="L1071">                    plot.getDomainAxisEdge());</span>
+<span class="fc" id="L1072">            PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L1073">            Line2D line = null;</span>
+<span class="pc bpc" id="L1074" title="1 of 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L1075">                line = new Line2D.Double(dataArea.getMinX(), v,</span>
 <span class="nc" id="L1076">                        dataArea.getMaxX(), v);</span>
-<span class="nc bnc" id="L1077" title="All 2 branches missed.">            } else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L1078">                line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
-<span class="nc" id="L1079">                        dataArea.getMaxY());</span>
+<span class="pc bpc" id="L1077" title="1 of 2 branches missed.">            } else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L1078">                line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
+<span class="fc" id="L1079">                        dataArea.getMaxY());</span>
             } else {
 <span class="nc" id="L1081">                throw new IllegalStateException(&quot;Unrecognised orientation.&quot;);</span>
             }
 
-<span class="nc" id="L1084">            final Composite originalComposite = g2.getComposite();</span>
-<span class="nc" id="L1085">            g2.setComposite(AlphaComposite.getInstance(</span>
-<span class="nc" id="L1086">                    AlphaComposite.SRC_OVER, marker.getAlpha()));</span>
-<span class="nc" id="L1087">            g2.setPaint(marker.getPaint());</span>
-<span class="nc" id="L1088">            g2.setStroke(marker.getStroke());</span>
-<span class="nc" id="L1089">            g2.draw(line);</span>
+<span class="fc" id="L1084">            final Composite originalComposite = g2.getComposite();</span>
+<span class="fc" id="L1085">            g2.setComposite(AlphaComposite.getInstance(</span>
+<span class="fc" id="L1086">                    AlphaComposite.SRC_OVER, marker.getAlpha()));</span>
+<span class="fc" id="L1087">            g2.setPaint(marker.getPaint());</span>
+<span class="fc" id="L1088">            g2.setStroke(marker.getStroke());</span>
+<span class="fc" id="L1089">            g2.draw(line);</span>
 
-<span class="nc" id="L1091">            String label = marker.getLabel();</span>
-<span class="nc" id="L1092">            RectangleAnchor anchor = marker.getLabelAnchor();</span>
-<span class="nc bnc" id="L1093" title="All 2 branches missed.">            if (label != null) {</span>
+<span class="fc" id="L1091">            String label = marker.getLabel();</span>
+<span class="fc" id="L1092">            RectangleAnchor anchor = marker.getLabelAnchor();</span>
+<span class="pc bpc" id="L1093" title="1 of 2 branches missed.">            if (label != null) {</span>
 <span class="nc" id="L1094">                Font labelFont = marker.getLabelFont();</span>
 <span class="nc" id="L1095">                g2.setFont(labelFont);</span>
 <span class="nc" id="L1096">                Point2D coords = calculateDomainMarkerTextAnchorPoint(</span>
@@ -1107,14 +1107,14 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
 <span class="nc" id="L1107">                        (float) coords.getX(), (float) coords.getY(),</span>
 <span class="nc" id="L1108">                        marker.getLabelTextAnchor());</span>
             }
-<span class="nc" id="L1110">            g2.setComposite(originalComposite);</span>
-<span class="nc bnc" id="L1111" title="All 2 branches missed.">        } else if (marker instanceof IntervalMarker) {</span>
-<span class="nc" id="L1112">            IntervalMarker im = (IntervalMarker) marker;</span>
-<span class="nc" id="L1113">            double start = im.getStartValue();</span>
-<span class="nc" id="L1114">            double end = im.getEndValue();</span>
-<span class="nc" id="L1115">            Range range = domainAxis.getRange();</span>
-<span class="nc bnc" id="L1116" title="All 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
-<span class="nc" id="L1117">                return;</span>
+<span class="fc" id="L1110">            g2.setComposite(originalComposite);</span>
+<span class="pc bpc" id="L1111" title="1 of 2 branches missed.">        } else if (marker instanceof IntervalMarker) {</span>
+<span class="fc" id="L1112">            IntervalMarker im = (IntervalMarker) marker;</span>
+<span class="fc" id="L1113">            double start = im.getStartValue();</span>
+<span class="fc" id="L1114">            double end = im.getEndValue();</span>
+<span class="fc" id="L1115">            Range range = domainAxis.getRange();</span>
+<span class="pc bpc" id="L1116" title="1 of 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
+<span class="fc" id="L1117">                return;</span>
             }
 
 <span class="nc" id="L1120">            double start2d = domainAxis.valueToJava2D(start, dataArea,</span>
@@ -1212,7 +1212,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
             }
 <span class="nc" id="L1213">            g2.setComposite(originalComposite);</span>
         }
-<span class="nc" id="L1215">    }</span>
+<span class="fc" id="L1215">    }</span>
 
     /**
      * Calculates the {@code (x, y)} coordinates for drawing a marker label.
@@ -1259,12 +1259,12 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
     public void drawRangeMarker(Graphics2D g2, XYPlot plot, ValueAxis rangeAxis,
             Marker marker, Rectangle2D dataArea) {
 
-<span class="nc bnc" id="L1262" title="All 2 branches missed.">        if (marker instanceof ValueMarker) {</span>
-<span class="nc" id="L1263">            ValueMarker vm = (ValueMarker) marker;</span>
-<span class="nc" id="L1264">            double value = vm.getValue();</span>
-<span class="nc" id="L1265">            Range range = rangeAxis.getRange();</span>
-<span class="nc bnc" id="L1266" title="All 2 branches missed.">            if (!range.contains(value)) {</span>
-<span class="nc" id="L1267">                return;</span>
+<span class="fc bfc" id="L1262" title="All 2 branches covered.">        if (marker instanceof ValueMarker) {</span>
+<span class="fc" id="L1263">            ValueMarker vm = (ValueMarker) marker;</span>
+<span class="fc" id="L1264">            double value = vm.getValue();</span>
+<span class="fc" id="L1265">            Range range = rangeAxis.getRange();</span>
+<span class="pc bpc" id="L1266" title="1 of 2 branches missed.">            if (!range.contains(value)) {</span>
+<span class="fc" id="L1267">                return;</span>
             }
 
 <span class="nc" id="L1270">            double v = rangeAxis.valueToJava2D(value, dataArea,</span>
@@ -1308,13 +1308,13 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
 <span class="nc" id="L1308">                        marker.getLabelTextAnchor());</span>
             }
 <span class="nc" id="L1310">            g2.setComposite(originalComposite);</span>
-<span class="nc bnc" id="L1311" title="All 2 branches missed.">        } else if (marker instanceof IntervalMarker) {</span>
-<span class="nc" id="L1312">            IntervalMarker im = (IntervalMarker) marker;</span>
-<span class="nc" id="L1313">            double start = im.getStartValue();</span>
-<span class="nc" id="L1314">            double end = im.getEndValue();</span>
-<span class="nc" id="L1315">            Range range = rangeAxis.getRange();</span>
-<span class="nc bnc" id="L1316" title="All 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
-<span class="nc" id="L1317">                return;</span>
+<span class="pc bpc" id="L1311" title="1 of 2 branches missed.">        } else if (marker instanceof IntervalMarker) {</span>
+<span class="fc" id="L1312">            IntervalMarker im = (IntervalMarker) marker;</span>
+<span class="fc" id="L1313">            double start = im.getStartValue();</span>
+<span class="fc" id="L1314">            double end = im.getEndValue();</span>
+<span class="fc" id="L1315">            Range range = rangeAxis.getRange();</span>
+<span class="pc bpc" id="L1316" title="1 of 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
+<span class="fc" id="L1317">                return;</span>
             }
 
 <span class="nc" id="L1320">            double start2d = rangeAxis.valueToJava2D(start, dataArea,</span>
@@ -1455,35 +1455,35 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1458">        AbstractXYItemRenderer clone = (AbstractXYItemRenderer) super.clone();</span>
+<span class="fc" id="L1458">        AbstractXYItemRenderer clone = (AbstractXYItemRenderer) super.clone();</span>
         // 'plot' : just retain reference, not a deep copy
 
-<span class="nc" id="L1461">        clone.itemLabelGeneratorMap = CloneUtils.cloneMapValues(</span>
+<span class="fc" id="L1461">        clone.itemLabelGeneratorMap = CloneUtils.cloneMapValues(</span>
                 this.itemLabelGeneratorMap);
-<span class="nc" id="L1463">        clone.defaultItemLabelGenerator = (XYItemLabelGenerator) </span>
-<span class="nc" id="L1464">                CloneUtils.clone(this.defaultItemLabelGenerator);</span>
+<span class="fc" id="L1463">        clone.defaultItemLabelGenerator = (XYItemLabelGenerator) </span>
+<span class="fc" id="L1464">                CloneUtils.clone(this.defaultItemLabelGenerator);</span>
 
-<span class="nc" id="L1466">        clone.toolTipGeneratorMap = CloneUtils.cloneMapValues(</span>
+<span class="fc" id="L1466">        clone.toolTipGeneratorMap = CloneUtils.cloneMapValues(</span>
                 this.toolTipGeneratorMap);
         
-<span class="nc" id="L1469">        clone.defaultToolTipGenerator = (XYToolTipGenerator) CloneUtils.clone(</span>
+<span class="fc" id="L1469">        clone.defaultToolTipGenerator = (XYToolTipGenerator) CloneUtils.clone(</span>
                 this.defaultToolTipGenerator);
 
-<span class="nc" id="L1472">        clone.legendItemLabelGenerator = (XYSeriesLabelGenerator)</span>
-<span class="nc" id="L1473">                CloneUtils.clone(this.legendItemLabelGenerator);</span>
+<span class="fc" id="L1472">        clone.legendItemLabelGenerator = (XYSeriesLabelGenerator)</span>
+<span class="fc" id="L1473">                CloneUtils.clone(this.legendItemLabelGenerator);</span>
         
-<span class="nc" id="L1475">        clone.legendItemToolTipGenerator = (XYSeriesLabelGenerator)</span>
-<span class="nc" id="L1476">                CloneUtils.clone(this.legendItemToolTipGenerator);</span>
+<span class="fc" id="L1475">        clone.legendItemToolTipGenerator = (XYSeriesLabelGenerator)</span>
+<span class="fc" id="L1476">                CloneUtils.clone(this.legendItemToolTipGenerator);</span>
 
-<span class="nc" id="L1478">        clone.legendItemURLGenerator = (XYSeriesLabelGenerator)</span>
-<span class="nc" id="L1479">                CloneUtils.clone(this.legendItemURLGenerator);</span>
+<span class="fc" id="L1478">        clone.legendItemURLGenerator = (XYSeriesLabelGenerator)</span>
+<span class="fc" id="L1479">                CloneUtils.clone(this.legendItemURLGenerator);</span>
         
-<span class="nc" id="L1481">        clone.foregroundAnnotations = (List) CloneUtils.cloneList(</span>
+<span class="fc" id="L1481">        clone.foregroundAnnotations = (List) CloneUtils.cloneList(</span>
                 this.foregroundAnnotations);
-<span class="nc" id="L1483">        clone.backgroundAnnotations = (List) CloneUtils.cloneList(</span>
+<span class="fc" id="L1483">        clone.backgroundAnnotations = (List) CloneUtils.cloneList(</span>
                 this.backgroundAnnotations);
 
-<span class="nc" id="L1486">        return clone;</span>
+<span class="fc" id="L1486">        return clone;</span>
     }
 
     /**
@@ -1495,49 +1495,49 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1498" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1498" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1499">            return true;</span>
         }
-<span class="nc bnc" id="L1501" title="All 2 branches missed.">        if (!(obj instanceof AbstractXYItemRenderer)) {</span>
+<span class="pc bpc" id="L1501" title="1 of 2 branches missed.">        if (!(obj instanceof AbstractXYItemRenderer)) {</span>
 <span class="nc" id="L1502">            return false;</span>
         }
-<span class="nc" id="L1504">        AbstractXYItemRenderer that = (AbstractXYItemRenderer) obj;</span>
-<span class="nc bnc" id="L1505" title="All 2 branches missed.">        if (!this.itemLabelGeneratorMap.equals(that.itemLabelGeneratorMap)) {</span>
-<span class="nc" id="L1506">            return false;</span>
+<span class="fc" id="L1504">        AbstractXYItemRenderer that = (AbstractXYItemRenderer) obj;</span>
+<span class="fc bfc" id="L1505" title="All 2 branches covered.">        if (!this.itemLabelGeneratorMap.equals(that.itemLabelGeneratorMap)) {</span>
+<span class="fc" id="L1506">            return false;</span>
         }
-<span class="nc bnc" id="L1508" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.defaultItemLabelGenerator,</span>
+<span class="fc bfc" id="L1508" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.defaultItemLabelGenerator,</span>
                 that.defaultItemLabelGenerator)) {
-<span class="nc" id="L1510">            return false;</span>
+<span class="fc" id="L1510">            return false;</span>
         }
-<span class="nc bnc" id="L1512" title="All 2 branches missed.">        if (!this.toolTipGeneratorMap.equals(that.toolTipGeneratorMap)) {</span>
-<span class="nc" id="L1513">            return false;</span>
+<span class="fc bfc" id="L1512" title="All 2 branches covered.">        if (!this.toolTipGeneratorMap.equals(that.toolTipGeneratorMap)) {</span>
+<span class="fc" id="L1513">            return false;</span>
         }
-<span class="nc bnc" id="L1515" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.defaultToolTipGenerator,</span>
+<span class="fc bfc" id="L1515" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.defaultToolTipGenerator,</span>
                 that.defaultToolTipGenerator)) {
-<span class="nc" id="L1517">            return false;</span>
+<span class="fc" id="L1517">            return false;</span>
         }
-<span class="nc bnc" id="L1519" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.urlGenerator, that.urlGenerator)) {</span>
-<span class="nc" id="L1520">            return false;</span>
+<span class="fc bfc" id="L1519" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.urlGenerator, that.urlGenerator)) {</span>
+<span class="fc" id="L1520">            return false;</span>
         }
-<span class="nc bnc" id="L1522" title="All 2 branches missed.">        if (!this.foregroundAnnotations.equals(that.foregroundAnnotations)) {</span>
-<span class="nc" id="L1523">            return false;</span>
+<span class="fc bfc" id="L1522" title="All 2 branches covered.">        if (!this.foregroundAnnotations.equals(that.foregroundAnnotations)) {</span>
+<span class="fc" id="L1523">            return false;</span>
         }
-<span class="nc bnc" id="L1525" title="All 2 branches missed.">        if (!this.backgroundAnnotations.equals(that.backgroundAnnotations)) {</span>
-<span class="nc" id="L1526">            return false;</span>
+<span class="fc bfc" id="L1525" title="All 2 branches covered.">        if (!this.backgroundAnnotations.equals(that.backgroundAnnotations)) {</span>
+<span class="fc" id="L1526">            return false;</span>
         }
-<span class="nc bnc" id="L1528" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemLabelGenerator,</span>
+<span class="fc bfc" id="L1528" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemLabelGenerator,</span>
                 that.legendItemLabelGenerator)) {
-<span class="nc" id="L1530">            return false;</span>
+<span class="fc" id="L1530">            return false;</span>
         }
-<span class="nc bnc" id="L1532" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemToolTipGenerator,</span>
+<span class="fc bfc" id="L1532" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemToolTipGenerator,</span>
                 that.legendItemToolTipGenerator)) {
-<span class="nc" id="L1534">            return false;</span>
+<span class="fc" id="L1534">            return false;</span>
         }
-<span class="nc bnc" id="L1536" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemURLGenerator,</span>
+<span class="fc bfc" id="L1536" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemURLGenerator,</span>
                 that.legendItemURLGenerator)) {
-<span class="nc" id="L1538">            return false;</span>
+<span class="fc" id="L1538">            return false;</span>
         }
-<span class="nc" id="L1540">        return super.equals(obj);</span>
+<span class="fc" id="L1540">        return super.equals(obj);</span>
     }
 
     /**
@@ -1547,12 +1547,12 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      */
     @Override
     public DrawingSupplier getDrawingSupplier() {
-<span class="nc" id="L1550">        DrawingSupplier result = null;</span>
-<span class="nc" id="L1551">        XYPlot p = getPlot();</span>
-<span class="nc bnc" id="L1552" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L1553">            result = p.getDrawingSupplier();</span>
+<span class="fc" id="L1550">        DrawingSupplier result = null;</span>
+<span class="fc" id="L1551">        XYPlot p = getPlot();</span>
+<span class="pc bpc" id="L1552" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L1553">            result = p.getDrawingSupplier();</span>
         }
-<span class="nc" id="L1555">        return result;</span>
+<span class="fc" id="L1555">        return result;</span>
     }
 
     /**
@@ -1576,13 +1576,13 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
             double x, double y, int datasetIndex,
             double transX, double transY, PlotOrientation orientation) {
 
-<span class="nc" id="L1579">        Args.nullNotPermitted(orientation, &quot;orientation&quot;);</span>
-<span class="nc bnc" id="L1580" title="All 2 branches missed.">        if (crosshairState != null) {</span>
+<span class="fc" id="L1579">        Args.nullNotPermitted(orientation, &quot;orientation&quot;);</span>
+<span class="pc bpc" id="L1580" title="1 of 2 branches missed.">        if (crosshairState != null) {</span>
             // do we need to update the crosshair values?
-<span class="nc bnc" id="L1582" title="All 2 branches missed.">            if (this.plot.isDomainCrosshairLockedOnData()) {</span>
-<span class="nc bnc" id="L1583" title="All 2 branches missed.">                if (this.plot.isRangeCrosshairLockedOnData()) {</span>
+<span class="pc bpc" id="L1582" title="1 of 2 branches missed.">            if (this.plot.isDomainCrosshairLockedOnData()) {</span>
+<span class="pc bpc" id="L1583" title="1 of 2 branches missed.">                if (this.plot.isRangeCrosshairLockedOnData()) {</span>
                     // both axes
-<span class="nc" id="L1585">                    crosshairState.updateCrosshairPoint(x, y, datasetIndex,</span>
+<span class="fc" id="L1585">                    crosshairState.updateCrosshairPoint(x, y, datasetIndex,</span>
                             transX, transY, orientation);
                 }
                 else {
@@ -1598,7 +1598,7 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
             }
         }
 
-<span class="nc" id="L1601">    }</span>
+<span class="fc" id="L1601">    }</span>
 
     /**
      * Draws an item label.
@@ -1660,24 +1660,24 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
             ValueAxis domainAxis, ValueAxis rangeAxis, Layer layer,
             PlotRenderingInfo info) {
 
-<span class="nc" id="L1663">        List&lt;XYAnnotation&gt; toDraw = new ArrayList&lt;XYAnnotation&gt;();</span>
-<span class="nc bnc" id="L1664" title="All 2 branches missed.">        if (layer.equals(Layer.FOREGROUND)) {</span>
-<span class="nc" id="L1665">            toDraw.addAll(this.foregroundAnnotations);</span>
+<span class="fc" id="L1663">        List&lt;XYAnnotation&gt; toDraw = new ArrayList&lt;XYAnnotation&gt;();</span>
+<span class="fc bfc" id="L1664" title="All 2 branches covered.">        if (layer.equals(Layer.FOREGROUND)) {</span>
+<span class="fc" id="L1665">            toDraw.addAll(this.foregroundAnnotations);</span>
         }
-<span class="nc bnc" id="L1667" title="All 2 branches missed.">        else if (layer.equals(Layer.BACKGROUND)) {</span>
-<span class="nc" id="L1668">            toDraw.addAll(this.backgroundAnnotations);</span>
+<span class="pc bpc" id="L1667" title="1 of 2 branches missed.">        else if (layer.equals(Layer.BACKGROUND)) {</span>
+<span class="fc" id="L1668">            toDraw.addAll(this.backgroundAnnotations);</span>
         }
         else {
             // should not get here
 <span class="nc" id="L1672">            throw new RuntimeException(&quot;Unknown layer.&quot;);</span>
         }
-<span class="nc" id="L1674">        int index = this.plot.getIndexOf(this);</span>
-<span class="nc bnc" id="L1675" title="All 2 branches missed.">        for (XYAnnotation annotation : toDraw) {</span>
+<span class="fc" id="L1674">        int index = this.plot.getIndexOf(this);</span>
+<span class="pc bpc" id="L1675" title="1 of 2 branches missed.">        for (XYAnnotation annotation : toDraw) {</span>
 <span class="nc" id="L1676">            annotation.draw(g2, this.plot, dataArea, domainAxis, rangeAxis,</span>
                     index, info);
 <span class="nc" id="L1678">        }</span>
 
-<span class="nc" id="L1680">    }</span>
+<span class="fc" id="L1680">    }</span>
 
     /**
      * Adds an entity to the collection.  Note the the {@code entityX} and
@@ -1737,8 +1737,8 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @since 1.0.14
      */
     protected static void moveTo(GeneralPath hotspot, double x, double y) {
-<span class="nc" id="L1740">        hotspot.moveTo((float) x, (float) y);</span>
-<span class="nc" id="L1741">    }</span>
+<span class="fc" id="L1740">        hotspot.moveTo((float) x, (float) y);</span>
+<span class="fc" id="L1741">    }</span>
 
     /**
      * Utility method delegating to {@link GeneralPath#lineTo} taking double as
@@ -1752,8 +1752,8 @@ public abstract class AbstractXYItemRenderer extends AbstractRenderer
      * @since 1.0.14
      */
     protected static void lineTo(GeneralPath hotspot, double x, double y) {
-<span class="nc" id="L1755">        hotspot.lineTo((float) x, (float) y);</span>
-<span class="nc" id="L1756">    }</span>
+<span class="fc" id="L1755">        hotspot.lineTo((float) x, (float) y);</span>
+<span class="fc" id="L1756">    }</span>
  
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

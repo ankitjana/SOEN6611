@@ -99,11 +99,11 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      * Constructs a dataset. By default, the dataset is assigned to its own
      * group.
      */
-<span class="nc" id="L102">    protected AbstractDataset() {</span>
-<span class="nc" id="L103">        this.group = new DatasetGroup();</span>
-<span class="nc" id="L104">        this.listenerList = new EventListenerList();</span>
-<span class="nc" id="L105">        this.notify = true;</span>
-<span class="nc" id="L106">    }</span>
+<span class="fc" id="L102">    protected AbstractDataset() {</span>
+<span class="fc" id="L103">        this.group = new DatasetGroup();</span>
+<span class="fc" id="L104">        this.listenerList = new EventListenerList();</span>
+<span class="fc" id="L105">        this.notify = true;</span>
+<span class="fc" id="L106">    }</span>
 
     /**
      * Returns the dataset group for the dataset.
@@ -114,7 +114,7 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     @Override
     public DatasetGroup getGroup() {
-<span class="nc" id="L117">        return this.group;</span>
+<span class="fc" id="L117">        return this.group;</span>
     }
 
     /**
@@ -170,8 +170,8 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     @Override
     public void addChangeListener(DatasetChangeListener listener) {
-<span class="nc" id="L173">        this.listenerList.add(DatasetChangeListener.class, listener);</span>
-<span class="nc" id="L174">    }</span>
+<span class="fc" id="L173">        this.listenerList.add(DatasetChangeListener.class, listener);</span>
+<span class="fc" id="L174">    }</span>
 
     /**
      * Deregisters an object so that it no longer receives notification of
@@ -183,8 +183,8 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     @Override
     public void removeChangeListener(DatasetChangeListener listener) {
-<span class="nc" id="L186">        this.listenerList.remove(DatasetChangeListener.class, listener);</span>
-<span class="nc" id="L187">    }</span>
+<span class="fc" id="L186">        this.listenerList.remove(DatasetChangeListener.class, listener);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
      * Returns {@code true} if the specified object is registered with
@@ -199,8 +199,8 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      * @see #removeChangeListener(DatasetChangeListener)
      */
     public boolean hasListener(EventListener listener) {
-<span class="nc" id="L202">        List list = Arrays.asList(this.listenerList.getListenerList());</span>
-<span class="nc" id="L203">        return list.contains(listener);</span>
+<span class="fc" id="L202">        List list = Arrays.asList(this.listenerList.getListenerList());</span>
+<span class="fc" id="L203">        return list.contains(listener);</span>
     }
 
     /**
@@ -211,10 +211,10 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      * @see #addChangeListener(DatasetChangeListener)
      */
     protected void fireDatasetChanged() {
-<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (this.notify) {</span>
-<span class="nc" id="L215">            notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (this.notify) {</span>
+<span class="fc" id="L215">            notifyListeners(new DatasetChangeEvent(this, this));</span>
         }
-<span class="nc" id="L217">    }</span>
+<span class="fc" id="L217">    }</span>
 
     /**
      * Notifies all registered listeners that the dataset has changed.
@@ -226,14 +226,14 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      * @see #removeChangeListener(DatasetChangeListener)
      */
     protected void notifyListeners(DatasetChangeEvent event) {
-<span class="nc" id="L229">        Object[] listeners = this.listenerList.getListenerList();</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
-<span class="nc bnc" id="L231" title="All 2 branches missed.">            if (listeners[i] == DatasetChangeListener.class) {</span>
-<span class="nc" id="L232">                ((DatasetChangeListener) listeners[i + 1]).datasetChanged(</span>
+<span class="fc" id="L229">        Object[] listeners = this.listenerList.getListenerList();</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">            if (listeners[i] == DatasetChangeListener.class) {</span>
+<span class="fc" id="L232">                ((DatasetChangeListener) listeners[i + 1]).datasetChanged(</span>
                         event);
             }
         }
-<span class="nc" id="L236">    }</span>
+<span class="fc" id="L236">    }</span>
 
     /**
      * Returns a clone of the dataset. The cloned dataset will NOT include the
@@ -247,9 +247,9 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L250">        AbstractDataset clone = (AbstractDataset) super.clone();</span>
-<span class="nc" id="L251">        clone.listenerList = new EventListenerList();</span>
-<span class="nc" id="L252">        return clone;</span>
+<span class="fc" id="L250">        AbstractDataset clone = (AbstractDataset) super.clone();</span>
+<span class="fc" id="L251">        clone.listenerList = new EventListenerList();</span>
+<span class="fc" id="L252">        return clone;</span>
     }
 
     /**
@@ -260,8 +260,8 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      * @throws IOException if there is an I/O problem.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L263">        stream.defaultWriteObject();</span>
-<span class="nc" id="L264">    }</span>
+<span class="fc" id="L263">        stream.defaultWriteObject();</span>
+<span class="fc" id="L264">    }</span>
 
     /**
      * Restores a serialized object.
@@ -273,11 +273,11 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L276">        stream.defaultReadObject();</span>
-<span class="nc" id="L277">        this.listenerList = new EventListenerList();</span>
-<span class="nc" id="L278">        stream.registerValidation(this, 10);  // see comments about priority of</span>
+<span class="fc" id="L276">        stream.defaultReadObject();</span>
+<span class="fc" id="L277">        this.listenerList = new EventListenerList();</span>
+<span class="fc" id="L278">        stream.registerValidation(this, 10);  // see comments about priority of</span>
                                               // 10 in validateObject()
-<span class="nc" id="L280">    }</span>
+<span class="fc" id="L280">    }</span>
 
     /**
      * Validates the object. We use this opportunity to call listeners who have
@@ -298,8 +298,8 @@ public abstract class AbstractDataset implements Dataset, Cloneable,
      */
     @Override
     public void validateObject() throws InvalidObjectException {
-<span class="nc" id="L301">        fireDatasetChanged();</span>
-<span class="nc" id="L302">    }</span>
+<span class="fc" id="L301">        fireDatasetChanged();</span>
+<span class="fc" id="L302">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

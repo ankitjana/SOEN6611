@@ -175,8 +175,8 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * Creates a new renderer with both lines and shapes visible.
      */
     public XYLineAndShapeRenderer() {
-<span class="nc" id="L178">        this(true, true);</span>
-<span class="nc" id="L179">    }</span>
+<span class="fc" id="L178">        this(true, true);</span>
+<span class="fc" id="L179">    }</span>
 
     /**
      * Creates a new renderer.
@@ -184,24 +184,24 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @param lines  lines visible?
      * @param shapes  shapes visible?
      */
-<span class="nc" id="L187">    public XYLineAndShapeRenderer(boolean lines, boolean shapes) {</span>
-<span class="nc" id="L188">        this.seriesLinesVisible = new BooleanList();</span>
-<span class="nc" id="L189">        this.defaultLinesVisible = lines;</span>
-<span class="nc" id="L190">        this.legendLine = new Line2D.Double(-7.0, 0.0, 7.0, 0.0);</span>
+<span class="fc" id="L187">    public XYLineAndShapeRenderer(boolean lines, boolean shapes) {</span>
+<span class="fc" id="L188">        this.seriesLinesVisible = new BooleanList();</span>
+<span class="fc" id="L189">        this.defaultLinesVisible = lines;</span>
+<span class="fc" id="L190">        this.legendLine = new Line2D.Double(-7.0, 0.0, 7.0, 0.0);</span>
 
-<span class="nc" id="L192">        this.seriesShapesVisible = new BooleanList();</span>
-<span class="nc" id="L193">        this.defaultShapesVisible = shapes;</span>
+<span class="fc" id="L192">        this.seriesShapesVisible = new BooleanList();</span>
+<span class="fc" id="L193">        this.defaultShapesVisible = shapes;</span>
 
-<span class="nc" id="L195">        this.useFillPaint = false;     // use item paint for fills by default</span>
-<span class="nc" id="L196">        this.seriesShapesFilled = new BooleanList();</span>
-<span class="nc" id="L197">        this.defaultShapesFilled = true;</span>
+<span class="fc" id="L195">        this.useFillPaint = false;     // use item paint for fills by default</span>
+<span class="fc" id="L196">        this.seriesShapesFilled = new BooleanList();</span>
+<span class="fc" id="L197">        this.defaultShapesFilled = true;</span>
 
-<span class="nc" id="L199">        this.drawOutlines = true;</span>
-<span class="nc" id="L200">        this.useOutlinePaint = false;  // use item paint for outlines by</span>
+<span class="fc" id="L199">        this.drawOutlines = true;</span>
+<span class="fc" id="L200">        this.useOutlinePaint = false;  // use item paint for outlines by</span>
                                        // default, not outline paint
 
-<span class="nc" id="L203">        this.drawSeriesLineAsPath = false;</span>
-<span class="nc" id="L204">    }</span>
+<span class="fc" id="L203">        this.drawSeriesLineAsPath = false;</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Returns a flag that controls whether or not each series is drawn as a
@@ -225,11 +225,11 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getDrawSeriesLineAsPath()
      */
     public void setDrawSeriesLineAsPath(boolean flag) {
-<span class="nc bnc" id="L228" title="All 2 branches missed.">        if (this.drawSeriesLineAsPath != flag) {</span>
-<span class="nc" id="L229">            this.drawSeriesLineAsPath = flag;</span>
-<span class="nc" id="L230">            fireChangeEvent();</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if (this.drawSeriesLineAsPath != flag) {</span>
+<span class="fc" id="L229">            this.drawSeriesLineAsPath = flag;</span>
+<span class="fc" id="L230">            fireChangeEvent();</span>
         }
-<span class="nc" id="L232">    }</span>
+<span class="fc" id="L232">    }</span>
 
     /**
      * Returns the number of passes through the data that the renderer requires
@@ -240,7 +240,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     @Override
     public int getPassCount() {
-<span class="nc" id="L243">        return 2;</span>
+<span class="fc" id="L243">        return 2;</span>
     }
 
     // LINES VISIBLE
@@ -255,11 +255,11 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @return A boolean.
      */
     public boolean getItemLineVisible(int series, int item) {
-<span class="nc" id="L258">        Boolean flag = getSeriesLinesVisible(series);</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (flag != null) {</span>
+<span class="fc" id="L258">        Boolean flag = getSeriesLinesVisible(series);</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (flag != null) {</span>
 <span class="nc" id="L260">            return flag;</span>
         }
-<span class="nc" id="L262">        return this.defaultLinesVisible;</span>
+<span class="fc" id="L262">        return this.defaultLinesVisible;</span>
     }
 
     /**
@@ -273,7 +273,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #setSeriesLinesVisible(int, Boolean)
      */
     public Boolean getSeriesLinesVisible(int series) {
-<span class="nc" id="L276">        return this.seriesLinesVisible.getBoolean(series);</span>
+<span class="fc" id="L276">        return this.seriesLinesVisible.getBoolean(series);</span>
     }
 
     /**
@@ -286,9 +286,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesLinesVisible(int)
      */
     public void setSeriesLinesVisible(int series, Boolean flag) {
-<span class="nc" id="L289">        this.seriesLinesVisible.setBoolean(series, flag);</span>
-<span class="nc" id="L290">        fireChangeEvent();</span>
-<span class="nc" id="L291">    }</span>
+<span class="fc" id="L289">        this.seriesLinesVisible.setBoolean(series, flag);</span>
+<span class="fc" id="L290">        fireChangeEvent();</span>
+<span class="fc" id="L291">    }</span>
 
     /**
      * Sets the 'lines visible' flag for a series and sends a
@@ -300,8 +300,8 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesLinesVisible(int)
      */
     public void setSeriesLinesVisible(int series, boolean visible) {
-<span class="nc" id="L303">        setSeriesLinesVisible(series, Boolean.valueOf(visible));</span>
-<span class="nc" id="L304">    }</span>
+<span class="fc" id="L303">        setSeriesLinesVisible(series, Boolean.valueOf(visible));</span>
+<span class="fc" id="L304">    }</span>
 
     /**
      * Returns the default 'lines visible' attribute.
@@ -323,9 +323,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getDefaultLinesVisible()
      */
     public void setDefaultLinesVisible(boolean flag) {
-<span class="nc" id="L326">        this.defaultLinesVisible = flag;</span>
-<span class="nc" id="L327">        fireChangeEvent();</span>
-<span class="nc" id="L328">    }</span>
+<span class="fc" id="L326">        this.defaultLinesVisible = flag;</span>
+<span class="fc" id="L327">        fireChangeEvent();</span>
+<span class="fc" id="L328">    }</span>
 
     /**
      * Returns the shape used to represent a line in the legend.
@@ -347,10 +347,10 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getLegendLine()
      */
     public void setLegendLine(Shape line) {
-<span class="nc" id="L350">        Args.nullNotPermitted(line, &quot;line&quot;);</span>
-<span class="nc" id="L351">        this.legendLine = line;</span>
-<span class="nc" id="L352">        fireChangeEvent();</span>
-<span class="nc" id="L353">    }</span>
+<span class="fc" id="L350">        Args.nullNotPermitted(line, &quot;line&quot;);</span>
+<span class="fc" id="L351">        this.legendLine = line;</span>
+<span class="fc" id="L352">        fireChangeEvent();</span>
+<span class="fc" id="L353">    }</span>
 
     // SHAPES VISIBLE
 
@@ -368,11 +368,11 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @return A boolean.
      */
     public boolean getItemShapeVisible(int series, int item) {
-<span class="nc" id="L371">        Boolean flag = getSeriesShapesVisible(series);</span>
-<span class="nc bnc" id="L372" title="All 2 branches missed.">        if (flag != null) {</span>
+<span class="fc" id="L371">        Boolean flag = getSeriesShapesVisible(series);</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (flag != null) {</span>
 <span class="nc" id="L373">            return flag;</span>
         }
-<span class="nc" id="L375">        return this.defaultShapesVisible;</span>
+<span class="fc" id="L375">        return this.defaultShapesVisible;</span>
     }
 
     /**
@@ -386,7 +386,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #setSeriesShapesVisible(int, Boolean)
      */
     public Boolean getSeriesShapesVisible(int series) {
-<span class="nc" id="L389">        return this.seriesShapesVisible.getBoolean(series);</span>
+<span class="fc" id="L389">        return this.seriesShapesVisible.getBoolean(series);</span>
     }
 
     /**
@@ -399,8 +399,8 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesShapesVisible(int)
      */
     public void setSeriesShapesVisible(int series, boolean visible) {
-<span class="nc" id="L402">        setSeriesShapesVisible(series, Boolean.valueOf(visible));</span>
-<span class="nc" id="L403">    }</span>
+<span class="fc" id="L402">        setSeriesShapesVisible(series, Boolean.valueOf(visible));</span>
+<span class="fc" id="L403">    }</span>
 
     /**
      * Sets the 'shapes visible' flag for a series and sends a
@@ -412,9 +412,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesShapesVisible(int)
      */
     public void setSeriesShapesVisible(int series, Boolean flag) {
-<span class="nc" id="L415">        this.seriesShapesVisible.setBoolean(series, flag);</span>
-<span class="nc" id="L416">        fireChangeEvent();</span>
-<span class="nc" id="L417">    }</span>
+<span class="fc" id="L415">        this.seriesShapesVisible.setBoolean(series, flag);</span>
+<span class="fc" id="L416">        fireChangeEvent();</span>
+<span class="fc" id="L417">    }</span>
 
     /**
      * Returns the default 'shape visible' attribute.
@@ -436,9 +436,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getDefaultShapesVisible()
      */
     public void setDefaultShapesVisible(boolean flag) {
-<span class="nc" id="L439">        this.defaultShapesVisible = flag;</span>
-<span class="nc" id="L440">        fireChangeEvent();</span>
-<span class="nc" id="L441">    }</span>
+<span class="fc" id="L439">        this.defaultShapesVisible = flag;</span>
+<span class="fc" id="L440">        fireChangeEvent();</span>
+<span class="fc" id="L441">    }</span>
 
     // SHAPES FILLED
 
@@ -456,11 +456,11 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @return A boolean.
      */
     public boolean getItemShapeFilled(int series, int item) {
-<span class="nc" id="L459">        Boolean flag = getSeriesShapesFilled(series);</span>
-<span class="nc bnc" id="L460" title="All 2 branches missed.">        if (flag != null) {</span>
+<span class="fc" id="L459">        Boolean flag = getSeriesShapesFilled(series);</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (flag != null) {</span>
 <span class="nc" id="L461">            return flag;</span>
         }
-<span class="nc" id="L463">        return this.defaultShapesFilled;</span>
+<span class="fc" id="L463">        return this.defaultShapesFilled;</span>
        
     }
 
@@ -475,7 +475,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #setSeriesShapesFilled(int, Boolean)
      */
     public Boolean getSeriesShapesFilled(int series) {
-<span class="nc" id="L478">        return this.seriesShapesFilled.getBoolean(series);</span>
+<span class="fc" id="L478">        return this.seriesShapesFilled.getBoolean(series);</span>
     }
 
     /**
@@ -488,8 +488,8 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesShapesFilled(int)
      */
     public void setSeriesShapesFilled(int series, boolean flag) {
-<span class="nc" id="L491">        setSeriesShapesFilled(series, Boolean.valueOf(flag));</span>
-<span class="nc" id="L492">    }</span>
+<span class="fc" id="L491">        setSeriesShapesFilled(series, Boolean.valueOf(flag));</span>
+<span class="fc" id="L492">    }</span>
 
     /**
      * Sets the 'shapes filled' flag for a series and sends a
@@ -501,9 +501,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getSeriesShapesFilled(int)
      */
     public void setSeriesShapesFilled(int series, Boolean flag) {
-<span class="nc" id="L504">        this.seriesShapesFilled.setBoolean(series, flag);</span>
-<span class="nc" id="L505">        fireChangeEvent();</span>
-<span class="nc" id="L506">    }</span>
+<span class="fc" id="L504">        this.seriesShapesFilled.setBoolean(series, flag);</span>
+<span class="fc" id="L505">        fireChangeEvent();</span>
+<span class="fc" id="L506">    }</span>
 
     /**
      * Returns the default 'shape filled' attribute.
@@ -525,9 +525,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getDefaultShapesFilled()
      */
     public void setDefaultShapesFilled(boolean flag) {
-<span class="nc" id="L528">        this.defaultShapesFilled = flag;</span>
-<span class="nc" id="L529">        fireChangeEvent();</span>
-<span class="nc" id="L530">    }</span>
+<span class="fc" id="L528">        this.defaultShapesFilled = flag;</span>
+<span class="fc" id="L529">        fireChangeEvent();</span>
+<span class="fc" id="L530">    }</span>
 
     /**
      * Returns {@code true} if outlines should be drawn for shapes, and
@@ -538,7 +538,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #setDrawOutlines(boolean)
      */
     public boolean getDrawOutlines() {
-<span class="nc" id="L541">        return this.drawOutlines;</span>
+<span class="fc" id="L541">        return this.drawOutlines;</span>
     }
 
     /**
@@ -554,9 +554,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getDrawOutlines()
      */
     public void setDrawOutlines(boolean flag) {
-<span class="nc" id="L557">        this.drawOutlines = flag;</span>
-<span class="nc" id="L558">        fireChangeEvent();</span>
-<span class="nc" id="L559">    }</span>
+<span class="fc" id="L557">        this.drawOutlines = flag;</span>
+<span class="fc" id="L558">        fireChangeEvent();</span>
+<span class="fc" id="L559">    }</span>
 
     /**
      * Returns {@code true} if the renderer should use the fill paint
@@ -585,9 +585,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getUseFillPaint()
      */
     public void setUseFillPaint(boolean flag) {
-<span class="nc" id="L588">        this.useFillPaint = flag;</span>
-<span class="nc" id="L589">        fireChangeEvent();</span>
-<span class="nc" id="L590">    }</span>
+<span class="fc" id="L588">        this.useFillPaint = flag;</span>
+<span class="fc" id="L589">        fireChangeEvent();</span>
+<span class="fc" id="L590">    }</span>
 
     /**
      * Returns {@code true} if the renderer should use the outline paint
@@ -600,7 +600,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getUseFillPaint()
      */
     public boolean getUseOutlinePaint() {
-<span class="nc" id="L603">        return this.useOutlinePaint;</span>
+<span class="fc" id="L603">        return this.useOutlinePaint;</span>
     }
 
     /**
@@ -616,9 +616,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @see #getUseOutlinePaint()
      */
     public void setUseOutlinePaint(boolean flag) {
-<span class="nc" id="L619">        this.useOutlinePaint = flag;</span>
-<span class="nc" id="L620">        fireChangeEvent();</span>
-<span class="nc" id="L621">    }</span>
+<span class="fc" id="L619">        this.useOutlinePaint = flag;</span>
+<span class="fc" id="L620">        fireChangeEvent();</span>
+<span class="fc" id="L621">    }</span>
 
     /**
      * Records the state for the renderer.  This is used to preserve state
@@ -642,9 +642,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
          * @param info  the plot rendering info.
          */
         public State(PlotRenderingInfo info) {
-<span class="nc" id="L645">            super(info);</span>
-<span class="nc" id="L646">            this.seriesPath = new GeneralPath();</span>
-<span class="nc" id="L647">        }</span>
+<span class="fc" id="L645">            super(info);</span>
+<span class="fc" id="L646">            this.seriesPath = new GeneralPath();</span>
+<span class="fc" id="L647">        }</span>
 
         /**
          * Returns a flag that indicates if the last point drawn (in the
@@ -680,11 +680,11 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
         @Override
         public void startSeriesPass(XYDataset dataset, int series,
                 int firstItem, int lastItem, int pass, int passCount) {
-<span class="nc" id="L683">            this.seriesPath.reset();</span>
-<span class="nc" id="L684">            this.lastPointGood = false;</span>
-<span class="nc" id="L685">            super.startSeriesPass(dataset, series, firstItem, lastItem, pass,</span>
+<span class="fc" id="L683">            this.seriesPath.reset();</span>
+<span class="fc" id="L684">            this.lastPointGood = false;</span>
+<span class="fc" id="L685">            super.startSeriesPass(dataset, series, firstItem, lastItem, pass,</span>
                     passCount);
-<span class="nc" id="L687">       }</span>
+<span class="fc" id="L687">       }</span>
 
     }
 
@@ -707,7 +707,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
     @Override
     public XYItemRendererState initialise(Graphics2D g2, Rectangle2D dataArea,
             XYPlot plot, XYDataset data, PlotRenderingInfo info) {
-<span class="nc" id="L710">        return new State(info);</span>
+<span class="fc" id="L710">        return new State(info);</span>
     }
 
     /**
@@ -735,36 +735,36 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
             int series, int item, CrosshairState crosshairState, int pass) {
 
         // do nothing if item is not visible
-<span class="nc bnc" id="L738" title="All 2 branches missed.">        if (!getItemVisible(series, item)) {</span>
+<span class="pc bpc" id="L738" title="1 of 2 branches missed.">        if (!getItemVisible(series, item)) {</span>
 <span class="nc" id="L739">            return;</span>
         }
 
         // first pass draws the background (lines, for instance)
-<span class="nc bnc" id="L743" title="All 2 branches missed.">        if (isLinePass(pass)) {</span>
-<span class="nc bnc" id="L744" title="All 2 branches missed.">            if (getItemLineVisible(series, item)) {</span>
-<span class="nc bnc" id="L745" title="All 2 branches missed.">                if (this.drawSeriesLineAsPath) {</span>
+<span class="fc bfc" id="L743" title="All 2 branches covered.">        if (isLinePass(pass)) {</span>
+<span class="pc bpc" id="L744" title="1 of 2 branches missed.">            if (getItemLineVisible(series, item)) {</span>
+<span class="pc bpc" id="L745" title="1 of 2 branches missed.">                if (this.drawSeriesLineAsPath) {</span>
 <span class="nc" id="L746">                    drawPrimaryLineAsPath(state, g2, plot, dataset, pass,</span>
                             series, item, domainAxis, rangeAxis, dataArea);
                 }
                 else {
-<span class="nc" id="L750">                    drawPrimaryLine(state, g2, plot, dataset, pass, series,</span>
+<span class="fc" id="L750">                    drawPrimaryLine(state, g2, plot, dataset, pass, series,</span>
                             item, domainAxis, rangeAxis, dataArea);
                 }
             }
         }
         // second pass adds shapes where the items are ..
-<span class="nc bnc" id="L756" title="All 2 branches missed.">        else if (isItemPass(pass)) {</span>
+<span class="pc bpc" id="L756" title="1 of 2 branches missed.">        else if (isItemPass(pass)) {</span>
 
             // setup for collecting optional entity info...
-<span class="nc" id="L759">            EntityCollection entities = null;</span>
-<span class="nc bnc" id="L760" title="All 4 branches missed.">            if (info != null &amp;&amp; info.getOwner() != null) {</span>
+<span class="fc" id="L759">            EntityCollection entities = null;</span>
+<span class="pc bpc" id="L760" title="3 of 4 branches missed.">            if (info != null &amp;&amp; info.getOwner() != null) {</span>
 <span class="nc" id="L761">                entities = info.getOwner().getEntityCollection();</span>
             }
 
-<span class="nc" id="L764">            drawSecondaryPass(g2, plot, dataset, pass, series, item,</span>
+<span class="fc" id="L764">            drawSecondaryPass(g2, plot, dataset, pass, series, item,</span>
                     domainAxis, dataArea, rangeAxis, crosshairState, entities);
         }
-<span class="nc" id="L767">    }</span>
+<span class="fc" id="L767">    }</span>
 
     /**
      * Returns {@code true} if the specified pass is the one for drawing
@@ -775,7 +775,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @return A boolean.
      */
     protected boolean isLinePass(int pass) {
-<span class="nc bnc" id="L778" title="All 2 branches missed.">        return pass == 0;</span>
+<span class="fc bfc" id="L778" title="All 2 branches covered.">        return pass == 0;</span>
     }
 
     /**
@@ -787,7 +787,7 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @return A boolean.
      */
     protected boolean isItemPass(int pass) {
-<span class="nc bnc" id="L790" title="All 2 branches missed.">        return pass == 1;</span>
+<span class="pc bpc" id="L790" title="1 of 2 branches missed.">        return pass == 1;</span>
     }
 
     /**
@@ -816,51 +816,51 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
                                    ValueAxis domainAxis,
                                    ValueAxis rangeAxis,
                                    Rectangle2D dataArea) {
-<span class="nc bnc" id="L819" title="All 2 branches missed.">        if (item == 0) {</span>
-<span class="nc" id="L820">            return;</span>
+<span class="fc bfc" id="L819" title="All 2 branches covered.">        if (item == 0) {</span>
+<span class="fc" id="L820">            return;</span>
         }
 
         // get the data point...
-<span class="nc" id="L824">        double x1 = dataset.getXValue(series, item);</span>
-<span class="nc" id="L825">        double y1 = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L826" title="All 4 branches missed.">        if (Double.isNaN(y1) || Double.isNaN(x1)) {</span>
+<span class="fc" id="L824">        double x1 = dataset.getXValue(series, item);</span>
+<span class="fc" id="L825">        double y1 = dataset.getYValue(series, item);</span>
+<span class="pc bpc" id="L826" title="2 of 4 branches missed.">        if (Double.isNaN(y1) || Double.isNaN(x1)) {</span>
 <span class="nc" id="L827">            return;</span>
         }
 
-<span class="nc" id="L830">        double x0 = dataset.getXValue(series, item - 1);</span>
-<span class="nc" id="L831">        double y0 = dataset.getYValue(series, item - 1);</span>
-<span class="nc bnc" id="L832" title="All 4 branches missed.">        if (Double.isNaN(y0) || Double.isNaN(x0)) {</span>
+<span class="fc" id="L830">        double x0 = dataset.getXValue(series, item - 1);</span>
+<span class="fc" id="L831">        double y0 = dataset.getYValue(series, item - 1);</span>
+<span class="pc bpc" id="L832" title="2 of 4 branches missed.">        if (Double.isNaN(y0) || Double.isNaN(x0)) {</span>
 <span class="nc" id="L833">            return;</span>
         }
 
-<span class="nc" id="L836">        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();</span>
-<span class="nc" id="L837">        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();</span>
+<span class="fc" id="L836">        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();</span>
+<span class="fc" id="L837">        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();</span>
 
-<span class="nc" id="L839">        double transX0 = domainAxis.valueToJava2D(x0, dataArea, xAxisLocation);</span>
-<span class="nc" id="L840">        double transY0 = rangeAxis.valueToJava2D(y0, dataArea, yAxisLocation);</span>
+<span class="fc" id="L839">        double transX0 = domainAxis.valueToJava2D(x0, dataArea, xAxisLocation);</span>
+<span class="fc" id="L840">        double transY0 = rangeAxis.valueToJava2D(y0, dataArea, yAxisLocation);</span>
 
-<span class="nc" id="L842">        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);</span>
-<span class="nc" id="L843">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);</span>
+<span class="fc" id="L842">        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);</span>
+<span class="fc" id="L843">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);</span>
 
         // only draw if we have good values
-<span class="nc bnc" id="L846" title="All 4 branches missed.">        if (Double.isNaN(transX0) || Double.isNaN(transY0)</span>
-<span class="nc bnc" id="L847" title="All 4 branches missed.">            || Double.isNaN(transX1) || Double.isNaN(transY1)) {</span>
+<span class="pc bpc" id="L846" title="2 of 4 branches missed.">        if (Double.isNaN(transX0) || Double.isNaN(transY0)</span>
+<span class="pc bpc" id="L847" title="2 of 4 branches missed.">            || Double.isNaN(transX1) || Double.isNaN(transY1)) {</span>
 <span class="nc" id="L848">            return;</span>
         }
 
-<span class="nc" id="L851">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L851">        PlotOrientation orientation = plot.getOrientation();</span>
         boolean visible;
-<span class="nc bnc" id="L853" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L853" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L854">            state.workingLine.setLine(transY0, transX0, transY1, transX1);</span>
         }
-<span class="nc bnc" id="L856" title="All 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L857">            state.workingLine.setLine(transX0, transY0, transX1, transY1);</span>
+<span class="pc bpc" id="L856" title="1 of 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L857">            state.workingLine.setLine(transX0, transY0, transX1, transY1);</span>
         }
-<span class="nc" id="L859">        visible = LineUtils.clipLine(state.workingLine, dataArea);</span>
-<span class="nc bnc" id="L860" title="All 2 branches missed.">        if (visible) {</span>
-<span class="nc" id="L861">            drawFirstPassShape(g2, pass, series, item, state.workingLine);</span>
+<span class="fc" id="L859">        visible = LineUtils.clipLine(state.workingLine, dataArea);</span>
+<span class="pc bpc" id="L860" title="1 of 2 branches missed.">        if (visible) {</span>
+<span class="fc" id="L861">            drawFirstPassShape(g2, pass, series, item, state.workingLine);</span>
         }
-<span class="nc" id="L863">    }</span>
+<span class="fc" id="L863">    }</span>
 
     /**
      * Draws the first pass shape.
@@ -873,10 +873,10 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     protected void drawFirstPassShape(Graphics2D g2, int pass, int series,
                                       int item, Shape shape) {
-<span class="nc" id="L876">        g2.setStroke(getItemStroke(series, item));</span>
-<span class="nc" id="L877">        g2.setPaint(getItemPaint(series, item));</span>
-<span class="nc" id="L878">        g2.draw(shape);</span>
-<span class="nc" id="L879">    }</span>
+<span class="fc" id="L876">        g2.setStroke(getItemStroke(series, item));</span>
+<span class="fc" id="L877">        g2.setPaint(getItemPaint(series, item));</span>
+<span class="fc" id="L878">        g2.draw(shape);</span>
+<span class="fc" id="L879">    }</span>
 
 
     /**
@@ -962,78 +962,78 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
             ValueAxis domainAxis, Rectangle2D dataArea, ValueAxis rangeAxis,
             CrosshairState crosshairState, EntityCollection entities) {
 
-<span class="nc" id="L965">        Shape entityArea = null;</span>
+<span class="fc" id="L965">        Shape entityArea = null;</span>
 
         // get the data point...
-<span class="nc" id="L968">        double x1 = dataset.getXValue(series, item);</span>
-<span class="nc" id="L969">        double y1 = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L970" title="All 4 branches missed.">        if (Double.isNaN(y1) || Double.isNaN(x1)) {</span>
+<span class="fc" id="L968">        double x1 = dataset.getXValue(series, item);</span>
+<span class="fc" id="L969">        double y1 = dataset.getYValue(series, item);</span>
+<span class="pc bpc" id="L970" title="2 of 4 branches missed.">        if (Double.isNaN(y1) || Double.isNaN(x1)) {</span>
 <span class="nc" id="L971">            return;</span>
         }
 
-<span class="nc" id="L974">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L975">        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();</span>
-<span class="nc" id="L976">        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();</span>
-<span class="nc" id="L977">        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);</span>
-<span class="nc" id="L978">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);</span>
+<span class="fc" id="L974">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L975">        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();</span>
+<span class="fc" id="L976">        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();</span>
+<span class="fc" id="L977">        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);</span>
+<span class="fc" id="L978">        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);</span>
 
-<span class="nc bnc" id="L980" title="All 2 branches missed.">        if (getItemShapeVisible(series, item)) {</span>
-<span class="nc" id="L981">            Shape shape = getItemShape(series, item);</span>
-<span class="nc bnc" id="L982" title="All 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L980" title="1 of 2 branches missed.">        if (getItemShapeVisible(series, item)) {</span>
+<span class="fc" id="L981">            Shape shape = getItemShape(series, item);</span>
+<span class="pc bpc" id="L982" title="1 of 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L983">                shape = ShapeUtils.createTranslatedShape(shape, transY1,</span>
                         transX1);
             }
-<span class="nc bnc" id="L986" title="All 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L987">                shape = ShapeUtils.createTranslatedShape(shape, transX1,</span>
+<span class="pc bpc" id="L986" title="1 of 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L987">                shape = ShapeUtils.createTranslatedShape(shape, transX1,</span>
                         transY1);
             }
-<span class="nc" id="L990">            entityArea = shape;</span>
-<span class="nc bnc" id="L991" title="All 2 branches missed.">            if (shape.intersects(dataArea)) {</span>
-<span class="nc bnc" id="L992" title="All 2 branches missed.">                if (getItemShapeFilled(series, item)) {</span>
-<span class="nc bnc" id="L993" title="All 2 branches missed.">                    if (this.useFillPaint) {</span>
+<span class="fc" id="L990">            entityArea = shape;</span>
+<span class="pc bpc" id="L991" title="1 of 2 branches missed.">            if (shape.intersects(dataArea)) {</span>
+<span class="pc bpc" id="L992" title="1 of 2 branches missed.">                if (getItemShapeFilled(series, item)) {</span>
+<span class="pc bpc" id="L993" title="1 of 2 branches missed.">                    if (this.useFillPaint) {</span>
 <span class="nc" id="L994">                        g2.setPaint(getItemFillPaint(series, item));</span>
                     }
                     else {
-<span class="nc" id="L997">                        g2.setPaint(getItemPaint(series, item));</span>
+<span class="fc" id="L997">                        g2.setPaint(getItemPaint(series, item));</span>
                     }
-<span class="nc" id="L999">                    g2.fill(shape);</span>
+<span class="fc" id="L999">                    g2.fill(shape);</span>
                 }
-<span class="nc bnc" id="L1001" title="All 2 branches missed.">                if (this.drawOutlines) {</span>
-<span class="nc bnc" id="L1002" title="All 2 branches missed.">                    if (getUseOutlinePaint()) {</span>
+<span class="pc bpc" id="L1001" title="1 of 2 branches missed.">                if (this.drawOutlines) {</span>
+<span class="pc bpc" id="L1002" title="1 of 2 branches missed.">                    if (getUseOutlinePaint()) {</span>
 <span class="nc" id="L1003">                        g2.setPaint(getItemOutlinePaint(series, item));</span>
                     }
                     else {
-<span class="nc" id="L1006">                        g2.setPaint(getItemPaint(series, item));</span>
+<span class="fc" id="L1006">                        g2.setPaint(getItemPaint(series, item));</span>
                     }
-<span class="nc" id="L1008">                    g2.setStroke(getItemOutlineStroke(series, item));</span>
-<span class="nc" id="L1009">                    g2.draw(shape);</span>
+<span class="fc" id="L1008">                    g2.setStroke(getItemOutlineStroke(series, item));</span>
+<span class="fc" id="L1009">                    g2.draw(shape);</span>
                 }
             }
         }
 
-<span class="nc" id="L1014">        double xx = transX1;</span>
-<span class="nc" id="L1015">        double yy = transY1;</span>
-<span class="nc bnc" id="L1016" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L1014">        double xx = transX1;</span>
+<span class="fc" id="L1015">        double yy = transY1;</span>
+<span class="pc bpc" id="L1016" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L1017">            xx = transY1;</span>
 <span class="nc" id="L1018">            yy = transX1;</span>
         }
 
         // draw the item label if there is one...
-<span class="nc bnc" id="L1022" title="All 2 branches missed.">        if (isItemLabelVisible(series, item)) {</span>
+<span class="pc bpc" id="L1022" title="1 of 2 branches missed.">        if (isItemLabelVisible(series, item)) {</span>
 <span class="nc bnc" id="L1023" title="All 2 branches missed.">            drawItemLabel(g2, orientation, dataset, series, item, xx, yy,</span>
                     (y1 &lt; 0.0));
         }
 
-<span class="nc" id="L1027">        int datasetIndex = plot.indexOf(dataset);</span>
-<span class="nc" id="L1028">        updateCrosshairValues(crosshairState, x1, y1, datasetIndex,</span>
+<span class="fc" id="L1027">        int datasetIndex = plot.indexOf(dataset);</span>
+<span class="fc" id="L1028">        updateCrosshairValues(crosshairState, x1, y1, datasetIndex,</span>
                 transX1, transY1, orientation);
 
         // add an entity for the item, but only if it falls within the data
         // area...
-<span class="nc bnc" id="L1033" title="All 4 branches missed.">        if (entities != null &amp;&amp; ShapeUtils.isPointInRect(dataArea, xx, yy)) {</span>
+<span class="pc bpc" id="L1033" title="3 of 4 branches missed.">        if (entities != null &amp;&amp; ShapeUtils.isPointInRect(dataArea, xx, yy)) {</span>
 <span class="nc" id="L1034">            addEntity(entities, entityArea, dataset, series, item, xx, yy);</span>
         }
-<span class="nc" id="L1036">    }</span>
+<span class="fc" id="L1036">    }</span>
 
 
     /**
@@ -1046,59 +1046,59 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
-<span class="nc" id="L1049">        XYPlot plot = getPlot();</span>
-<span class="nc bnc" id="L1050" title="All 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L1049">        XYPlot plot = getPlot();</span>
+<span class="pc bpc" id="L1050" title="1 of 2 branches missed.">        if (plot == null) {</span>
 <span class="nc" id="L1051">            return null;</span>
         }
 
-<span class="nc" id="L1054">        XYDataset dataset = plot.getDataset(datasetIndex);</span>
-<span class="nc bnc" id="L1055" title="All 2 branches missed.">        if (dataset == null) {</span>
+<span class="fc" id="L1054">        XYDataset dataset = plot.getDataset(datasetIndex);</span>
+<span class="pc bpc" id="L1055" title="1 of 2 branches missed.">        if (dataset == null) {</span>
 <span class="nc" id="L1056">            return null;</span>
         }
 
-<span class="nc bnc" id="L1059" title="All 2 branches missed.">        if (!getItemVisible(series, 0)) {</span>
+<span class="pc bpc" id="L1059" title="1 of 2 branches missed.">        if (!getItemVisible(series, 0)) {</span>
 <span class="nc" id="L1060">            return null;</span>
         }
-<span class="nc" id="L1062">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
+<span class="fc" id="L1062">        String label = getLegendItemLabelGenerator().generateLabel(dataset,</span>
                 series);
-<span class="nc" id="L1064">        String description = label;</span>
-<span class="nc" id="L1065">        String toolTipText = null;</span>
-<span class="nc bnc" id="L1066" title="All 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L1064">        String description = label;</span>
+<span class="fc" id="L1065">        String toolTipText = null;</span>
+<span class="pc bpc" id="L1066" title="1 of 2 branches missed.">        if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L1067">            toolTipText = getLegendItemToolTipGenerator().generateLabel(</span>
                     dataset, series);
         }
-<span class="nc" id="L1070">        String urlText = null;</span>
-<span class="nc bnc" id="L1071" title="All 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L1070">        String urlText = null;</span>
+<span class="pc bpc" id="L1071" title="1 of 2 branches missed.">        if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L1072">            urlText = getLegendItemURLGenerator().generateLabel(dataset,</span>
                     series);
         }
-<span class="nc" id="L1075">        boolean shapeIsVisible = getItemShapeVisible(series, 0);</span>
-<span class="nc" id="L1076">        Shape shape = lookupLegendShape(series);</span>
-<span class="nc" id="L1077">        boolean shapeIsFilled = getItemShapeFilled(series, 0);</span>
-<span class="nc bnc" id="L1078" title="All 2 branches missed.">        Paint fillPaint = (this.useFillPaint ? lookupSeriesFillPaint(series)</span>
-<span class="nc" id="L1079">                : lookupSeriesPaint(series));</span>
-<span class="nc" id="L1080">        boolean shapeOutlineVisible = this.drawOutlines;</span>
-<span class="nc bnc" id="L1081" title="All 2 branches missed.">        Paint outlinePaint = (this.useOutlinePaint ? lookupSeriesOutlinePaint(</span>
-<span class="nc" id="L1082">                series) : lookupSeriesPaint(series));</span>
-<span class="nc" id="L1083">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
-<span class="nc" id="L1084">        boolean lineVisible = getItemLineVisible(series, 0);</span>
-<span class="nc" id="L1085">        Stroke lineStroke = lookupSeriesStroke(series);</span>
-<span class="nc" id="L1086">        Paint linePaint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L1087">        LegendItem result = new LegendItem(label, description, toolTipText,</span>
+<span class="fc" id="L1075">        boolean shapeIsVisible = getItemShapeVisible(series, 0);</span>
+<span class="fc" id="L1076">        Shape shape = lookupLegendShape(series);</span>
+<span class="fc" id="L1077">        boolean shapeIsFilled = getItemShapeFilled(series, 0);</span>
+<span class="pc bpc" id="L1078" title="1 of 2 branches missed.">        Paint fillPaint = (this.useFillPaint ? lookupSeriesFillPaint(series)</span>
+<span class="fc" id="L1079">                : lookupSeriesPaint(series));</span>
+<span class="fc" id="L1080">        boolean shapeOutlineVisible = this.drawOutlines;</span>
+<span class="pc bpc" id="L1081" title="1 of 2 branches missed.">        Paint outlinePaint = (this.useOutlinePaint ? lookupSeriesOutlinePaint(</span>
+<span class="fc" id="L1082">                series) : lookupSeriesPaint(series));</span>
+<span class="fc" id="L1083">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
+<span class="fc" id="L1084">        boolean lineVisible = getItemLineVisible(series, 0);</span>
+<span class="fc" id="L1085">        Stroke lineStroke = lookupSeriesStroke(series);</span>
+<span class="fc" id="L1086">        Paint linePaint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L1087">        LegendItem result = new LegendItem(label, description, toolTipText,</span>
                 urlText, shapeIsVisible, shape, shapeIsFilled, fillPaint,
                 shapeOutlineVisible, outlinePaint, outlineStroke, lineVisible,
                 this.legendLine, lineStroke, linePaint);
-<span class="nc" id="L1091">        result.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L1092">        Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L1093" title="All 2 branches missed.">        if (labelPaint != null) {</span>
+<span class="fc" id="L1091">        result.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L1092">        Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L1093" title="1 of 2 branches missed.">        if (labelPaint != null) {</span>
 <span class="nc" id="L1094">            result.setLabelPaint(labelPaint);</span>
         }
-<span class="nc" id="L1096">        result.setSeriesKey(dataset.getSeriesKey(series));</span>
-<span class="nc" id="L1097">        result.setSeriesIndex(series);</span>
-<span class="nc" id="L1098">        result.setDataset(dataset);</span>
-<span class="nc" id="L1099">        result.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L1096">        result.setSeriesKey(dataset.getSeriesKey(series));</span>
+<span class="fc" id="L1097">        result.setSeriesIndex(series);</span>
+<span class="fc" id="L1098">        result.setDataset(dataset);</span>
+<span class="fc" id="L1099">        result.setDatasetIndex(datasetIndex);</span>
 
-<span class="nc" id="L1101">        return result;</span>
+<span class="fc" id="L1101">        return result;</span>
     }
 
     /**
@@ -1110,17 +1110,17 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1113">        XYLineAndShapeRenderer clone = (XYLineAndShapeRenderer) super.clone();</span>
-<span class="nc" id="L1114">        clone.seriesLinesVisible</span>
-<span class="nc" id="L1115">                = (BooleanList) this.seriesLinesVisible.clone();</span>
-<span class="nc bnc" id="L1116" title="All 2 branches missed.">        if (this.legendLine != null) {</span>
-<span class="nc" id="L1117">            clone.legendLine = ShapeUtils.clone(this.legendLine);</span>
+<span class="fc" id="L1113">        XYLineAndShapeRenderer clone = (XYLineAndShapeRenderer) super.clone();</span>
+<span class="fc" id="L1114">        clone.seriesLinesVisible</span>
+<span class="fc" id="L1115">                = (BooleanList) this.seriesLinesVisible.clone();</span>
+<span class="pc bpc" id="L1116" title="1 of 2 branches missed.">        if (this.legendLine != null) {</span>
+<span class="fc" id="L1117">            clone.legendLine = ShapeUtils.clone(this.legendLine);</span>
         }
-<span class="nc" id="L1119">        clone.seriesShapesVisible</span>
-<span class="nc" id="L1120">                = (BooleanList) this.seriesShapesVisible.clone();</span>
-<span class="nc" id="L1121">        clone.seriesShapesFilled</span>
-<span class="nc" id="L1122">                = (BooleanList) this.seriesShapesFilled.clone();</span>
-<span class="nc" id="L1123">        return clone;</span>
+<span class="fc" id="L1119">        clone.seriesShapesVisible</span>
+<span class="fc" id="L1120">                = (BooleanList) this.seriesShapesVisible.clone();</span>
+<span class="fc" id="L1121">        clone.seriesShapesFilled</span>
+<span class="fc" id="L1122">                = (BooleanList) this.seriesShapesFilled.clone();</span>
+<span class="fc" id="L1123">        return clone;</span>
     }
 
     /**
@@ -1132,56 +1132,56 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1135" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L1136">            return true;</span>
+<span class="fc bfc" id="L1135" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L1136">            return true;</span>
         }
-<span class="nc bnc" id="L1138" title="All 2 branches missed.">        if (!(obj instanceof XYLineAndShapeRenderer)) {</span>
+<span class="pc bpc" id="L1138" title="1 of 2 branches missed.">        if (!(obj instanceof XYLineAndShapeRenderer)) {</span>
 <span class="nc" id="L1139">            return false;</span>
         }
-<span class="nc bnc" id="L1141" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L1142">            return false;</span>
+<span class="fc bfc" id="L1141" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L1142">            return false;</span>
         }
-<span class="nc" id="L1144">        XYLineAndShapeRenderer that = (XYLineAndShapeRenderer) obj;</span>
-<span class="nc bnc" id="L1145" title="All 2 branches missed.">        if (!ObjectUtils.equal(</span>
+<span class="fc" id="L1144">        XYLineAndShapeRenderer that = (XYLineAndShapeRenderer) obj;</span>
+<span class="fc bfc" id="L1145" title="All 2 branches covered.">        if (!ObjectUtils.equal(</span>
             this.seriesLinesVisible, that.seriesLinesVisible)
         ) {
-<span class="nc" id="L1148">            return false;</span>
+<span class="fc" id="L1148">            return false;</span>
         }
-<span class="nc bnc" id="L1150" title="All 2 branches missed.">        if (this.defaultLinesVisible != that.defaultLinesVisible) {</span>
-<span class="nc" id="L1151">            return false;</span>
+<span class="fc bfc" id="L1150" title="All 2 branches covered.">        if (this.defaultLinesVisible != that.defaultLinesVisible) {</span>
+<span class="fc" id="L1151">            return false;</span>
         }
-<span class="nc bnc" id="L1153" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendLine, that.legendLine)) {</span>
-<span class="nc" id="L1154">            return false;</span>
+<span class="fc bfc" id="L1153" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendLine, that.legendLine)) {</span>
+<span class="fc" id="L1154">            return false;</span>
         }
-<span class="nc bnc" id="L1156" title="All 2 branches missed.">        if (!ObjectUtils.equal(</span>
+<span class="fc bfc" id="L1156" title="All 2 branches covered.">        if (!ObjectUtils.equal(</span>
             this.seriesShapesVisible, that.seriesShapesVisible)
         ) {
-<span class="nc" id="L1159">            return false;</span>
+<span class="fc" id="L1159">            return false;</span>
         }
-<span class="nc bnc" id="L1161" title="All 2 branches missed.">        if (this.defaultShapesVisible != that.defaultShapesVisible) {</span>
-<span class="nc" id="L1162">            return false;</span>
+<span class="fc bfc" id="L1161" title="All 2 branches covered.">        if (this.defaultShapesVisible != that.defaultShapesVisible) {</span>
+<span class="fc" id="L1162">            return false;</span>
         }
-<span class="nc bnc" id="L1164" title="All 2 branches missed.">        if (!ObjectUtils.equal(</span>
+<span class="fc bfc" id="L1164" title="All 2 branches covered.">        if (!ObjectUtils.equal(</span>
             this.seriesShapesFilled, that.seriesShapesFilled)
         ) {
-<span class="nc" id="L1167">            return false;</span>
+<span class="fc" id="L1167">            return false;</span>
         }
-<span class="nc bnc" id="L1169" title="All 2 branches missed.">        if (this.defaultShapesFilled != that.defaultShapesFilled) {</span>
-<span class="nc" id="L1170">            return false;</span>
+<span class="fc bfc" id="L1169" title="All 2 branches covered.">        if (this.defaultShapesFilled != that.defaultShapesFilled) {</span>
+<span class="fc" id="L1170">            return false;</span>
         }
-<span class="nc bnc" id="L1172" title="All 2 branches missed.">        if (this.drawOutlines != that.drawOutlines) {</span>
-<span class="nc" id="L1173">            return false;</span>
+<span class="fc bfc" id="L1172" title="All 2 branches covered.">        if (this.drawOutlines != that.drawOutlines) {</span>
+<span class="fc" id="L1173">            return false;</span>
         }
-<span class="nc bnc" id="L1175" title="All 2 branches missed.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
-<span class="nc" id="L1176">            return false;</span>
+<span class="fc bfc" id="L1175" title="All 2 branches covered.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
+<span class="fc" id="L1176">            return false;</span>
         }
-<span class="nc bnc" id="L1178" title="All 2 branches missed.">        if (this.useFillPaint != that.useFillPaint) {</span>
-<span class="nc" id="L1179">            return false;</span>
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">        if (this.useFillPaint != that.useFillPaint) {</span>
+<span class="fc" id="L1179">            return false;</span>
         }
-<span class="nc bnc" id="L1181" title="All 2 branches missed.">        if (this.drawSeriesLineAsPath != that.drawSeriesLineAsPath) {</span>
-<span class="nc" id="L1182">            return false;</span>
+<span class="fc bfc" id="L1181" title="All 2 branches covered.">        if (this.drawSeriesLineAsPath != that.drawSeriesLineAsPath) {</span>
+<span class="fc" id="L1182">            return false;</span>
         }
-<span class="nc" id="L1184">        return true;</span>
+<span class="fc" id="L1184">        return true;</span>
     }
 
     /**
@@ -1194,9 +1194,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L1197">        stream.defaultReadObject();</span>
-<span class="nc" id="L1198">        this.legendLine = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L1199">    }</span>
+<span class="fc" id="L1197">        stream.defaultReadObject();</span>
+<span class="fc" id="L1198">        this.legendLine = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L1199">    }</span>
 
     /**
      * Provides serialization support.
@@ -1206,9 +1206,9 @@ public class XYLineAndShapeRenderer extends AbstractXYItemRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1209">        stream.defaultWriteObject();</span>
-<span class="nc" id="L1210">        SerialUtils.writeShape(this.legendLine, stream);</span>
-<span class="nc" id="L1211">    }</span>
+<span class="fc" id="L1209">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1210">        SerialUtils.writeShape(this.legendLine, stream);</span>
+<span class="fc" id="L1211">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

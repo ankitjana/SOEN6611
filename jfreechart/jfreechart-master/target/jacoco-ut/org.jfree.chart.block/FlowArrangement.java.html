@@ -75,8 +75,8 @@ public class FlowArrangement implements Arrangement, Serializable {
      * Creates a new instance.
      */
     public FlowArrangement() {
-<span class="nc" id="L78">        this(HorizontalAlignment.CENTER, VerticalAlignment.CENTER, 2.0, 2.0);</span>
-<span class="nc" id="L79">    }</span>
+<span class="fc" id="L78">        this(HorizontalAlignment.CENTER, VerticalAlignment.CENTER, 2.0, 2.0);</span>
+<span class="fc" id="L79">    }</span>
 
     /**
      * Creates a new instance.
@@ -87,12 +87,12 @@ public class FlowArrangement implements Arrangement, Serializable {
      * @param vGap  the vertical gap.
      */
     public FlowArrangement(HorizontalAlignment hAlign, VerticalAlignment vAlign,
-<span class="nc" id="L90">                           double hGap, double vGap) {</span>
-<span class="nc" id="L91">        this.horizontalAlignment = hAlign;</span>
-<span class="nc" id="L92">        this.verticalAlignment = vAlign;</span>
-<span class="nc" id="L93">        this.horizontalGap = hGap;</span>
-<span class="nc" id="L94">        this.verticalGap = vGap;</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L90">                           double hGap, double vGap) {</span>
+<span class="fc" id="L91">        this.horizontalAlignment = hAlign;</span>
+<span class="fc" id="L92">        this.verticalAlignment = vAlign;</span>
+<span class="fc" id="L93">        this.horizontalGap = hGap;</span>
+<span class="fc" id="L94">        this.verticalGap = vGap;</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Adds a block to be managed by this instance.  This method is usually
@@ -106,7 +106,7 @@ public class FlowArrangement implements Arrangement, Serializable {
     public void add(Block block, Object key) {
         // since the flow layout is relatively straightforward,
         // no information needs to be recorded here
-<span class="nc" id="L109">    }</span>
+<span class="fc" id="L109">    }</span>
 
     /**
      * Calculates and sets the bounds of all the items in the specified
@@ -124,9 +124,9 @@ public class FlowArrangement implements Arrangement, Serializable {
     public Size2D arrange(BlockContainer container, Graphics2D g2,
                           RectangleConstraint constraint) {
 
-<span class="nc" id="L127">        LengthConstraintType w = constraint.getWidthConstraintType();</span>
-<span class="nc" id="L128">        LengthConstraintType h = constraint.getHeightConstraintType();</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (w == LengthConstraintType.NONE) {</span>
+<span class="fc" id="L127">        LengthConstraintType w = constraint.getWidthConstraintType();</span>
+<span class="fc" id="L128">        LengthConstraintType h = constraint.getHeightConstraintType();</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (w == LengthConstraintType.NONE) {</span>
 <span class="nc bnc" id="L130" title="All 2 branches missed.">            if (h == LengthConstraintType.NONE) {</span>
 <span class="nc" id="L131">                return arrangeNN(container, g2);</span>
             }
@@ -137,7 +137,7 @@ public class FlowArrangement implements Arrangement, Serializable {
 <span class="nc" id="L137">                throw new RuntimeException(&quot;Not implemented.&quot;);</span>
             }
         }
-<span class="nc bnc" id="L140" title="All 2 branches missed.">        else if (w == LengthConstraintType.FIXED) {</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        else if (w == LengthConstraintType.FIXED) {</span>
 <span class="nc bnc" id="L141" title="All 2 branches missed.">            if (h == LengthConstraintType.NONE) {</span>
 <span class="nc" id="L142">                return arrangeFN(container, g2, constraint);</span>
             }
@@ -148,15 +148,15 @@ public class FlowArrangement implements Arrangement, Serializable {
 <span class="nc" id="L148">                return arrangeFR(container, g2, constraint);</span>
             }
         }
-<span class="nc bnc" id="L151" title="All 2 branches missed.">        else if (w == LengthConstraintType.RANGE) {</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (h == LengthConstraintType.NONE) {</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        else if (w == LengthConstraintType.RANGE) {</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (h == LengthConstraintType.NONE) {</span>
 <span class="nc" id="L153">                return arrangeRN(container, g2, constraint);</span>
             }
-<span class="nc bnc" id="L155" title="All 2 branches missed.">            else if (h == LengthConstraintType.FIXED) {</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">            else if (h == LengthConstraintType.FIXED) {</span>
 <span class="nc" id="L156">                return arrangeRF(container, g2, constraint);</span>
             }
-<span class="nc bnc" id="L158" title="All 2 branches missed.">            else if (h == LengthConstraintType.RANGE) {</span>
-<span class="nc" id="L159">                return arrangeRR(container, g2, constraint);</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">            else if (h == LengthConstraintType.RANGE) {</span>
+<span class="fc" id="L159">                return arrangeRR(container, g2, constraint);</span>
             }
         }
 <span class="nc" id="L162">        throw new RuntimeException(&quot;Unrecognised constraint type.&quot;);</span>
@@ -176,26 +176,26 @@ public class FlowArrangement implements Arrangement, Serializable {
     protected Size2D arrangeFN(BlockContainer container, Graphics2D g2,
                                RectangleConstraint constraint) {
 
-<span class="nc" id="L179">        List blocks = container.getBlocks();</span>
-<span class="nc" id="L180">        double width = constraint.getWidth();</span>
+<span class="fc" id="L179">        List blocks = container.getBlocks();</span>
+<span class="fc" id="L180">        double width = constraint.getWidth();</span>
 
-<span class="nc" id="L182">        double x = 0.0;</span>
-<span class="nc" id="L183">        double y = 0.0;</span>
-<span class="nc" id="L184">        double maxHeight = 0.0;</span>
-<span class="nc" id="L185">        List itemsInRow = new ArrayList();</span>
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        for (int i = 0; i &lt; blocks.size(); i++) {</span>
-<span class="nc" id="L187">            Block block = (Block) blocks.get(i);</span>
-<span class="nc" id="L188">            Size2D size = block.arrange(g2, RectangleConstraint.NONE);</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">            if (x + size.width &lt;= width) {</span>
-<span class="nc" id="L190">                itemsInRow.add(block);</span>
-<span class="nc" id="L191">                block.setBounds(</span>
+<span class="fc" id="L182">        double x = 0.0;</span>
+<span class="fc" id="L183">        double y = 0.0;</span>
+<span class="fc" id="L184">        double maxHeight = 0.0;</span>
+<span class="fc" id="L185">        List itemsInRow = new ArrayList();</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        for (int i = 0; i &lt; blocks.size(); i++) {</span>
+<span class="fc" id="L187">            Block block = (Block) blocks.get(i);</span>
+<span class="fc" id="L188">            Size2D size = block.arrange(g2, RectangleConstraint.NONE);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            if (x + size.width &lt;= width) {</span>
+<span class="fc" id="L190">                itemsInRow.add(block);</span>
+<span class="fc" id="L191">                block.setBounds(</span>
                     new Rectangle2D.Double(x, y, size.width, size.height)
                 );
-<span class="nc" id="L194">                x = x + size.width + this.horizontalGap;</span>
-<span class="nc" id="L195">                maxHeight = Math.max(maxHeight, size.height);</span>
+<span class="fc" id="L194">                x = x + size.width + this.horizontalGap;</span>
+<span class="fc" id="L195">                maxHeight = Math.max(maxHeight, size.height);</span>
             }
             else {
-<span class="nc bnc" id="L198" title="All 2 branches missed.">                if (itemsInRow.isEmpty()) {</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                if (itemsInRow.isEmpty()) {</span>
                     // place in this row (truncated) anyway
 <span class="nc" id="L200">                    block.setBounds(</span>
                         new Rectangle2D.Double(
@@ -207,21 +207,21 @@ public class FlowArrangement implements Arrangement, Serializable {
                 }
                 else {
                     // start new row
-<span class="nc" id="L210">                    itemsInRow.clear();</span>
-<span class="nc" id="L211">                    x = 0.0;</span>
-<span class="nc" id="L212">                    y = y + maxHeight + this.verticalGap;</span>
-<span class="nc" id="L213">                    maxHeight = size.height;</span>
-<span class="nc" id="L214">                    block.setBounds(</span>
+<span class="fc" id="L210">                    itemsInRow.clear();</span>
+<span class="fc" id="L211">                    x = 0.0;</span>
+<span class="fc" id="L212">                    y = y + maxHeight + this.verticalGap;</span>
+<span class="fc" id="L213">                    maxHeight = size.height;</span>
+<span class="fc" id="L214">                    block.setBounds(</span>
                         new Rectangle2D.Double(
-<span class="nc" id="L216">                            x, y, Math.min(size.width, width), size.height</span>
+<span class="fc" id="L216">                            x, y, Math.min(size.width, width), size.height</span>
                         )
                     );
-<span class="nc" id="L219">                    x = size.width + this.horizontalGap;</span>
-<span class="nc" id="L220">                    itemsInRow.add(block);</span>
+<span class="fc" id="L219">                    x = size.width + this.horizontalGap;</span>
+<span class="fc" id="L220">                    itemsInRow.add(block);</span>
                 }
             }
         }
-<span class="nc" id="L224">        return new Size2D(constraint.getWidth(), y + maxHeight);</span>
+<span class="fc" id="L224">        return new Size2D(constraint.getWidth(), y + maxHeight);</span>
     }
 
     /**
@@ -237,9 +237,9 @@ public class FlowArrangement implements Arrangement, Serializable {
     protected Size2D arrangeFR(BlockContainer container, Graphics2D g2,
                                RectangleConstraint constraint) {
 
-<span class="nc" id="L240">        Size2D s = arrangeFN(container, g2, constraint);</span>
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (constraint.getHeightRange().contains(s.height)) {</span>
-<span class="nc" id="L242">            return s;</span>
+<span class="fc" id="L240">        Size2D s = arrangeFN(container, g2, constraint);</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (constraint.getHeightRange().contains(s.height)) {</span>
+<span class="fc" id="L242">            return s;</span>
         }
         else {
 <span class="nc" id="L245">            RectangleConstraint c = constraint.toFixedHeight(</span>
@@ -281,15 +281,15 @@ public class FlowArrangement implements Arrangement, Serializable {
 
         // first arrange without constraints, and see if this fits within
         // the required ranges...
-<span class="nc" id="L284">        Size2D s1 = arrangeNN(container, g2);</span>
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (constraint.getWidthRange().contains(s1.width)) {</span>
-<span class="nc" id="L286">            return s1;  // TODO: we didn't check the height yet</span>
+<span class="fc" id="L284">        Size2D s1 = arrangeNN(container, g2);</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (constraint.getWidthRange().contains(s1.width)) {</span>
+<span class="fc" id="L286">            return s1;  // TODO: we didn't check the height yet</span>
         }
         else {
-<span class="nc" id="L289">            RectangleConstraint c = constraint.toFixedWidth(</span>
-<span class="nc" id="L290">                constraint.getWidthRange().getUpperBound()</span>
+<span class="fc" id="L289">            RectangleConstraint c = constraint.toFixedWidth(</span>
+<span class="fc" id="L290">                constraint.getWidthRange().getUpperBound()</span>
             );
-<span class="nc" id="L292">            return arrangeFR(container, g2, c);</span>
+<span class="fc" id="L292">            return arrangeFR(container, g2, c);</span>
         }
     }
 
@@ -354,32 +354,32 @@ public class FlowArrangement implements Arrangement, Serializable {
      * @return The size after the arrangement.
      */
     protected Size2D arrangeNN(BlockContainer container, Graphics2D g2) {
-<span class="nc" id="L357">        double x = 0.0;</span>
-<span class="nc" id="L358">        double width = 0.0;</span>
-<span class="nc" id="L359">        double maxHeight = 0.0;</span>
-<span class="nc" id="L360">        List blocks = container.getBlocks();</span>
-<span class="nc" id="L361">        int blockCount = blocks.size();</span>
-<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (blockCount &gt; 0) {</span>
-<span class="nc" id="L363">            Size2D[] sizes = new Size2D[blocks.size()];</span>
-<span class="nc bnc" id="L364" title="All 2 branches missed.">            for (int i = 0; i &lt; blocks.size(); i++) {</span>
-<span class="nc" id="L365">                Block block = (Block) blocks.get(i);</span>
-<span class="nc" id="L366">                sizes[i] = block.arrange(g2, RectangleConstraint.NONE);</span>
-<span class="nc" id="L367">                width = width + sizes[i].getWidth();</span>
-<span class="nc" id="L368">                maxHeight = Math.max(sizes[i].height, maxHeight);</span>
-<span class="nc" id="L369">                block.setBounds(</span>
+<span class="fc" id="L357">        double x = 0.0;</span>
+<span class="fc" id="L358">        double width = 0.0;</span>
+<span class="fc" id="L359">        double maxHeight = 0.0;</span>
+<span class="fc" id="L360">        List blocks = container.getBlocks();</span>
+<span class="fc" id="L361">        int blockCount = blocks.size();</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">        if (blockCount &gt; 0) {</span>
+<span class="fc" id="L363">            Size2D[] sizes = new Size2D[blocks.size()];</span>
+<span class="fc bfc" id="L364" title="All 2 branches covered.">            for (int i = 0; i &lt; blocks.size(); i++) {</span>
+<span class="fc" id="L365">                Block block = (Block) blocks.get(i);</span>
+<span class="fc" id="L366">                sizes[i] = block.arrange(g2, RectangleConstraint.NONE);</span>
+<span class="fc" id="L367">                width = width + sizes[i].getWidth();</span>
+<span class="fc" id="L368">                maxHeight = Math.max(sizes[i].height, maxHeight);</span>
+<span class="fc" id="L369">                block.setBounds(</span>
                     new Rectangle2D.Double(
                         x, 0.0, sizes[i].width, sizes[i].height
                     )
                 );
-<span class="nc" id="L374">                x = x + sizes[i].width + this.horizontalGap;</span>
+<span class="fc" id="L374">                x = x + sizes[i].width + this.horizontalGap;</span>
             }
-<span class="nc bnc" id="L376" title="All 2 branches missed.">            if (blockCount &gt; 1) {</span>
-<span class="nc" id="L377">                width = width + this.horizontalGap * (blockCount - 1);</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">            if (blockCount &gt; 1) {</span>
+<span class="fc" id="L377">                width = width + this.horizontalGap * (blockCount - 1);</span>
             }
-<span class="nc bnc" id="L379" title="All 2 branches missed.">            if (this.verticalAlignment != VerticalAlignment.TOP) {</span>
-<span class="nc bnc" id="L380" title="All 2 branches missed.">                for (int i = 0; i &lt; blocks.size(); i++) {</span>
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">            if (this.verticalAlignment != VerticalAlignment.TOP) {</span>
+<span class="fc bfc" id="L380" title="All 2 branches covered.">                for (int i = 0; i &lt; blocks.size(); i++) {</span>
                     //Block b = (Block) blocks.get(i);
-<span class="nc bnc" id="L382" title="All 2 branches missed.">                    if (this.verticalAlignment == VerticalAlignment.CENTER) {</span>
+<span class="pc bpc" id="L382" title="1 of 2 branches missed.">                    if (this.verticalAlignment == VerticalAlignment.CENTER) {</span>
                         //TODO: shift block down by half
                     }
 <span class="nc bnc" id="L385" title="All 2 branches missed.">                    else if (this.verticalAlignment</span>
@@ -389,7 +389,7 @@ public class FlowArrangement implements Arrangement, Serializable {
                 }
             }
         }
-<span class="nc" id="L392">        return new Size2D(width, maxHeight);</span>
+<span class="fc" id="L392">        return new Size2D(width, maxHeight);</span>
     }
 
     /**
@@ -414,7 +414,7 @@ public class FlowArrangement implements Arrangement, Serializable {
     @Override
     public void clear() {
         // no action required.
-<span class="nc" id="L417">    }</span>
+<span class="fc" id="L417">    }</span>
 
     /**
      * Tests this instance for equality with an arbitrary object.
@@ -425,27 +425,27 @@ public class FlowArrangement implements Arrangement, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L428" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L429">            return true;</span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L429">            return true;</span>
         }
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (!(obj instanceof FlowArrangement)) {</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">        if (!(obj instanceof FlowArrangement)) {</span>
 <span class="nc" id="L432">            return false;</span>
         }
-<span class="nc" id="L434">        FlowArrangement that = (FlowArrangement) obj;</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">        if (this.horizontalAlignment != that.horizontalAlignment) {</span>
-<span class="nc" id="L436">            return false;</span>
+<span class="fc" id="L434">        FlowArrangement that = (FlowArrangement) obj;</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">        if (this.horizontalAlignment != that.horizontalAlignment) {</span>
+<span class="fc" id="L436">            return false;</span>
         }
-<span class="nc bnc" id="L438" title="All 2 branches missed.">        if (this.verticalAlignment != that.verticalAlignment) {</span>
-<span class="nc" id="L439">            return false;</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (this.verticalAlignment != that.verticalAlignment) {</span>
+<span class="fc" id="L439">            return false;</span>
         }
-<span class="nc bnc" id="L441" title="All 2 branches missed.">        if (this.horizontalGap != that.horizontalGap) {</span>
-<span class="nc" id="L442">            return false;</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">        if (this.horizontalGap != that.horizontalGap) {</span>
+<span class="fc" id="L442">            return false;</span>
         }
-<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (this.verticalGap != that.verticalGap) {</span>
-<span class="nc" id="L445">            return false;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (this.verticalGap != that.verticalGap) {</span>
+<span class="fc" id="L445">            return false;</span>
         }
-<span class="nc" id="L447">        return true;</span>
+<span class="fc" id="L447">        return true;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

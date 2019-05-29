@@ -72,11 +72,11 @@ public class KeyedObjects2D implements Cloneable, Serializable {
     /**
      * Creates a new instance (initially empty).
      */
-<span class="nc" id="L75">    public KeyedObjects2D() {</span>
-<span class="nc" id="L76">        this.rowKeys = new java.util.ArrayList();</span>
-<span class="nc" id="L77">        this.columnKeys = new java.util.ArrayList();</span>
-<span class="nc" id="L78">        this.rows = new java.util.ArrayList();</span>
-<span class="nc" id="L79">    }</span>
+<span class="fc" id="L75">    public KeyedObjects2D() {</span>
+<span class="fc" id="L76">        this.rowKeys = new java.util.ArrayList();</span>
+<span class="fc" id="L77">        this.columnKeys = new java.util.ArrayList();</span>
+<span class="fc" id="L78">        this.rows = new java.util.ArrayList();</span>
+<span class="fc" id="L79">    }</span>
 
     /**
      * Returns the row count.
@@ -86,7 +86,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getColumnCount()
      */
     public int getRowCount() {
-<span class="nc" id="L89">        return this.rowKeys.size();</span>
+<span class="fc" id="L89">        return this.rowKeys.size();</span>
     }
 
     /**
@@ -97,7 +97,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getRowCount()
      */
     public int getColumnCount() {
-<span class="nc" id="L100">        return this.columnKeys.size();</span>
+<span class="fc" id="L100">        return this.columnKeys.size();</span>
     }
 
     /**
@@ -111,18 +111,18 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getObject(Comparable, Comparable)
      */
     public Object getObject(int row, int column) {
-<span class="nc" id="L114">        Object result = null;</span>
-<span class="nc" id="L115">        KeyedObjects rowData = (KeyedObjects) this.rows.get(row);</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (rowData != null) {</span>
-<span class="nc" id="L117">            Comparable columnKey = (Comparable) this.columnKeys.get(column);</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (columnKey != null) {</span>
-<span class="nc" id="L119">                int index = rowData.getIndex(columnKey);</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">                if (index &gt;= 0) {</span>
-<span class="nc" id="L121">                    result = rowData.getObject(columnKey);</span>
+<span class="fc" id="L114">        Object result = null;</span>
+<span class="fc" id="L115">        KeyedObjects rowData = (KeyedObjects) this.rows.get(row);</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (rowData != null) {</span>
+<span class="fc" id="L117">            Comparable columnKey = (Comparable) this.columnKeys.get(column);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">            if (columnKey != null) {</span>
+<span class="fc" id="L119">                int index = rowData.getIndex(columnKey);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                if (index &gt;= 0) {</span>
+<span class="fc" id="L121">                    result = rowData.getObject(columnKey);</span>
                 }
             }
         }
-<span class="nc" id="L125">        return result;</span>
+<span class="fc" id="L125">        return result;</span>
     }
 
     /**
@@ -135,7 +135,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getRowIndex(Comparable)
      */
     public Comparable getRowKey(int row) {
-<span class="nc" id="L138">        return (Comparable) this.rowKeys.get(row);</span>
+<span class="fc" id="L138">        return (Comparable) this.rowKeys.get(row);</span>
     }
 
     /**
@@ -149,8 +149,8 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getRowKey(int)
      */
     public int getRowIndex(Comparable key) {
-<span class="nc" id="L152">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L153">        return this.rowKeys.indexOf(key);</span>
+<span class="fc" id="L152">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L153">        return this.rowKeys.indexOf(key);</span>
     }
 
     /**
@@ -161,7 +161,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getRowKeys()
      */
     public List getRowKeys() {
-<span class="nc" id="L164">        return Collections.unmodifiableList(this.rowKeys);</span>
+<span class="fc" id="L164">        return Collections.unmodifiableList(this.rowKeys);</span>
     }
 
     /**
@@ -174,7 +174,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getColumnIndex(Comparable)
      */
     public Comparable getColumnKey(int column) {
-<span class="nc" id="L177">        return (Comparable) this.columnKeys.get(column);</span>
+<span class="fc" id="L177">        return (Comparable) this.columnKeys.get(column);</span>
     }
 
     /**
@@ -188,8 +188,8 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getColumnKey(int)
      */
     public int getColumnIndex(Comparable key) {
-<span class="nc" id="L191">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L192">        return this.columnKeys.indexOf(key);</span>
+<span class="fc" id="L191">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L192">        return this.columnKeys.indexOf(key);</span>
     }
 
     /**
@@ -200,7 +200,7 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #getRowKeys()
      */
     public List getColumnKeys() {
-<span class="nc" id="L203">        return Collections.unmodifiableList(this.columnKeys);</span>
+<span class="fc" id="L203">        return Collections.unmodifiableList(this.columnKeys);</span>
     }
 
     /**
@@ -217,25 +217,25 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      *         {@code columnKey} is not recognised.
      */
     public Object getObject(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L220">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
-<span class="nc" id="L221">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
-<span class="nc" id="L222">        int row = this.rowKeys.indexOf(rowKey);</span>
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (row &lt; 0) {</span>
-<span class="nc" id="L224">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
+<span class="fc" id="L220">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L221">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
+<span class="fc" id="L222">        int row = this.rowKeys.indexOf(rowKey);</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (row &lt; 0) {</span>
+<span class="fc" id="L224">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L227">        int column = this.columnKeys.indexOf(columnKey);</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">        if (column &lt; 0) {</span>
-<span class="nc" id="L229">            throw new UnknownKeyException(&quot;Column key (&quot; + columnKey</span>
+<span class="fc" id="L227">        int column = this.columnKeys.indexOf(columnKey);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (column &lt; 0) {</span>
+<span class="fc" id="L229">            throw new UnknownKeyException(&quot;Column key (&quot; + columnKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L232">        KeyedObjects rowData = (KeyedObjects) this.rows.get(row);</span>
-<span class="nc" id="L233">        int index = rowData.getIndex(columnKey);</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (index &gt;= 0) {</span>
-<span class="nc" id="L235">            return rowData.getObject(index);</span>
+<span class="fc" id="L232">        KeyedObjects rowData = (KeyedObjects) this.rows.get(row);</span>
+<span class="fc" id="L233">        int index = rowData.getIndex(columnKey);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (index &gt;= 0) {</span>
+<span class="fc" id="L235">            return rowData.getObject(index);</span>
         }
         else {
-<span class="nc" id="L238">            return null;</span>
+<span class="fc" id="L238">            return null;</span>
         }
     }
 
@@ -248,8 +248,8 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      */
     public void addObject(Object object, Comparable rowKey,
             Comparable columnKey) {
-<span class="nc" id="L251">        setObject(object, rowKey, columnKey);</span>
-<span class="nc" id="L252">    }</span>
+<span class="fc" id="L251">        setObject(object, rowKey, columnKey);</span>
+<span class="fc" id="L252">    }</span>
 
     /**
      * Adds or updates an object.
@@ -260,24 +260,24 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      */
     public void setObject(Object object, Comparable rowKey,
             Comparable columnKey) {
-<span class="nc" id="L263">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
-<span class="nc" id="L264">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
+<span class="fc" id="L263">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L264">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
         KeyedObjects row;
-<span class="nc" id="L266">        int rowIndex = this.rowKeys.indexOf(rowKey);</span>
-<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (rowIndex &gt;= 0) {</span>
-<span class="nc" id="L268">            row = (KeyedObjects) this.rows.get(rowIndex);</span>
+<span class="fc" id="L266">        int rowIndex = this.rowKeys.indexOf(rowKey);</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        if (rowIndex &gt;= 0) {</span>
+<span class="fc" id="L268">            row = (KeyedObjects) this.rows.get(rowIndex);</span>
         }
         else {
-<span class="nc" id="L271">            this.rowKeys.add(rowKey);</span>
-<span class="nc" id="L272">            row = new KeyedObjects();</span>
-<span class="nc" id="L273">            this.rows.add(row);</span>
+<span class="fc" id="L271">            this.rowKeys.add(rowKey);</span>
+<span class="fc" id="L272">            row = new KeyedObjects();</span>
+<span class="fc" id="L273">            this.rows.add(row);</span>
         }
-<span class="nc" id="L275">        row.setObject(columnKey, object);</span>
-<span class="nc" id="L276">        int columnIndex = this.columnKeys.indexOf(columnKey);</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (columnIndex &lt; 0) {</span>
-<span class="nc" id="L278">            this.columnKeys.add(columnKey);</span>
+<span class="fc" id="L275">        row.setObject(columnKey, object);</span>
+<span class="fc" id="L276">        int columnIndex = this.columnKeys.indexOf(columnKey);</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        if (columnIndex &lt; 0) {</span>
+<span class="fc" id="L278">            this.columnKeys.add(columnKey);</span>
         }
-<span class="nc" id="L280">    }</span>
+<span class="fc" id="L280">    }</span>
 
     /**
      * Removes an object from the table by setting it to {@code null}.  If
@@ -290,60 +290,60 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #addObject(Object, Comparable, Comparable)
      */
     public void removeObject(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L293">        int rowIndex = getRowIndex(rowKey);</span>
-<span class="nc bnc" id="L294" title="All 2 branches missed.">        if (rowIndex &lt; 0) {</span>
-<span class="nc" id="L295">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
+<span class="fc" id="L293">        int rowIndex = getRowIndex(rowKey);</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (rowIndex &lt; 0) {</span>
+<span class="fc" id="L295">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L298">        int columnIndex = getColumnIndex(columnKey);</span>
-<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (columnIndex &lt; 0) {</span>
+<span class="fc" id="L298">        int columnIndex = getColumnIndex(columnKey);</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        if (columnIndex &lt; 0) {</span>
 <span class="nc" id="L300">            throw new UnknownKeyException(&quot;Column key (&quot; + columnKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L303">        setObject(null, rowKey, columnKey);</span>
+<span class="fc" id="L303">        setObject(null, rowKey, columnKey);</span>
 
         // 1. check whether the row is now empty.
-<span class="nc" id="L306">        boolean allNull = true;</span>
-<span class="nc" id="L307">        KeyedObjects row = (KeyedObjects) this.rows.get(rowIndex);</span>
+<span class="fc" id="L306">        boolean allNull = true;</span>
+<span class="fc" id="L307">        KeyedObjects row = (KeyedObjects) this.rows.get(rowIndex);</span>
 
-<span class="nc bnc" id="L309" title="All 2 branches missed.">        for (int item = 0, itemCount = row.getItemCount(); item &lt; itemCount;</span>
-<span class="nc" id="L310">             item++) {</span>
-<span class="nc bnc" id="L311" title="All 2 branches missed.">            if (row.getObject(item) != null) {</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        for (int item = 0, itemCount = row.getItemCount(); item &lt; itemCount;</span>
+<span class="fc" id="L310">             item++) {</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">            if (row.getObject(item) != null) {</span>
 <span class="nc" id="L312">                allNull = false;</span>
 <span class="nc" id="L313">                break;</span>
             }
         }
 
-<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (allNull) {</span>
-<span class="nc" id="L318">            this.rowKeys.remove(rowIndex);</span>
-<span class="nc" id="L319">            this.rows.remove(rowIndex);</span>
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">        if (allNull) {</span>
+<span class="fc" id="L318">            this.rowKeys.remove(rowIndex);</span>
+<span class="fc" id="L319">            this.rows.remove(rowIndex);</span>
         }
 
         // 2. check whether the column is now empty.
-<span class="nc" id="L323">        allNull = true;</span>
+<span class="fc" id="L323">        allNull = true;</span>
 
-<span class="nc bnc" id="L325" title="All 2 branches missed.">        for (int item = 0, itemCount = this.rows.size(); item &lt; itemCount;</span>
-<span class="nc" id="L326">             item++) {</span>
-<span class="nc" id="L327">            row = (KeyedObjects) this.rows.get(item);</span>
-<span class="nc" id="L328">            int colIndex = row.getIndex(columnKey);</span>
-<span class="nc bnc" id="L329" title="All 4 branches missed.">            if (colIndex &gt;= 0 &amp;&amp; row.getObject(colIndex) != null) {</span>
-<span class="nc" id="L330">                allNull = false;</span>
-<span class="nc" id="L331">                break;</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        for (int item = 0, itemCount = this.rows.size(); item &lt; itemCount;</span>
+<span class="fc" id="L326">             item++) {</span>
+<span class="fc" id="L327">            row = (KeyedObjects) this.rows.get(item);</span>
+<span class="fc" id="L328">            int colIndex = row.getIndex(columnKey);</span>
+<span class="pc bpc" id="L329" title="1 of 4 branches missed.">            if (colIndex &gt;= 0 &amp;&amp; row.getObject(colIndex) != null) {</span>
+<span class="fc" id="L330">                allNull = false;</span>
+<span class="fc" id="L331">                break;</span>
             }
         }
 
-<span class="nc bnc" id="L335" title="All 2 branches missed.">        if (allNull) {</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">            for (int item = 0, itemCount = this.rows.size(); item &lt; itemCount;</span>
-<span class="nc" id="L337">                 item++) {</span>
-<span class="nc" id="L338">                row = (KeyedObjects) this.rows.get(item);</span>
-<span class="nc" id="L339">                int colIndex = row.getIndex(columnKey);</span>
-<span class="nc bnc" id="L340" title="All 2 branches missed.">                if (colIndex &gt;= 0) {</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (allNull) {</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">            for (int item = 0, itemCount = this.rows.size(); item &lt; itemCount;</span>
+<span class="fc" id="L337">                 item++) {</span>
+<span class="fc" id="L338">                row = (KeyedObjects) this.rows.get(item);</span>
+<span class="fc" id="L339">                int colIndex = row.getIndex(columnKey);</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">                if (colIndex &gt;= 0) {</span>
 <span class="nc" id="L341">                    row.removeValue(colIndex);</span>
                 }
             }
-<span class="nc" id="L344">            this.columnKeys.remove(columnKey);</span>
+<span class="fc" id="L344">            this.columnKeys.remove(columnKey);</span>
         }
-<span class="nc" id="L346">    }</span>
+<span class="fc" id="L346">    }</span>
 
     /**
      * Removes an entire row from the table.
@@ -353,9 +353,9 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #removeColumn(int)
      */
     public void removeRow(int rowIndex) {
-<span class="nc" id="L356">        this.rowKeys.remove(rowIndex);</span>
-<span class="nc" id="L357">        this.rows.remove(rowIndex);</span>
-<span class="nc" id="L358">    }</span>
+<span class="fc" id="L356">        this.rowKeys.remove(rowIndex);</span>
+<span class="fc" id="L357">        this.rows.remove(rowIndex);</span>
+<span class="fc" id="L358">    }</span>
 
     /**
      * Removes an entire row from the table.
@@ -367,13 +367,13 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #removeColumn(Comparable)
      */
     public void removeRow(Comparable rowKey) {
-<span class="nc" id="L370">        int index = getRowIndex(rowKey);</span>
-<span class="nc bnc" id="L371" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L372">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
+<span class="fc" id="L370">        int index = getRowIndex(rowKey);</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L372">            throw new UnknownKeyException(&quot;Row key (&quot; + rowKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L375">        removeRow(index);</span>
-<span class="nc" id="L376">    }</span>
+<span class="fc" id="L375">        removeRow(index);</span>
+<span class="fc" id="L376">    }</span>
 
     /**
      * Removes an entire column from the table.
@@ -383,9 +383,9 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #removeRow(int)
      */
     public void removeColumn(int columnIndex) {
-<span class="nc" id="L386">        Comparable columnKey = getColumnKey(columnIndex);</span>
-<span class="nc" id="L387">        removeColumn(columnKey);</span>
-<span class="nc" id="L388">    }</span>
+<span class="fc" id="L386">        Comparable columnKey = getColumnKey(columnIndex);</span>
+<span class="fc" id="L387">        removeColumn(columnKey);</span>
+<span class="fc" id="L388">    }</span>
 
     /**
      * Removes an entire column from the table.
@@ -397,21 +397,21 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      * @see #removeRow(Comparable)
      */
     public void removeColumn(Comparable columnKey) {
-<span class="nc" id="L400">        int index = getColumnIndex(columnKey);</span>
-<span class="nc bnc" id="L401" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L402">            throw new UnknownKeyException(&quot;Column key (&quot; + columnKey</span>
+<span class="fc" id="L400">        int index = getColumnIndex(columnKey);</span>
+<span class="fc bfc" id="L401" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L402">            throw new UnknownKeyException(&quot;Column key (&quot; + columnKey</span>
                     + &quot;) not recognised.&quot;);
         }
-<span class="nc" id="L405">        Iterator iterator = this.rows.iterator();</span>
-<span class="nc bnc" id="L406" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L407">            KeyedObjects rowData = (KeyedObjects) iterator.next();</span>
-<span class="nc" id="L408">            int i = rowData.getIndex(columnKey);</span>
-<span class="nc bnc" id="L409" title="All 2 branches missed.">            if (i &gt;= 0) {</span>
-<span class="nc" id="L410">                rowData.removeValue(i);</span>
+<span class="fc" id="L405">        Iterator iterator = this.rows.iterator();</span>
+<span class="fc bfc" id="L406" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L407">            KeyedObjects rowData = (KeyedObjects) iterator.next();</span>
+<span class="fc" id="L408">            int i = rowData.getIndex(columnKey);</span>
+<span class="fc bfc" id="L409" title="All 2 branches covered.">            if (i &gt;= 0) {</span>
+<span class="fc" id="L410">                rowData.removeValue(i);</span>
             }
-<span class="nc" id="L412">        }</span>
-<span class="nc" id="L413">        this.columnKeys.remove(columnKey);</span>
-<span class="nc" id="L414">    }</span>
+<span class="fc" id="L412">        }</span>
+<span class="fc" id="L413">        this.columnKeys.remove(columnKey);</span>
+<span class="fc" id="L414">    }</span>
 
     /**
      * Clears all the data and associated keys.
@@ -433,45 +433,45 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L437">            return true;</span>
         }
-<span class="nc bnc" id="L439" title="All 2 branches missed.">        if (!(obj instanceof KeyedObjects2D)) {</span>
+<span class="pc bpc" id="L439" title="1 of 2 branches missed.">        if (!(obj instanceof KeyedObjects2D)) {</span>
 <span class="nc" id="L440">            return false;</span>
         }
 
-<span class="nc" id="L443">        KeyedObjects2D that = (KeyedObjects2D) obj;</span>
-<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (!getRowKeys().equals(that.getRowKeys())) {</span>
-<span class="nc" id="L445">            return false;</span>
+<span class="fc" id="L443">        KeyedObjects2D that = (KeyedObjects2D) obj;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (!getRowKeys().equals(that.getRowKeys())) {</span>
+<span class="fc" id="L445">            return false;</span>
         }
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        if (!getColumnKeys().equals(that.getColumnKeys())) {</span>
-<span class="nc" id="L448">            return false;</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (!getColumnKeys().equals(that.getColumnKeys())) {</span>
+<span class="fc" id="L448">            return false;</span>
         }
-<span class="nc" id="L450">        int rowCount = getRowCount();</span>
-<span class="nc bnc" id="L451" title="All 2 branches missed.">        if (rowCount != that.getRowCount()) {</span>
+<span class="fc" id="L450">        int rowCount = getRowCount();</span>
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">        if (rowCount != that.getRowCount()) {</span>
 <span class="nc" id="L452">            return false;</span>
         }
-<span class="nc" id="L454">        int colCount = getColumnCount();</span>
-<span class="nc bnc" id="L455" title="All 2 branches missed.">        if (colCount != that.getColumnCount()) {</span>
+<span class="fc" id="L454">        int colCount = getColumnCount();</span>
+<span class="pc bpc" id="L455" title="1 of 2 branches missed.">        if (colCount != that.getColumnCount()) {</span>
 <span class="nc" id="L456">            return false;</span>
         }
-<span class="nc bnc" id="L458" title="All 2 branches missed.">        for (int r = 0; r &lt; rowCount; r++) {</span>
-<span class="nc bnc" id="L459" title="All 2 branches missed.">            for (int c = 0; c &lt; colCount; c++) {</span>
-<span class="nc" id="L460">                Object v1 = getObject(r, c);</span>
-<span class="nc" id="L461">                Object v2 = that.getObject(r, c);</span>
-<span class="nc bnc" id="L462" title="All 2 branches missed.">                if (v1 == null) {</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">                    if (v2 != null) {</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">        for (int r = 0; r &lt; rowCount; r++) {</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">            for (int c = 0; c &lt; colCount; c++) {</span>
+<span class="fc" id="L460">                Object v1 = getObject(r, c);</span>
+<span class="fc" id="L461">                Object v2 = that.getObject(r, c);</span>
+<span class="fc bfc" id="L462" title="All 2 branches covered.">                if (v1 == null) {</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">                    if (v2 != null) {</span>
 <span class="nc" id="L464">                        return false;</span>
                     }
                 }
                 else {
-<span class="nc bnc" id="L468" title="All 2 branches missed.">                    if (!v1.equals(v2)) {</span>
-<span class="nc" id="L469">                        return false;</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">                    if (!v1.equals(v2)) {</span>
+<span class="fc" id="L469">                        return false;</span>
                     }
                 }
             }
         }
-<span class="nc" id="L474">        return true;</span>
+<span class="fc" id="L474">        return true;</span>
     }
 
     /**
@@ -498,17 +498,17 @@ public class KeyedObjects2D implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L501">        KeyedObjects2D clone = (KeyedObjects2D) super.clone();</span>
-<span class="nc" id="L502">        clone.columnKeys = new java.util.ArrayList(this.columnKeys);</span>
-<span class="nc" id="L503">        clone.rowKeys = new java.util.ArrayList(this.rowKeys);</span>
-<span class="nc" id="L504">        clone.rows = new java.util.ArrayList(this.rows.size());</span>
-<span class="nc" id="L505">        Iterator iterator = this.rows.iterator();</span>
-<span class="nc bnc" id="L506" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L507">            KeyedObjects row = (KeyedObjects) iterator.next();</span>
-<span class="nc" id="L508">            clone.rows.add(row.clone());</span>
-<span class="nc" id="L509">        }</span>
-<span class="nc" id="L510">        return clone;</span>
+<span class="fc" id="L501">        KeyedObjects2D clone = (KeyedObjects2D) super.clone();</span>
+<span class="fc" id="L502">        clone.columnKeys = new java.util.ArrayList(this.columnKeys);</span>
+<span class="fc" id="L503">        clone.rowKeys = new java.util.ArrayList(this.rowKeys);</span>
+<span class="fc" id="L504">        clone.rows = new java.util.ArrayList(this.rows.size());</span>
+<span class="fc" id="L505">        Iterator iterator = this.rows.iterator();</span>
+<span class="fc bfc" id="L506" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L507">            KeyedObjects row = (KeyedObjects) iterator.next();</span>
+<span class="fc" id="L508">            clone.rows.add(row.clone());</span>
+<span class="fc" id="L509">        }</span>
+<span class="fc" id="L510">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

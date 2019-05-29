@@ -99,8 +99,8 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * collect information about the dimensions of a rendered chart.
      */
     public ChartRenderingInfo() {
-<span class="nc" id="L102">        this(new StandardEntityCollection());</span>
-<span class="nc" id="L103">    }</span>
+<span class="fc" id="L102">        this(new StandardEntityCollection());</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Constructs a new instance. If an entity collection is supplied, it will
@@ -110,11 +110,11 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      *
      * @param entities  an entity collection ({@code null} permitted).
      */
-<span class="nc" id="L113">    public ChartRenderingInfo(EntityCollection entities) {</span>
-<span class="nc" id="L114">        this.chartArea = new Rectangle2D.Double();</span>
-<span class="nc" id="L115">        this.plotInfo = new PlotRenderingInfo(this);</span>
-<span class="nc" id="L116">        this.entities = entities;</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L113">    public ChartRenderingInfo(EntityCollection entities) {</span>
+<span class="fc" id="L114">        this.chartArea = new Rectangle2D.Double();</span>
+<span class="fc" id="L115">        this.plotInfo = new PlotRenderingInfo(this);</span>
+<span class="fc" id="L116">        this.entities = entities;</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Returns the area in which the chart was drawn.
@@ -124,7 +124,7 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @see #setChartArea(Rectangle2D)
      */
     public Rectangle2D getChartArea() {
-<span class="nc" id="L127">        return this.chartArea;</span>
+<span class="fc" id="L127">        return this.chartArea;</span>
     }
 
     /**
@@ -135,8 +135,8 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @see #getChartArea()
      */
     public void setChartArea(Rectangle2D area) {
-<span class="nc" id="L138">        this.chartArea.setRect(area);</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L138">        this.chartArea.setRect(area);</span>
+<span class="fc" id="L139">    }</span>
 
     /**
      * Returns the collection of entities maintained by this instance.
@@ -146,7 +146,7 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @see #setEntityCollection(EntityCollection)
      */
     public EntityCollection getEntityCollection() {
-<span class="nc" id="L149">        return this.entities;</span>
+<span class="fc" id="L149">        return this.entities;</span>
     }
 
     /**
@@ -157,19 +157,19 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @see #getEntityCollection()
      */
     public void setEntityCollection(EntityCollection entities) {
-<span class="nc" id="L160">        this.entities = entities;</span>
-<span class="nc" id="L161">    }</span>
+<span class="fc" id="L160">        this.entities = entities;</span>
+<span class="fc" id="L161">    }</span>
 
     /**
      * Clears the information recorded by this object.
      */
     public void clear() {
-<span class="nc" id="L167">        this.chartArea.setRect(0.0, 0.0, 0.0, 0.0);</span>
-<span class="nc" id="L168">        this.plotInfo = new PlotRenderingInfo(this);</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (this.entities != null) {</span>
-<span class="nc" id="L170">            this.entities.clear();</span>
+<span class="fc" id="L167">        this.chartArea.setRect(0.0, 0.0, 0.0, 0.0);</span>
+<span class="fc" id="L168">        this.plotInfo = new PlotRenderingInfo(this);</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (this.entities != null) {</span>
+<span class="fc" id="L170">            this.entities.clear();</span>
         }
-<span class="nc" id="L172">    }</span>
+<span class="fc" id="L172">    }</span>
 
     /**
      * Returns the rendering info for the chart's plot.
@@ -177,7 +177,7 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @return The rendering info for the plot.
      */
     public PlotRenderingInfo getPlotInfo() {
-<span class="nc" id="L180">        return this.plotInfo;</span>
+<span class="fc" id="L180">        return this.plotInfo;</span>
     }
 
     /**
@@ -189,23 +189,23 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L193">            return true;</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L193">            return true;</span>
         }
-<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (!(obj instanceof ChartRenderingInfo)) {</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (!(obj instanceof ChartRenderingInfo)) {</span>
 <span class="nc" id="L196">            return false;</span>
         }
-<span class="nc" id="L198">        ChartRenderingInfo that = (ChartRenderingInfo) obj;</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.chartArea, that.chartArea)) {</span>
-<span class="nc" id="L200">            return false;</span>
+<span class="fc" id="L198">        ChartRenderingInfo that = (ChartRenderingInfo) obj;</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.chartArea, that.chartArea)) {</span>
+<span class="fc" id="L200">            return false;</span>
         }
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.plotInfo, that.plotInfo)) {</span>
-<span class="nc" id="L203">            return false;</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.plotInfo, that.plotInfo)) {</span>
+<span class="fc" id="L203">            return false;</span>
         }
-<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.entities, that.entities)) {</span>
-<span class="nc" id="L206">            return false;</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.entities, that.entities)) {</span>
+<span class="fc" id="L206">            return false;</span>
         }
-<span class="nc" id="L208">        return true;</span>
+<span class="fc" id="L208">        return true;</span>
     }
 
     /**
@@ -217,15 +217,15 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L220">        ChartRenderingInfo clone = (ChartRenderingInfo) super.clone();</span>
-<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (this.chartArea != null) {</span>
-<span class="nc" id="L222">            clone.chartArea = (Rectangle2D) this.chartArea.clone();</span>
+<span class="fc" id="L220">        ChartRenderingInfo clone = (ChartRenderingInfo) super.clone();</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">        if (this.chartArea != null) {</span>
+<span class="fc" id="L222">            clone.chartArea = (Rectangle2D) this.chartArea.clone();</span>
         }
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (this.entities instanceof PublicCloneable) {</span>
-<span class="nc" id="L225">            PublicCloneable pc = (PublicCloneable) this.entities;</span>
-<span class="nc" id="L226">            clone.entities = (EntityCollection) pc.clone();</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">        if (this.entities instanceof PublicCloneable) {</span>
+<span class="fc" id="L225">            PublicCloneable pc = (PublicCloneable) this.entities;</span>
+<span class="fc" id="L226">            clone.entities = (EntityCollection) pc.clone();</span>
         }
-<span class="nc" id="L228">        return clone;</span>
+<span class="fc" id="L228">        return clone;</span>
     }
 
     /**
@@ -236,9 +236,9 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L239">        stream.defaultWriteObject();</span>
-<span class="nc" id="L240">        SerialUtils.writeShape(this.chartArea, stream);</span>
-<span class="nc" id="L241">    }</span>
+<span class="fc" id="L239">        stream.defaultWriteObject();</span>
+<span class="fc" id="L240">        SerialUtils.writeShape(this.chartArea, stream);</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Provides serialization support.
@@ -250,9 +250,9 @@ public class ChartRenderingInfo implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L253">        stream.defaultReadObject();</span>
-<span class="nc" id="L254">        this.chartArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
-<span class="nc" id="L255">    }</span>
+<span class="fc" id="L253">        stream.defaultReadObject();</span>
+<span class="fc" id="L254">        this.chartArea = (Rectangle2D) SerialUtils.readShape(stream);</span>
+<span class="fc" id="L255">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

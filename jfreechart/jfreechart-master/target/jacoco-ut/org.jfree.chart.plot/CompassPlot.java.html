@@ -116,7 +116,7 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
     private static final long serialVersionUID = 6924382802125527395L;
 
     /** The default label font. */
-<span class="nc" id="L119">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
+<span class="fc" id="L119">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
             Font.BOLD, 10);
 
     /** A constant for the label type. */
@@ -132,19 +132,19 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
     private Font labelFont;
 
     /** A flag that controls whether or not a border is drawn. */
-<span class="nc" id="L135">    private boolean drawBorder = false;</span>
+<span class="fc" id="L135">    private boolean drawBorder = false;</span>
 
     /** The rose highlight paint. */
-<span class="nc" id="L138">    private transient Paint roseHighlightPaint = Color.BLACK;</span>
+<span class="fc" id="L138">    private transient Paint roseHighlightPaint = Color.BLACK;</span>
 
     /** The rose paint. */
-<span class="nc" id="L141">    private transient Paint rosePaint = Color.YELLOW;</span>
+<span class="fc" id="L141">    private transient Paint rosePaint = Color.YELLOW;</span>
 
     /** The rose center paint. */
-<span class="nc" id="L144">    private transient Paint roseCenterPaint = Color.WHITE;</span>
+<span class="fc" id="L144">    private transient Paint roseCenterPaint = Color.WHITE;</span>
 
     /** The compass font. */
-<span class="nc" id="L147">    private Font compassFont = new Font(&quot;Arial&quot;, Font.PLAIN, 10);</span>
+<span class="fc" id="L147">    private Font compassFont = new Font(&quot;Arial&quot;, Font.PLAIN, 10);</span>
 
     /** A working shape. */
     private transient Ellipse2D circle1;
@@ -162,28 +162,28 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
     private transient Rectangle2D rect1;
 
     /** An array of value datasets. */
-<span class="nc" id="L165">    private ValueDataset[] datasets = new ValueDataset[1];</span>
+<span class="fc" id="L165">    private ValueDataset[] datasets = new ValueDataset[1];</span>
 
     /** An array of needles. */
-<span class="nc" id="L168">    private MeterNeedle[] seriesNeedle = new MeterNeedle[1];</span>
+<span class="fc" id="L168">    private MeterNeedle[] seriesNeedle = new MeterNeedle[1];</span>
 
     /** The resourceBundle for the localization. */
-<span class="nc" id="L171">    protected static ResourceBundle localizationResources</span>
-<span class="nc" id="L172">            = ResourceBundleWrapper.getBundle(</span>
+<span class="fc" id="L171">    protected static ResourceBundle localizationResources</span>
+<span class="fc" id="L172">            = ResourceBundleWrapper.getBundle(</span>
                     &quot;org.jfree.chart.plot.LocalizationBundle&quot;);
 
     /**
      * The count to complete one revolution.  Can be arbitrarily set
      * For degrees (the default) it is 360, for radians this is 2*Pi, etc
      */
-<span class="nc" id="L179">    protected double revolutionDistance = 360;</span>
+<span class="fc" id="L179">    protected double revolutionDistance = 360;</span>
 
     /**
      * Default constructor.
      */
     public CompassPlot() {
-<span class="nc" id="L185">        this(new DefaultValueDataset());</span>
-<span class="nc" id="L186">    }</span>
+<span class="fc" id="L185">        this(new DefaultValueDataset());</span>
+<span class="fc" id="L186">    }</span>
 
     /**
      * Constructs a new compass plot.
@@ -191,16 +191,16 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @param dataset  the dataset for the plot ({@code null} permitted).
      */
     public CompassPlot(ValueDataset dataset) {
-<span class="nc" id="L194">        super();</span>
-<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L196">            this.datasets[0] = dataset;</span>
-<span class="nc" id="L197">            dataset.addChangeListener(this);</span>
+<span class="fc" id="L194">        super();</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (dataset != null) {</span>
+<span class="fc" id="L196">            this.datasets[0] = dataset;</span>
+<span class="fc" id="L197">            dataset.addChangeListener(this);</span>
         }
-<span class="nc" id="L199">        this.circle1 = new Ellipse2D.Double();</span>
-<span class="nc" id="L200">        this.circle2 = new Ellipse2D.Double();</span>
-<span class="nc" id="L201">        this.rect1   = new Rectangle2D.Double();</span>
-<span class="nc" id="L202">        setSeriesNeedle(0);</span>
-<span class="nc" id="L203">    }</span>
+<span class="fc" id="L199">        this.circle1 = new Ellipse2D.Double();</span>
+<span class="fc" id="L200">        this.circle2 = new Ellipse2D.Double();</span>
+<span class="fc" id="L201">        this.rect1   = new Rectangle2D.Double();</span>
+<span class="fc" id="L202">        setSeriesNeedle(0);</span>
+<span class="fc" id="L203">    }</span>
 
     /**
      * Returns the label type.  Defined by the constants: {@link #NO_LABELS}
@@ -224,15 +224,15 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      */
     public void setLabelType(int type) {
         // FIXME: this attribute is never used - deprecate?
-<span class="nc bnc" id="L227" title="All 4 branches missed.">        if ((type != NO_LABELS) &amp;&amp; (type != VALUE_LABELS)) {</span>
+<span class="pc bpc" id="L227" title="2 of 4 branches missed.">        if ((type != NO_LABELS) &amp;&amp; (type != VALUE_LABELS)) {</span>
 <span class="nc" id="L228">            throw new IllegalArgumentException(</span>
                     &quot;MeterPlot.setLabelType(int): unrecognised type.&quot;);
         }
-<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (this.labelType != type) {</span>
-<span class="nc" id="L232">            this.labelType = type;</span>
-<span class="nc" id="L233">            fireChangeEvent();</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (this.labelType != type) {</span>
+<span class="fc" id="L232">            this.labelType = type;</span>
+<span class="fc" id="L233">            fireChangeEvent();</span>
         }
-<span class="nc" id="L235">    }</span>
+<span class="fc" id="L235">    }</span>
 
     /**
      * Returns the label font.
@@ -256,10 +256,10 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      */
     public void setLabelFont(Font font) {
         // FIXME: this attribute is not used - deprecate?
-<span class="nc" id="L259">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc" id="L260">        this.labelFont = font;</span>
-<span class="nc" id="L261">        fireChangeEvent();</span>
-<span class="nc" id="L262">    }</span>
+<span class="fc" id="L259">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="fc" id="L260">        this.labelFont = font;</span>
+<span class="fc" id="L261">        fireChangeEvent();</span>
+<span class="fc" id="L262">    }</span>
 
     /**
      * Returns the paint used to fill the outer circle of the compass.
@@ -281,10 +281,10 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #getRosePaint()
      */
     public void setRosePaint(Paint paint) {
-<span class="nc" id="L284">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L285">        this.rosePaint = paint;</span>
-<span class="nc" id="L286">        fireChangeEvent();</span>
-<span class="nc" id="L287">    }</span>
+<span class="fc" id="L284">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L285">        this.rosePaint = paint;</span>
+<span class="fc" id="L286">        fireChangeEvent();</span>
+<span class="fc" id="L287">    }</span>
 
     /**
      * Returns the paint used to fill the inner background area of the
@@ -307,10 +307,10 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #getRoseCenterPaint()
      */
     public void setRoseCenterPaint(Paint paint) {
-<span class="nc" id="L310">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L311">        this.roseCenterPaint = paint;</span>
-<span class="nc" id="L312">        fireChangeEvent();</span>
-<span class="nc" id="L313">    }</span>
+<span class="fc" id="L310">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L311">        this.roseCenterPaint = paint;</span>
+<span class="fc" id="L312">        fireChangeEvent();</span>
+<span class="fc" id="L313">    }</span>
 
     /**
      * Returns the paint used to draw the circles, symbols and labels on the
@@ -333,10 +333,10 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #getRoseHighlightPaint()
      */
     public void setRoseHighlightPaint(Paint paint) {
-<span class="nc" id="L336">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L337">        this.roseHighlightPaint = paint;</span>
-<span class="nc" id="L338">        fireChangeEvent();</span>
-<span class="nc" id="L339">    }</span>
+<span class="fc" id="L336">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L337">        this.roseHighlightPaint = paint;</span>
+<span class="fc" id="L338">        fireChangeEvent();</span>
+<span class="fc" id="L339">    }</span>
 
     /**
      * Returns a flag that controls whether or not a border is drawn.
@@ -357,9 +357,9 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #getDrawBorder()
      */
     public void setDrawBorder(boolean status) {
-<span class="nc" id="L360">        this.drawBorder = status;</span>
-<span class="nc" id="L361">        fireChangeEvent();</span>
-<span class="nc" id="L362">    }</span>
+<span class="fc" id="L360">        this.drawBorder = status;</span>
+<span class="fc" id="L361">        fireChangeEvent();</span>
+<span class="fc" id="L362">    }</span>
 
     /**
      * Sets the series paint.
@@ -371,10 +371,10 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      */
     public void setSeriesPaint(int series, Paint paint) {
        // super.setSeriesPaint(series, paint);
-<span class="nc bnc" id="L374" title="All 4 branches missed.">        if ((series &gt;= 0) &amp;&amp; (series &lt; this.seriesNeedle.length)) {</span>
-<span class="nc" id="L375">            this.seriesNeedle[series].setFillPaint(paint);</span>
+<span class="pc bpc" id="L374" title="2 of 4 branches missed.">        if ((series &gt;= 0) &amp;&amp; (series &lt; this.seriesNeedle.length)) {</span>
+<span class="fc" id="L375">            this.seriesNeedle[series].setFillPaint(paint);</span>
         }
-<span class="nc" id="L377">    }</span>
+<span class="fc" id="L377">    }</span>
 
     /**
      * Sets the series outline paint.
@@ -416,8 +416,8 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #setSeriesNeedle(int, int)
      */
     public void setSeriesNeedle(int type) {
-<span class="nc" id="L419">        setSeriesNeedle(0, type);</span>
-<span class="nc" id="L420">    }</span>
+<span class="fc" id="L419">        setSeriesNeedle(0, type);</span>
+<span class="fc" id="L420">    }</span>
 
     /**
      * Sets the needle for a series.  The needle type is one of the following:
@@ -439,12 +439,12 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #setSeriesNeedle(int)
      */
     public void setSeriesNeedle(int index, int type) {
-<span class="nc bnc" id="L442" title="All 11 branches missed.">        switch (type) {</span>
+<span class="pc bpc" id="L442" title="10 of 11 branches missed.">        switch (type) {</span>
             case 0:
-<span class="nc" id="L444">                setSeriesNeedle(index, new ArrowNeedle(true));</span>
-<span class="nc" id="L445">                setSeriesPaint(index, Color.RED);</span>
-<span class="nc" id="L446">                this.seriesNeedle[index].setHighlightPaint(Color.WHITE);</span>
-<span class="nc" id="L447">                break;</span>
+<span class="fc" id="L444">                setSeriesNeedle(index, new ArrowNeedle(true));</span>
+<span class="fc" id="L445">                setSeriesPaint(index, Color.RED);</span>
+<span class="fc" id="L446">                this.seriesNeedle[index].setHighlightPaint(Color.WHITE);</span>
+<span class="fc" id="L447">                break;</span>
             case 1:
 <span class="nc" id="L449">                setSeriesNeedle(index, new LineNeedle());</span>
 <span class="nc" id="L450">                break;</span>
@@ -482,7 +482,7 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
 <span class="nc" id="L482">                throw new IllegalArgumentException(&quot;Unrecognised type.&quot;);</span>
         }
 
-<span class="nc" id="L485">    }</span>
+<span class="fc" id="L485">    }</span>
 
     /**
      * Sets the needle for a series and sends a {@link PlotChangeEvent} to all
@@ -492,11 +492,11 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @param needle  the needle.
      */
     public void setSeriesNeedle(int index, MeterNeedle needle) {
-<span class="nc bnc" id="L495" title="All 4 branches missed.">        if ((needle != null) &amp;&amp; (index &lt; this.seriesNeedle.length)) {</span>
-<span class="nc" id="L496">            this.seriesNeedle[index] = needle;</span>
+<span class="pc bpc" id="L495" title="2 of 4 branches missed.">        if ((needle != null) &amp;&amp; (index &lt; this.seriesNeedle.length)) {</span>
+<span class="fc" id="L496">            this.seriesNeedle[index] = needle;</span>
         }
-<span class="nc" id="L498">        fireChangeEvent();</span>
-<span class="nc" id="L499">    }</span>
+<span class="fc" id="L498">        fireChangeEvent();</span>
+<span class="fc" id="L499">    }</span>
 
     /**
      * Returns an array of dataset references for the plot.
@@ -749,46 +749,46 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L752" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L752" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L753">            return true;</span>
         }
-<span class="nc bnc" id="L755" title="All 2 branches missed.">        if (!(obj instanceof CompassPlot)) {</span>
+<span class="pc bpc" id="L755" title="1 of 2 branches missed.">        if (!(obj instanceof CompassPlot)) {</span>
 <span class="nc" id="L756">            return false;</span>
         }
-<span class="nc bnc" id="L758" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L758" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L759">            return false;</span>
         }
-<span class="nc" id="L761">        CompassPlot that = (CompassPlot) obj;</span>
-<span class="nc bnc" id="L762" title="All 2 branches missed.">        if (this.labelType != that.labelType) {</span>
-<span class="nc" id="L763">            return false;</span>
+<span class="fc" id="L761">        CompassPlot that = (CompassPlot) obj;</span>
+<span class="fc bfc" id="L762" title="All 2 branches covered.">        if (this.labelType != that.labelType) {</span>
+<span class="fc" id="L763">            return false;</span>
         }
-<span class="nc bnc" id="L765" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.labelFont, that.labelFont)) {</span>
-<span class="nc" id="L766">            return false;</span>
+<span class="fc bfc" id="L765" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.labelFont, that.labelFont)) {</span>
+<span class="fc" id="L766">            return false;</span>
         }
-<span class="nc bnc" id="L768" title="All 2 branches missed.">        if (this.drawBorder != that.drawBorder) {</span>
-<span class="nc" id="L769">            return false;</span>
+<span class="fc bfc" id="L768" title="All 2 branches covered.">        if (this.drawBorder != that.drawBorder) {</span>
+<span class="fc" id="L769">            return false;</span>
         }
-<span class="nc bnc" id="L771" title="All 2 branches missed.">        if (!PaintUtils.equal(this.roseHighlightPaint,</span>
+<span class="fc bfc" id="L771" title="All 2 branches covered.">        if (!PaintUtils.equal(this.roseHighlightPaint,</span>
                 that.roseHighlightPaint)) {
-<span class="nc" id="L773">            return false;</span>
+<span class="fc" id="L773">            return false;</span>
         }
-<span class="nc bnc" id="L775" title="All 2 branches missed.">        if (!PaintUtils.equal(this.rosePaint, that.rosePaint)) {</span>
-<span class="nc" id="L776">            return false;</span>
+<span class="fc bfc" id="L775" title="All 2 branches covered.">        if (!PaintUtils.equal(this.rosePaint, that.rosePaint)) {</span>
+<span class="fc" id="L776">            return false;</span>
         }
-<span class="nc bnc" id="L778" title="All 2 branches missed.">        if (!PaintUtils.equal(this.roseCenterPaint,</span>
+<span class="fc bfc" id="L778" title="All 2 branches covered.">        if (!PaintUtils.equal(this.roseCenterPaint,</span>
                 that.roseCenterPaint)) {
-<span class="nc" id="L780">            return false;</span>
+<span class="fc" id="L780">            return false;</span>
         }
-<span class="nc bnc" id="L782" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.compassFont, that.compassFont)) {</span>
+<span class="pc bpc" id="L782" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.compassFont, that.compassFont)) {</span>
 <span class="nc" id="L783">            return false;</span>
         }
-<span class="nc bnc" id="L785" title="All 2 branches missed.">        if (!Arrays.equals(this.seriesNeedle, that.seriesNeedle)) {</span>
+<span class="pc bpc" id="L785" title="1 of 2 branches missed.">        if (!Arrays.equals(this.seriesNeedle, that.seriesNeedle)) {</span>
 <span class="nc" id="L786">            return false;</span>
         }
-<span class="nc bnc" id="L788" title="All 2 branches missed.">        if (getRevolutionDistance() != that.getRevolutionDistance()) {</span>
+<span class="pc bpc" id="L788" title="1 of 2 branches missed.">        if (getRevolutionDistance() != that.getRevolutionDistance()) {</span>
 <span class="nc" id="L789">            return false;</span>
         }
-<span class="nc" id="L791">        return true;</span>
+<span class="fc" id="L791">        return true;</span>
 
     }
 
@@ -803,32 +803,32 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
 
-<span class="nc" id="L806">        CompassPlot clone = (CompassPlot) super.clone();</span>
-<span class="nc bnc" id="L807" title="All 2 branches missed.">        if (this.circle1 != null) {</span>
-<span class="nc" id="L808">            clone.circle1 = (Ellipse2D) this.circle1.clone();</span>
+<span class="fc" id="L806">        CompassPlot clone = (CompassPlot) super.clone();</span>
+<span class="pc bpc" id="L807" title="1 of 2 branches missed.">        if (this.circle1 != null) {</span>
+<span class="fc" id="L808">            clone.circle1 = (Ellipse2D) this.circle1.clone();</span>
         }
-<span class="nc bnc" id="L810" title="All 2 branches missed.">        if (this.circle2 != null) {</span>
-<span class="nc" id="L811">            clone.circle2 = (Ellipse2D) this.circle2.clone();</span>
+<span class="pc bpc" id="L810" title="1 of 2 branches missed.">        if (this.circle2 != null) {</span>
+<span class="fc" id="L811">            clone.circle2 = (Ellipse2D) this.circle2.clone();</span>
         }
-<span class="nc bnc" id="L813" title="All 2 branches missed.">        if (this.a1 != null) {</span>
+<span class="pc bpc" id="L813" title="1 of 2 branches missed.">        if (this.a1 != null) {</span>
 <span class="nc" id="L814">            clone.a1 = (Area) this.a1.clone();</span>
         }
-<span class="nc bnc" id="L816" title="All 2 branches missed.">        if (this.a2 != null) {</span>
+<span class="pc bpc" id="L816" title="1 of 2 branches missed.">        if (this.a2 != null) {</span>
 <span class="nc" id="L817">            clone.a2 = (Area) this.a2.clone();</span>
         }
-<span class="nc bnc" id="L819" title="All 2 branches missed.">        if (this.rect1 != null) {</span>
-<span class="nc" id="L820">            clone.rect1 = (Rectangle2D) this.rect1.clone();</span>
+<span class="pc bpc" id="L819" title="1 of 2 branches missed.">        if (this.rect1 != null) {</span>
+<span class="fc" id="L820">            clone.rect1 = (Rectangle2D) this.rect1.clone();</span>
         }
-<span class="nc" id="L822">        clone.datasets = (ValueDataset[]) this.datasets.clone();</span>
-<span class="nc" id="L823">        clone.seriesNeedle = (MeterNeedle[]) this.seriesNeedle.clone();</span>
+<span class="fc" id="L822">        clone.datasets = (ValueDataset[]) this.datasets.clone();</span>
+<span class="fc" id="L823">        clone.seriesNeedle = (MeterNeedle[]) this.seriesNeedle.clone();</span>
 
         // clone share data sets =&gt; add the clone as listener to the dataset
-<span class="nc bnc" id="L826" title="All 2 branches missed.">        for (int i = 0; i &lt; this.datasets.length; ++i) {</span>
-<span class="nc bnc" id="L827" title="All 2 branches missed.">            if (clone.datasets[i] != null) {</span>
-<span class="nc" id="L828">                clone.datasets[i].addChangeListener(clone);</span>
+<span class="fc bfc" id="L826" title="All 2 branches covered.">        for (int i = 0; i &lt; this.datasets.length; ++i) {</span>
+<span class="pc bpc" id="L827" title="1 of 2 branches missed.">            if (clone.datasets[i] != null) {</span>
+<span class="fc" id="L828">                clone.datasets[i].addChangeListener(clone);</span>
             }
         }
-<span class="nc" id="L831">        return clone;</span>
+<span class="fc" id="L831">        return clone;</span>
 
     }
 
@@ -854,7 +854,7 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @see #setRevolutionDistance(double)
      */
     public double getRevolutionDistance() {
-<span class="nc" id="L857">        return this.revolutionDistance;</span>
+<span class="fc" id="L857">        return this.revolutionDistance;</span>
     }
 
     /**
@@ -865,11 +865,11 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L868">        stream.defaultWriteObject();</span>
-<span class="nc" id="L869">        SerialUtils.writePaint(this.rosePaint, stream);</span>
-<span class="nc" id="L870">        SerialUtils.writePaint(this.roseCenterPaint, stream);</span>
-<span class="nc" id="L871">        SerialUtils.writePaint(this.roseHighlightPaint, stream);</span>
-<span class="nc" id="L872">    }</span>
+<span class="fc" id="L868">        stream.defaultWriteObject();</span>
+<span class="fc" id="L869">        SerialUtils.writePaint(this.rosePaint, stream);</span>
+<span class="fc" id="L870">        SerialUtils.writePaint(this.roseCenterPaint, stream);</span>
+<span class="fc" id="L871">        SerialUtils.writePaint(this.roseHighlightPaint, stream);</span>
+<span class="fc" id="L872">    }</span>
 
     /**
      * Provides serialization support.
@@ -881,11 +881,11 @@ public class CompassPlot extends Plot implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L884">        stream.defaultReadObject();</span>
-<span class="nc" id="L885">        this.rosePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L886">        this.roseCenterPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L887">        this.roseHighlightPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L888">    }</span>
+<span class="fc" id="L884">        stream.defaultReadObject();</span>
+<span class="fc" id="L885">        this.rosePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L886">        this.roseCenterPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L887">        this.roseHighlightPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L888">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

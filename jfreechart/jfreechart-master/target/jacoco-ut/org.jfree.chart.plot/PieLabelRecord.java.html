@@ -88,16 +88,16 @@ public class PieLabelRecord implements Comparable, Serializable {
      */
     public PieLabelRecord(Comparable key, double angle, double baseY,
                           TextBox label, double labelHeight, double gap,
-<span class="nc" id="L91">                          double linkPercent) {</span>
-<span class="nc" id="L92">        this.key = key;</span>
-<span class="nc" id="L93">        this.angle = angle;</span>
-<span class="nc" id="L94">        this.baseY = baseY;</span>
-<span class="nc" id="L95">        this.allocatedY = baseY;</span>
-<span class="nc" id="L96">        this.label = label;</span>
-<span class="nc" id="L97">        this.labelHeight = labelHeight;</span>
-<span class="nc" id="L98">        this.gap = gap;</span>
-<span class="nc" id="L99">        this.linkPercent = linkPercent;</span>
-<span class="nc" id="L100">    }</span>
+<span class="fc" id="L91">                          double linkPercent) {</span>
+<span class="fc" id="L92">        this.key = key;</span>
+<span class="fc" id="L93">        this.angle = angle;</span>
+<span class="fc" id="L94">        this.baseY = baseY;</span>
+<span class="fc" id="L95">        this.allocatedY = baseY;</span>
+<span class="fc" id="L96">        this.label = label;</span>
+<span class="fc" id="L97">        this.labelHeight = labelHeight;</span>
+<span class="fc" id="L98">        this.gap = gap;</span>
+<span class="fc" id="L99">        this.linkPercent = linkPercent;</span>
+<span class="fc" id="L100">    }</span>
 
     /**
      * Returns the base y-coordinate.  This is where the label will appear if
@@ -124,7 +124,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The lower bound.
      */
     public double getLowerY() {
-<span class="nc" id="L127">        return this.allocatedY - this.labelHeight / 2.0;</span>
+<span class="fc" id="L127">        return this.allocatedY - this.labelHeight / 2.0;</span>
     }
 
     /**
@@ -133,7 +133,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The upper bound.
      */
     public double getUpperY() {
-<span class="nc" id="L136">        return this.allocatedY + this.labelHeight / 2.0;</span>
+<span class="fc" id="L136">        return this.allocatedY + this.labelHeight / 2.0;</span>
     }
 
     /**
@@ -142,7 +142,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The angle, in radians.
      */
     public double getAngle() {
-<span class="nc" id="L145">        return this.angle;</span>
+<span class="fc" id="L145">        return this.angle;</span>
     }
 
     /**
@@ -160,7 +160,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The label.
      */
     public TextBox getLabel() {
-<span class="nc" id="L163">        return this.label;</span>
+<span class="fc" id="L163">        return this.label;</span>
     }
 
     /**
@@ -170,7 +170,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The label height (in Java2D units).
      */
     public double getLabelHeight() {
-<span class="nc" id="L173">        return this.labelHeight;</span>
+<span class="fc" id="L173">        return this.labelHeight;</span>
     }
 
     /**
@@ -179,7 +179,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The allocated y-coordinate.
      */
     public double getAllocatedY() {
-<span class="nc" id="L182">        return this.allocatedY;</span>
+<span class="fc" id="L182">        return this.allocatedY;</span>
     }
 
     /**
@@ -188,8 +188,8 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @param y  the y-coordinate.
      */
     public void setAllocatedY(double y) {
-<span class="nc" id="L191">        this.allocatedY = y;</span>
-<span class="nc" id="L192">    }</span>
+<span class="fc" id="L191">        this.allocatedY = y;</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Returns the gap.
@@ -197,7 +197,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The gap.
      */
     public double getGap() {
-<span class="nc" id="L200">        return this.gap;</span>
+<span class="fc" id="L200">        return this.gap;</span>
     }
 
     /**
@@ -206,7 +206,7 @@ public class PieLabelRecord implements Comparable, Serializable {
      * @return The link percent.
      */
     public double getLinkPercent() {
-<span class="nc" id="L209">        return this.linkPercent;</span>
+<span class="fc" id="L209">        return this.linkPercent;</span>
     }
 
     /**
@@ -218,17 +218,17 @@ public class PieLabelRecord implements Comparable, Serializable {
      */
     @Override
     public int compareTo(Object obj) {
-<span class="nc" id="L221">        int result = 0;</span>
-<span class="nc bnc" id="L222" title="All 2 branches missed.">        if (obj instanceof PieLabelRecord) {</span>
-<span class="nc" id="L223">            PieLabelRecord plr = (PieLabelRecord) obj;</span>
-<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (this.baseY &lt; plr.baseY) {</span>
-<span class="nc" id="L225">                result = -1;</span>
+<span class="fc" id="L221">        int result = 0;</span>
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        if (obj instanceof PieLabelRecord) {</span>
+<span class="fc" id="L223">            PieLabelRecord plr = (PieLabelRecord) obj;</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            if (this.baseY &lt; plr.baseY) {</span>
+<span class="fc" id="L225">                result = -1;</span>
             }
 <span class="nc bnc" id="L227" title="All 2 branches missed.">            else if (this.baseY &gt; plr.baseY) {</span>
 <span class="nc" id="L228">                result = 1;</span>
             }
         }
-<span class="nc" id="L231">        return result;</span>
+<span class="fc" id="L231">        return result;</span>
     }
 
     /**
@@ -240,38 +240,38 @@ public class PieLabelRecord implements Comparable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L244">            return true;</span>
         }
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (!(obj instanceof PieLabelRecord)) {</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (!(obj instanceof PieLabelRecord)) {</span>
 <span class="nc" id="L247">            return false;</span>
         }
-<span class="nc" id="L249">        PieLabelRecord that = (PieLabelRecord) obj;</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (!this.key.equals(that.key)) {</span>
-<span class="nc" id="L251">            return false;</span>
+<span class="fc" id="L249">        PieLabelRecord that = (PieLabelRecord) obj;</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        if (!this.key.equals(that.key)) {</span>
+<span class="fc" id="L251">            return false;</span>
         }
-<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (this.angle != that.angle) {</span>
-<span class="nc" id="L254">            return false;</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        if (this.angle != that.angle) {</span>
+<span class="fc" id="L254">            return false;</span>
         }
-<span class="nc bnc" id="L256" title="All 2 branches missed.">        if (this.gap != that.gap) {</span>
-<span class="nc" id="L257">            return false;</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (this.gap != that.gap) {</span>
+<span class="fc" id="L257">            return false;</span>
         }
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (this.allocatedY != that.allocatedY) {</span>
-<span class="nc" id="L260">            return false;</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (this.allocatedY != that.allocatedY) {</span>
+<span class="fc" id="L260">            return false;</span>
         }
-<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (this.baseY != that.baseY) {</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">        if (this.baseY != that.baseY) {</span>
 <span class="nc" id="L263">            return false;</span>
         }
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (this.labelHeight != that.labelHeight) {</span>
-<span class="nc" id="L266">            return false;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (this.labelHeight != that.labelHeight) {</span>
+<span class="fc" id="L266">            return false;</span>
         }
-<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (this.linkPercent != that.linkPercent) {</span>
-<span class="nc" id="L269">            return false;</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (this.linkPercent != that.linkPercent) {</span>
+<span class="fc" id="L269">            return false;</span>
         }
-<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (!this.label.equals(that.label)) {</span>
-<span class="nc" id="L272">            return false;</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (!this.label.equals(that.label)) {</span>
+<span class="fc" id="L272">            return false;</span>
         }
-<span class="nc" id="L274">        return true;</span>
+<span class="fc" id="L274">        return true;</span>
     }
 
     /**
@@ -284,4 +284,4 @@ public class PieLabelRecord implements Comparable, Serializable {
 <span class="nc" id="L284">        return this.baseY + &quot;, &quot; + this.key.toString();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

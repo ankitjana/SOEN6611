@@ -115,13 +115,13 @@ public class GanttRenderer extends IntervalBarRenderer
      * Creates a new renderer.
      */
     public GanttRenderer() {
-<span class="nc" id="L118">        super();</span>
-<span class="nc" id="L119">        setIncludeBaseInRange(false);</span>
-<span class="nc" id="L120">        this.completePaint = Color.green;</span>
-<span class="nc" id="L121">        this.incompletePaint = Color.RED;</span>
-<span class="nc" id="L122">        this.startPercent = 0.35;</span>
-<span class="nc" id="L123">        this.endPercent = 0.65;</span>
-<span class="nc" id="L124">    }</span>
+<span class="fc" id="L118">        super();</span>
+<span class="fc" id="L119">        setIncludeBaseInRange(false);</span>
+<span class="fc" id="L120">        this.completePaint = Color.green;</span>
+<span class="fc" id="L121">        this.incompletePaint = Color.RED;</span>
+<span class="fc" id="L122">        this.startPercent = 0.35;</span>
+<span class="fc" id="L123">        this.endPercent = 0.65;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Returns the paint used to show the percentage complete.
@@ -143,10 +143,10 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #getCompletePaint()
      */
     public void setCompletePaint(Paint paint) {
-<span class="nc" id="L146">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L147">        this.completePaint = paint;</span>
-<span class="nc" id="L148">        fireChangeEvent();</span>
-<span class="nc" id="L149">    }</span>
+<span class="fc" id="L146">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L147">        this.completePaint = paint;</span>
+<span class="fc" id="L148">        fireChangeEvent();</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Returns the paint used to show the percentage incomplete.
@@ -168,10 +168,10 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #getIncompletePaint()
      */
     public void setIncompletePaint(Paint paint) {
-<span class="nc" id="L171">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L172">        this.incompletePaint = paint;</span>
-<span class="nc" id="L173">        fireChangeEvent();</span>
-<span class="nc" id="L174">    }</span>
+<span class="fc" id="L171">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L172">        this.incompletePaint = paint;</span>
+<span class="fc" id="L173">        fireChangeEvent();</span>
+<span class="fc" id="L174">    }</span>
 
     /**
      * Returns the position of the start of the progress indicator, as a
@@ -182,7 +182,7 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #setStartPercent(double)
      */
     public double getStartPercent() {
-<span class="nc" id="L185">        return this.startPercent;</span>
+<span class="fc" id="L185">        return this.startPercent;</span>
     }
 
     /**
@@ -195,9 +195,9 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #getStartPercent()
      */
     public void setStartPercent(double percent) {
-<span class="nc" id="L198">        this.startPercent = percent;</span>
-<span class="nc" id="L199">        fireChangeEvent();</span>
-<span class="nc" id="L200">    }</span>
+<span class="fc" id="L198">        this.startPercent = percent;</span>
+<span class="fc" id="L199">        fireChangeEvent();</span>
+<span class="fc" id="L200">    }</span>
 
     /**
      * Returns the position of the end of the progress indicator, as a
@@ -208,7 +208,7 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #setEndPercent(double)
      */
     public double getEndPercent() {
-<span class="nc" id="L211">        return this.endPercent;</span>
+<span class="fc" id="L211">        return this.endPercent;</span>
     }
 
     /**
@@ -221,9 +221,9 @@ public class GanttRenderer extends IntervalBarRenderer
      * @see #getEndPercent()
      */
     public void setEndPercent(double percent) {
-<span class="nc" id="L224">        this.endPercent = percent;</span>
-<span class="nc" id="L225">        fireChangeEvent();</span>
-<span class="nc" id="L226">    }</span>
+<span class="fc" id="L224">        this.endPercent = percent;</span>
+<span class="fc" id="L225">        fireChangeEvent();</span>
+<span class="fc" id="L226">    }</span>
 
     /**
      * Draws the bar for a single (series, category) data item.
@@ -245,17 +245,17 @@ public class GanttRenderer extends IntervalBarRenderer
             ValueAxis rangeAxis, CategoryDataset dataset, int row,
             int column, int pass) {
 
-<span class="nc bnc" id="L248" title="All 2 branches missed.">         if (dataset instanceof GanttCategoryDataset) {</span>
-<span class="nc" id="L249">             GanttCategoryDataset gcd = (GanttCategoryDataset) dataset;</span>
-<span class="nc" id="L250">             drawTasks(g2, state, dataArea, plot, domainAxis, rangeAxis, gcd,</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">         if (dataset instanceof GanttCategoryDataset) {</span>
+<span class="fc" id="L249">             GanttCategoryDataset gcd = (GanttCategoryDataset) dataset;</span>
+<span class="fc" id="L250">             drawTasks(g2, state, dataArea, plot, domainAxis, rangeAxis, gcd,</span>
                      row, column);
-<span class="nc" id="L252">         }</span>
+<span class="fc" id="L252">         }</span>
          else {  // let the superclass handle it...
 <span class="nc" id="L254">             super.drawItem(g2, state, dataArea, plot, domainAxis, rangeAxis,</span>
                      dataset, row, column, pass);
          }
 
-<span class="nc" id="L258">     }</span>
+<span class="fc" id="L258">     }</span>
 
     /**
      * Draws the tasks/subtasks for one item.
@@ -280,14 +280,14 @@ public class GanttRenderer extends IntervalBarRenderer
                              int row,
                              int column) {
 
-<span class="nc" id="L283">        int count = dataset.getSubIntervalCount(row, column);</span>
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (count == 0) {</span>
-<span class="nc" id="L285">            drawTask(g2, state, dataArea, plot, domainAxis, rangeAxis,</span>
+<span class="fc" id="L283">        int count = dataset.getSubIntervalCount(row, column);</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (count == 0) {</span>
+<span class="fc" id="L285">            drawTask(g2, state, dataArea, plot, domainAxis, rangeAxis,</span>
                     dataset, row, column);
         }
 
-<span class="nc" id="L289">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc bnc" id="L290" title="All 2 branches missed.">        for (int subinterval = 0; subinterval &lt; count; subinterval++) {</span>
+<span class="fc" id="L289">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">        for (int subinterval = 0; subinterval &lt; count; subinterval++) {</span>
 
 <span class="nc" id="L292">            RectangleEdge rangeAxisLocation = plot.getRangeAxisEdge();</span>
 
@@ -403,7 +403,7 @@ public class GanttRenderer extends IntervalBarRenderer
                 }
             }
         }
-<span class="nc" id="L406">    }</span>
+<span class="fc" id="L406">    }</span>
 
     /**
      * Draws a single task.
@@ -428,43 +428,43 @@ public class GanttRenderer extends IntervalBarRenderer
                             int row,
                             int column) {
 
-<span class="nc" id="L431">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L432">        RectangleEdge rangeAxisLocation = plot.getRangeAxisEdge();</span>
+<span class="fc" id="L431">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L432">        RectangleEdge rangeAxisLocation = plot.getRangeAxisEdge();</span>
 
         // Y0
-<span class="nc" id="L435">        Number value0 = dataset.getEndValue(row, column);</span>
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (value0 == null) {</span>
+<span class="fc" id="L435">        Number value0 = dataset.getEndValue(row, column);</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        if (value0 == null) {</span>
 <span class="nc" id="L437">            return;</span>
         }
-<span class="nc" id="L439">        double java2dValue0 = rangeAxis.valueToJava2D(value0.doubleValue(),</span>
+<span class="fc" id="L439">        double java2dValue0 = rangeAxis.valueToJava2D(value0.doubleValue(),</span>
                 dataArea, rangeAxisLocation);
 
         // Y1
-<span class="nc" id="L443">        Number value1 = dataset.getStartValue(row, column);</span>
-<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (value1 == null) {</span>
+<span class="fc" id="L443">        Number value1 = dataset.getStartValue(row, column);</span>
+<span class="pc bpc" id="L444" title="1 of 2 branches missed.">        if (value1 == null) {</span>
 <span class="nc" id="L445">            return;</span>
         }
-<span class="nc" id="L447">        double java2dValue1 = rangeAxis.valueToJava2D(value1.doubleValue(),</span>
+<span class="fc" id="L447">        double java2dValue1 = rangeAxis.valueToJava2D(value1.doubleValue(),</span>
                 dataArea, rangeAxisLocation);
 
-<span class="nc bnc" id="L450" title="All 2 branches missed.">        if (java2dValue1 &lt; java2dValue0) {</span>
-<span class="nc" id="L451">            double temp = java2dValue1;</span>
-<span class="nc" id="L452">            java2dValue1 = java2dValue0;</span>
-<span class="nc" id="L453">            java2dValue0 = temp;</span>
-<span class="nc" id="L454">            value1 = value0;</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (java2dValue1 &lt; java2dValue0) {</span>
+<span class="fc" id="L451">            double temp = java2dValue1;</span>
+<span class="fc" id="L452">            java2dValue1 = java2dValue0;</span>
+<span class="fc" id="L453">            java2dValue0 = temp;</span>
+<span class="fc" id="L454">            value1 = value0;</span>
         }
 
-<span class="nc" id="L457">        double rectStart = calculateBarW0(plot, orientation, dataArea,</span>
+<span class="fc" id="L457">        double rectStart = calculateBarW0(plot, orientation, dataArea,</span>
                 domainAxis, state, row, column);
-<span class="nc" id="L459">        double rectBreadth = state.getBarWidth();</span>
-<span class="nc" id="L460">        double rectLength = Math.abs(java2dValue1 - java2dValue0);</span>
+<span class="fc" id="L459">        double rectBreadth = state.getBarWidth();</span>
+<span class="fc" id="L460">        double rectLength = Math.abs(java2dValue1 - java2dValue0);</span>
 
-<span class="nc" id="L462">        Rectangle2D bar = null;</span>
-<span class="nc" id="L463">        RectangleEdge barBase = null;</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
-<span class="nc" id="L465">            bar = new Rectangle2D.Double(java2dValue0, rectStart, rectLength,</span>
+<span class="fc" id="L462">        Rectangle2D bar = null;</span>
+<span class="fc" id="L463">        RectangleEdge barBase = null;</span>
+<span class="pc bpc" id="L464" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L465">            bar = new Rectangle2D.Double(java2dValue0, rectStart, rectLength,</span>
                     rectBreadth);
-<span class="nc" id="L467">            barBase = RectangleEdge.LEFT;</span>
+<span class="fc" id="L467">            barBase = RectangleEdge.LEFT;</span>
         }
 <span class="nc bnc" id="L469" title="All 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
 <span class="nc" id="L470">            bar = new Rectangle2D.Double(rectStart, java2dValue1, rectBreadth,</span>
@@ -472,12 +472,12 @@ public class GanttRenderer extends IntervalBarRenderer
 <span class="nc" id="L472">            barBase = RectangleEdge.BOTTOM;</span>
         }
 
-<span class="nc" id="L475">        Rectangle2D completeBar = null;</span>
-<span class="nc" id="L476">        Rectangle2D incompleteBar = null;</span>
-<span class="nc" id="L477">        Number percent = dataset.getPercentComplete(row, column);</span>
-<span class="nc" id="L478">        double start = getStartPercent();</span>
-<span class="nc" id="L479">        double end = getEndPercent();</span>
-<span class="nc bnc" id="L480" title="All 2 branches missed.">        if (percent != null) {</span>
+<span class="fc" id="L475">        Rectangle2D completeBar = null;</span>
+<span class="fc" id="L476">        Rectangle2D incompleteBar = null;</span>
+<span class="fc" id="L477">        Number percent = dataset.getPercentComplete(row, column);</span>
+<span class="fc" id="L478">        double start = getStartPercent();</span>
+<span class="fc" id="L479">        double end = getEndPercent();</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (percent != null) {</span>
 <span class="nc" id="L481">            double p = percent.doubleValue();</span>
 <span class="nc bnc" id="L482" title="All 2 branches missed.">            if (plot.getOrientation() == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L483">                completeBar = new Rectangle2D.Double(java2dValue0,</span>
@@ -498,23 +498,23 @@ public class GanttRenderer extends IntervalBarRenderer
 
         }
 
-<span class="nc bnc" id="L501" title="All 2 branches missed.">        if (getShadowsVisible()) {</span>
+<span class="pc bpc" id="L501" title="1 of 2 branches missed.">        if (getShadowsVisible()) {</span>
 <span class="nc" id="L502">            getBarPainter().paintBarShadow(g2, this, row, column, bar,</span>
                     barBase, true);
         }
-<span class="nc" id="L505">        getBarPainter().paintBar(g2, this, row, column, bar, barBase);</span>
+<span class="fc" id="L505">        getBarPainter().paintBar(g2, this, row, column, bar, barBase);</span>
 
-<span class="nc bnc" id="L507" title="All 2 branches missed.">        if (completeBar != null) {</span>
+<span class="pc bpc" id="L507" title="1 of 2 branches missed.">        if (completeBar != null) {</span>
 <span class="nc" id="L508">            g2.setPaint(getCompletePaint());</span>
 <span class="nc" id="L509">            g2.fill(completeBar);</span>
         }
-<span class="nc bnc" id="L511" title="All 2 branches missed.">        if (incompleteBar != null) {</span>
+<span class="pc bpc" id="L511" title="1 of 2 branches missed.">        if (incompleteBar != null) {</span>
 <span class="nc" id="L512">            g2.setPaint(getIncompletePaint());</span>
 <span class="nc" id="L513">            g2.fill(incompleteBar);</span>
         }
 
         // draw the outline...
-<span class="nc bnc" id="L517" title="All 2 branches missed.">        if (isDrawBarOutline()</span>
+<span class="pc bpc" id="L517" title="1 of 2 branches missed.">        if (isDrawBarOutline()</span>
 <span class="nc bnc" id="L518" title="All 2 branches missed.">                &amp;&amp; state.getBarWidth() &gt; BAR_OUTLINE_WIDTH_THRESHOLD) {</span>
 <span class="nc" id="L519">            Stroke stroke = getItemOutlineStroke(row, column);</span>
 <span class="nc" id="L520">            Paint paint = getItemOutlinePaint(row, column);</span>
@@ -525,30 +525,30 @@ public class GanttRenderer extends IntervalBarRenderer
             }
         }
 
-<span class="nc" id="L528">        CategoryItemLabelGenerator generator = getItemLabelGenerator(row,</span>
+<span class="fc" id="L528">        CategoryItemLabelGenerator generator = getItemLabelGenerator(row,</span>
                 column);
-<span class="nc bnc" id="L530" title="All 4 branches missed.">        if (generator != null &amp;&amp; isItemLabelVisible(row, column)) {</span>
+<span class="pc bpc" id="L530" title="3 of 4 branches missed.">        if (generator != null &amp;&amp; isItemLabelVisible(row, column)) {</span>
 <span class="nc" id="L531">            drawItemLabel(g2, dataset, row, column, plot, generator, bar,</span>
                     false);
         }
 
         // submit the current data point as a crosshair candidate
-<span class="nc" id="L536">        int datasetIndex = plot.indexOf(dataset);</span>
-<span class="nc" id="L537">        Comparable columnKey = dataset.getColumnKey(column);</span>
-<span class="nc" id="L538">        Comparable rowKey = dataset.getRowKey(row);</span>
-<span class="nc" id="L539">        double xx = domainAxis.getCategorySeriesMiddle(columnKey, rowKey,</span>
-<span class="nc" id="L540">                dataset, getItemMargin(), dataArea, plot.getDomainAxisEdge());</span>
-<span class="nc" id="L541">        updateCrosshairValues(state.getCrosshairState(),</span>
-<span class="nc" id="L542">                dataset.getRowKey(row), dataset.getColumnKey(column),</span>
-<span class="nc" id="L543">                value1.doubleValue(), datasetIndex, xx, java2dValue1,</span>
+<span class="fc" id="L536">        int datasetIndex = plot.indexOf(dataset);</span>
+<span class="fc" id="L537">        Comparable columnKey = dataset.getColumnKey(column);</span>
+<span class="fc" id="L538">        Comparable rowKey = dataset.getRowKey(row);</span>
+<span class="fc" id="L539">        double xx = domainAxis.getCategorySeriesMiddle(columnKey, rowKey,</span>
+<span class="fc" id="L540">                dataset, getItemMargin(), dataArea, plot.getDomainAxisEdge());</span>
+<span class="fc" id="L541">        updateCrosshairValues(state.getCrosshairState(),</span>
+<span class="fc" id="L542">                dataset.getRowKey(row), dataset.getColumnKey(column),</span>
+<span class="fc" id="L543">                value1.doubleValue(), datasetIndex, xx, java2dValue1,</span>
                 orientation);
 
         // collect entity and tool tip information...
-<span class="nc" id="L547">        EntityCollection entities = state.getEntityCollection();</span>
-<span class="nc bnc" id="L548" title="All 2 branches missed.">        if (entities != null) {</span>
+<span class="fc" id="L547">        EntityCollection entities = state.getEntityCollection();</span>
+<span class="pc bpc" id="L548" title="1 of 2 branches missed.">        if (entities != null) {</span>
 <span class="nc" id="L549">            addItemEntity(entities, dataset, row, column, bar);</span>
         }
-<span class="nc" id="L551">    }</span>
+<span class="fc" id="L551">    }</span>
 
     /**
      * Returns the Java2D coordinate for the middle of the specified data item.
@@ -581,26 +581,26 @@ public class GanttRenderer extends IntervalBarRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L584" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L584" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L585">            return true;</span>
         }
-<span class="nc bnc" id="L587" title="All 2 branches missed.">        if (!(obj instanceof GanttRenderer)) {</span>
+<span class="pc bpc" id="L587" title="1 of 2 branches missed.">        if (!(obj instanceof GanttRenderer)) {</span>
 <span class="nc" id="L588">            return false;</span>
         }
-<span class="nc" id="L590">        GanttRenderer that = (GanttRenderer) obj;</span>
-<span class="nc bnc" id="L591" title="All 2 branches missed.">        if (!PaintUtils.equal(this.completePaint, that.completePaint)) {</span>
-<span class="nc" id="L592">            return false;</span>
+<span class="fc" id="L590">        GanttRenderer that = (GanttRenderer) obj;</span>
+<span class="fc bfc" id="L591" title="All 2 branches covered.">        if (!PaintUtils.equal(this.completePaint, that.completePaint)) {</span>
+<span class="fc" id="L592">            return false;</span>
         }
-<span class="nc bnc" id="L594" title="All 2 branches missed.">        if (!PaintUtils.equal(this.incompletePaint, that.incompletePaint)) {</span>
-<span class="nc" id="L595">            return false;</span>
+<span class="fc bfc" id="L594" title="All 2 branches covered.">        if (!PaintUtils.equal(this.incompletePaint, that.incompletePaint)) {</span>
+<span class="fc" id="L595">            return false;</span>
         }
-<span class="nc bnc" id="L597" title="All 2 branches missed.">        if (this.startPercent != that.startPercent) {</span>
-<span class="nc" id="L598">            return false;</span>
+<span class="fc bfc" id="L597" title="All 2 branches covered.">        if (this.startPercent != that.startPercent) {</span>
+<span class="fc" id="L598">            return false;</span>
         }
-<span class="nc bnc" id="L600" title="All 2 branches missed.">        if (this.endPercent != that.endPercent) {</span>
-<span class="nc" id="L601">            return false;</span>
+<span class="fc bfc" id="L600" title="All 2 branches covered.">        if (this.endPercent != that.endPercent) {</span>
+<span class="fc" id="L601">            return false;</span>
         }
-<span class="nc" id="L603">        return super.equals(obj);</span>
+<span class="fc" id="L603">        return super.equals(obj);</span>
     }
 
     /**
@@ -611,10 +611,10 @@ public class GanttRenderer extends IntervalBarRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L614">        stream.defaultWriteObject();</span>
-<span class="nc" id="L615">        SerialUtils.writePaint(this.completePaint, stream);</span>
-<span class="nc" id="L616">        SerialUtils.writePaint(this.incompletePaint, stream);</span>
-<span class="nc" id="L617">    }</span>
+<span class="fc" id="L614">        stream.defaultWriteObject();</span>
+<span class="fc" id="L615">        SerialUtils.writePaint(this.completePaint, stream);</span>
+<span class="fc" id="L616">        SerialUtils.writePaint(this.incompletePaint, stream);</span>
+<span class="fc" id="L617">    }</span>
 
     /**
      * Provides serialization support.
@@ -626,10 +626,10 @@ public class GanttRenderer extends IntervalBarRenderer
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L629">        stream.defaultReadObject();</span>
-<span class="nc" id="L630">        this.completePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L631">        this.incompletePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L632">    }</span>
+<span class="fc" id="L629">        stream.defaultReadObject();</span>
+<span class="fc" id="L630">        this.completePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L631">        this.incompletePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L632">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

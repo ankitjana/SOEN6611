@@ -88,11 +88,11 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      * @param label  the axis label.
      */
     public ExtendedCategoryAxis(String label) {
-<span class="nc" id="L91">        super(label);</span>
-<span class="nc" id="L92">        this.sublabels = new HashMap();</span>
-<span class="nc" id="L93">        this.sublabelFont = new Font(&quot;SansSerif&quot;, Font.PLAIN, 10);</span>
-<span class="nc" id="L94">        this.sublabelPaint = Color.BLACK;</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L91">        super(label);</span>
+<span class="fc" id="L92">        this.sublabels = new HashMap();</span>
+<span class="fc" id="L93">        this.sublabelFont = new Font(&quot;SansSerif&quot;, Font.PLAIN, 10);</span>
+<span class="fc" id="L94">        this.sublabelPaint = Color.BLACK;</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Returns the font for the sublabels.
@@ -114,10 +114,10 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      * @see #getSubLabelFont()
      */
     public void setSubLabelFont(Font font) {
-<span class="nc" id="L117">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc" id="L118">        this.sublabelFont = font;</span>
-<span class="nc" id="L119">        notifyListeners(new AxisChangeEvent(this));</span>
-<span class="nc" id="L120">    }</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="fc" id="L118">        this.sublabelFont = font;</span>
+<span class="fc" id="L119">        notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Returns the paint for the sublabels.
@@ -139,10 +139,10 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      * @see #getSubLabelPaint()
      */
     public void setSubLabelPaint(Paint paint) {
-<span class="nc" id="L142">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L143">        this.sublabelPaint = paint;</span>
-<span class="nc" id="L144">        notifyListeners(new AxisChangeEvent(this));</span>
-<span class="nc" id="L145">    }</span>
+<span class="fc" id="L142">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L143">        this.sublabelPaint = paint;</span>
+<span class="fc" id="L144">        notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Adds a sublabel for a category.
@@ -151,8 +151,8 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      * @param label  the label.
      */
     public void addSubLabel(Comparable category, String label) {
-<span class="nc" id="L154">        this.sublabels.put(category, label);</span>
-<span class="nc" id="L155">    }</span>
+<span class="fc" id="L154">        this.sublabels.put(category, label);</span>
+<span class="fc" id="L155">    }</span>
 
     /**
      * Overrides the default behaviour by adding the sublabel to the text
@@ -197,23 +197,23 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L201">            return true;</span>
         }
-<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (!(obj instanceof ExtendedCategoryAxis)) {</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (!(obj instanceof ExtendedCategoryAxis)) {</span>
 <span class="nc" id="L204">            return false;</span>
         }
-<span class="nc" id="L206">        ExtendedCategoryAxis that = (ExtendedCategoryAxis) obj;</span>
-<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (!this.sublabelFont.equals(that.sublabelFont)) {</span>
-<span class="nc" id="L208">            return false;</span>
+<span class="fc" id="L206">        ExtendedCategoryAxis that = (ExtendedCategoryAxis) obj;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (!this.sublabelFont.equals(that.sublabelFont)) {</span>
+<span class="fc" id="L208">            return false;</span>
         }
-<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (!PaintUtils.equal(this.sublabelPaint, that.sublabelPaint)) {</span>
-<span class="nc" id="L211">            return false;</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (!PaintUtils.equal(this.sublabelPaint, that.sublabelPaint)) {</span>
+<span class="fc" id="L211">            return false;</span>
         }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (!this.sublabels.equals(that.sublabels)) {</span>
-<span class="nc" id="L214">            return false;</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (!this.sublabels.equals(that.sublabels)) {</span>
+<span class="fc" id="L214">            return false;</span>
         }
-<span class="nc" id="L216">        return super.equals(obj);</span>
+<span class="fc" id="L216">        return super.equals(obj);</span>
     }
 
     /**
@@ -225,9 +225,9 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L228">        ExtendedCategoryAxis clone = (ExtendedCategoryAxis) super.clone();</span>
-<span class="nc" id="L229">        clone.sublabels = new HashMap(this.sublabels);</span>
-<span class="nc" id="L230">        return clone;</span>
+<span class="fc" id="L228">        ExtendedCategoryAxis clone = (ExtendedCategoryAxis) super.clone();</span>
+<span class="fc" id="L229">        clone.sublabels = new HashMap(this.sublabels);</span>
+<span class="fc" id="L230">        return clone;</span>
     }
 
     /**
@@ -238,9 +238,9 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L241">        stream.defaultWriteObject();</span>
-<span class="nc" id="L242">        SerialUtils.writePaint(this.sublabelPaint, stream);</span>
-<span class="nc" id="L243">    }</span>
+<span class="fc" id="L241">        stream.defaultWriteObject();</span>
+<span class="fc" id="L242">        SerialUtils.writePaint(this.sublabelPaint, stream);</span>
+<span class="fc" id="L243">    }</span>
 
     /**
      * Provides serialization support.
@@ -252,9 +252,9 @@ public class ExtendedCategoryAxis extends CategoryAxis {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L255">        stream.defaultReadObject();</span>
-<span class="nc" id="L256">        this.sublabelPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L257">    }</span>
+<span class="fc" id="L255">        stream.defaultReadObject();</span>
+<span class="fc" id="L256">        this.sublabelPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L257">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

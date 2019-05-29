@@ -42,8 +42,8 @@ public class StrokeList extends AbstractObjectList {
      * Creates a new list.
      */
     public StrokeList() {
-<span class="nc" id="L45">        super();</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L45">        super();</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * Returns a {@link Stroke} object from the list.
@@ -53,7 +53,7 @@ public class StrokeList extends AbstractObjectList {
      * @return The object.
      */
     public Stroke getStroke(int index) {
-<span class="nc" id="L56">        return (Stroke) get(index);</span>
+<span class="fc" id="L56">        return (Stroke) get(index);</span>
     }
 
     /**
@@ -63,8 +63,8 @@ public class StrokeList extends AbstractObjectList {
      * @param stroke  the {@link Stroke}.
      */
     public void setStroke(int index, Stroke stroke) {
-<span class="nc" id="L66">        set(index, stroke);</span>
-<span class="nc" id="L67">    }</span>
+<span class="fc" id="L66">        set(index, stroke);</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * Returns an independent copy of the list.
@@ -74,7 +74,7 @@ public class StrokeList extends AbstractObjectList {
      * @throws CloneNotSupportedException if an item in the list cannot be cloned.
      */
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L77">        return super.clone();</span>
+<span class="fc" id="L77">        return super.clone();</span>
     }
     
     /**
@@ -87,16 +87,16 @@ public class StrokeList extends AbstractObjectList {
     @Override
     public boolean equals(Object o) {
 
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (o == null) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (o == null) {</span>
 <span class="nc" id="L91">            return false;</span>
         }
         
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (o == this) {</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (o == this) {</span>
 <span class="nc" id="L95">            return true;</span>
         }
         
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (o instanceof StrokeList) {</span>
-<span class="nc" id="L99">            return super.equals(o);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (o instanceof StrokeList) {</span>
+<span class="fc" id="L99">            return super.equals(o);</span>
         }
 
 <span class="nc" id="L102">        return false;</span>
@@ -121,10 +121,10 @@ public class StrokeList extends AbstractObjectList {
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
 
-<span class="nc" id="L124">        stream.defaultWriteObject();</span>
-<span class="nc" id="L125">        final int count = size();</span>
-<span class="nc" id="L126">        stream.writeInt(count);</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L124">        stream.defaultWriteObject();</span>
+<span class="fc" id="L125">        final int count = size();</span>
+<span class="fc" id="L126">        stream.writeInt(count);</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
 <span class="nc" id="L128">            final Stroke stroke = getStroke(i);</span>
 <span class="nc bnc" id="L129" title="All 2 branches missed.">            if (stroke != null) {</span>
 <span class="nc" id="L130">                stream.writeInt(i);</span>
@@ -135,7 +135,7 @@ public class StrokeList extends AbstractObjectList {
             }
         }
 
-<span class="nc" id="L138">    }</span>
+<span class="fc" id="L138">    }</span>
     
     /**
      * Provides serialization support.
@@ -147,18 +147,18 @@ public class StrokeList extends AbstractObjectList {
      */
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 
-<span class="nc" id="L150">        stream.defaultReadObject();</span>
-<span class="nc" id="L151">        int count = stream.readInt();</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L150">        stream.defaultReadObject();</span>
+<span class="fc" id="L151">        int count = stream.readInt();</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
 <span class="nc" id="L153">            int index = stream.readInt();</span>
 <span class="nc bnc" id="L154" title="All 2 branches missed.">            if (index != -1) {</span>
 <span class="nc" id="L155">                setStroke(index, SerialUtils.readStroke(stream));</span>
             }
         }
         
-<span class="nc" id="L159">    }</span>
+<span class="fc" id="L159">    }</span>
 
 }
 
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

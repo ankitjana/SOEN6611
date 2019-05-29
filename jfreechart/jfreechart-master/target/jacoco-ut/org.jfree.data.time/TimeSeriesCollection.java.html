@@ -142,8 +142,8 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * Constructs an empty dataset, tied to the default timezone.
      */
     public TimeSeriesCollection() {
-<span class="nc" id="L145">        this(null, TimeZone.getDefault());</span>
-<span class="nc" id="L146">    }</span>
+<span class="fc" id="L145">        this(null, TimeZone.getDefault());</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * Constructs an empty dataset, tied to a specific timezone.
@@ -153,8 +153,8 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     public TimeSeriesCollection(TimeZone zone) {
         // FIXME: need a locale as well as a timezone
-<span class="nc" id="L156">        this(null, zone);</span>
-<span class="nc" id="L157">    }</span>
+<span class="fc" id="L156">        this(null, zone);</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Constructs a dataset containing a single series (more can be added),
@@ -163,8 +163,8 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param series the series ({@code null} permitted).
      */
     public TimeSeriesCollection(TimeSeries series) {
-<span class="nc" id="L166">        this(series, TimeZone.getDefault());</span>
-<span class="nc" id="L167">    }</span>
+<span class="fc" id="L166">        this(series, TimeZone.getDefault());</span>
+<span class="fc" id="L167">    }</span>
 
     /**
      * Constructs a dataset containing a single series (more can be added),
@@ -175,19 +175,19 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param zone  the timezone ({@code null} permitted, will use
      *              {@code TimeZone.getDefault()} in that case).
      */
-<span class="nc" id="L178">    public TimeSeriesCollection(TimeSeries series, TimeZone zone) {</span>
+<span class="fc" id="L178">    public TimeSeriesCollection(TimeSeries series, TimeZone zone) {</span>
         // FIXME:  need a locale as well as a timezone
-<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (zone == null) {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (zone == null) {</span>
 <span class="nc" id="L181">            zone = TimeZone.getDefault();</span>
         }
-<span class="nc" id="L183">        this.workingCalendar = Calendar.getInstance(zone);</span>
-<span class="nc" id="L184">        this.data = new ArrayList();</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (series != null) {</span>
-<span class="nc" id="L186">            this.data.add(series);</span>
-<span class="nc" id="L187">            series.addChangeListener(this);</span>
+<span class="fc" id="L183">        this.workingCalendar = Calendar.getInstance(zone);</span>
+<span class="fc" id="L184">        this.data = new ArrayList();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (series != null) {</span>
+<span class="fc" id="L186">            this.data.add(series);</span>
+<span class="fc" id="L187">            series.addChangeListener(this);</span>
         }
-<span class="nc" id="L189">        this.xPosition = TimePeriodAnchor.START;</span>
-<span class="nc" id="L190">    }</span>
+<span class="fc" id="L189">        this.xPosition = TimePeriodAnchor.START;</span>
+<span class="fc" id="L190">    }</span>
 
     /**
      * Returns the order of the domain values in this dataset.
@@ -218,10 +218,10 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param anchor  the anchor position ({@code null} not permitted).
      */
     public void setXPosition(TimePeriodAnchor anchor) {
-<span class="nc" id="L221">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
-<span class="nc" id="L222">        this.xPosition = anchor;</span>
-<span class="nc" id="L223">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L224">    }</span>
+<span class="fc" id="L221">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
+<span class="fc" id="L222">        this.xPosition = anchor;</span>
+<span class="fc" id="L223">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L224">    }</span>
 
     /**
      * Returns a list of all the series in the collection.
@@ -239,7 +239,7 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L242">        return this.data.size();</span>
+<span class="fc" id="L242">        return this.data.size();</span>
     }
 
     /**
@@ -253,8 +253,8 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.6
      */
     public int indexOf(TimeSeries series) {
-<span class="nc" id="L256">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L257">        return this.data.indexOf(series);</span>
+<span class="fc" id="L256">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L257">        return this.data.indexOf(series);</span>
     }
 
     /**
@@ -265,11 +265,11 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @return The series.
      */
     public TimeSeries getSeries(int series) {
-<span class="nc bnc" id="L268" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L269">            throw new IllegalArgumentException(</span>
+<span class="pc bpc" id="L268" title="1 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L269">            throw new IllegalArgumentException(</span>
                 &quot;The 'series' argument is out of bounds (&quot; + series + &quot;).&quot;);
         }
-<span class="nc" id="L272">        return (TimeSeries) this.data.get(series);</span>
+<span class="fc" id="L272">        return (TimeSeries) this.data.get(series);</span>
     }
 
     /**
@@ -281,16 +281,16 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @return The series with the given key.
      */
     public TimeSeries getSeries(Comparable key) {
-<span class="nc" id="L284">        TimeSeries result = null;</span>
-<span class="nc" id="L285">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L287">            TimeSeries series = (TimeSeries) iterator.next();</span>
-<span class="nc" id="L288">            Comparable k = series.getKey();</span>
-<span class="nc bnc" id="L289" title="All 4 branches missed.">            if (k != null &amp;&amp; k.equals(key)) {</span>
-<span class="nc" id="L290">                result = series;</span>
+<span class="fc" id="L284">        TimeSeries result = null;</span>
+<span class="fc" id="L285">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L287">            TimeSeries series = (TimeSeries) iterator.next();</span>
+<span class="fc" id="L288">            Comparable k = series.getKey();</span>
+<span class="pc bpc" id="L289" title="1 of 4 branches missed.">            if (k != null &amp;&amp; k.equals(key)) {</span>
+<span class="fc" id="L290">                result = series;</span>
             }
-<span class="nc" id="L292">        }</span>
-<span class="nc" id="L293">        return result;</span>
+<span class="fc" id="L292">        }</span>
+<span class="fc" id="L293">        return result;</span>
     }
 
     /**
@@ -304,7 +304,7 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
     public Comparable getSeriesKey(int series) {
         // check arguments...delegated
         // fetch the series name...
-<span class="nc" id="L307">        return getSeries(series).getKey();</span>
+<span class="fc" id="L307">        return getSeries(series).getKey();</span>
     }
 
     /**
@@ -318,15 +318,15 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.17
      */
     public int getSeriesIndex(Comparable key) {
-<span class="nc" id="L321">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L322">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L324">            TimeSeries series = (TimeSeries) this.data.get(i);</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">            if (key.equals(series.getKey())) {</span>
-<span class="nc" id="L326">                return i;</span>
+<span class="fc" id="L321">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L322">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L324">            TimeSeries series = (TimeSeries) this.data.get(i);</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">            if (key.equals(series.getKey())) {</span>
+<span class="fc" id="L326">                return i;</span>
             }
         }
-<span class="nc" id="L329">        return -1;</span>
+<span class="fc" id="L329">        return -1;</span>
     }
 
     /**
@@ -336,12 +336,12 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void addSeries(TimeSeries series) {
-<span class="nc" id="L339">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L340">        this.data.add(series);</span>
-<span class="nc" id="L341">        series.addChangeListener(this);</span>
-<span class="nc" id="L342">        series.addVetoableChangeListener(this);</span>
-<span class="nc" id="L343">        fireDatasetChanged();</span>
-<span class="nc" id="L344">    }</span>
+<span class="fc" id="L339">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L340">        this.data.add(series);</span>
+<span class="fc" id="L341">        series.addChangeListener(this);</span>
+<span class="fc" id="L342">        series.addVetoableChangeListener(this);</span>
+<span class="fc" id="L343">        fireDatasetChanged();</span>
+<span class="fc" id="L344">    }</span>
 
     /**
      * Removes the specified series from the collection and sends a
@@ -350,12 +350,12 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void removeSeries(TimeSeries series) {
-<span class="nc" id="L353">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L354">        this.data.remove(series);</span>
-<span class="nc" id="L355">        series.removeChangeListener(this);</span>
-<span class="nc" id="L356">        series.removeVetoableChangeListener(this);</span>
-<span class="nc" id="L357">        fireDatasetChanged();</span>
-<span class="nc" id="L358">    }</span>
+<span class="fc" id="L353">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L354">        this.data.remove(series);</span>
+<span class="fc" id="L355">        series.removeChangeListener(this);</span>
+<span class="fc" id="L356">        series.removeVetoableChangeListener(this);</span>
+<span class="fc" id="L357">        fireDatasetChanged();</span>
+<span class="fc" id="L358">    }</span>
 
     /**
      * Removes a series from the collection.
@@ -363,11 +363,11 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @param index  the series index (zero-based).
      */
     public void removeSeries(int index) {
-<span class="nc" id="L366">        TimeSeries series = getSeries(index);</span>
-<span class="nc bnc" id="L367" title="All 2 branches missed.">        if (series != null) {</span>
-<span class="nc" id="L368">            removeSeries(series);</span>
+<span class="fc" id="L366">        TimeSeries series = getSeries(index);</span>
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">        if (series != null) {</span>
+<span class="fc" id="L368">            removeSeries(series);</span>
         }
-<span class="nc" id="L370">    }</span>
+<span class="fc" id="L370">    }</span>
 
     /**
      * Removes all the series from the collection and sends a
@@ -377,17 +377,17 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
 
         // deregister the collection as a change listener to each series in the
         // collection
-<span class="nc bnc" id="L380" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L381">            TimeSeries series = (TimeSeries) this.data.get(i);</span>
-<span class="nc" id="L382">            series.removeChangeListener(this);</span>
-<span class="nc" id="L383">            series.removeVetoableChangeListener(this);</span>
+<span class="fc bfc" id="L380" title="All 2 branches covered.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L381">            TimeSeries series = (TimeSeries) this.data.get(i);</span>
+<span class="fc" id="L382">            series.removeChangeListener(this);</span>
+<span class="fc" id="L383">            series.removeVetoableChangeListener(this);</span>
         }
 
         // remove all the series from the collection and notify listeners.
-<span class="nc" id="L387">        this.data.clear();</span>
-<span class="nc" id="L388">        fireDatasetChanged();</span>
+<span class="fc" id="L387">        this.data.clear();</span>
+<span class="fc" id="L388">        fireDatasetChanged();</span>
 
-<span class="nc" id="L390">    }</span>
+<span class="fc" id="L390">    }</span>
 
     /**
      * Returns the number of items in the specified series.  This method is
@@ -399,7 +399,7 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public int getItemCount(int series) {
-<span class="nc" id="L402">        return getSeries(series).getItemCount();</span>
+<span class="fc" id="L402">        return getSeries(series).getItemCount();</span>
     }
 
     /**
@@ -427,9 +427,9 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getX(int series, int item) {
-<span class="nc" id="L430">        TimeSeries ts = (TimeSeries) this.data.get(series);</span>
-<span class="nc" id="L431">        RegularTimePeriod period = ts.getTimePeriod(item);</span>
-<span class="nc" id="L432">        return new Long(getX(period));</span>
+<span class="fc" id="L430">        TimeSeries ts = (TimeSeries) this.data.get(series);</span>
+<span class="fc" id="L431">        RegularTimePeriod period = ts.getTimePeriod(item);</span>
+<span class="fc" id="L432">        return new Long(getX(period));</span>
     }
 
     /**
@@ -440,17 +440,17 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @return The x-value.
      */
     protected synchronized long getX(RegularTimePeriod period) {
-<span class="nc" id="L443">        long result = 0L;</span>
-<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (this.xPosition == TimePeriodAnchor.START) {</span>
-<span class="nc" id="L445">            result = period.getFirstMillisecond(this.workingCalendar);</span>
+<span class="fc" id="L443">        long result = 0L;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (this.xPosition == TimePeriodAnchor.START) {</span>
+<span class="fc" id="L445">            result = period.getFirstMillisecond(this.workingCalendar);</span>
         }
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        else if (this.xPosition == TimePeriodAnchor.MIDDLE) {</span>
-<span class="nc" id="L448">            result = period.getMiddleMillisecond(this.workingCalendar);</span>
+<span class="pc bpc" id="L447" title="1 of 2 branches missed.">        else if (this.xPosition == TimePeriodAnchor.MIDDLE) {</span>
+<span class="fc" id="L448">            result = period.getMiddleMillisecond(this.workingCalendar);</span>
         }
 <span class="nc bnc" id="L450" title="All 2 branches missed.">        else if (this.xPosition == TimePeriodAnchor.END) {</span>
 <span class="nc" id="L451">            result = period.getLastMillisecond(this.workingCalendar);</span>
         }
-<span class="nc" id="L453">        return result;</span>
+<span class="fc" id="L453">        return result;</span>
     }
 
     /**
@@ -493,8 +493,8 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getY(int series, int item) {
-<span class="nc" id="L496">        TimeSeries ts = (TimeSeries) this.data.get(series);</span>
-<span class="nc" id="L497">        return ts.getValue(item);</span>
+<span class="fc" id="L496">        TimeSeries ts = (TimeSeries) this.data.get(series);</span>
+<span class="fc" id="L497">        return ts.getValue(item);</span>
     }
 
     /**
@@ -507,7 +507,7 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getStartY(int series, int item) {
-<span class="nc" id="L510">        return getY(series, item);</span>
+<span class="fc" id="L510">        return getY(series, item);</span>
     }
 
     /**
@@ -520,7 +520,7 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getEndY(int series, int item) {
-<span class="nc" id="L523">        return getY(series, item);</span>
+<span class="fc" id="L523">        return getY(series, item);</span>
     }
 
 
@@ -535,20 +535,20 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      *         the time.
      */
     public int[] getSurroundingItems(int series, long milliseconds) {
-<span class="nc" id="L538">        int[] result = new int[] {-1, -1};</span>
-<span class="nc" id="L539">        TimeSeries timeSeries = getSeries(series);</span>
-<span class="nc bnc" id="L540" title="All 2 branches missed.">        for (int i = 0; i &lt; timeSeries.getItemCount(); i++) {</span>
-<span class="nc" id="L541">            Number x = getX(series, i);</span>
-<span class="nc" id="L542">            long m = x.longValue();</span>
-<span class="nc bnc" id="L543" title="All 2 branches missed.">            if (m &lt;= milliseconds) {</span>
-<span class="nc" id="L544">                result[0] = i;</span>
+<span class="fc" id="L538">        int[] result = new int[] {-1, -1};</span>
+<span class="fc" id="L539">        TimeSeries timeSeries = getSeries(series);</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">        for (int i = 0; i &lt; timeSeries.getItemCount(); i++) {</span>
+<span class="fc" id="L541">            Number x = getX(series, i);</span>
+<span class="fc" id="L542">            long m = x.longValue();</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">            if (m &lt;= milliseconds) {</span>
+<span class="fc" id="L544">                result[0] = i;</span>
             }
-<span class="nc bnc" id="L546" title="All 2 branches missed.">            if (m &gt;= milliseconds) {</span>
-<span class="nc" id="L547">                result[1] = i;</span>
-<span class="nc" id="L548">                break;</span>
+<span class="fc bfc" id="L546" title="All 2 branches covered.">            if (m &gt;= milliseconds) {</span>
+<span class="fc" id="L547">                result[1] = i;</span>
+<span class="fc" id="L548">                break;</span>
             }
         }
-<span class="nc" id="L551">        return result;</span>
+<span class="fc" id="L551">        return result;</span>
     }
 
     /**
@@ -597,27 +597,27 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Range getDomainBounds(boolean includeInterval) {
-<span class="nc" id="L600">        Range result = null;</span>
-<span class="nc" id="L601">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L602" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L603">            TimeSeries series = (TimeSeries) iterator.next();</span>
-<span class="nc" id="L604">            int count = series.getItemCount();</span>
-<span class="nc bnc" id="L605" title="All 2 branches missed.">            if (count &gt; 0) {</span>
-<span class="nc" id="L606">                RegularTimePeriod start = series.getTimePeriod(0);</span>
-<span class="nc" id="L607">                RegularTimePeriod end = series.getTimePeriod(count - 1);</span>
+<span class="fc" id="L600">        Range result = null;</span>
+<span class="fc" id="L601">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L602" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L603">            TimeSeries series = (TimeSeries) iterator.next();</span>
+<span class="fc" id="L604">            int count = series.getItemCount();</span>
+<span class="pc bpc" id="L605" title="1 of 2 branches missed.">            if (count &gt; 0) {</span>
+<span class="fc" id="L606">                RegularTimePeriod start = series.getTimePeriod(0);</span>
+<span class="fc" id="L607">                RegularTimePeriod end = series.getTimePeriod(count - 1);</span>
                 Range temp;
-<span class="nc bnc" id="L609" title="All 2 branches missed.">                if (!includeInterval) {</span>
+<span class="pc bpc" id="L609" title="1 of 2 branches missed.">                if (!includeInterval) {</span>
 <span class="nc" id="L610">                    temp = new Range(getX(start), getX(end));</span>
                 }
                 else {
-<span class="nc" id="L613">                    temp = new Range(</span>
-<span class="nc" id="L614">                            start.getFirstMillisecond(this.workingCalendar),</span>
-<span class="nc" id="L615">                            end.getLastMillisecond(this.workingCalendar));</span>
+<span class="fc" id="L613">                    temp = new Range(</span>
+<span class="fc" id="L614">                            start.getFirstMillisecond(this.workingCalendar),</span>
+<span class="fc" id="L615">                            end.getLastMillisecond(this.workingCalendar));</span>
                 }
-<span class="nc" id="L617">                result = Range.combine(result, temp);</span>
+<span class="fc" id="L617">                result = Range.combine(result, temp);</span>
             }
-<span class="nc" id="L619">        }</span>
-<span class="nc" id="L620">        return result;</span>
+<span class="fc" id="L619">        }</span>
+<span class="fc" id="L620">        return result;</span>
     }
 
     /**
@@ -633,28 +633,28 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
     @Override
     public Range getDomainBounds(List visibleSeriesKeys,
             boolean includeInterval) {
-<span class="nc" id="L636">        Range result = null;</span>
-<span class="nc" id="L637">        Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L638" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L639">            Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L640">            TimeSeries series = getSeries(seriesKey);</span>
-<span class="nc" id="L641">            int count = series.getItemCount();</span>
-<span class="nc bnc" id="L642" title="All 2 branches missed.">            if (count &gt; 0) {</span>
-<span class="nc" id="L643">                RegularTimePeriod start = series.getTimePeriod(0);</span>
-<span class="nc" id="L644">                RegularTimePeriod end = series.getTimePeriod(count - 1);</span>
+<span class="fc" id="L636">        Range result = null;</span>
+<span class="fc" id="L637">        Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L638" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L639">            Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L640">            TimeSeries series = getSeries(seriesKey);</span>
+<span class="fc" id="L641">            int count = series.getItemCount();</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">            if (count &gt; 0) {</span>
+<span class="fc" id="L643">                RegularTimePeriod start = series.getTimePeriod(0);</span>
+<span class="fc" id="L644">                RegularTimePeriod end = series.getTimePeriod(count - 1);</span>
                 Range temp;
-<span class="nc bnc" id="L646" title="All 2 branches missed.">                if (!includeInterval) {</span>
-<span class="nc" id="L647">                    temp = new Range(getX(start), getX(end));</span>
+<span class="fc bfc" id="L646" title="All 2 branches covered.">                if (!includeInterval) {</span>
+<span class="fc" id="L647">                    temp = new Range(getX(start), getX(end));</span>
                 }
                 else {
-<span class="nc" id="L650">                    temp = new Range(</span>
-<span class="nc" id="L651">                            start.getFirstMillisecond(this.workingCalendar),</span>
-<span class="nc" id="L652">                            end.getLastMillisecond(this.workingCalendar));</span>
+<span class="fc" id="L650">                    temp = new Range(</span>
+<span class="fc" id="L651">                            start.getFirstMillisecond(this.workingCalendar),</span>
+<span class="fc" id="L652">                            end.getLastMillisecond(this.workingCalendar));</span>
                 }
-<span class="nc" id="L654">                result = Range.combine(result, temp);</span>
+<span class="fc" id="L654">                result = Range.combine(result, temp);</span>
             }
-<span class="nc" id="L656">        }</span>
-<span class="nc" id="L657">        return result;</span>
+<span class="fc" id="L656">        }</span>
+<span class="fc" id="L657">        return result;</span>
     }
 
     /**
@@ -667,14 +667,14 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.15
      */
     public Range getRangeBounds(boolean includeInterval) {
-<span class="nc" id="L670">        Range result = null;</span>
-<span class="nc" id="L671">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L672" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L673">            TimeSeries series = (TimeSeries) iterator.next();</span>
-<span class="nc" id="L674">            Range r = new Range(series.getMinY(), series.getMaxY());</span>
-<span class="nc" id="L675">            result = Range.combineIgnoringNaN(result, r);</span>
-<span class="nc" id="L676">        }</span>
-<span class="nc" id="L677">        return result;</span>
+<span class="fc" id="L670">        Range result = null;</span>
+<span class="fc" id="L671">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L672" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L673">            TimeSeries series = (TimeSeries) iterator.next();</span>
+<span class="fc" id="L674">            Range r = new Range(series.getMinY(), series.getMaxY());</span>
+<span class="fc" id="L675">            result = Range.combineIgnoringNaN(result, r);</span>
+<span class="fc" id="L676">        }</span>
+<span class="fc" id="L677">        return result;</span>
     }
 
     /**
@@ -691,16 +691,16 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
     @Override
     public Range getRangeBounds(List visibleSeriesKeys, Range xRange,
             boolean includeInterval) {
-<span class="nc" id="L694">        Range result = null;</span>
-<span class="nc" id="L695">        Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L696" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L697">            Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L698">            TimeSeries series = getSeries(seriesKey);</span>
-<span class="nc" id="L699">            Range r = series.findValueRange(xRange, this.xPosition, </span>
-<span class="nc" id="L700">                    this.workingCalendar.getTimeZone());</span>
-<span class="nc" id="L701">            result = Range.combineIgnoringNaN(result, r);</span>
-<span class="nc" id="L702">        }</span>
-<span class="nc" id="L703">        return result;</span>
+<span class="fc" id="L694">        Range result = null;</span>
+<span class="fc" id="L695">        Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L696" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L697">            Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L698">            TimeSeries series = getSeries(seriesKey);</span>
+<span class="fc" id="L699">            Range r = series.findValueRange(xRange, this.xPosition, </span>
+<span class="fc" id="L700">                    this.workingCalendar.getTimeZone());</span>
+<span class="fc" id="L701">            result = Range.combineIgnoringNaN(result, r);</span>
+<span class="fc" id="L702">        }</span>
+<span class="fc" id="L703">        return result;</span>
     }
 
     /**
@@ -716,23 +716,23 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
     public void vetoableChange(PropertyChangeEvent e)
             throws PropertyVetoException {
         // if it is not the series name, then we have no interest
-<span class="nc bnc" id="L719" title="All 2 branches missed.">        if (!&quot;Key&quot;.equals(e.getPropertyName())) {</span>
+<span class="pc bpc" id="L719" title="1 of 2 branches missed.">        if (!&quot;Key&quot;.equals(e.getPropertyName())) {</span>
 <span class="nc" id="L720">            return;</span>
         }
         
         // to be defensive, let's check that the source series does in fact
         // belong to this collection
-<span class="nc" id="L725">        Series s = (Series) e.getSource();</span>
-<span class="nc bnc" id="L726" title="All 2 branches missed.">        if (getSeriesIndex(s.getKey()) == -1) {</span>
+<span class="fc" id="L725">        Series s = (Series) e.getSource();</span>
+<span class="pc bpc" id="L726" title="1 of 2 branches missed.">        if (getSeriesIndex(s.getKey()) == -1) {</span>
 <span class="nc" id="L727">            throw new IllegalStateException(&quot;Receiving events from a series &quot; +</span>
                     &quot;that does not belong to this collection.&quot;);
         }
         // check if the new series name already exists for another series
-<span class="nc" id="L731">        Comparable key = (Comparable) e.getNewValue();</span>
-<span class="nc bnc" id="L732" title="All 2 branches missed.">        if (getSeriesIndex(key) &gt;= 0) {</span>
-<span class="nc" id="L733">            throw new PropertyVetoException(&quot;Duplicate key2&quot;, e);</span>
+<span class="fc" id="L731">        Comparable key = (Comparable) e.getNewValue();</span>
+<span class="fc bfc" id="L732" title="All 2 branches covered.">        if (getSeriesIndex(key) &gt;= 0) {</span>
+<span class="fc" id="L733">            throw new PropertyVetoException(&quot;Duplicate key2&quot;, e);</span>
         }
-<span class="nc" id="L735">    }</span>
+<span class="fc" id="L735">    }</span>
 
     /**
      * Tests this time series collection for equality with another object.
@@ -743,20 +743,20 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L746" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L747">            return true;</span>
+<span class="fc bfc" id="L746" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L747">            return true;</span>
         }
-<span class="nc bnc" id="L749" title="All 2 branches missed.">        if (!(obj instanceof TimeSeriesCollection)) {</span>
+<span class="pc bpc" id="L749" title="1 of 2 branches missed.">        if (!(obj instanceof TimeSeriesCollection)) {</span>
 <span class="nc" id="L750">            return false;</span>
         }
-<span class="nc" id="L752">        TimeSeriesCollection that = (TimeSeriesCollection) obj;</span>
-<span class="nc bnc" id="L753" title="All 2 branches missed.">        if (this.xPosition != that.xPosition) {</span>
+<span class="fc" id="L752">        TimeSeriesCollection that = (TimeSeriesCollection) obj;</span>
+<span class="pc bpc" id="L753" title="1 of 2 branches missed.">        if (this.xPosition != that.xPosition) {</span>
 <span class="nc" id="L754">            return false;</span>
         }
-<span class="nc bnc" id="L756" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
-<span class="nc" id="L757">            return false;</span>
+<span class="fc bfc" id="L756" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
+<span class="fc" id="L757">            return false;</span>
         }
-<span class="nc" id="L759">        return true;</span>
+<span class="fc" id="L759">        return true;</span>
     }
 
     /**
@@ -785,11 +785,11 @@ public class TimeSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L788">        TimeSeriesCollection clone = (TimeSeriesCollection) super.clone();</span>
-<span class="nc" id="L789">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
-<span class="nc" id="L790">        clone.workingCalendar = (Calendar) this.workingCalendar.clone();</span>
-<span class="nc" id="L791">        return clone;</span>
+<span class="fc" id="L788">        TimeSeriesCollection clone = (TimeSeriesCollection) super.clone();</span>
+<span class="fc" id="L789">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
+<span class="fc" id="L790">        clone.workingCalendar = (Calendar) this.workingCalendar.clone();</span>
+<span class="fc" id="L791">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -225,15 +225,15 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * require tool tips or URLs, then you can easily add the required
      * generators.
      */
-<span class="nc" id="L228">    protected AbstractCategoryItemRenderer() {</span>
-<span class="nc" id="L229">        this.itemLabelGeneratorMap </span>
+<span class="fc" id="L228">    protected AbstractCategoryItemRenderer() {</span>
+<span class="fc" id="L229">        this.itemLabelGeneratorMap </span>
                 = new HashMap&lt;Integer, CategoryItemLabelGenerator&gt;();
-<span class="nc" id="L231">        this.toolTipGeneratorMap </span>
+<span class="fc" id="L231">        this.toolTipGeneratorMap </span>
                 = new HashMap&lt;Integer, CategoryToolTipGenerator&gt;();
-<span class="nc" id="L233">        this.itemURLGeneratorMap = new HashMap&lt;Integer, CategoryURLGenerator&gt;();</span>
-<span class="nc" id="L234">        this.legendItemLabelGenerator</span>
+<span class="fc" id="L233">        this.itemURLGeneratorMap = new HashMap&lt;Integer, CategoryURLGenerator&gt;();</span>
+<span class="fc" id="L234">        this.legendItemLabelGenerator</span>
                 = new StandardCategorySeriesLabelGenerator();
-<span class="nc" id="L236">    }</span>
+<span class="fc" id="L236">    }</span>
 
     /**
      * Returns the number of passes through the dataset required by the
@@ -244,7 +244,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public int getPassCount() {
-<span class="nc" id="L247">        return 1;</span>
+<span class="fc" id="L247">        return 1;</span>
     }
 
     /**
@@ -258,7 +258,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public CategoryPlot getPlot() {
-<span class="nc" id="L261">        return this.plot;</span>
+<span class="fc" id="L261">        return this.plot;</span>
     }
 
     /**
@@ -272,9 +272,9 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public void setPlot(CategoryPlot plot) {
-<span class="nc" id="L275">        Args.nullNotPermitted(plot, &quot;plot&quot;);</span>
-<span class="nc" id="L276">        this.plot = plot;</span>
-<span class="nc" id="L277">    }</span>
+<span class="fc" id="L275">        Args.nullNotPermitted(plot, &quot;plot&quot;);</span>
+<span class="fc" id="L276">        this.plot = plot;</span>
+<span class="fc" id="L277">    }</span>
 
     // ITEM LABEL GENERATOR
 
@@ -292,7 +292,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public CategoryItemLabelGenerator getItemLabelGenerator(int row,
             int column) {
-<span class="nc" id="L295">        return getSeriesItemLabelGenerator(row);</span>
+<span class="fc" id="L295">        return getSeriesItemLabelGenerator(row);</span>
     }
 
     /**
@@ -308,12 +308,12 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     public CategoryItemLabelGenerator getSeriesItemLabelGenerator(int series) {
 
         // otherwise look up the generator table
-<span class="nc" id="L311">        CategoryItemLabelGenerator generator = this.itemLabelGeneratorMap.get(</span>
-<span class="nc" id="L312">                series);</span>
-<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (generator == null) {</span>
-<span class="nc" id="L314">            generator = this.defaultItemLabelGenerator;</span>
+<span class="fc" id="L311">        CategoryItemLabelGenerator generator = this.itemLabelGeneratorMap.get(</span>
+<span class="fc" id="L312">                series);</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (generator == null) {</span>
+<span class="fc" id="L314">            generator = this.defaultItemLabelGenerator;</span>
         }
-<span class="nc" id="L316">        return generator;</span>
+<span class="fc" id="L316">        return generator;</span>
     }
 
     /**
@@ -328,8 +328,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesItemLabelGenerator(int series,
             CategoryItemLabelGenerator generator) {
-<span class="nc" id="L331">        setSeriesItemLabelGenerator(series, generator, true);</span>
-<span class="nc" id="L332">    }</span>
+<span class="fc" id="L331">        setSeriesItemLabelGenerator(series, generator, true);</span>
+<span class="fc" id="L332">    }</span>
     
     /**
      * Sets the item label generator for a series and sends a
@@ -344,11 +344,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesItemLabelGenerator(int series,
             CategoryItemLabelGenerator generator, boolean notify) {
-<span class="nc" id="L347">        this.itemLabelGeneratorMap.put(series, generator);</span>
-<span class="nc bnc" id="L348" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L349">            fireChangeEvent();</span>
+<span class="fc" id="L347">        this.itemLabelGeneratorMap.put(series, generator);</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L349">            fireChangeEvent();</span>
         }
-<span class="nc" id="L351">    }</span>
+<span class="fc" id="L351">    }</span>
 
     /**
      * Returns the default item label generator.
@@ -373,8 +373,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setDefaultItemLabelGenerator(
             CategoryItemLabelGenerator generator) {
-<span class="nc" id="L376">        setDefaultItemLabelGenerator(generator, true);</span>
-<span class="nc" id="L377">    }</span>
+<span class="fc" id="L376">        setDefaultItemLabelGenerator(generator, true);</span>
+<span class="fc" id="L377">    }</span>
     
     /**
      * Sets the default item label generator and sends a
@@ -388,11 +388,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setDefaultItemLabelGenerator(
             CategoryItemLabelGenerator generator, boolean notify) {
-<span class="nc" id="L391">        this.defaultItemLabelGenerator = generator;</span>
-<span class="nc bnc" id="L392" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L393">            fireChangeEvent();</span>
+<span class="fc" id="L391">        this.defaultItemLabelGenerator = generator;</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L393">            fireChangeEvent();</span>
         }
-<span class="nc" id="L395">    }</span>
+<span class="fc" id="L395">    }</span>
 
     // TOOL TIP GENERATOR
 
@@ -411,11 +411,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public CategoryToolTipGenerator getToolTipGenerator(int row, int column) {
 
-<span class="nc" id="L414">        CategoryToolTipGenerator result = getSeriesToolTipGenerator(row);</span>
-<span class="nc bnc" id="L415" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L416">            result = this.defaultToolTipGenerator;</span>
+<span class="fc" id="L414">        CategoryToolTipGenerator result = getSeriesToolTipGenerator(row);</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">        if (result == null) {</span>
+<span class="fc" id="L416">            result = this.defaultToolTipGenerator;</span>
         }
-<span class="nc" id="L418">        return result;</span>
+<span class="fc" id="L418">        return result;</span>
     }
 
     /**
@@ -430,7 +430,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public CategoryToolTipGenerator getSeriesToolTipGenerator(int series) {
-<span class="nc" id="L433">        return this.toolTipGeneratorMap.get(series);</span>
+<span class="fc" id="L433">        return this.toolTipGeneratorMap.get(series);</span>
     }
 
     /**
@@ -445,8 +445,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesToolTipGenerator(int series,
             CategoryToolTipGenerator generator) {
-<span class="nc" id="L448">        setSeriesToolTipGenerator(series, generator, true);</span>
-<span class="nc" id="L449">    }</span>
+<span class="fc" id="L448">        setSeriesToolTipGenerator(series, generator, true);</span>
+<span class="fc" id="L449">    }</span>
     
     /**
      * Sets the tool tip generator for a series and sends a
@@ -461,11 +461,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesToolTipGenerator(int series,
             CategoryToolTipGenerator generator, boolean notify) {
-<span class="nc" id="L464">        this.toolTipGeneratorMap.put(series, generator);</span>
-<span class="nc bnc" id="L465" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L466">            fireChangeEvent();</span>
+<span class="fc" id="L464">        this.toolTipGeneratorMap.put(series, generator);</span>
+<span class="pc bpc" id="L465" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L466">            fireChangeEvent();</span>
         }
-<span class="nc" id="L468">    }</span>
+<span class="fc" id="L468">    }</span>
 
     /**
      * Returns the default tool tip generator (the &quot;layer 2&quot; generator).
@@ -489,8 +489,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultToolTipGenerator(CategoryToolTipGenerator generator) {
-<span class="nc" id="L492">        setDefaultToolTipGenerator(generator, true);</span>
-<span class="nc" id="L493">    }</span>
+<span class="fc" id="L492">        setDefaultToolTipGenerator(generator, true);</span>
+<span class="fc" id="L493">    }</span>
     
     /**
      * Sets the default tool tip generator and sends a {@link RendererChangeEvent}
@@ -503,11 +503,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultToolTipGenerator(CategoryToolTipGenerator generator, boolean notify) {
-<span class="nc" id="L506">        this.defaultToolTipGenerator = generator;</span>
-<span class="nc bnc" id="L507" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L508">            fireChangeEvent();</span>
+<span class="fc" id="L506">        this.defaultToolTipGenerator = generator;</span>
+<span class="pc bpc" id="L507" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L508">            fireChangeEvent();</span>
         }
-<span class="nc" id="L510">    }</span>
+<span class="fc" id="L510">    }</span>
 
     // URL GENERATOR
 
@@ -523,7 +523,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public CategoryURLGenerator getItemURLGenerator(int row, int column) {
-<span class="nc" id="L526">        return getSeriesItemURLGenerator(row);</span>
+<span class="fc" id="L526">        return getSeriesItemURLGenerator(row);</span>
     }
 
     /**
@@ -538,11 +538,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public CategoryURLGenerator getSeriesItemURLGenerator(int series) {
         // otherwise look up the generator table
-<span class="nc" id="L541">        CategoryURLGenerator generator = this.itemURLGeneratorMap.get(series);</span>
-<span class="nc bnc" id="L542" title="All 2 branches missed.">        if (generator == null) {</span>
-<span class="nc" id="L543">            generator = this.defaultItemURLGenerator;</span>
+<span class="fc" id="L541">        CategoryURLGenerator generator = this.itemURLGeneratorMap.get(series);</span>
+<span class="fc bfc" id="L542" title="All 2 branches covered.">        if (generator == null) {</span>
+<span class="fc" id="L543">            generator = this.defaultItemURLGenerator;</span>
         }
-<span class="nc" id="L545">        return generator;</span>
+<span class="fc" id="L545">        return generator;</span>
     }
 
     /**
@@ -557,8 +557,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesItemURLGenerator(int series,
             CategoryURLGenerator generator) {
-<span class="nc" id="L560">        setSeriesItemURLGenerator(series, generator, true);</span>
-<span class="nc" id="L561">    }</span>
+<span class="fc" id="L560">        setSeriesItemURLGenerator(series, generator, true);</span>
+<span class="fc" id="L561">    }</span>
     
     /**
      * Sets the URL generator for a series and sends a
@@ -573,11 +573,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void setSeriesItemURLGenerator(int series,
             CategoryURLGenerator generator, boolean notify) {
-<span class="nc" id="L576">        this.itemURLGeneratorMap.put(series, generator);</span>
-<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L578">            fireChangeEvent();</span>
+<span class="fc" id="L576">        this.itemURLGeneratorMap.put(series, generator);</span>
+<span class="pc bpc" id="L577" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L578">            fireChangeEvent();</span>
         }
-<span class="nc" id="L580">    }</span>
+<span class="fc" id="L580">    }</span>
 
     /**
      * Returns the default item URL generator.
@@ -601,8 +601,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultItemURLGenerator(CategoryURLGenerator generator) {
-<span class="nc" id="L604">        setDefaultItemURLGenerator(generator, true);</span>
-<span class="nc" id="L605">    }</span>
+<span class="fc" id="L604">        setDefaultItemURLGenerator(generator, true);</span>
+<span class="fc" id="L605">    }</span>
     
     /**
      * Sets the default item URL generator and sends a
@@ -615,11 +615,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public void setDefaultItemURLGenerator(CategoryURLGenerator generator, boolean notify) {
-<span class="nc" id="L618">        this.defaultItemURLGenerator = generator;</span>
-<span class="nc bnc" id="L619" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L620">            fireChangeEvent();</span>
+<span class="fc" id="L618">        this.defaultItemURLGenerator = generator;</span>
+<span class="pc bpc" id="L619" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L620">            fireChangeEvent();</span>
         }
-<span class="nc" id="L622">    }</span>
+<span class="fc" id="L622">    }</span>
 
     /**
      * Returns the number of rows in the dataset.  This value is updated in the
@@ -628,7 +628,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @return The row count.
      */
     public int getRowCount() {
-<span class="nc" id="L631">        return this.rowCount;</span>
+<span class="fc" id="L631">        return this.rowCount;</span>
     }
 
     /**
@@ -638,7 +638,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @return The column count.
      */
     public int getColumnCount() {
-<span class="nc" id="L641">        return this.columnCount;</span>
+<span class="fc" id="L641">        return this.columnCount;</span>
     }
 
     /**
@@ -654,7 +654,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @since 1.0.5
      */
     protected CategoryItemRendererState createState(PlotRenderingInfo info) {
-<span class="nc" id="L657">        return new CategoryItemRendererState(info);</span>
+<span class="fc" id="L657">        return new CategoryItemRendererState(info);</span>
     }
 
     /**
@@ -677,30 +677,30 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
             Rectangle2D dataArea, CategoryPlot plot, int rendererIndex,
             PlotRenderingInfo info) {
 
-<span class="nc" id="L680">        setPlot(plot);</span>
-<span class="nc" id="L681">        CategoryDataset data = plot.getDataset(rendererIndex);</span>
-<span class="nc bnc" id="L682" title="All 2 branches missed.">        if (data != null) {</span>
-<span class="nc" id="L683">            this.rowCount = data.getRowCount();</span>
-<span class="nc" id="L684">            this.columnCount = data.getColumnCount();</span>
+<span class="fc" id="L680">        setPlot(plot);</span>
+<span class="fc" id="L681">        CategoryDataset data = plot.getDataset(rendererIndex);</span>
+<span class="pc bpc" id="L682" title="1 of 2 branches missed.">        if (data != null) {</span>
+<span class="fc" id="L683">            this.rowCount = data.getRowCount();</span>
+<span class="fc" id="L684">            this.columnCount = data.getColumnCount();</span>
         } else {
 <span class="nc" id="L686">            this.rowCount = 0;</span>
 <span class="nc" id="L687">            this.columnCount = 0;</span>
         }
-<span class="nc" id="L689">        CategoryItemRendererState state = createState(info);</span>
-<span class="nc" id="L690">        state.setElementHinting(plot.fetchElementHintingFlag());</span>
-<span class="nc" id="L691">        int[] visibleSeriesTemp = new int[this.rowCount];</span>
-<span class="nc" id="L692">        int visibleSeriesCount = 0;</span>
-<span class="nc bnc" id="L693" title="All 2 branches missed.">        for (int row = 0; row &lt; this.rowCount; row++) {</span>
-<span class="nc bnc" id="L694" title="All 2 branches missed.">            if (isSeriesVisible(row)) {</span>
-<span class="nc" id="L695">                visibleSeriesTemp[visibleSeriesCount] = row;</span>
-<span class="nc" id="L696">                visibleSeriesCount++;</span>
+<span class="fc" id="L689">        CategoryItemRendererState state = createState(info);</span>
+<span class="fc" id="L690">        state.setElementHinting(plot.fetchElementHintingFlag());</span>
+<span class="fc" id="L691">        int[] visibleSeriesTemp = new int[this.rowCount];</span>
+<span class="fc" id="L692">        int visibleSeriesCount = 0;</span>
+<span class="fc bfc" id="L693" title="All 2 branches covered.">        for (int row = 0; row &lt; this.rowCount; row++) {</span>
+<span class="pc bpc" id="L694" title="1 of 2 branches missed.">            if (isSeriesVisible(row)) {</span>
+<span class="fc" id="L695">                visibleSeriesTemp[visibleSeriesCount] = row;</span>
+<span class="fc" id="L696">                visibleSeriesCount++;</span>
             }
         }
-<span class="nc" id="L699">        int[] visibleSeries = new int[visibleSeriesCount];</span>
-<span class="nc" id="L700">        System.arraycopy(visibleSeriesTemp, 0, visibleSeries, 0,</span>
+<span class="fc" id="L699">        int[] visibleSeries = new int[visibleSeriesCount];</span>
+<span class="fc" id="L700">        System.arraycopy(visibleSeriesTemp, 0, visibleSeries, 0,</span>
                 visibleSeriesCount);
-<span class="nc" id="L702">        state.setVisibleSeriesArray(visibleSeries);</span>
-<span class="nc" id="L703">        return state;</span>
+<span class="fc" id="L702">        state.setVisibleSeriesArray(visibleSeries);</span>
+<span class="fc" id="L703">        return state;</span>
     }
 
     /**
@@ -732,7 +732,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public Range findRangeBounds(CategoryDataset dataset) {
-<span class="nc" id="L735">        return findRangeBounds(dataset, false);</span>
+<span class="fc" id="L735">        return findRangeBounds(dataset, false);</span>
     }
 
     /**
@@ -749,18 +749,18 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     protected Range findRangeBounds(CategoryDataset dataset,
             boolean includeInterval) {
-<span class="nc bnc" id="L752" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L753">            return null;</span>
+<span class="fc bfc" id="L752" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L753">            return null;</span>
         }
-<span class="nc bnc" id="L755" title="All 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
-<span class="nc" id="L756">            List visibleSeriesKeys = new ArrayList();</span>
-<span class="nc" id="L757">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L758" title="All 2 branches missed.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc bnc" id="L759" title="All 2 branches missed.">                if (isSeriesVisible(s)) {</span>
-<span class="nc" id="L760">                    visibleSeriesKeys.add(dataset.getRowKey(s));</span>
+<span class="pc bpc" id="L755" title="1 of 2 branches missed.">        if (getDataBoundsIncludesVisibleSeriesOnly()) {</span>
+<span class="fc" id="L756">            List visibleSeriesKeys = new ArrayList();</span>
+<span class="fc" id="L757">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc bfc" id="L758" title="All 2 branches covered.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc bfc" id="L759" title="All 2 branches covered.">                if (isSeriesVisible(s)) {</span>
+<span class="fc" id="L760">                    visibleSeriesKeys.add(dataset.getRowKey(s));</span>
                 }
             }
-<span class="nc" id="L763">            return DatasetUtils.findRangeBounds(dataset,</span>
+<span class="fc" id="L763">            return DatasetUtils.findRangeBounds(dataset,</span>
                     visibleSeriesKeys, includeInterval);
         }
         else {
@@ -802,8 +802,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void drawBackground(Graphics2D g2, CategoryPlot plot,
             Rectangle2D dataArea) {
-<span class="nc" id="L805">        plot.drawBackground(g2, dataArea);</span>
-<span class="nc" id="L806">    }</span>
+<span class="fc" id="L805">        plot.drawBackground(g2, dataArea);</span>
+<span class="fc" id="L806">    }</span>
 
     /**
      * Draws an outline for the data area.  The default implementation just
@@ -817,8 +817,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public void drawOutline(Graphics2D g2, CategoryPlot plot,
             Rectangle2D dataArea) {
-<span class="nc" id="L820">        plot.drawOutline(g2, dataArea);</span>
-<span class="nc" id="L821">    }</span>
+<span class="fc" id="L820">        plot.drawOutline(g2, dataArea);</span>
+<span class="fc" id="L821">    }</span>
 
     /**
      * Draws a grid line against the domain axis.
@@ -837,35 +837,35 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     public void drawDomainGridline(Graphics2D g2, CategoryPlot plot,
            Rectangle2D dataArea, double value) {
 
-<span class="nc" id="L840">        Line2D line = null;</span>
-<span class="nc" id="L841">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L840">        Line2D line = null;</span>
+<span class="fc" id="L841">        PlotOrientation orientation = plot.getOrientation();</span>
 
-<span class="nc bnc" id="L843" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L843" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L844">            line = new Line2D.Double(dataArea.getMinX(), value,</span>
 <span class="nc" id="L845">                    dataArea.getMaxX(), value);</span>
         }
-<span class="nc bnc" id="L847" title="All 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L848">            line = new Line2D.Double(value, dataArea.getMinY(), value,</span>
-<span class="nc" id="L849">                    dataArea.getMaxY());</span>
+<span class="pc bpc" id="L847" title="1 of 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L848">            line = new Line2D.Double(value, dataArea.getMinY(), value,</span>
+<span class="fc" id="L849">                    dataArea.getMaxY());</span>
         }
 
-<span class="nc" id="L852">        Paint paint = plot.getDomainGridlinePaint();</span>
-<span class="nc bnc" id="L853" title="All 2 branches missed.">        if (paint == null) {</span>
+<span class="fc" id="L852">        Paint paint = plot.getDomainGridlinePaint();</span>
+<span class="pc bpc" id="L853" title="1 of 2 branches missed.">        if (paint == null) {</span>
 <span class="nc" id="L854">            paint = CategoryPlot.DEFAULT_GRIDLINE_PAINT;</span>
         }
-<span class="nc" id="L856">        g2.setPaint(paint);</span>
+<span class="fc" id="L856">        g2.setPaint(paint);</span>
 
-<span class="nc" id="L858">        Stroke stroke = plot.getDomainGridlineStroke();</span>
-<span class="nc bnc" id="L859" title="All 2 branches missed.">        if (stroke == null) {</span>
+<span class="fc" id="L858">        Stroke stroke = plot.getDomainGridlineStroke();</span>
+<span class="pc bpc" id="L859" title="1 of 2 branches missed.">        if (stroke == null) {</span>
 <span class="nc" id="L860">            stroke = CategoryPlot.DEFAULT_GRIDLINE_STROKE;</span>
         }
-<span class="nc" id="L862">        g2.setStroke(stroke);</span>
-<span class="nc" id="L863">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
-<span class="nc" id="L864">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
+<span class="fc" id="L862">        g2.setStroke(stroke);</span>
+<span class="fc" id="L863">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
+<span class="fc" id="L864">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
                 RenderingHints.VALUE_STROKE_NORMALIZE);
-<span class="nc" id="L866">        g2.draw(line);</span>
-<span class="nc" id="L867">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
-<span class="nc" id="L868">    }</span>
+<span class="fc" id="L866">        g2.draw(line);</span>
+<span class="fc" id="L867">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
+<span class="fc" id="L868">    }</span>
 
     /**
      * Draws a line perpendicular to the range axis.
@@ -885,30 +885,30 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     public void drawRangeLine(Graphics2D g2, CategoryPlot plot, ValueAxis axis,
             Rectangle2D dataArea, double value, Paint paint, Stroke stroke) {
 
-<span class="nc" id="L888">        Range range = axis.getRange();</span>
-<span class="nc bnc" id="L889" title="All 2 branches missed.">        if (!range.contains(value)) {</span>
+<span class="fc" id="L888">        Range range = axis.getRange();</span>
+<span class="pc bpc" id="L889" title="1 of 2 branches missed.">        if (!range.contains(value)) {</span>
 <span class="nc" id="L890">            return;</span>
         }
 
-<span class="nc" id="L893">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L894">        Line2D line = null;</span>
-<span class="nc" id="L895">        double v = axis.valueToJava2D(value, dataArea, plot.getRangeAxisEdge());</span>
-<span class="nc bnc" id="L896" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
-<span class="nc" id="L897">            line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
-<span class="nc" id="L898">                    dataArea.getMaxY());</span>
-<span class="nc bnc" id="L899" title="All 2 branches missed.">        } else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L900">            line = new Line2D.Double(dataArea.getMinX(), v,</span>
-<span class="nc" id="L901">                    dataArea.getMaxX(), v);</span>
+<span class="fc" id="L893">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L894">        Line2D line = null;</span>
+<span class="fc" id="L895">        double v = axis.valueToJava2D(value, dataArea, plot.getRangeAxisEdge());</span>
+<span class="fc bfc" id="L896" title="All 2 branches covered.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L897">            line = new Line2D.Double(v, dataArea.getMinY(), v,</span>
+<span class="fc" id="L898">                    dataArea.getMaxY());</span>
+<span class="pc bpc" id="L899" title="1 of 2 branches missed.">        } else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L900">            line = new Line2D.Double(dataArea.getMinX(), v,</span>
+<span class="fc" id="L901">                    dataArea.getMaxX(), v);</span>
         }
 
-<span class="nc" id="L904">        g2.setPaint(paint);</span>
-<span class="nc" id="L905">        g2.setStroke(stroke);</span>
-<span class="nc" id="L906">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
-<span class="nc" id="L907">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
+<span class="fc" id="L904">        g2.setPaint(paint);</span>
+<span class="fc" id="L905">        g2.setStroke(stroke);</span>
+<span class="fc" id="L906">        Object saved = g2.getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);</span>
+<span class="fc" id="L907">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, </span>
                 RenderingHints.VALUE_STROKE_NORMALIZE);
-<span class="nc" id="L909">        g2.draw(line);</span>
-<span class="nc" id="L910">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
-<span class="nc" id="L911">    }</span>
+<span class="fc" id="L909">        g2.draw(line);</span>
+<span class="fc" id="L910">        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, saved);</span>
+<span class="fc" id="L911">    }</span>
 
     /**
      * Draws a marker for the domain axis.
@@ -1012,13 +1012,13 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     public void drawRangeMarker(Graphics2D g2, CategoryPlot plot,
             ValueAxis axis, Marker marker, Rectangle2D dataArea) {
 
-<span class="nc bnc" id="L1015" title="All 2 branches missed.">        if (marker instanceof ValueMarker) {</span>
-<span class="nc" id="L1016">            ValueMarker vm = (ValueMarker) marker;</span>
-<span class="nc" id="L1017">            double value = vm.getValue();</span>
-<span class="nc" id="L1018">            Range range = axis.getRange();</span>
+<span class="fc bfc" id="L1015" title="All 2 branches covered.">        if (marker instanceof ValueMarker) {</span>
+<span class="fc" id="L1016">            ValueMarker vm = (ValueMarker) marker;</span>
+<span class="fc" id="L1017">            double value = vm.getValue();</span>
+<span class="fc" id="L1018">            Range range = axis.getRange();</span>
 
-<span class="nc bnc" id="L1020" title="All 2 branches missed.">            if (!range.contains(value)) {</span>
-<span class="nc" id="L1021">                return;</span>
+<span class="pc bpc" id="L1020" title="1 of 2 branches missed.">            if (!range.contains(value)) {</span>
+<span class="fc" id="L1021">                return;</span>
             }
 
 <span class="nc" id="L1024">            final Composite savedComposite = g2.getComposite();</span>
@@ -1065,13 +1065,13 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
             }
 <span class="nc" id="L1066">            g2.setComposite(savedComposite);</span>
 <span class="nc" id="L1067">        }</span>
-<span class="nc bnc" id="L1068" title="All 2 branches missed.">        else if (marker instanceof IntervalMarker) {</span>
-<span class="nc" id="L1069">            IntervalMarker im = (IntervalMarker) marker;</span>
-<span class="nc" id="L1070">            double start = im.getStartValue();</span>
-<span class="nc" id="L1071">            double end = im.getEndValue();</span>
-<span class="nc" id="L1072">            Range range = axis.getRange();</span>
-<span class="nc bnc" id="L1073" title="All 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
-<span class="nc" id="L1074">                return;</span>
+<span class="pc bpc" id="L1068" title="1 of 2 branches missed.">        else if (marker instanceof IntervalMarker) {</span>
+<span class="fc" id="L1069">            IntervalMarker im = (IntervalMarker) marker;</span>
+<span class="fc" id="L1070">            double start = im.getStartValue();</span>
+<span class="fc" id="L1071">            double end = im.getEndValue();</span>
+<span class="fc" id="L1072">            Range range = axis.getRange();</span>
+<span class="pc bpc" id="L1073" title="1 of 2 branches missed.">            if (!(range.intersects(start, end))) {</span>
+<span class="fc" id="L1074">                return;</span>
             }
 
 <span class="nc" id="L1077">            final Composite savedComposite = g2.getComposite();</span>
@@ -1248,47 +1248,47 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
 
-<span class="nc" id="L1251">        CategoryPlot p = getPlot();</span>
-<span class="nc bnc" id="L1252" title="All 2 branches missed.">        if (p == null) {</span>
+<span class="fc" id="L1251">        CategoryPlot p = getPlot();</span>
+<span class="pc bpc" id="L1252" title="1 of 2 branches missed.">        if (p == null) {</span>
 <span class="nc" id="L1253">            return null;</span>
         }
 
         // check that a legend item needs to be displayed...
-<span class="nc bnc" id="L1257" title="All 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
+<span class="pc bpc" id="L1257" title="2 of 4 branches missed.">        if (!isSeriesVisible(series) || !isSeriesVisibleInLegend(series)) {</span>
 <span class="nc" id="L1258">            return null;</span>
         }
 
-<span class="nc" id="L1261">        CategoryDataset dataset = p.getDataset(datasetIndex);</span>
-<span class="nc" id="L1262">        String label = this.legendItemLabelGenerator.generateLabel(dataset,</span>
+<span class="fc" id="L1261">        CategoryDataset dataset = p.getDataset(datasetIndex);</span>
+<span class="fc" id="L1262">        String label = this.legendItemLabelGenerator.generateLabel(dataset,</span>
                 series);
-<span class="nc" id="L1264">        String description = label;</span>
-<span class="nc" id="L1265">        String toolTipText = null;</span>
-<span class="nc bnc" id="L1266" title="All 2 branches missed.">        if (this.legendItemToolTipGenerator != null) {</span>
+<span class="fc" id="L1264">        String description = label;</span>
+<span class="fc" id="L1265">        String toolTipText = null;</span>
+<span class="pc bpc" id="L1266" title="1 of 2 branches missed.">        if (this.legendItemToolTipGenerator != null) {</span>
 <span class="nc" id="L1267">            toolTipText = this.legendItemToolTipGenerator.generateLabel(</span>
                     dataset, series);
         }
-<span class="nc" id="L1270">        String urlText = null;</span>
-<span class="nc bnc" id="L1271" title="All 2 branches missed.">        if (this.legendItemURLGenerator != null) {</span>
+<span class="fc" id="L1270">        String urlText = null;</span>
+<span class="pc bpc" id="L1271" title="1 of 2 branches missed.">        if (this.legendItemURLGenerator != null) {</span>
 <span class="nc" id="L1272">            urlText = this.legendItemURLGenerator.generateLabel(dataset,</span>
                     series);
         }
-<span class="nc" id="L1275">        Shape shape = lookupLegendShape(series);</span>
-<span class="nc" id="L1276">        Paint paint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L1277">        Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
-<span class="nc" id="L1278">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
+<span class="fc" id="L1275">        Shape shape = lookupLegendShape(series);</span>
+<span class="fc" id="L1276">        Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L1277">        Paint outlinePaint = lookupSeriesOutlinePaint(series);</span>
+<span class="fc" id="L1278">        Stroke outlineStroke = lookupSeriesOutlineStroke(series);</span>
 
-<span class="nc" id="L1280">        LegendItem item = new LegendItem(label, description, toolTipText,</span>
+<span class="fc" id="L1280">        LegendItem item = new LegendItem(label, description, toolTipText,</span>
                 urlText, shape, paint, outlineStroke, outlinePaint);
-<span class="nc" id="L1282">        item.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L1283">        Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L1284" title="All 2 branches missed.">        if (labelPaint != null) {</span>
+<span class="fc" id="L1282">        item.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L1283">        Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L1284" title="1 of 2 branches missed.">        if (labelPaint != null) {</span>
 <span class="nc" id="L1285">            item.setLabelPaint(labelPaint);</span>
         }
-<span class="nc" id="L1287">        item.setSeriesKey(dataset.getRowKey(series));</span>
-<span class="nc" id="L1288">        item.setSeriesIndex(series);</span>
-<span class="nc" id="L1289">        item.setDataset(dataset);</span>
-<span class="nc" id="L1290">        item.setDatasetIndex(datasetIndex);</span>
-<span class="nc" id="L1291">        return item;</span>
+<span class="fc" id="L1287">        item.setSeriesKey(dataset.getRowKey(series));</span>
+<span class="fc" id="L1288">        item.setSeriesIndex(series);</span>
+<span class="fc" id="L1289">        item.setDataset(dataset);</span>
+<span class="fc" id="L1290">        item.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L1291">        return item;</span>
     }
 
     /**
@@ -1300,51 +1300,51 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1303" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1303" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1304">            return true;</span>
         }
-<span class="nc bnc" id="L1306" title="All 2 branches missed.">        if (!(obj instanceof AbstractCategoryItemRenderer)) {</span>
+<span class="pc bpc" id="L1306" title="1 of 2 branches missed.">        if (!(obj instanceof AbstractCategoryItemRenderer)) {</span>
 <span class="nc" id="L1307">            return false;</span>
         }
-<span class="nc" id="L1309">        AbstractCategoryItemRenderer that = (AbstractCategoryItemRenderer) obj;</span>
+<span class="fc" id="L1309">        AbstractCategoryItemRenderer that = (AbstractCategoryItemRenderer) obj;</span>
 
-<span class="nc bnc" id="L1311" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.itemLabelGeneratorMap,</span>
+<span class="fc bfc" id="L1311" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.itemLabelGeneratorMap,</span>
                 that.itemLabelGeneratorMap)) {
-<span class="nc" id="L1313">            return false;</span>
+<span class="fc" id="L1313">            return false;</span>
         }
-<span class="nc bnc" id="L1315" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.defaultItemLabelGenerator,</span>
+<span class="fc bfc" id="L1315" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.defaultItemLabelGenerator,</span>
                 that.defaultItemLabelGenerator)) {
-<span class="nc" id="L1317">            return false;</span>
+<span class="fc" id="L1317">            return false;</span>
         }
-<span class="nc bnc" id="L1319" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.toolTipGeneratorMap,</span>
+<span class="fc bfc" id="L1319" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.toolTipGeneratorMap,</span>
                 that.toolTipGeneratorMap)) {
-<span class="nc" id="L1321">            return false;</span>
+<span class="fc" id="L1321">            return false;</span>
         }
-<span class="nc bnc" id="L1323" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.defaultToolTipGenerator,</span>
+<span class="fc bfc" id="L1323" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.defaultToolTipGenerator,</span>
                 that.defaultToolTipGenerator)) {
-<span class="nc" id="L1325">            return false;</span>
+<span class="fc" id="L1325">            return false;</span>
         }
-<span class="nc bnc" id="L1327" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.itemURLGeneratorMap,</span>
+<span class="fc bfc" id="L1327" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.itemURLGeneratorMap,</span>
                 that.itemURLGeneratorMap)) {
-<span class="nc" id="L1329">            return false;</span>
+<span class="fc" id="L1329">            return false;</span>
         }
-<span class="nc bnc" id="L1331" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.defaultItemURLGenerator,</span>
+<span class="fc bfc" id="L1331" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.defaultItemURLGenerator,</span>
                 that.defaultItemURLGenerator)) {
-<span class="nc" id="L1333">            return false;</span>
+<span class="fc" id="L1333">            return false;</span>
         }
-<span class="nc bnc" id="L1335" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemLabelGenerator,</span>
+<span class="fc bfc" id="L1335" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemLabelGenerator,</span>
                 that.legendItemLabelGenerator)) {
-<span class="nc" id="L1337">            return false;</span>
+<span class="fc" id="L1337">            return false;</span>
         }
-<span class="nc bnc" id="L1339" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemToolTipGenerator,</span>
+<span class="fc bfc" id="L1339" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemToolTipGenerator,</span>
                 that.legendItemToolTipGenerator)) {
-<span class="nc" id="L1341">            return false;</span>
+<span class="fc" id="L1341">            return false;</span>
         }
-<span class="nc bnc" id="L1343" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.legendItemURLGenerator,</span>
+<span class="fc bfc" id="L1343" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.legendItemURLGenerator,</span>
                 that.legendItemURLGenerator)) {
-<span class="nc" id="L1345">            return false;</span>
+<span class="fc" id="L1345">            return false;</span>
         }
-<span class="nc" id="L1347">        return super.equals(obj);</span>
+<span class="fc" id="L1347">        return super.equals(obj);</span>
     }
 
     /**
@@ -1354,8 +1354,8 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L1357">        int result = super.hashCode();</span>
-<span class="nc" id="L1358">        return result;</span>
+<span class="fc" id="L1357">        int result = super.hashCode();</span>
+<span class="fc" id="L1358">        return result;</span>
     }
 
     /**
@@ -1365,12 +1365,12 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public DrawingSupplier getDrawingSupplier() {
-<span class="nc" id="L1368">        DrawingSupplier result = null;</span>
-<span class="nc" id="L1369">        CategoryPlot cp = getPlot();</span>
-<span class="nc bnc" id="L1370" title="All 2 branches missed.">        if (cp != null) {</span>
-<span class="nc" id="L1371">            result = cp.getDrawingSupplier();</span>
+<span class="fc" id="L1368">        DrawingSupplier result = null;</span>
+<span class="fc" id="L1369">        CategoryPlot cp = getPlot();</span>
+<span class="pc bpc" id="L1370" title="1 of 2 branches missed.">        if (cp != null) {</span>
+<span class="fc" id="L1371">            result = cp.getDrawingSupplier();</span>
         }
-<span class="nc" id="L1373">        return result;</span>
+<span class="fc" id="L1373">        return result;</span>
     }
 
     /**
@@ -1396,12 +1396,12 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
             int datasetIndex,
             double transX, double transY, PlotOrientation orientation) {
 
-<span class="nc" id="L1399">        Args.nullNotPermitted(orientation, &quot;orientation&quot;);</span>
+<span class="fc" id="L1399">        Args.nullNotPermitted(orientation, &quot;orientation&quot;);</span>
 
-<span class="nc bnc" id="L1401" title="All 2 branches missed.">        if (crosshairState != null) {</span>
-<span class="nc bnc" id="L1402" title="All 2 branches missed.">            if (this.plot.isRangeCrosshairLockedOnData()) {</span>
+<span class="pc bpc" id="L1401" title="1 of 2 branches missed.">        if (crosshairState != null) {</span>
+<span class="pc bpc" id="L1402" title="1 of 2 branches missed.">            if (this.plot.isRangeCrosshairLockedOnData()) {</span>
                 // both axes
-<span class="nc" id="L1404">                crosshairState.updateCrosshairPoint(rowKey, columnKey, value,</span>
+<span class="fc" id="L1404">                crosshairState.updateCrosshairPoint(rowKey, columnKey, value,</span>
                         datasetIndex, transX, transY, orientation);
             }
             else {
@@ -1409,7 +1409,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
                         datasetIndex, transX, orientation);
             }
         }
-<span class="nc" id="L1412">    }</span>
+<span class="fc" id="L1412">    }</span>
 
     /**
      * Draws an item label.
@@ -1465,51 +1465,51 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1468">        AbstractCategoryItemRenderer clone</span>
-<span class="nc" id="L1469">            = (AbstractCategoryItemRenderer) super.clone();</span>
+<span class="fc" id="L1468">        AbstractCategoryItemRenderer clone</span>
+<span class="fc" id="L1469">            = (AbstractCategoryItemRenderer) super.clone();</span>
 
-<span class="nc bnc" id="L1471" title="All 2 branches missed.">        if (this.itemLabelGeneratorMap != null) {</span>
-<span class="nc" id="L1472">            clone.itemLabelGeneratorMap = CloneUtils.cloneMapValues(</span>
+<span class="pc bpc" id="L1471" title="1 of 2 branches missed.">        if (this.itemLabelGeneratorMap != null) {</span>
+<span class="fc" id="L1472">            clone.itemLabelGeneratorMap = CloneUtils.cloneMapValues(</span>
                     this.itemLabelGeneratorMap);
         }
 
-<span class="nc bnc" id="L1476" title="All 2 branches missed.">        if (this.defaultItemLabelGenerator != null) {</span>
-<span class="nc bnc" id="L1477" title="All 2 branches missed.">            if (this.defaultItemLabelGenerator instanceof PublicCloneable) {</span>
-<span class="nc" id="L1478">                PublicCloneable pc</span>
+<span class="fc bfc" id="L1476" title="All 2 branches covered.">        if (this.defaultItemLabelGenerator != null) {</span>
+<span class="pc bpc" id="L1477" title="1 of 2 branches missed.">            if (this.defaultItemLabelGenerator instanceof PublicCloneable) {</span>
+<span class="fc" id="L1478">                PublicCloneable pc</span>
                         = (PublicCloneable) this.defaultItemLabelGenerator;
-<span class="nc" id="L1480">                clone.defaultItemLabelGenerator</span>
-<span class="nc" id="L1481">                        = (CategoryItemLabelGenerator) pc.clone();</span>
-<span class="nc" id="L1482">            }</span>
+<span class="fc" id="L1480">                clone.defaultItemLabelGenerator</span>
+<span class="fc" id="L1481">                        = (CategoryItemLabelGenerator) pc.clone();</span>
+<span class="fc" id="L1482">            }</span>
             else {
 <span class="nc" id="L1484">                throw new CloneNotSupportedException(</span>
                         &quot;ItemLabelGenerator not cloneable.&quot;);
             }
         }
 
-<span class="nc bnc" id="L1489" title="All 2 branches missed.">        if (this.toolTipGeneratorMap != null) {</span>
-<span class="nc" id="L1490">            clone.toolTipGeneratorMap = CloneUtils.cloneMapValues(</span>
+<span class="pc bpc" id="L1489" title="1 of 2 branches missed.">        if (this.toolTipGeneratorMap != null) {</span>
+<span class="fc" id="L1490">            clone.toolTipGeneratorMap = CloneUtils.cloneMapValues(</span>
                     this.toolTipGeneratorMap);
         }
 
-<span class="nc bnc" id="L1494" title="All 2 branches missed.">        if (this.defaultToolTipGenerator != null) {</span>
-<span class="nc bnc" id="L1495" title="All 2 branches missed.">            if (this.defaultToolTipGenerator instanceof PublicCloneable) {</span>
-<span class="nc" id="L1496">                PublicCloneable pc</span>
+<span class="fc bfc" id="L1494" title="All 2 branches covered.">        if (this.defaultToolTipGenerator != null) {</span>
+<span class="pc bpc" id="L1495" title="1 of 2 branches missed.">            if (this.defaultToolTipGenerator instanceof PublicCloneable) {</span>
+<span class="fc" id="L1496">                PublicCloneable pc</span>
                         = (PublicCloneable) this.defaultToolTipGenerator;
-<span class="nc" id="L1498">                clone.defaultToolTipGenerator</span>
-<span class="nc" id="L1499">                        = (CategoryToolTipGenerator) pc.clone();</span>
-<span class="nc" id="L1500">            }</span>
+<span class="fc" id="L1498">                clone.defaultToolTipGenerator</span>
+<span class="fc" id="L1499">                        = (CategoryToolTipGenerator) pc.clone();</span>
+<span class="fc" id="L1500">            }</span>
             else {
 <span class="nc" id="L1502">                throw new CloneNotSupportedException(</span>
                         &quot;Default tool tip generator not cloneable.&quot;);
             }
         }
 
-<span class="nc bnc" id="L1507" title="All 2 branches missed.">        if (this.itemURLGeneratorMap != null) {</span>
-<span class="nc" id="L1508">            clone.itemURLGeneratorMap = CloneUtils.cloneMapValues(</span>
+<span class="pc bpc" id="L1507" title="1 of 2 branches missed.">        if (this.itemURLGeneratorMap != null) {</span>
+<span class="fc" id="L1508">            clone.itemURLGeneratorMap = CloneUtils.cloneMapValues(</span>
                     this.itemURLGeneratorMap);
         }
 
-<span class="nc bnc" id="L1512" title="All 2 branches missed.">        if (this.defaultItemURLGenerator != null) {</span>
+<span class="pc bpc" id="L1512" title="1 of 2 branches missed.">        if (this.defaultItemURLGenerator != null) {</span>
 <span class="nc bnc" id="L1513" title="All 2 branches missed.">            if (this.defaultItemURLGenerator instanceof PublicCloneable) {</span>
 <span class="nc" id="L1514">                PublicCloneable pc</span>
                         = (PublicCloneable) this.defaultItemURLGenerator;
@@ -1521,19 +1521,19 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
             }
         }
 
-<span class="nc bnc" id="L1524" title="All 2 branches missed.">        if (this.legendItemLabelGenerator instanceof PublicCloneable) {</span>
-<span class="nc" id="L1525">            clone.legendItemLabelGenerator = (CategorySeriesLabelGenerator)</span>
-<span class="nc" id="L1526">                    ObjectUtils.clone(this.legendItemLabelGenerator);</span>
+<span class="pc bpc" id="L1524" title="1 of 2 branches missed.">        if (this.legendItemLabelGenerator instanceof PublicCloneable) {</span>
+<span class="fc" id="L1525">            clone.legendItemLabelGenerator = (CategorySeriesLabelGenerator)</span>
+<span class="fc" id="L1526">                    ObjectUtils.clone(this.legendItemLabelGenerator);</span>
         }
-<span class="nc bnc" id="L1528" title="All 2 branches missed.">        if (this.legendItemToolTipGenerator instanceof PublicCloneable) {</span>
-<span class="nc" id="L1529">            clone.legendItemToolTipGenerator = (CategorySeriesLabelGenerator)</span>
-<span class="nc" id="L1530">                    ObjectUtils.clone(this.legendItemToolTipGenerator);</span>
+<span class="fc bfc" id="L1528" title="All 2 branches covered.">        if (this.legendItemToolTipGenerator instanceof PublicCloneable) {</span>
+<span class="fc" id="L1529">            clone.legendItemToolTipGenerator = (CategorySeriesLabelGenerator)</span>
+<span class="fc" id="L1530">                    ObjectUtils.clone(this.legendItemToolTipGenerator);</span>
         }
-<span class="nc bnc" id="L1532" title="All 2 branches missed.">        if (this.legendItemURLGenerator instanceof PublicCloneable) {</span>
-<span class="nc" id="L1533">            clone.legendItemURLGenerator = (CategorySeriesLabelGenerator)</span>
-<span class="nc" id="L1534">                    ObjectUtils.clone(this.legendItemURLGenerator);</span>
+<span class="fc bfc" id="L1532" title="All 2 branches covered.">        if (this.legendItemURLGenerator instanceof PublicCloneable) {</span>
+<span class="fc" id="L1533">            clone.legendItemURLGenerator = (CategorySeriesLabelGenerator)</span>
+<span class="fc" id="L1534">                    ObjectUtils.clone(this.legendItemURLGenerator);</span>
         }
-<span class="nc" id="L1536">        return clone;</span>
+<span class="fc" id="L1536">        return clone;</span>
     }
 
     /**
@@ -1545,11 +1545,11 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @return A domain axis.
      */
     protected CategoryAxis getDomainAxis(CategoryPlot plot, int index) {
-<span class="nc" id="L1548">        CategoryAxis result = plot.getDomainAxis(index);</span>
-<span class="nc bnc" id="L1549" title="All 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L1548">        CategoryAxis result = plot.getDomainAxis(index);</span>
+<span class="pc bpc" id="L1549" title="1 of 2 branches missed.">        if (result == null) {</span>
 <span class="nc" id="L1550">            result = plot.getDomainAxis();</span>
         }
-<span class="nc" id="L1552">        return result;</span>
+<span class="fc" id="L1552">        return result;</span>
     }
 
     /**
@@ -1578,22 +1578,22 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     @Override
     public LegendItemCollection getLegendItems() {
-<span class="nc" id="L1581">        LegendItemCollection result = new LegendItemCollection();</span>
-<span class="nc bnc" id="L1582" title="All 2 branches missed.">        if (this.plot == null) {</span>
-<span class="nc" id="L1583">            return result;</span>
+<span class="fc" id="L1581">        LegendItemCollection result = new LegendItemCollection();</span>
+<span class="fc bfc" id="L1582" title="All 2 branches covered.">        if (this.plot == null) {</span>
+<span class="fc" id="L1583">            return result;</span>
         }
-<span class="nc" id="L1585">        int index = this.plot.getIndexOf(this);</span>
-<span class="nc" id="L1586">        CategoryDataset dataset = this.plot.getDataset(index);</span>
-<span class="nc bnc" id="L1587" title="All 2 branches missed.">        if (dataset == null) {</span>
+<span class="fc" id="L1585">        int index = this.plot.getIndexOf(this);</span>
+<span class="fc" id="L1586">        CategoryDataset dataset = this.plot.getDataset(index);</span>
+<span class="pc bpc" id="L1587" title="1 of 2 branches missed.">        if (dataset == null) {</span>
 <span class="nc" id="L1588">            return result;</span>
         }
-<span class="nc" id="L1590">        int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L1591" title="All 2 branches missed.">        if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {</span>
-<span class="nc bnc" id="L1592" title="All 2 branches missed.">            for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc bnc" id="L1593" title="All 2 branches missed.">                if (isSeriesVisibleInLegend(i)) {</span>
-<span class="nc" id="L1594">                    LegendItem item = getLegendItem(index, i);</span>
-<span class="nc bnc" id="L1595" title="All 2 branches missed.">                    if (item != null) {</span>
-<span class="nc" id="L1596">                        result.add(item);</span>
+<span class="fc" id="L1590">        int seriesCount = dataset.getRowCount();</span>
+<span class="pc bpc" id="L1591" title="1 of 2 branches missed.">        if (plot.getRowRenderingOrder().equals(SortOrder.ASCENDING)) {</span>
+<span class="fc bfc" id="L1592" title="All 2 branches covered.">            for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="pc bpc" id="L1593" title="1 of 2 branches missed.">                if (isSeriesVisibleInLegend(i)) {</span>
+<span class="fc" id="L1594">                    LegendItem item = getLegendItem(index, i);</span>
+<span class="pc bpc" id="L1595" title="1 of 2 branches missed.">                    if (item != null) {</span>
+<span class="fc" id="L1596">                        result.add(item);</span>
                     }
                 }
             }
@@ -1608,7 +1608,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
                 }
             }
         }
-<span class="nc" id="L1611">        return result;</span>
+<span class="fc" id="L1611">        return result;</span>
     }
 
     /**
@@ -1619,7 +1619,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @see #setLegendItemLabelGenerator(CategorySeriesLabelGenerator)
      */
     public CategorySeriesLabelGenerator getLegendItemLabelGenerator() {
-<span class="nc" id="L1622">        return this.legendItemLabelGenerator;</span>
+<span class="fc" id="L1622">        return this.legendItemLabelGenerator;</span>
     }
 
     /**
@@ -1632,10 +1632,10 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     public void setLegendItemLabelGenerator(
             CategorySeriesLabelGenerator generator) {
-<span class="nc" id="L1635">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
-<span class="nc" id="L1636">        this.legendItemLabelGenerator = generator;</span>
-<span class="nc" id="L1637">        fireChangeEvent();</span>
-<span class="nc" id="L1638">    }</span>
+<span class="fc" id="L1635">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
+<span class="fc" id="L1636">        this.legendItemLabelGenerator = generator;</span>
+<span class="fc" id="L1637">        fireChangeEvent();</span>
+<span class="fc" id="L1638">    }</span>
 
     /**
      * Returns the legend item tool tip generator.
@@ -1645,7 +1645,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @see #setLegendItemToolTipGenerator(CategorySeriesLabelGenerator)
      */
     public CategorySeriesLabelGenerator getLegendItemToolTipGenerator() {
-<span class="nc" id="L1648">        return this.legendItemToolTipGenerator;</span>
+<span class="fc" id="L1648">        return this.legendItemToolTipGenerator;</span>
     }
 
     /**
@@ -1658,9 +1658,9 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     public void setLegendItemToolTipGenerator(
             CategorySeriesLabelGenerator generator) {
-<span class="nc" id="L1661">        this.legendItemToolTipGenerator = generator;</span>
-<span class="nc" id="L1662">        fireChangeEvent();</span>
-<span class="nc" id="L1663">    }</span>
+<span class="fc" id="L1661">        this.legendItemToolTipGenerator = generator;</span>
+<span class="fc" id="L1662">        fireChangeEvent();</span>
+<span class="fc" id="L1663">    }</span>
 
     /**
      * Returns the legend item URL generator.
@@ -1670,7 +1670,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      * @see #setLegendItemURLGenerator(CategorySeriesLabelGenerator)
      */
     public CategorySeriesLabelGenerator getLegendItemURLGenerator() {
-<span class="nc" id="L1673">        return this.legendItemURLGenerator;</span>
+<span class="fc" id="L1673">        return this.legendItemURLGenerator;</span>
     }
 
     /**
@@ -1683,9 +1683,9 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     public void setLegendItemURLGenerator(
             CategorySeriesLabelGenerator generator) {
-<span class="nc" id="L1686">        this.legendItemURLGenerator = generator;</span>
-<span class="nc" id="L1687">        fireChangeEvent();</span>
-<span class="nc" id="L1688">    }</span>
+<span class="fc" id="L1686">        this.legendItemURLGenerator = generator;</span>
+<span class="fc" id="L1687">        fireChangeEvent();</span>
+<span class="fc" id="L1688">    }</span>
     
     /**
      * Adds an entity with the specified hotspot.
@@ -1698,24 +1698,24 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
      */
     protected void addItemEntity(EntityCollection entities,
             CategoryDataset dataset, int row, int column, Shape hotspot) {
-<span class="nc" id="L1701">        Args.nullNotPermitted(hotspot, &quot;hotspot&quot;);</span>
-<span class="nc bnc" id="L1702" title="All 2 branches missed.">        if (!getItemCreateEntity(row, column)) {</span>
+<span class="fc" id="L1701">        Args.nullNotPermitted(hotspot, &quot;hotspot&quot;);</span>
+<span class="pc bpc" id="L1702" title="1 of 2 branches missed.">        if (!getItemCreateEntity(row, column)) {</span>
 <span class="nc" id="L1703">            return;</span>
         }
-<span class="nc" id="L1705">        String tip = null;</span>
-<span class="nc" id="L1706">        CategoryToolTipGenerator tipster = getToolTipGenerator(row, column);</span>
-<span class="nc bnc" id="L1707" title="All 2 branches missed.">        if (tipster != null) {</span>
+<span class="fc" id="L1705">        String tip = null;</span>
+<span class="fc" id="L1706">        CategoryToolTipGenerator tipster = getToolTipGenerator(row, column);</span>
+<span class="pc bpc" id="L1707" title="1 of 2 branches missed.">        if (tipster != null) {</span>
 <span class="nc" id="L1708">            tip = tipster.generateToolTip(dataset, row, column);</span>
         }
-<span class="nc" id="L1710">        String url = null;</span>
-<span class="nc" id="L1711">        CategoryURLGenerator urlster = getItemURLGenerator(row, column);</span>
-<span class="nc bnc" id="L1712" title="All 2 branches missed.">        if (urlster != null) {</span>
+<span class="fc" id="L1710">        String url = null;</span>
+<span class="fc" id="L1711">        CategoryURLGenerator urlster = getItemURLGenerator(row, column);</span>
+<span class="pc bpc" id="L1712" title="1 of 2 branches missed.">        if (urlster != null) {</span>
 <span class="nc" id="L1713">            url = urlster.generateURL(dataset, row, column);</span>
         }
-<span class="nc" id="L1715">        CategoryItemEntity entity = new CategoryItemEntity(hotspot, tip, url,</span>
-<span class="nc" id="L1716">                dataset, dataset.getRowKey(row), dataset.getColumnKey(column));</span>
-<span class="nc" id="L1717">        entities.add(entity);</span>
-<span class="nc" id="L1718">    }</span>
+<span class="fc" id="L1715">        CategoryItemEntity entity = new CategoryItemEntity(hotspot, tip, url,</span>
+<span class="fc" id="L1716">                dataset, dataset.getRowKey(row), dataset.getColumnKey(column));</span>
+<span class="fc" id="L1717">        entities.add(entity);</span>
+<span class="fc" id="L1718">    }</span>
 
     /**
      * Adds an entity to the collection.
@@ -1766,4 +1766,4 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
 <span class="nc" id="L1766">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -193,7 +193,7 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
     protected static final int AXIS_GAP = 10;
 
     /** The unit strings. */
-<span class="nc" id="L196">    protected static final String[] UNITS = {&quot;&quot;, &quot;\u00B0F&quot;, &quot;\u00B0C&quot;,</span>
+<span class="fc" id="L196">    protected static final String[] UNITS = {&quot;&quot;, &quot;\u00B0F&quot;, &quot;\u00B0C&quot;,</span>
             &quot;\u00B0K&quot;};
 
     /** Index for low value in subrangeInfo matrix. */
@@ -242,31 +242,31 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
     private ValueAxis rangeAxis;
 
     /** The lower bound for the thermometer. */
-<span class="nc" id="L245">    private double lowerBound = DEFAULT_LOWER_BOUND;</span>
+<span class="fc" id="L245">    private double lowerBound = DEFAULT_LOWER_BOUND;</span>
 
     /** The upper bound for the thermometer. */
-<span class="nc" id="L248">    private double upperBound = DEFAULT_UPPER_BOUND;</span>
+<span class="fc" id="L248">    private double upperBound = DEFAULT_UPPER_BOUND;</span>
 
     /**
      * The value label position.
      *
      * @since 1.0.7
      */
-<span class="nc" id="L255">    private int bulbRadius = DEFAULT_BULB_RADIUS;</span>
+<span class="fc" id="L255">    private int bulbRadius = DEFAULT_BULB_RADIUS;</span>
 
     /**
      * The column radius.
      *
      * @since 1.0.7
      */
-<span class="nc" id="L262">    private int columnRadius = DEFAULT_COLUMN_RADIUS;</span>
+<span class="fc" id="L262">    private int columnRadius = DEFAULT_COLUMN_RADIUS;</span>
 
     /**
      * The gap between the two outlines the represent the thermometer.
      *
      * @since 1.0.7
      */
-<span class="nc" id="L269">    private int gap = DEFAULT_GAP;</span>
+<span class="fc" id="L269">    private int gap = DEFAULT_GAP;</span>
 
     /**
      * Blank space inside the plot area around the outside of the thermometer.
@@ -274,40 +274,40 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
     private RectangleInsets padding;
 
     /** Stroke for drawing the thermometer */
-<span class="nc" id="L277">    private transient Stroke thermometerStroke = new BasicStroke(1.0f);</span>
+<span class="fc" id="L277">    private transient Stroke thermometerStroke = new BasicStroke(1.0f);</span>
 
     /** Paint for drawing the thermometer */
-<span class="nc" id="L280">    private transient Paint thermometerPaint = Color.BLACK;</span>
+<span class="fc" id="L280">    private transient Paint thermometerPaint = Color.BLACK;</span>
 
     /** The display units */
-<span class="nc" id="L283">    private int units = UNITS_CELCIUS;</span>
+<span class="fc" id="L283">    private int units = UNITS_CELCIUS;</span>
 
     /** The value label position. */
-<span class="nc" id="L286">    private int valueLocation = BULB;</span>
+<span class="fc" id="L286">    private int valueLocation = BULB;</span>
 
     /** The position of the axis **/
-<span class="nc" id="L289">    private int axisLocation = LEFT;</span>
+<span class="fc" id="L289">    private int axisLocation = LEFT;</span>
 
     /** The font to write the value in */
-<span class="nc" id="L292">    private Font valueFont = new Font(&quot;SansSerif&quot;, Font.BOLD, 16);</span>
+<span class="fc" id="L292">    private Font valueFont = new Font(&quot;SansSerif&quot;, Font.BOLD, 16);</span>
 
     /** Colour that the value is written in */
-<span class="nc" id="L295">    private transient Paint valuePaint = Color.WHITE;</span>
+<span class="fc" id="L295">    private transient Paint valuePaint = Color.WHITE;</span>
 
     /** Number format for the value */
-<span class="nc" id="L298">    private NumberFormat valueFormat = new DecimalFormat();</span>
+<span class="fc" id="L298">    private NumberFormat valueFormat = new DecimalFormat();</span>
 
     /** The default paint for the mercury in the thermometer. */
-<span class="nc" id="L301">    private transient Paint mercuryPaint = Color.LIGHT_GRAY;</span>
+<span class="fc" id="L301">    private transient Paint mercuryPaint = Color.LIGHT_GRAY;</span>
 
     /** A flag that controls whether value lines are drawn. */
-<span class="nc" id="L304">    private boolean showValueLines = false;</span>
+<span class="fc" id="L304">    private boolean showValueLines = false;</span>
 
     /** The display sub-range. */
-<span class="nc" id="L307">    private int subrange = -1;</span>
+<span class="fc" id="L307">    private int subrange = -1;</span>
 
     /** The start and end values for the subranges. */
-<span class="nc" id="L310">    private double[][] subrangeInfo = {</span>
+<span class="fc" id="L310">    private double[][] subrangeInfo = {</span>
         {0.0, 50.0, 0.0, 50.0},
         {50.0, 75.0, 50.0, 75.0},
         {75.0, 100.0, 75.0, 100.0}
@@ -317,38 +317,38 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * A flag that controls whether or not the axis range adjusts to the
      * sub-ranges.
      */
-<span class="nc" id="L320">    private boolean followDataInSubranges = false;</span>
+<span class="fc" id="L320">    private boolean followDataInSubranges = false;</span>
 
     /**
      * A flag that controls whether or not the mercury paint changes with
      * the subranges.
      */
-<span class="nc" id="L326">    private boolean useSubrangePaint = true;</span>
+<span class="fc" id="L326">    private boolean useSubrangePaint = true;</span>
 
     /** Paint for each range */
-<span class="nc" id="L329">    private transient Paint[] subrangePaint = {Color.GREEN, Color.ORANGE,</span>
+<span class="fc" id="L329">    private transient Paint[] subrangePaint = {Color.GREEN, Color.ORANGE,</span>
             Color.RED};
 
     /** A flag that controls whether the sub-range indicators are visible. */
-<span class="nc" id="L333">    private boolean subrangeIndicatorsVisible = true;</span>
+<span class="fc" id="L333">    private boolean subrangeIndicatorsVisible = true;</span>
 
     /** The stroke for the sub-range indicators. */
-<span class="nc" id="L336">    private transient Stroke subrangeIndicatorStroke = new BasicStroke(2.0f);</span>
+<span class="fc" id="L336">    private transient Stroke subrangeIndicatorStroke = new BasicStroke(2.0f);</span>
 
     /** The range indicator stroke. */
-<span class="nc" id="L339">    private transient Stroke rangeIndicatorStroke = new BasicStroke(3.0f);</span>
+<span class="fc" id="L339">    private transient Stroke rangeIndicatorStroke = new BasicStroke(3.0f);</span>
 
     /** The resourceBundle for the localization. */
-<span class="nc" id="L342">    protected static ResourceBundle localizationResources</span>
-<span class="nc" id="L343">            = ResourceBundleWrapper.getBundle(</span>
+<span class="fc" id="L342">    protected static ResourceBundle localizationResources</span>
+<span class="fc" id="L343">            = ResourceBundleWrapper.getBundle(</span>
                     &quot;org.jfree.chart.plot.LocalizationBundle&quot;);
 
     /**
      * Creates a new thermometer plot.
      */
     public ThermometerPlot() {
-<span class="nc" id="L350">        this(new DefaultValueDataset());</span>
-<span class="nc" id="L351">    }</span>
+<span class="fc" id="L350">        this(new DefaultValueDataset());</span>
+<span class="fc" id="L351">    }</span>
 
     /**
      * Creates a new thermometer plot, using default attributes where necessary.
@@ -357,22 +357,22 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      */
     public ThermometerPlot(ValueDataset dataset) {
 
-<span class="nc" id="L360">        super();</span>
+<span class="fc" id="L360">        super();</span>
 
-<span class="nc" id="L362">        this.padding = new RectangleInsets(UnitType.RELATIVE, 0.05, 0.05, 0.05,</span>
+<span class="fc" id="L362">        this.padding = new RectangleInsets(UnitType.RELATIVE, 0.05, 0.05, 0.05,</span>
                 0.05);
-<span class="nc" id="L364">        this.dataset = dataset;</span>
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L366">            dataset.addChangeListener(this);</span>
+<span class="fc" id="L364">        this.dataset = dataset;</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if (dataset != null) {</span>
+<span class="fc" id="L366">            dataset.addChangeListener(this);</span>
         }
-<span class="nc" id="L368">        NumberAxis axis = new NumberAxis(null);</span>
-<span class="nc" id="L369">        axis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());</span>
-<span class="nc" id="L370">        axis.setAxisLineVisible(false);</span>
-<span class="nc" id="L371">        axis.setPlot(this);</span>
-<span class="nc" id="L372">        axis.addChangeListener(this);</span>
-<span class="nc" id="L373">        this.rangeAxis = axis;</span>
-<span class="nc" id="L374">        setAxisRange();</span>
-<span class="nc" id="L375">    }</span>
+<span class="fc" id="L368">        NumberAxis axis = new NumberAxis(null);</span>
+<span class="fc" id="L369">        axis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());</span>
+<span class="fc" id="L370">        axis.setAxisLineVisible(false);</span>
+<span class="fc" id="L371">        axis.setPlot(this);</span>
+<span class="fc" id="L372">        axis.addChangeListener(this);</span>
+<span class="fc" id="L373">        this.rangeAxis = axis;</span>
+<span class="fc" id="L374">        setAxisRange();</span>
+<span class="fc" id="L375">    }</span>
 
     /**
      * Returns the dataset for the plot.
@@ -526,10 +526,10 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getPadding()
      */
     public void setPadding(RectangleInsets padding) {
-<span class="nc" id="L529">        Args.nullNotPermitted(padding, &quot;padding&quot;);</span>
-<span class="nc" id="L530">        this.padding = padding;</span>
-<span class="nc" id="L531">        fireChangeEvent();</span>
-<span class="nc" id="L532">    }</span>
+<span class="fc" id="L529">        Args.nullNotPermitted(padding, &quot;padding&quot;);</span>
+<span class="fc" id="L530">        this.padding = padding;</span>
+<span class="fc" id="L531">        fireChangeEvent();</span>
+<span class="fc" id="L532">    }</span>
 
     /**
      * Returns the stroke used to draw the thermometer outline.
@@ -552,11 +552,11 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getThermometerStroke()
      */
     public void setThermometerStroke(Stroke s) {
-<span class="nc bnc" id="L555" title="All 2 branches missed.">        if (s != null) {</span>
-<span class="nc" id="L556">            this.thermometerStroke = s;</span>
-<span class="nc" id="L557">            fireChangeEvent();</span>
+<span class="pc bpc" id="L555" title="1 of 2 branches missed.">        if (s != null) {</span>
+<span class="fc" id="L556">            this.thermometerStroke = s;</span>
+<span class="fc" id="L557">            fireChangeEvent();</span>
         }
-<span class="nc" id="L559">    }</span>
+<span class="fc" id="L559">    }</span>
 
     /**
      * Returns the paint used to draw the thermometer outline.
@@ -579,11 +579,11 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getThermometerPaint()
      */
     public void setThermometerPaint(Paint paint) {
-<span class="nc bnc" id="L582" title="All 2 branches missed.">        if (paint != null) {</span>
-<span class="nc" id="L583">            this.thermometerPaint = paint;</span>
-<span class="nc" id="L584">            fireChangeEvent();</span>
+<span class="pc bpc" id="L582" title="1 of 2 branches missed.">        if (paint != null) {</span>
+<span class="fc" id="L583">            this.thermometerPaint = paint;</span>
+<span class="fc" id="L584">            fireChangeEvent();</span>
         }
-<span class="nc" id="L586">    }</span>
+<span class="fc" id="L586">    }</span>
 
     /**
      * Returns a code indicating the unit display type.  This is one of
@@ -614,13 +614,13 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getUnits()
      */
     public void setUnits(int u) {
-<span class="nc bnc" id="L617" title="All 4 branches missed.">        if ((u &gt;= 0) &amp;&amp; (u &lt; UNITS.length)) {</span>
-<span class="nc bnc" id="L618" title="All 2 branches missed.">            if (this.units != u) {</span>
-<span class="nc" id="L619">                this.units = u;</span>
-<span class="nc" id="L620">                fireChangeEvent();</span>
+<span class="pc bpc" id="L617" title="2 of 4 branches missed.">        if ((u &gt;= 0) &amp;&amp; (u &lt; UNITS.length)) {</span>
+<span class="pc bpc" id="L618" title="1 of 2 branches missed.">            if (this.units != u) {</span>
+<span class="fc" id="L619">                this.units = u;</span>
+<span class="fc" id="L620">                fireChangeEvent();</span>
             }
         }
-<span class="nc" id="L623">    }</span>
+<span class="fc" id="L623">    }</span>
 
     /**
      * Returns a code indicating the location at which the value label is
@@ -643,14 +643,14 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @param location  the location.
      */
     public void setValueLocation(int location) {
-<span class="nc bnc" id="L646" title="All 4 branches missed.">        if ((location &gt;= 0) &amp;&amp; (location &lt; 4)) {</span>
-<span class="nc" id="L647">            this.valueLocation = location;</span>
-<span class="nc" id="L648">            fireChangeEvent();</span>
+<span class="pc bpc" id="L646" title="2 of 4 branches missed.">        if ((location &gt;= 0) &amp;&amp; (location &lt; 4)) {</span>
+<span class="fc" id="L647">            this.valueLocation = location;</span>
+<span class="fc" id="L648">            fireChangeEvent();</span>
         }
         else {
 <span class="nc" id="L651">            throw new IllegalArgumentException(&quot;Location not recognised.&quot;);</span>
         }
-<span class="nc" id="L653">    }</span>
+<span class="fc" id="L653">    }</span>
 
     /**
      * Returns the axis location.
@@ -675,14 +675,14 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getAxisLocation()
      */
     public void setAxisLocation(int location) {
-<span class="nc bnc" id="L678" title="All 4 branches missed.">        if ((location &gt;= 0) &amp;&amp; (location &lt; 3)) {</span>
-<span class="nc" id="L679">            this.axisLocation = location;</span>
-<span class="nc" id="L680">            fireChangeEvent();</span>
+<span class="pc bpc" id="L678" title="2 of 4 branches missed.">        if ((location &gt;= 0) &amp;&amp; (location &lt; 3)) {</span>
+<span class="fc" id="L679">            this.axisLocation = location;</span>
+<span class="fc" id="L680">            fireChangeEvent();</span>
         }
         else {
 <span class="nc" id="L683">            throw new IllegalArgumentException(&quot;Location not recognised.&quot;);</span>
         }
-<span class="nc" id="L685">    }</span>
+<span class="fc" id="L685">    }</span>
 
     /**
      * Gets the font used to display the current value.
@@ -703,12 +703,12 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getValueFont()
      */
     public void setValueFont(Font f) {
-<span class="nc" id="L706">        Args.nullNotPermitted(f, &quot;f&quot;);</span>
-<span class="nc bnc" id="L707" title="All 2 branches missed.">        if (!this.valueFont.equals(f)) {</span>
-<span class="nc" id="L708">            this.valueFont = f;</span>
-<span class="nc" id="L709">            fireChangeEvent();</span>
+<span class="fc" id="L706">        Args.nullNotPermitted(f, &quot;f&quot;);</span>
+<span class="pc bpc" id="L707" title="1 of 2 branches missed.">        if (!this.valueFont.equals(f)) {</span>
+<span class="fc" id="L708">            this.valueFont = f;</span>
+<span class="fc" id="L709">            fireChangeEvent();</span>
         }
-<span class="nc" id="L711">    }</span>
+<span class="fc" id="L711">    }</span>
 
     /**
      * Gets the paint used to display the current value.
@@ -730,12 +730,12 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getValuePaint()
      */
     public void setValuePaint(Paint paint) {
-<span class="nc" id="L733">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc bnc" id="L734" title="All 2 branches missed.">        if (!this.valuePaint.equals(paint)) {</span>
-<span class="nc" id="L735">            this.valuePaint = paint;</span>
-<span class="nc" id="L736">            fireChangeEvent();</span>
+<span class="fc" id="L733">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="pc bpc" id="L734" title="1 of 2 branches missed.">        if (!this.valuePaint.equals(paint)) {</span>
+<span class="fc" id="L735">            this.valuePaint = paint;</span>
+<span class="fc" id="L736">            fireChangeEvent();</span>
         }
-<span class="nc" id="L738">    }</span>
+<span class="fc" id="L738">    }</span>
 
     // FIXME: No getValueFormat() method?
 
@@ -746,10 +746,10 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @param formatter  the new formatter ({@code null} not permitted).
      */
     public void setValueFormat(NumberFormat formatter) {
-<span class="nc" id="L749">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
-<span class="nc" id="L750">        this.valueFormat = formatter;</span>
-<span class="nc" id="L751">        fireChangeEvent();</span>
-<span class="nc" id="L752">    }</span>
+<span class="fc" id="L749">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
+<span class="fc" id="L750">        this.valueFormat = formatter;</span>
+<span class="fc" id="L751">        fireChangeEvent();</span>
+<span class="fc" id="L752">    }</span>
 
     /**
      * Returns the default mercury paint.
@@ -771,10 +771,10 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getMercuryPaint()
      */
     public void setMercuryPaint(Paint paint) {
-<span class="nc" id="L774">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L775">        this.mercuryPaint = paint;</span>
-<span class="nc" id="L776">        fireChangeEvent();</span>
-<span class="nc" id="L777">    }</span>
+<span class="fc" id="L774">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L775">        this.mercuryPaint = paint;</span>
+<span class="fc" id="L776">        fireChangeEvent();</span>
+<span class="fc" id="L777">    }</span>
 
     /**
      * Sets information for a particular range.
@@ -817,11 +817,11 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @param high  the high value.
      */
     public void setSubrange(int range, double low, double high) {
-<span class="nc bnc" id="L820" title="All 4 branches missed.">        if ((range &gt;= 0) &amp;&amp; (range &lt; 3)) {</span>
-<span class="nc" id="L821">            this.subrangeInfo[range][RANGE_HIGH] = high;</span>
-<span class="nc" id="L822">            this.subrangeInfo[range][RANGE_LOW] = low;</span>
+<span class="pc bpc" id="L820" title="2 of 4 branches missed.">        if ((range &gt;= 0) &amp;&amp; (range &lt; 3)) {</span>
+<span class="fc" id="L821">            this.subrangeInfo[range][RANGE_HIGH] = high;</span>
+<span class="fc" id="L822">            this.subrangeInfo[range][RANGE_LOW] = low;</span>
         }
-<span class="nc" id="L824">    }</span>
+<span class="fc" id="L824">    }</span>
 
     /**
      * Sets the displayed bounds for a sub range.
@@ -876,12 +876,12 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @see #getSubrangePaint(int)
      */
     public void setSubrangePaint(int range, Paint paint) {
-<span class="nc bnc" id="L879" title="All 6 branches missed.">        if ((range &gt;= 0)</span>
+<span class="pc bpc" id="L879" title="3 of 6 branches missed.">        if ((range &gt;= 0)</span>
                 &amp;&amp; (range &lt; this.subrangePaint.length) &amp;&amp; (paint != null)) {
-<span class="nc" id="L881">            this.subrangePaint[range] = paint;</span>
-<span class="nc" id="L882">            fireChangeEvent();</span>
+<span class="fc" id="L881">            this.subrangePaint[range] = paint;</span>
+<span class="fc" id="L882">            fireChangeEvent();</span>
         }
-<span class="nc" id="L884">    }</span>
+<span class="fc" id="L884">    }</span>
 
     /**
      * Returns a flag that controls whether or not the thermometer axis zooms
@@ -950,9 +950,9 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @since 1.0.7
      */
     public void setBulbRadius(int r) {
-<span class="nc" id="L953">        this.bulbRadius = r;</span>
-<span class="nc" id="L954">        fireChangeEvent();</span>
-<span class="nc" id="L955">    }</span>
+<span class="fc" id="L953">        this.bulbRadius = r;</span>
+<span class="fc" id="L954">        fireChangeEvent();</span>
+<span class="fc" id="L955">    }</span>
 
     /**
      * Returns the bulb diameter, which is always twice the value returned
@@ -990,9 +990,9 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @since 1.0.7
      */
     public void setColumnRadius(int r) {
-<span class="nc" id="L993">        this.columnRadius = r;</span>
-<span class="nc" id="L994">        fireChangeEvent();</span>
-<span class="nc" id="L995">    }</span>
+<span class="fc" id="L993">        this.columnRadius = r;</span>
+<span class="fc" id="L994">        fireChangeEvent();</span>
+<span class="fc" id="L995">    }</span>
 
     /**
      * Returns the column diameter, which is always twice the value returned
@@ -1032,9 +1032,9 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @since 1.0.7
      */
     public void setGap(int gap) {
-<span class="nc" id="L1035">        this.gap = gap;</span>
-<span class="nc" id="L1036">        fireChangeEvent();</span>
-<span class="nc" id="L1037">    }</span>
+<span class="fc" id="L1035">        this.gap = gap;</span>
+<span class="fc" id="L1036">        fireChangeEvent();</span>
+<span class="fc" id="L1037">    }</span>
 
     /**
      * Draws the plot on a Java 2D graphics device (such as the screen or a
@@ -1304,22 +1304,22 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      */
     @Override
     public Range getDataRange(ValueAxis axis) {
-<span class="nc" id="L1307">       return new Range(this.lowerBound, this.upperBound);</span>
+<span class="fc" id="L1307">       return new Range(this.lowerBound, this.upperBound);</span>
     }
 
     /**
      * Sets the axis range to the current values in the rangeInfo array.
      */
     protected void setAxisRange() {
-<span class="nc bnc" id="L1314" title="All 4 branches missed.">        if ((this.subrange &gt;= 0) &amp;&amp; (this.followDataInSubranges)) {</span>
+<span class="pc bpc" id="L1314" title="3 of 4 branches missed.">        if ((this.subrange &gt;= 0) &amp;&amp; (this.followDataInSubranges)) {</span>
 <span class="nc" id="L1315">            this.rangeAxis.setRange(</span>
                     new Range(this.subrangeInfo[this.subrange][DISPLAY_LOW],
                     this.subrangeInfo[this.subrange][DISPLAY_HIGH]));
         }
         else {
-<span class="nc" id="L1320">            this.rangeAxis.setRange(this.lowerBound, this.upperBound);</span>
+<span class="fc" id="L1320">            this.rangeAxis.setRange(this.lowerBound, this.upperBound);</span>
         }
-<span class="nc" id="L1322">    }</span>
+<span class="fc" id="L1322">    }</span>
 
     /**
      * Returns the legend items for the plot.
@@ -1400,88 +1400,88 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1403" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1403" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1404">            return true;</span>
         }
-<span class="nc bnc" id="L1406" title="All 2 branches missed.">        if (!(obj instanceof ThermometerPlot)) {</span>
+<span class="pc bpc" id="L1406" title="1 of 2 branches missed.">        if (!(obj instanceof ThermometerPlot)) {</span>
 <span class="nc" id="L1407">            return false;</span>
         }
-<span class="nc" id="L1409">        ThermometerPlot that = (ThermometerPlot) obj;</span>
-<span class="nc bnc" id="L1410" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L1409">        ThermometerPlot that = (ThermometerPlot) obj;</span>
+<span class="pc bpc" id="L1410" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L1411">            return false;</span>
         }
-<span class="nc bnc" id="L1413" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.rangeAxis, that.rangeAxis)) {</span>
+<span class="pc bpc" id="L1413" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.rangeAxis, that.rangeAxis)) {</span>
 <span class="nc" id="L1414">            return false;</span>
         }
-<span class="nc bnc" id="L1416" title="All 2 branches missed.">        if (this.axisLocation != that.axisLocation) {</span>
-<span class="nc" id="L1417">            return false;</span>
+<span class="fc bfc" id="L1416" title="All 2 branches covered.">        if (this.axisLocation != that.axisLocation) {</span>
+<span class="fc" id="L1417">            return false;</span>
         }
-<span class="nc bnc" id="L1419" title="All 2 branches missed.">        if (this.lowerBound != that.lowerBound) {</span>
+<span class="pc bpc" id="L1419" title="1 of 2 branches missed.">        if (this.lowerBound != that.lowerBound) {</span>
 <span class="nc" id="L1420">            return false;</span>
         }
-<span class="nc bnc" id="L1422" title="All 2 branches missed.">        if (this.upperBound != that.upperBound) {</span>
+<span class="pc bpc" id="L1422" title="1 of 2 branches missed.">        if (this.upperBound != that.upperBound) {</span>
 <span class="nc" id="L1423">            return false;</span>
         }
-<span class="nc bnc" id="L1425" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.padding, that.padding)) {</span>
-<span class="nc" id="L1426">            return false;</span>
+<span class="fc bfc" id="L1425" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.padding, that.padding)) {</span>
+<span class="fc" id="L1426">            return false;</span>
         }
-<span class="nc bnc" id="L1428" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.thermometerStroke,</span>
+<span class="fc bfc" id="L1428" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.thermometerStroke,</span>
                 that.thermometerStroke)) {
-<span class="nc" id="L1430">            return false;</span>
+<span class="fc" id="L1430">            return false;</span>
         }
-<span class="nc bnc" id="L1432" title="All 2 branches missed.">        if (!PaintUtils.equal(this.thermometerPaint,</span>
+<span class="fc bfc" id="L1432" title="All 2 branches covered.">        if (!PaintUtils.equal(this.thermometerPaint,</span>
                 that.thermometerPaint)) {
-<span class="nc" id="L1434">            return false;</span>
+<span class="fc" id="L1434">            return false;</span>
         }
-<span class="nc bnc" id="L1436" title="All 2 branches missed.">        if (this.units != that.units) {</span>
-<span class="nc" id="L1437">            return false;</span>
+<span class="fc bfc" id="L1436" title="All 2 branches covered.">        if (this.units != that.units) {</span>
+<span class="fc" id="L1437">            return false;</span>
         }
-<span class="nc bnc" id="L1439" title="All 2 branches missed.">        if (this.valueLocation != that.valueLocation) {</span>
-<span class="nc" id="L1440">            return false;</span>
+<span class="fc bfc" id="L1439" title="All 2 branches covered.">        if (this.valueLocation != that.valueLocation) {</span>
+<span class="fc" id="L1440">            return false;</span>
         }
-<span class="nc bnc" id="L1442" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.valueFont, that.valueFont)) {</span>
-<span class="nc" id="L1443">            return false;</span>
+<span class="fc bfc" id="L1442" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.valueFont, that.valueFont)) {</span>
+<span class="fc" id="L1443">            return false;</span>
         }
-<span class="nc bnc" id="L1445" title="All 2 branches missed.">        if (!PaintUtils.equal(this.valuePaint, that.valuePaint)) {</span>
-<span class="nc" id="L1446">            return false;</span>
+<span class="fc bfc" id="L1445" title="All 2 branches covered.">        if (!PaintUtils.equal(this.valuePaint, that.valuePaint)) {</span>
+<span class="fc" id="L1446">            return false;</span>
         }
-<span class="nc bnc" id="L1448" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.valueFormat, that.valueFormat)) {</span>
-<span class="nc" id="L1449">            return false;</span>
+<span class="fc bfc" id="L1448" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.valueFormat, that.valueFormat)) {</span>
+<span class="fc" id="L1449">            return false;</span>
         }
-<span class="nc bnc" id="L1451" title="All 2 branches missed.">        if (!PaintUtils.equal(this.mercuryPaint, that.mercuryPaint)) {</span>
-<span class="nc" id="L1452">            return false;</span>
+<span class="fc bfc" id="L1451" title="All 2 branches covered.">        if (!PaintUtils.equal(this.mercuryPaint, that.mercuryPaint)) {</span>
+<span class="fc" id="L1452">            return false;</span>
         }
-<span class="nc bnc" id="L1454" title="All 2 branches missed.">        if (this.showValueLines != that.showValueLines) {</span>
+<span class="pc bpc" id="L1454" title="1 of 2 branches missed.">        if (this.showValueLines != that.showValueLines) {</span>
 <span class="nc" id="L1455">            return false;</span>
         }
-<span class="nc bnc" id="L1457" title="All 2 branches missed.">        if (this.subrange != that.subrange) {</span>
+<span class="pc bpc" id="L1457" title="1 of 2 branches missed.">        if (this.subrange != that.subrange) {</span>
 <span class="nc" id="L1458">            return false;</span>
         }
-<span class="nc bnc" id="L1460" title="All 2 branches missed.">        if (this.followDataInSubranges != that.followDataInSubranges) {</span>
+<span class="pc bpc" id="L1460" title="1 of 2 branches missed.">        if (this.followDataInSubranges != that.followDataInSubranges) {</span>
 <span class="nc" id="L1461">            return false;</span>
         }
-<span class="nc bnc" id="L1463" title="All 2 branches missed.">        if (!equal(this.subrangeInfo, that.subrangeInfo)) {</span>
-<span class="nc" id="L1464">            return false;</span>
+<span class="fc bfc" id="L1463" title="All 2 branches covered.">        if (!equal(this.subrangeInfo, that.subrangeInfo)) {</span>
+<span class="fc" id="L1464">            return false;</span>
         }
-<span class="nc bnc" id="L1466" title="All 2 branches missed.">        if (this.useSubrangePaint != that.useSubrangePaint) {</span>
+<span class="pc bpc" id="L1466" title="1 of 2 branches missed.">        if (this.useSubrangePaint != that.useSubrangePaint) {</span>
 <span class="nc" id="L1467">            return false;</span>
         }
-<span class="nc bnc" id="L1469" title="All 2 branches missed.">        if (this.bulbRadius != that.bulbRadius) {</span>
-<span class="nc" id="L1470">            return false;</span>
+<span class="fc bfc" id="L1469" title="All 2 branches covered.">        if (this.bulbRadius != that.bulbRadius) {</span>
+<span class="fc" id="L1470">            return false;</span>
         }
-<span class="nc bnc" id="L1472" title="All 2 branches missed.">        if (this.columnRadius != that.columnRadius) {</span>
-<span class="nc" id="L1473">            return false;</span>
+<span class="fc bfc" id="L1472" title="All 2 branches covered.">        if (this.columnRadius != that.columnRadius) {</span>
+<span class="fc" id="L1473">            return false;</span>
         }
-<span class="nc bnc" id="L1475" title="All 2 branches missed.">        if (this.gap != that.gap) {</span>
-<span class="nc" id="L1476">            return false;</span>
+<span class="fc bfc" id="L1475" title="All 2 branches covered.">        if (this.gap != that.gap) {</span>
+<span class="fc" id="L1476">            return false;</span>
         }
-<span class="nc bnc" id="L1478" title="All 2 branches missed.">        for (int i = 0; i &lt; this.subrangePaint.length; i++) {</span>
-<span class="nc bnc" id="L1479" title="All 2 branches missed.">            if (!PaintUtils.equal(this.subrangePaint[i],</span>
+<span class="fc bfc" id="L1478" title="All 2 branches covered.">        for (int i = 0; i &lt; this.subrangePaint.length; i++) {</span>
+<span class="fc bfc" id="L1479" title="All 2 branches covered.">            if (!PaintUtils.equal(this.subrangePaint[i],</span>
                     that.subrangePaint[i])) {
-<span class="nc" id="L1481">                return false;</span>
+<span class="fc" id="L1481">                return false;</span>
             }
         }
-<span class="nc" id="L1484">        return true;</span>
+<span class="fc" id="L1484">        return true;</span>
     }
 
     /**
@@ -1493,21 +1493,21 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @return A boolean.
      */
     private static boolean equal(double[][] array1, double[][] array2) {
-<span class="nc bnc" id="L1496" title="All 2 branches missed.">        if (array1 == null) {</span>
+<span class="pc bpc" id="L1496" title="1 of 2 branches missed.">        if (array1 == null) {</span>
 <span class="nc bnc" id="L1497" title="All 2 branches missed.">            return (array2 == null);</span>
         }
-<span class="nc bnc" id="L1499" title="All 2 branches missed.">        if (array2 == null) {</span>
+<span class="pc bpc" id="L1499" title="1 of 2 branches missed.">        if (array2 == null) {</span>
 <span class="nc" id="L1500">            return false;</span>
         }
-<span class="nc bnc" id="L1502" title="All 2 branches missed.">        if (array1.length != array2.length) {</span>
+<span class="pc bpc" id="L1502" title="1 of 2 branches missed.">        if (array1.length != array2.length) {</span>
 <span class="nc" id="L1503">            return false;</span>
         }
-<span class="nc bnc" id="L1505" title="All 2 branches missed.">        for (int i = 0; i &lt; array1.length; i++) {</span>
-<span class="nc bnc" id="L1506" title="All 2 branches missed.">            if (!Arrays.equals(array1[i], array2[i])) {</span>
-<span class="nc" id="L1507">                return false;</span>
+<span class="fc bfc" id="L1505" title="All 2 branches covered.">        for (int i = 0; i &lt; array1.length; i++) {</span>
+<span class="fc bfc" id="L1506" title="All 2 branches covered.">            if (!Arrays.equals(array1[i], array2[i])) {</span>
+<span class="fc" id="L1507">                return false;</span>
             }
         }
-<span class="nc" id="L1510">        return true;</span>
+<span class="fc" id="L1510">        return true;</span>
     }
 
     /**
@@ -1520,20 +1520,20 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
     @Override
     public Object clone() throws CloneNotSupportedException {
 
-<span class="nc" id="L1523">        ThermometerPlot clone = (ThermometerPlot) super.clone();</span>
+<span class="fc" id="L1523">        ThermometerPlot clone = (ThermometerPlot) super.clone();</span>
 
-<span class="nc bnc" id="L1525" title="All 2 branches missed.">        if (clone.dataset != null) {</span>
-<span class="nc" id="L1526">            clone.dataset.addChangeListener(clone);</span>
+<span class="pc bpc" id="L1525" title="1 of 2 branches missed.">        if (clone.dataset != null) {</span>
+<span class="fc" id="L1526">            clone.dataset.addChangeListener(clone);</span>
         }
-<span class="nc" id="L1528">        clone.rangeAxis = (ValueAxis) ObjectUtils.clone(this.rangeAxis);</span>
-<span class="nc bnc" id="L1529" title="All 2 branches missed.">        if (clone.rangeAxis != null) {</span>
-<span class="nc" id="L1530">            clone.rangeAxis.setPlot(clone);</span>
-<span class="nc" id="L1531">            clone.rangeAxis.addChangeListener(clone);</span>
+<span class="fc" id="L1528">        clone.rangeAxis = (ValueAxis) ObjectUtils.clone(this.rangeAxis);</span>
+<span class="pc bpc" id="L1529" title="1 of 2 branches missed.">        if (clone.rangeAxis != null) {</span>
+<span class="fc" id="L1530">            clone.rangeAxis.setPlot(clone);</span>
+<span class="fc" id="L1531">            clone.rangeAxis.addChangeListener(clone);</span>
         }
-<span class="nc" id="L1533">        clone.valueFormat = (NumberFormat) this.valueFormat.clone();</span>
-<span class="nc" id="L1534">        clone.subrangePaint = (Paint[]) this.subrangePaint.clone();</span>
+<span class="fc" id="L1533">        clone.valueFormat = (NumberFormat) this.valueFormat.clone();</span>
+<span class="fc" id="L1534">        clone.subrangePaint = (Paint[]) this.subrangePaint.clone();</span>
 
-<span class="nc" id="L1536">        return clone;</span>
+<span class="fc" id="L1536">        return clone;</span>
 
     }
 
@@ -1545,17 +1545,17 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1548">        stream.defaultWriteObject();</span>
-<span class="nc" id="L1549">        SerialUtils.writeStroke(this.thermometerStroke, stream);</span>
-<span class="nc" id="L1550">        SerialUtils.writePaint(this.thermometerPaint, stream);</span>
-<span class="nc" id="L1551">        SerialUtils.writePaint(this.valuePaint, stream);</span>
-<span class="nc" id="L1552">        SerialUtils.writePaint(this.mercuryPaint, stream);</span>
-<span class="nc" id="L1553">        SerialUtils.writeStroke(this.subrangeIndicatorStroke, stream);</span>
-<span class="nc" id="L1554">        SerialUtils.writeStroke(this.rangeIndicatorStroke, stream);</span>
-<span class="nc bnc" id="L1555" title="All 2 branches missed.">        for (int i = 0; i &lt; 3; i++) {</span>
-<span class="nc" id="L1556">            SerialUtils.writePaint(this.subrangePaint[i], stream);</span>
+<span class="fc" id="L1548">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1549">        SerialUtils.writeStroke(this.thermometerStroke, stream);</span>
+<span class="fc" id="L1550">        SerialUtils.writePaint(this.thermometerPaint, stream);</span>
+<span class="fc" id="L1551">        SerialUtils.writePaint(this.valuePaint, stream);</span>
+<span class="fc" id="L1552">        SerialUtils.writePaint(this.mercuryPaint, stream);</span>
+<span class="fc" id="L1553">        SerialUtils.writeStroke(this.subrangeIndicatorStroke, stream);</span>
+<span class="fc" id="L1554">        SerialUtils.writeStroke(this.rangeIndicatorStroke, stream);</span>
+<span class="fc bfc" id="L1555" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L1556">            SerialUtils.writePaint(this.subrangePaint[i], stream);</span>
         }
-<span class="nc" id="L1558">    }</span>
+<span class="fc" id="L1558">    }</span>
 
     /**
      * Provides serialization support.
@@ -1567,21 +1567,21 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
      */
     private void readObject(ObjectInputStream stream) throws IOException,
             ClassNotFoundException {
-<span class="nc" id="L1570">        stream.defaultReadObject();</span>
-<span class="nc" id="L1571">        this.thermometerStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1572">        this.thermometerPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1573">        this.valuePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1574">        this.mercuryPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1575">        this.subrangeIndicatorStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1576">        this.rangeIndicatorStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1577">        this.subrangePaint = new Paint[3];</span>
-<span class="nc bnc" id="L1578" title="All 2 branches missed.">        for (int i = 0; i &lt; 3; i++) {</span>
-<span class="nc" id="L1579">            this.subrangePaint[i] = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1570">        stream.defaultReadObject();</span>
+<span class="fc" id="L1571">        this.thermometerStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1572">        this.thermometerPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1573">        this.valuePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1574">        this.mercuryPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1575">        this.subrangeIndicatorStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1576">        this.rangeIndicatorStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1577">        this.subrangePaint = new Paint[3];</span>
+<span class="fc bfc" id="L1578" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L1579">            this.subrangePaint[i] = SerialUtils.readPaint(stream);</span>
         }
-<span class="nc bnc" id="L1581" title="All 2 branches missed.">        if (this.rangeAxis != null) {</span>
-<span class="nc" id="L1582">            this.rangeAxis.addChangeListener(this);</span>
+<span class="pc bpc" id="L1581" title="1 of 2 branches missed.">        if (this.rangeAxis != null) {</span>
+<span class="fc" id="L1582">            this.rangeAxis.addChangeListener(this);</span>
         }
-<span class="nc" id="L1584">    }</span>
+<span class="fc" id="L1584">    }</span>
 
     /**
      * Multiplies the range on the domain axis/axes by the specified factor.
@@ -1694,4 +1694,4 @@ public class ThermometerPlot extends Plot implements ValueAxisPlot,
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

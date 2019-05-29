@@ -137,7 +137,7 @@ public class CombinedRangeXYPlot extends XYPlot
     private List&lt;XYPlot&gt; subplots;
 
     /** The gap between subplots. */
-<span class="nc" id="L140">    private double gap = 5.0;</span>
+<span class="fc" id="L140">    private double gap = 5.0;</span>
 
     /** Temporary storage for the subplot areas. */
     private transient Rectangle2D[] subplotAreas;
@@ -146,8 +146,8 @@ public class CombinedRangeXYPlot extends XYPlot
      * Default constructor.
      */
     public CombinedRangeXYPlot() {
-<span class="nc" id="L149">        this(new NumberAxis());</span>
-<span class="nc" id="L150">    }</span>
+<span class="fc" id="L149">        this(new NumberAxis());</span>
+<span class="fc" id="L150">    }</span>
 
     /**
      * Creates a new plot.
@@ -155,12 +155,12 @@ public class CombinedRangeXYPlot extends XYPlot
      * @param rangeAxis  the shared axis.
      */
     public CombinedRangeXYPlot(ValueAxis rangeAxis) {
-<span class="nc" id="L158">        super(null, // no data in the parent plot</span>
+<span class="fc" id="L158">        super(null, // no data in the parent plot</span>
               null,
               rangeAxis,
               null);
-<span class="nc" id="L162">        this.subplots = new java.util.ArrayList&lt;XYPlot&gt;();</span>
-<span class="nc" id="L163">    }</span>
+<span class="fc" id="L162">        this.subplots = new java.util.ArrayList&lt;XYPlot&gt;();</span>
+<span class="fc" id="L163">    }</span>
 
     /**
      * Returns a string describing the type of plot.
@@ -191,8 +191,8 @@ public class CombinedRangeXYPlot extends XYPlot
      * @see #getGap()
      */
     public void setGap(double gap) {
-<span class="nc" id="L194">        this.gap = gap;</span>
-<span class="nc" id="L195">    }</span>
+<span class="fc" id="L194">        this.gap = gap;</span>
+<span class="fc" id="L195">    }</span>
     
     /**
      * Returns {@code true} if the domain is pannable for at least one subplot,
@@ -232,8 +232,8 @@ public class CombinedRangeXYPlot extends XYPlot
      * @param subplot  the subplot.
      */
     public void add(XYPlot subplot) {
-<span class="nc" id="L235">        add(subplot, 1);</span>
-<span class="nc" id="L236">    }</span>
+<span class="fc" id="L235">        add(subplot, 1);</span>
+<span class="fc" id="L236">    }</span>
 
     /**
      * Adds a subplot with a particular weight (greater than or equal to one).
@@ -247,23 +247,23 @@ public class CombinedRangeXYPlot extends XYPlot
      * @param weight  the weight (must be 1 or greater).
      */
     public void add(XYPlot subplot, int weight) {
-<span class="nc" id="L250">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (weight &lt;= 0) {</span>
+<span class="fc" id="L250">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">        if (weight &lt;= 0) {</span>
 <span class="nc" id="L252">            String msg = &quot;The 'weight' must be positive.&quot;;</span>
 <span class="nc" id="L253">            throw new IllegalArgumentException(msg);</span>
         }
 
         // store the plot and its weight
-<span class="nc" id="L257">        subplot.setParent(this);</span>
-<span class="nc" id="L258">        subplot.setWeight(weight);</span>
-<span class="nc" id="L259">        subplot.setInsets(new RectangleInsets(0.0, 0.0, 0.0, 0.0));</span>
-<span class="nc" id="L260">        subplot.setRangeAxis(null);</span>
-<span class="nc" id="L261">        subplot.addChangeListener(this);</span>
-<span class="nc" id="L262">        this.subplots.add(subplot);</span>
-<span class="nc" id="L263">        configureRangeAxes();</span>
-<span class="nc" id="L264">        fireChangeEvent();</span>
+<span class="fc" id="L257">        subplot.setParent(this);</span>
+<span class="fc" id="L258">        subplot.setWeight(weight);</span>
+<span class="fc" id="L259">        subplot.setInsets(new RectangleInsets(0.0, 0.0, 0.0, 0.0));</span>
+<span class="fc" id="L260">        subplot.setRangeAxis(null);</span>
+<span class="fc" id="L261">        subplot.addChangeListener(this);</span>
+<span class="fc" id="L262">        this.subplots.add(subplot);</span>
+<span class="fc" id="L263">        configureRangeAxes();</span>
+<span class="fc" id="L264">        fireChangeEvent();</span>
 
-<span class="nc" id="L266">    }</span>
+<span class="fc" id="L266">    }</span>
 
     /**
      * Removes a subplot from the combined chart.
@@ -271,24 +271,24 @@ public class CombinedRangeXYPlot extends XYPlot
      * @param subplot  the subplot ({@code null} not permitted).
      */
     public void remove(XYPlot subplot) {
-<span class="nc" id="L274">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
-<span class="nc" id="L275">        int position = -1;</span>
-<span class="nc" id="L276">        int size = this.subplots.size();</span>
-<span class="nc" id="L277">        int i = 0;</span>
-<span class="nc bnc" id="L278" title="All 4 branches missed.">        while (position == -1 &amp;&amp; i &lt; size) {</span>
-<span class="nc bnc" id="L279" title="All 2 branches missed.">            if (this.subplots.get(i) == subplot) {</span>
-<span class="nc" id="L280">                position = i;</span>
+<span class="fc" id="L274">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
+<span class="fc" id="L275">        int position = -1;</span>
+<span class="fc" id="L276">        int size = this.subplots.size();</span>
+<span class="fc" id="L277">        int i = 0;</span>
+<span class="pc bpc" id="L278" title="1 of 4 branches missed.">        while (position == -1 &amp;&amp; i &lt; size) {</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">            if (this.subplots.get(i) == subplot) {</span>
+<span class="fc" id="L280">                position = i;</span>
             }
-<span class="nc" id="L282">            i++;</span>
+<span class="fc" id="L282">            i++;</span>
         }
-<span class="nc bnc" id="L284" title="All 2 branches missed.">        if (position != -1) {</span>
-<span class="nc" id="L285">            this.subplots.remove(position);</span>
-<span class="nc" id="L286">            subplot.setParent(null);</span>
-<span class="nc" id="L287">            subplot.removeChangeListener(this);</span>
-<span class="nc" id="L288">            configureRangeAxes();</span>
-<span class="nc" id="L289">            fireChangeEvent();</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (position != -1) {</span>
+<span class="fc" id="L285">            this.subplots.remove(position);</span>
+<span class="fc" id="L286">            subplot.setParent(null);</span>
+<span class="fc" id="L287">            subplot.removeChangeListener(this);</span>
+<span class="fc" id="L288">            configureRangeAxes();</span>
+<span class="fc" id="L289">            fireChangeEvent();</span>
         }
-<span class="nc" id="L291">    }</span>
+<span class="fc" id="L291">    }</span>
 
     /**
      * Returns the list of subplots.  The returned list may be empty, but is
@@ -297,8 +297,8 @@ public class CombinedRangeXYPlot extends XYPlot
      * @return An unmodifiable list of subplots.
      */
     public List getSubplots() {
-<span class="nc bnc" id="L300" title="All 2 branches missed.">        if (this.subplots != null) {</span>
-<span class="nc" id="L301">            return Collections.unmodifiableList(this.subplots);</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        if (this.subplots != null) {</span>
+<span class="fc" id="L301">            return Collections.unmodifiableList(this.subplots);</span>
         }
         else {
 <span class="nc" id="L304">            return Collections.EMPTY_LIST;</span>
@@ -317,12 +317,12 @@ public class CombinedRangeXYPlot extends XYPlot
     protected AxisSpace calculateAxisSpace(Graphics2D g2,
                                            Rectangle2D plotArea) {
 
-<span class="nc" id="L320">        AxisSpace space = new AxisSpace();</span>
-<span class="nc" id="L321">        PlotOrientation orientation = getOrientation();</span>
+<span class="fc" id="L320">        AxisSpace space = new AxisSpace();</span>
+<span class="fc" id="L321">        PlotOrientation orientation = getOrientation();</span>
 
         // work out the space required by the domain axis...
-<span class="nc" id="L324">        AxisSpace fixed = getFixedRangeAxisSpace();</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (fixed != null) {</span>
+<span class="fc" id="L324">        AxisSpace fixed = getFixedRangeAxisSpace();</span>
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">        if (fixed != null) {</span>
 <span class="nc bnc" id="L326" title="All 2 branches missed.">            if (orientation == PlotOrientation.VERTICAL) {</span>
 <span class="nc" id="L327">                space.setLeft(fixed.getLeft());</span>
 <span class="nc" id="L328">                space.setRight(fixed.getRight());</span>
@@ -333,48 +333,48 @@ public class CombinedRangeXYPlot extends XYPlot
             }
         }
         else {
-<span class="nc" id="L336">            ValueAxis valueAxis = getRangeAxis();</span>
-<span class="nc" id="L337">            RectangleEdge valueEdge = Plot.resolveRangeAxisLocation(</span>
-<span class="nc" id="L338">                getRangeAxisLocation(), orientation</span>
+<span class="fc" id="L336">            ValueAxis valueAxis = getRangeAxis();</span>
+<span class="fc" id="L337">            RectangleEdge valueEdge = Plot.resolveRangeAxisLocation(</span>
+<span class="fc" id="L338">                getRangeAxisLocation(), orientation</span>
             );
-<span class="nc bnc" id="L340" title="All 2 branches missed.">            if (valueAxis != null) {</span>
-<span class="nc" id="L341">                space = valueAxis.reserveSpace(g2, this, plotArea, valueEdge,</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">            if (valueAxis != null) {</span>
+<span class="fc" id="L341">                space = valueAxis.reserveSpace(g2, this, plotArea, valueEdge,</span>
                         space);
             }
         }
 
-<span class="nc" id="L346">        Rectangle2D adjustedPlotArea = space.shrink(plotArea, null);</span>
+<span class="fc" id="L346">        Rectangle2D adjustedPlotArea = space.shrink(plotArea, null);</span>
         // work out the maximum height or width of the non-shared axes...
-<span class="nc" id="L348">        int n = this.subplots.size();</span>
-<span class="nc" id="L349">        int totalWeight = 0;</span>
-<span class="nc bnc" id="L350" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
-<span class="nc" id="L351">            XYPlot sub = (XYPlot) this.subplots.get(i);</span>
-<span class="nc" id="L352">            totalWeight += sub.getWeight();</span>
+<span class="fc" id="L348">        int n = this.subplots.size();</span>
+<span class="fc" id="L349">        int totalWeight = 0;</span>
+<span class="fc bfc" id="L350" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L351">            XYPlot sub = (XYPlot) this.subplots.get(i);</span>
+<span class="fc" id="L352">            totalWeight += sub.getWeight();</span>
         }
 
         // calculate plotAreas of all sub-plots, maximum vertical/horizontal
         // axis width/height
-<span class="nc" id="L357">        this.subplotAreas = new Rectangle2D[n];</span>
-<span class="nc" id="L358">        double x = adjustedPlotArea.getX();</span>
-<span class="nc" id="L359">        double y = adjustedPlotArea.getY();</span>
-<span class="nc" id="L360">        double usableSize = 0.0;</span>
-<span class="nc bnc" id="L361" title="All 2 branches missed.">        if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L362">            usableSize = adjustedPlotArea.getWidth() - this.gap * (n - 1);</span>
+<span class="fc" id="L357">        this.subplotAreas = new Rectangle2D[n];</span>
+<span class="fc" id="L358">        double x = adjustedPlotArea.getX();</span>
+<span class="fc" id="L359">        double y = adjustedPlotArea.getY();</span>
+<span class="fc" id="L360">        double usableSize = 0.0;</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L362">            usableSize = adjustedPlotArea.getWidth() - this.gap * (n - 1);</span>
         }
 <span class="nc bnc" id="L364" title="All 2 branches missed.">        else if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L365">            usableSize = adjustedPlotArea.getHeight() - this.gap * (n - 1);</span>
         }
 
-<span class="nc bnc" id="L368" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
-<span class="nc" id="L369">            XYPlot plot = (XYPlot) this.subplots.get(i);</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L369">            XYPlot plot = (XYPlot) this.subplots.get(i);</span>
 
             // calculate sub-plot area
-<span class="nc bnc" id="L372" title="All 2 branches missed.">            if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L373">                double w = usableSize * plot.getWeight() / totalWeight;</span>
-<span class="nc" id="L374">                this.subplotAreas[i] = new Rectangle2D.Double(x, y, w,</span>
-<span class="nc" id="L375">                        adjustedPlotArea.getHeight());</span>
-<span class="nc" id="L376">                x = x + w + this.gap;</span>
-<span class="nc" id="L377">            }</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">            if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L373">                double w = usableSize * plot.getWeight() / totalWeight;</span>
+<span class="fc" id="L374">                this.subplotAreas[i] = new Rectangle2D.Double(x, y, w,</span>
+<span class="fc" id="L375">                        adjustedPlotArea.getHeight());</span>
+<span class="fc" id="L376">                x = x + w + this.gap;</span>
+<span class="fc" id="L377">            }</span>
 <span class="nc bnc" id="L378" title="All 2 branches missed.">            else if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L379">                double h = usableSize * plot.getWeight() / totalWeight;</span>
 <span class="nc" id="L380">                this.subplotAreas[i] = new Rectangle2D.Double(x, y,</span>
@@ -382,13 +382,13 @@ public class CombinedRangeXYPlot extends XYPlot
 <span class="nc" id="L382">                y = y + h + this.gap;</span>
             }
 
-<span class="nc" id="L385">            AxisSpace subSpace = plot.calculateDomainAxisSpace(g2,</span>
+<span class="fc" id="L385">            AxisSpace subSpace = plot.calculateDomainAxisSpace(g2,</span>
                     this.subplotAreas[i], null);
-<span class="nc" id="L387">            space.ensureAtLeast(subSpace);</span>
+<span class="fc" id="L387">            space.ensureAtLeast(subSpace);</span>
 
         }
 
-<span class="nc" id="L391">        return space;</span>
+<span class="fc" id="L391">        return space;</span>
     }
 
     /**
@@ -408,49 +408,49 @@ public class CombinedRangeXYPlot extends XYPlot
             PlotState parentState, PlotRenderingInfo info) {
 
         // set up info collection...
-<span class="nc bnc" id="L411" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L412">            info.setPlotArea(area);</span>
         }
 
         // adjust the drawing area for plot insets (if any)...
-<span class="nc" id="L416">        RectangleInsets insets = getInsets();</span>
-<span class="nc" id="L417">        insets.trim(area);</span>
+<span class="fc" id="L416">        RectangleInsets insets = getInsets();</span>
+<span class="fc" id="L417">        insets.trim(area);</span>
 
-<span class="nc" id="L419">        AxisSpace space = calculateAxisSpace(g2, area);</span>
-<span class="nc" id="L420">        Rectangle2D dataArea = space.shrink(area, null);</span>
+<span class="fc" id="L419">        AxisSpace space = calculateAxisSpace(g2, area);</span>
+<span class="fc" id="L420">        Rectangle2D dataArea = space.shrink(area, null);</span>
         //this.axisOffset.trim(dataArea);
 
         // set the width and height of non-shared axis of all sub-plots
-<span class="nc" id="L424">        setFixedDomainAxisSpaceForSubplots(space);</span>
+<span class="fc" id="L424">        setFixedDomainAxisSpaceForSubplots(space);</span>
 
         // draw the shared axis
-<span class="nc" id="L427">        ValueAxis axis = getRangeAxis();</span>
-<span class="nc" id="L428">        RectangleEdge edge = getRangeAxisEdge();</span>
-<span class="nc" id="L429">        double cursor = RectangleEdge.coordinate(dataArea, edge);</span>
-<span class="nc" id="L430">        AxisState axisState = axis.draw(g2, cursor, area, dataArea, edge, info);</span>
+<span class="fc" id="L427">        ValueAxis axis = getRangeAxis();</span>
+<span class="fc" id="L428">        RectangleEdge edge = getRangeAxisEdge();</span>
+<span class="fc" id="L429">        double cursor = RectangleEdge.coordinate(dataArea, edge);</span>
+<span class="fc" id="L430">        AxisState axisState = axis.draw(g2, cursor, area, dataArea, edge, info);</span>
 
-<span class="nc bnc" id="L432" title="All 2 branches missed.">        if (parentState == null) {</span>
-<span class="nc" id="L433">            parentState = new PlotState();</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        if (parentState == null) {</span>
+<span class="fc" id="L433">            parentState = new PlotState();</span>
         }
-<span class="nc" id="L435">        parentState.getSharedAxisStates().put(axis, axisState);</span>
+<span class="fc" id="L435">        parentState.getSharedAxisStates().put(axis, axisState);</span>
 
         // draw all the charts
-<span class="nc bnc" id="L438" title="All 2 branches missed.">        for (int i = 0; i &lt; this.subplots.size(); i++) {</span>
-<span class="nc" id="L439">            XYPlot plot = (XYPlot) this.subplots.get(i);</span>
-<span class="nc" id="L440">            PlotRenderingInfo subplotInfo = null;</span>
-<span class="nc bnc" id="L441" title="All 2 branches missed.">            if (info != null) {</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        for (int i = 0; i &lt; this.subplots.size(); i++) {</span>
+<span class="fc" id="L439">            XYPlot plot = (XYPlot) this.subplots.get(i);</span>
+<span class="fc" id="L440">            PlotRenderingInfo subplotInfo = null;</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">            if (info != null) {</span>
 <span class="nc" id="L442">                subplotInfo = new PlotRenderingInfo(info.getOwner());</span>
 <span class="nc" id="L443">                info.addSubplotInfo(subplotInfo);</span>
             }
-<span class="nc" id="L445">            plot.draw(g2, this.subplotAreas[i], anchor, parentState,</span>
+<span class="fc" id="L445">            plot.draw(g2, this.subplotAreas[i], anchor, parentState,</span>
                     subplotInfo);
         }
 
-<span class="nc bnc" id="L449" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L450">            info.setDataArea(dataArea);</span>
         }
 
-<span class="nc" id="L453">    }</span>
+<span class="fc" id="L453">    }</span>
 
     /**
      * Returns a collection of legend items for the plot.
@@ -459,20 +459,20 @@ public class CombinedRangeXYPlot extends XYPlot
      */
     @Override
     public LegendItemCollection getLegendItems() {
-<span class="nc" id="L462">        LegendItemCollection result = getFixedLegendItems();</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L464">            result = new LegendItemCollection();</span>
+<span class="fc" id="L462">        LegendItemCollection result = getFixedLegendItems();</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L464">            result = new LegendItemCollection();</span>
 
-<span class="nc bnc" id="L466" title="All 2 branches missed.">            if (this.subplots != null) {</span>
-<span class="nc" id="L467">                Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L468" title="All 2 branches missed.">                while (iterator.hasNext()) {</span>
-<span class="nc" id="L469">                    XYPlot plot = (XYPlot) iterator.next();</span>
-<span class="nc" id="L470">                    LegendItemCollection more = plot.getLegendItems();</span>
-<span class="nc" id="L471">                    result.addAll(more);</span>
-<span class="nc" id="L472">                }</span>
+<span class="pc bpc" id="L466" title="1 of 2 branches missed.">            if (this.subplots != null) {</span>
+<span class="fc" id="L467">                Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L469">                    XYPlot plot = (XYPlot) iterator.next();</span>
+<span class="fc" id="L470">                    LegendItemCollection more = plot.getLegendItems();</span>
+<span class="fc" id="L471">                    result.addAll(more);</span>
+<span class="fc" id="L472">                }</span>
             }
         }
-<span class="nc" id="L475">        return result;</span>
+<span class="fc" id="L475">        return result;</span>
     }
 
     /**
@@ -625,13 +625,13 @@ public class CombinedRangeXYPlot extends XYPlot
      */
     @Override
     public void setOrientation(PlotOrientation orientation) {
-<span class="nc" id="L628">        super.setOrientation(orientation);</span>
-<span class="nc" id="L629">        Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L630" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L631">            XYPlot plot = (XYPlot) iterator.next();</span>
-<span class="nc" id="L632">            plot.setOrientation(orientation);</span>
-<span class="nc" id="L633">        }</span>
-<span class="nc" id="L634">    }</span>
+<span class="fc" id="L628">        super.setOrientation(orientation);</span>
+<span class="fc" id="L629">        Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L630" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L631">            XYPlot plot = (XYPlot) iterator.next();</span>
+<span class="fc" id="L632">            plot.setOrientation(orientation);</span>
+<span class="fc" id="L633">        }</span>
+<span class="fc" id="L634">    }</span>
 
     /**
      * Sets the shadow generator for the plot (and all subplots) and sends
@@ -666,15 +666,15 @@ public class CombinedRangeXYPlot extends XYPlot
      */
     @Override
     public Range getDataRange(ValueAxis axis) {
-<span class="nc" id="L669">        Range result = null;</span>
-<span class="nc bnc" id="L670" title="All 2 branches missed.">        if (this.subplots != null) {</span>
-<span class="nc" id="L671">            Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L672" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L673">                XYPlot subplot = (XYPlot) iterator.next();</span>
-<span class="nc" id="L674">                result = Range.combine(result, subplot.getDataRange(axis));</span>
-<span class="nc" id="L675">            }</span>
+<span class="fc" id="L669">        Range result = null;</span>
+<span class="fc bfc" id="L670" title="All 2 branches covered.">        if (this.subplots != null) {</span>
+<span class="fc" id="L671">            Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L672" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L673">                XYPlot subplot = (XYPlot) iterator.next();</span>
+<span class="fc" id="L674">                result = Range.combine(result, subplot.getDataRange(axis));</span>
+<span class="fc" id="L675">            }</span>
         }
-<span class="nc" id="L677">        return result;</span>
+<span class="fc" id="L677">        return result;</span>
     }
 
     /**
@@ -684,12 +684,12 @@ public class CombinedRangeXYPlot extends XYPlot
      * @param space  the space.
      */
     protected void setFixedDomainAxisSpaceForSubplots(AxisSpace space) {
-<span class="nc" id="L687">        Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L688" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L689">            XYPlot plot = (XYPlot) iterator.next();</span>
-<span class="nc" id="L690">            plot.setFixedDomainAxisSpace(space, false);</span>
-<span class="nc" id="L691">        }</span>
-<span class="nc" id="L692">    }</span>
+<span class="fc" id="L687">        Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L688" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L689">            XYPlot plot = (XYPlot) iterator.next();</span>
+<span class="fc" id="L690">            plot.setFixedDomainAxisSpace(space, false);</span>
+<span class="fc" id="L691">        }</span>
+<span class="fc" id="L692">    }</span>
 
     /**
      * Handles a 'click' on the plot by updating the anchor values...
@@ -718,8 +718,8 @@ public class CombinedRangeXYPlot extends XYPlot
      */
     @Override
     public void plotChanged(PlotChangeEvent event) {
-<span class="nc" id="L721">        notifyListeners(event);</span>
-<span class="nc" id="L722">    }</span>
+<span class="fc" id="L721">        notifyListeners(event);</span>
+<span class="fc" id="L722">    }</span>
 
     /**
      * Tests this plot for equality with another object.
@@ -730,20 +730,20 @@ public class CombinedRangeXYPlot extends XYPlot
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L733" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L734">            return true;</span>
+<span class="fc bfc" id="L733" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L734">            return true;</span>
         }
-<span class="nc bnc" id="L736" title="All 2 branches missed.">        if (!(obj instanceof CombinedRangeXYPlot)) {</span>
-<span class="nc" id="L737">            return false;</span>
+<span class="fc bfc" id="L736" title="All 2 branches covered.">        if (!(obj instanceof CombinedRangeXYPlot)) {</span>
+<span class="fc" id="L737">            return false;</span>
         }
-<span class="nc" id="L739">        CombinedRangeXYPlot that = (CombinedRangeXYPlot) obj;</span>
-<span class="nc bnc" id="L740" title="All 2 branches missed.">        if (this.gap != that.gap) {</span>
+<span class="fc" id="L739">        CombinedRangeXYPlot that = (CombinedRangeXYPlot) obj;</span>
+<span class="pc bpc" id="L740" title="1 of 2 branches missed.">        if (this.gap != that.gap) {</span>
 <span class="nc" id="L741">            return false;</span>
         }
-<span class="nc bnc" id="L743" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.subplots, that.subplots)) {</span>
+<span class="pc bpc" id="L743" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.subplots, that.subplots)) {</span>
 <span class="nc" id="L744">            return false;</span>
         }
-<span class="nc" id="L746">        return super.equals(obj);</span>
+<span class="fc" id="L746">        return super.equals(obj);</span>
     }
 
     /**
@@ -757,22 +757,22 @@ public class CombinedRangeXYPlot extends XYPlot
     @Override
     public Object clone() throws CloneNotSupportedException {
 
-<span class="nc" id="L760">        CombinedRangeXYPlot result = (CombinedRangeXYPlot) super.clone();</span>
-<span class="nc" id="L761">        result.subplots = (List) ObjectUtils.deepClone(this.subplots);</span>
-<span class="nc bnc" id="L762" title="All 2 branches missed.">        for (Iterator it = result.subplots.iterator(); it.hasNext();) {</span>
-<span class="nc" id="L763">            Plot child = (Plot) it.next();</span>
-<span class="nc" id="L764">            child.setParent(result);</span>
-<span class="nc" id="L765">        }</span>
+<span class="fc" id="L760">        CombinedRangeXYPlot result = (CombinedRangeXYPlot) super.clone();</span>
+<span class="fc" id="L761">        result.subplots = (List) ObjectUtils.deepClone(this.subplots);</span>
+<span class="fc bfc" id="L762" title="All 2 branches covered.">        for (Iterator it = result.subplots.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L763">            Plot child = (Plot) it.next();</span>
+<span class="fc" id="L764">            child.setParent(result);</span>
+<span class="fc" id="L765">        }</span>
 
         // after setting up all the subplots, the shared range axis may need
         // reconfiguring
-<span class="nc" id="L769">        ValueAxis rangeAxis = result.getRangeAxis();</span>
-<span class="nc bnc" id="L770" title="All 2 branches missed.">        if (rangeAxis != null) {</span>
-<span class="nc" id="L771">            rangeAxis.configure();</span>
+<span class="fc" id="L769">        ValueAxis rangeAxis = result.getRangeAxis();</span>
+<span class="pc bpc" id="L770" title="1 of 2 branches missed.">        if (rangeAxis != null) {</span>
+<span class="fc" id="L771">            rangeAxis.configure();</span>
         }
 
-<span class="nc" id="L774">        return result;</span>
+<span class="fc" id="L774">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

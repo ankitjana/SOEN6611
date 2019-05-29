@@ -77,35 +77,35 @@ public abstract class MeterNeedle implements Serializable {
     private static final long serialVersionUID = 5203064851510951052L;
 
     /** The outline paint. */
-<span class="nc" id="L80">    private transient Paint outlinePaint = Color.BLACK;</span>
+<span class="fc" id="L80">    private transient Paint outlinePaint = Color.BLACK;</span>
 
     /** The outline stroke. */
-<span class="nc" id="L83">    private transient Stroke outlineStroke = new BasicStroke(2);</span>
+<span class="fc" id="L83">    private transient Stroke outlineStroke = new BasicStroke(2);</span>
 
     /** The fill paint. */
-<span class="nc" id="L86">    private transient Paint fillPaint = null;</span>
+<span class="fc" id="L86">    private transient Paint fillPaint = null;</span>
 
     /** The highlight paint. */
-<span class="nc" id="L89">    private transient Paint highlightPaint = null;</span>
+<span class="fc" id="L89">    private transient Paint highlightPaint = null;</span>
 
     /** The size. */
-<span class="nc" id="L92">    private int size = 5;</span>
+<span class="fc" id="L92">    private int size = 5;</span>
 
     /** Scalar to apply to locate the rotation x point. */
-<span class="nc" id="L95">    private double rotateX = 0.5;</span>
+<span class="fc" id="L95">    private double rotateX = 0.5;</span>
 
     /** Scalar to apply to locate the rotation y point. */
-<span class="nc" id="L98">    private double rotateY = 0.5;</span>
+<span class="fc" id="L98">    private double rotateY = 0.5;</span>
 
     /** A transform. */
-<span class="nc" id="L101">    protected static AffineTransform transform = new AffineTransform();</span>
+<span class="fc" id="L101">    protected static AffineTransform transform = new AffineTransform();</span>
 
     /**
      * Creates a new needle.
      */
     public MeterNeedle() {
-<span class="nc" id="L107">        this(null, null, null);</span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this(null, null, null);</span>
+<span class="fc" id="L108">    }</span>
 
     /**
      * Creates a new needle.
@@ -114,11 +114,11 @@ public abstract class MeterNeedle implements Serializable {
      * @param fill  the fill paint ({@code null} permitted).
      * @param highlight  the highlight paint ({@code null} permitted).
      */
-<span class="nc" id="L117">    public MeterNeedle(Paint outline, Paint fill, Paint highlight) {</span>
-<span class="nc" id="L118">        this.fillPaint = fill;</span>
-<span class="nc" id="L119">        this.highlightPaint = highlight;</span>
-<span class="nc" id="L120">        this.outlinePaint = outline;</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L117">    public MeterNeedle(Paint outline, Paint fill, Paint highlight) {</span>
+<span class="fc" id="L118">        this.fillPaint = fill;</span>
+<span class="fc" id="L119">        this.highlightPaint = highlight;</span>
+<span class="fc" id="L120">        this.outlinePaint = outline;</span>
+<span class="fc" id="L121">    }</span>
 
     /**
      * Returns the outline paint.
@@ -135,10 +135,10 @@ public abstract class MeterNeedle implements Serializable {
      * @param p  the new paint.
      */
     public void setOutlinePaint(Paint p) {
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L139">            this.outlinePaint = p;</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L139">            this.outlinePaint = p;</span>
         }
-<span class="nc" id="L141">    }</span>
+<span class="fc" id="L141">    }</span>
 
     /**
      * Returns the outline stroke.
@@ -155,10 +155,10 @@ public abstract class MeterNeedle implements Serializable {
      * @param s  the new stroke.
      */
     public void setOutlineStroke(Stroke s) {
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (s != null) {</span>
-<span class="nc" id="L159">            this.outlineStroke = s;</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (s != null) {</span>
+<span class="fc" id="L159">            this.outlineStroke = s;</span>
         }
-<span class="nc" id="L161">    }</span>
+<span class="fc" id="L161">    }</span>
 
     /**
      * Returns the fill paint.
@@ -175,10 +175,10 @@ public abstract class MeterNeedle implements Serializable {
      * @param p  the fill paint.
      */
     public void setFillPaint(Paint p) {
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L179">            this.fillPaint = p;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L179">            this.fillPaint = p;</span>
         }
-<span class="nc" id="L181">    }</span>
+<span class="fc" id="L181">    }</span>
 
     /**
      * Returns the highlight paint.
@@ -195,10 +195,10 @@ public abstract class MeterNeedle implements Serializable {
      * @param p  the highlight paint.
      */
     public void setHighlightPaint(Paint p) {
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L199">            this.highlightPaint = p;</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L199">            this.highlightPaint = p;</span>
         }
-<span class="nc" id="L201">    }</span>
+<span class="fc" id="L201">    }</span>
 
     /**
      * Returns the scalar used for determining the rotation x value.
@@ -215,8 +215,8 @@ public abstract class MeterNeedle implements Serializable {
      * @param x  the new value.
      */
     public void setRotateX(double x) {
-<span class="nc" id="L218">        this.rotateX = x;</span>
-<span class="nc" id="L219">    }</span>
+<span class="fc" id="L218">        this.rotateX = x;</span>
+<span class="fc" id="L219">    }</span>
 
     /**
      * Sets the rotateY value.
@@ -224,8 +224,8 @@ public abstract class MeterNeedle implements Serializable {
      * @param y  the new value.
      */
     public void setRotateY(double y) {
-<span class="nc" id="L227">        this.rotateY = y;</span>
-<span class="nc" id="L228">    }</span>
+<span class="fc" id="L227">        this.rotateY = y;</span>
+<span class="fc" id="L228">    }</span>
 
     /**
      * Returns the scalar used for determining the rotation y value.
@@ -325,8 +325,8 @@ public abstract class MeterNeedle implements Serializable {
      * @param pixels  the new size.
      */
     public void setSize(int pixels) {
-<span class="nc" id="L328">        this.size = pixels;</span>
-<span class="nc" id="L329">    }</span>
+<span class="fc" id="L328">        this.size = pixels;</span>
+<span class="fc" id="L329">    }</span>
 
     /**
      * Returns the transform.
@@ -346,35 +346,35 @@ public abstract class MeterNeedle implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L349" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L350">            return true;</span>
         }
-<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (!(obj instanceof MeterNeedle)) {</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">        if (!(obj instanceof MeterNeedle)) {</span>
 <span class="nc" id="L353">            return false;</span>
         }
-<span class="nc" id="L355">        MeterNeedle that = (MeterNeedle) obj;</span>
-<span class="nc bnc" id="L356" title="All 2 branches missed.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
-<span class="nc" id="L357">            return false;</span>
+<span class="fc" id="L355">        MeterNeedle that = (MeterNeedle) obj;</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
+<span class="fc" id="L357">            return false;</span>
         }
-<span class="nc bnc" id="L359" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
-<span class="nc" id="L360">            return false;</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
+<span class="fc" id="L360">            return false;</span>
         }
-<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
-<span class="nc" id="L363">            return false;</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
+<span class="fc" id="L363">            return false;</span>
         }
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (!PaintUtils.equal(this.highlightPaint, that.highlightPaint)) {</span>
-<span class="nc" id="L366">            return false;</span>
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        if (!PaintUtils.equal(this.highlightPaint, that.highlightPaint)) {</span>
+<span class="fc" id="L366">            return false;</span>
         }
-<span class="nc bnc" id="L368" title="All 2 branches missed.">        if (this.size != that.size) {</span>
-<span class="nc" id="L369">            return false;</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (this.size != that.size) {</span>
+<span class="fc" id="L369">            return false;</span>
         }
-<span class="nc bnc" id="L371" title="All 2 branches missed.">        if (this.rotateX != that.rotateX) {</span>
-<span class="nc" id="L372">            return false;</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">        if (this.rotateX != that.rotateX) {</span>
+<span class="fc" id="L372">            return false;</span>
         }
-<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (this.rotateY != that.rotateY) {</span>
-<span class="nc" id="L375">            return false;</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">        if (this.rotateY != that.rotateY) {</span>
+<span class="fc" id="L375">            return false;</span>
         }
-<span class="nc" id="L377">        return true;</span>
+<span class="fc" id="L377">        return true;</span>
     }
 
     /**
@@ -402,12 +402,12 @@ public abstract class MeterNeedle implements Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L405">        stream.defaultWriteObject();</span>
-<span class="nc" id="L406">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
-<span class="nc" id="L407">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
-<span class="nc" id="L408">        SerialUtils.writePaint(this.fillPaint, stream);</span>
-<span class="nc" id="L409">        SerialUtils.writePaint(this.highlightPaint, stream);</span>
-<span class="nc" id="L410">    }</span>
+<span class="fc" id="L405">        stream.defaultWriteObject();</span>
+<span class="fc" id="L406">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
+<span class="fc" id="L407">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
+<span class="fc" id="L408">        SerialUtils.writePaint(this.fillPaint, stream);</span>
+<span class="fc" id="L409">        SerialUtils.writePaint(this.highlightPaint, stream);</span>
+<span class="fc" id="L410">    }</span>
 
     /**
      * Provides serialization support.
@@ -419,12 +419,12 @@ public abstract class MeterNeedle implements Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L422">        stream.defaultReadObject();</span>
-<span class="nc" id="L423">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L424">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L425">        this.fillPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L426">        this.highlightPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L427">    }</span>
+<span class="fc" id="L422">        stream.defaultReadObject();</span>
+<span class="fc" id="L423">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L424">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L425">        this.fillPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L426">        this.highlightPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L427">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

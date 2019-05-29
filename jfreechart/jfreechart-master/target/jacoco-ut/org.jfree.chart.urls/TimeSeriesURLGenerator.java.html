@@ -69,23 +69,23 @@ public class TimeSeriesURLGenerator implements XYURLGenerator, Serializable {
     private static final long serialVersionUID = -9122773175671182445L;
 
     /** A formatter for the date. */
-<span class="nc" id="L72">    private DateFormat dateFormat = DateFormat.getInstance();</span>
+<span class="fc" id="L72">    private DateFormat dateFormat = DateFormat.getInstance();</span>
 
     /** Prefix to the URL */
-<span class="nc" id="L75">    private String prefix = &quot;index.html&quot;;</span>
+<span class="fc" id="L75">    private String prefix = &quot;index.html&quot;;</span>
 
     /** Name to use to identify the series */
-<span class="nc" id="L78">    private String seriesParameterName = &quot;series&quot;;</span>
+<span class="fc" id="L78">    private String seriesParameterName = &quot;series&quot;;</span>
 
     /** Name to use to identify the item */
-<span class="nc" id="L81">    private String itemParameterName = &quot;item&quot;;</span>
+<span class="fc" id="L81">    private String itemParameterName = &quot;item&quot;;</span>
 
     /**
      * Default constructor.
      */
     public TimeSeriesURLGenerator() {
-<span class="nc" id="L87">        super();</span>
-<span class="nc" id="L88">    }</span>
+<span class="fc" id="L87">        super();</span>
+<span class="fc" id="L88">    }</span>
 
     /**
      * Construct TimeSeriesURLGenerator overriding defaults.
@@ -99,17 +99,17 @@ public class TimeSeriesURLGenerator implements XYURLGenerator, Serializable {
      *         ({@code null} not permitted).
      */
     public TimeSeriesURLGenerator(DateFormat dateFormat, String prefix,
-<span class="nc" id="L102">            String seriesParameterName, String itemParameterName) {</span>
+<span class="fc" id="L102">            String seriesParameterName, String itemParameterName) {</span>
 
-<span class="nc" id="L104">        Args.nullNotPermitted(dateFormat, &quot;dateFormat&quot;);</span>
-<span class="nc" id="L105">        Args.nullNotPermitted(prefix, &quot;prefix&quot;);</span>
-<span class="nc" id="L106">        Args.nullNotPermitted(seriesParameterName, &quot;seriesParameterName&quot;);</span>
-<span class="nc" id="L107">        Args.nullNotPermitted(itemParameterName, &quot;itemParameterName&quot;);</span>
-<span class="nc" id="L108">        this.dateFormat = (DateFormat) dateFormat.clone();</span>
-<span class="nc" id="L109">        this.prefix = prefix;</span>
-<span class="nc" id="L110">        this.seriesParameterName = seriesParameterName;</span>
-<span class="nc" id="L111">        this.itemParameterName = itemParameterName;</span>
-<span class="nc" id="L112">    }</span>
+<span class="fc" id="L104">        Args.nullNotPermitted(dateFormat, &quot;dateFormat&quot;);</span>
+<span class="fc" id="L105">        Args.nullNotPermitted(prefix, &quot;prefix&quot;);</span>
+<span class="fc" id="L106">        Args.nullNotPermitted(seriesParameterName, &quot;seriesParameterName&quot;);</span>
+<span class="fc" id="L107">        Args.nullNotPermitted(itemParameterName, &quot;itemParameterName&quot;);</span>
+<span class="fc" id="L108">        this.dateFormat = (DateFormat) dateFormat.clone();</span>
+<span class="fc" id="L109">        this.prefix = prefix;</span>
+<span class="fc" id="L110">        this.seriesParameterName = seriesParameterName;</span>
+<span class="fc" id="L111">        this.itemParameterName = itemParameterName;</span>
+<span class="fc" id="L112">    }</span>
 
     /**
      * Returns a clone of the date format assigned to this URL generator.
@@ -166,31 +166,31 @@ public class TimeSeriesURLGenerator implements XYURLGenerator, Serializable {
      */
     @Override
     public String generateURL(XYDataset dataset, int series, int item) {
-<span class="nc" id="L169">        String result = this.prefix;</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">        boolean firstParameter = !result.contains(&quot;?&quot;);</span>
-<span class="nc" id="L171">        Comparable seriesKey = dataset.getSeriesKey(series);</span>
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (seriesKey != null) {</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">            result += firstParameter ? &quot;?&quot; : &quot;&amp;amp;&quot;;</span>
+<span class="fc" id="L169">        String result = this.prefix;</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        boolean firstParameter = !result.contains(&quot;?&quot;);</span>
+<span class="fc" id="L171">        Comparable seriesKey = dataset.getSeriesKey(series);</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if (seriesKey != null) {</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            result += firstParameter ? &quot;?&quot; : &quot;&amp;amp;&quot;;</span>
             try {
-<span class="nc" id="L175">                result += this.seriesParameterName + &quot;=&quot; + URLEncoder.encode(</span>
-<span class="nc" id="L176">                        seriesKey.toString(), &quot;UTF-8&quot;);</span>
+<span class="fc" id="L175">                result += this.seriesParameterName + &quot;=&quot; + URLEncoder.encode(</span>
+<span class="fc" id="L176">                        seriesKey.toString(), &quot;UTF-8&quot;);</span>
 <span class="nc" id="L177">            } catch (UnsupportedEncodingException ex) {</span>
 <span class="nc" id="L178">                throw new RuntimeException(ex);</span>
-<span class="nc" id="L179">            }</span>
-<span class="nc" id="L180">            firstParameter = false;</span>
+<span class="fc" id="L179">            }</span>
+<span class="fc" id="L180">            firstParameter = false;</span>
         }
 
-<span class="nc" id="L183">        long x = (long) dataset.getXValue(series, item);</span>
-<span class="nc" id="L184">        String xValue = this.dateFormat.format(new Date(x));</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">        result += firstParameter ? &quot;?&quot; : &quot;&amp;amp;&quot;;</span>
+<span class="fc" id="L183">        long x = (long) dataset.getXValue(series, item);</span>
+<span class="fc" id="L184">        String xValue = this.dateFormat.format(new Date(x));</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        result += firstParameter ? &quot;?&quot; : &quot;&amp;amp;&quot;;</span>
         try {
-<span class="nc" id="L187">            result += this.itemParameterName + &quot;=&quot; + URLEncoder.encode(xValue,</span>
+<span class="fc" id="L187">            result += this.itemParameterName + &quot;=&quot; + URLEncoder.encode(xValue,</span>
                     &quot;UTF-8&quot;);
 <span class="nc" id="L189">        } catch (UnsupportedEncodingException ex) {</span>
 <span class="nc" id="L190">            throw new RuntimeException(ex);</span>
-<span class="nc" id="L191">        }</span>
+<span class="fc" id="L191">        }</span>
 
-<span class="nc" id="L193">        return result;</span>
+<span class="fc" id="L193">        return result;</span>
     }
 
     /**
@@ -202,27 +202,27 @@ public class TimeSeriesURLGenerator implements XYURLGenerator, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L206">            return true;</span>
         }
-<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (!(obj instanceof TimeSeriesURLGenerator)) {</span>
-<span class="nc" id="L209">            return false;</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (!(obj instanceof TimeSeriesURLGenerator)) {</span>
+<span class="fc" id="L209">            return false;</span>
         }
-<span class="nc" id="L211">        TimeSeriesURLGenerator that = (TimeSeriesURLGenerator) obj;</span>
-<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (!this.dateFormat.equals(that.dateFormat)) {</span>
-<span class="nc" id="L213">            return false;</span>
+<span class="fc" id="L211">        TimeSeriesURLGenerator that = (TimeSeriesURLGenerator) obj;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (!this.dateFormat.equals(that.dateFormat)) {</span>
+<span class="fc" id="L213">            return false;</span>
         }
-<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (!this.itemParameterName.equals(that.itemParameterName)) {</span>
-<span class="nc" id="L216">            return false;</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (!this.itemParameterName.equals(that.itemParameterName)) {</span>
+<span class="fc" id="L216">            return false;</span>
         }
-<span class="nc bnc" id="L218" title="All 2 branches missed.">        if (!this.prefix.equals(that.prefix)) {</span>
-<span class="nc" id="L219">            return false;</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        if (!this.prefix.equals(that.prefix)) {</span>
+<span class="fc" id="L219">            return false;</span>
         }
-<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (!this.seriesParameterName.equals(that.seriesParameterName)) {</span>
-<span class="nc" id="L222">            return false;</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (!this.seriesParameterName.equals(that.seriesParameterName)) {</span>
+<span class="fc" id="L222">            return false;</span>
         }
-<span class="nc" id="L224">        return true;</span>
+<span class="fc" id="L224">        return true;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

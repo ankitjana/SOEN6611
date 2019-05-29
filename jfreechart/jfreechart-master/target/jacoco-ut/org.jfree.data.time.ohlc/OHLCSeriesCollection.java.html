@@ -70,14 +70,14 @@ public class OHLCSeriesCollection extends AbstractXYDataset
     /** Storage for the data series. */
     private List data;
 
-<span class="nc" id="L73">    private TimePeriodAnchor xPosition = TimePeriodAnchor.MIDDLE;</span>
+<span class="fc" id="L73">    private TimePeriodAnchor xPosition = TimePeriodAnchor.MIDDLE;</span>
 
     /**
      * Creates a new instance of {@code OHLCSeriesCollection}.
      */
-<span class="nc" id="L78">    public OHLCSeriesCollection() {</span>
-<span class="nc" id="L79">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L78">    public OHLCSeriesCollection() {</span>
+<span class="fc" id="L79">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Returns the position within each time period that is used for the X
@@ -101,10 +101,10 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      * @since 1.0.11
      */
     public void setXPosition(TimePeriodAnchor anchor) {
-<span class="nc" id="L104">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
-<span class="nc" id="L105">        this.xPosition = anchor;</span>
-<span class="nc" id="L106">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L104">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
+<span class="fc" id="L105">        this.xPosition = anchor;</span>
+<span class="fc" id="L106">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Adds a series to the collection and sends a {@link DatasetChangeEvent}
@@ -113,11 +113,11 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void addSeries(OHLCSeries series) {
-<span class="nc" id="L116">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L117">        this.data.add(series);</span>
-<span class="nc" id="L118">        series.addChangeListener(this);</span>
-<span class="nc" id="L119">        fireDatasetChanged();</span>
-<span class="nc" id="L120">    }</span>
+<span class="fc" id="L116">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L117">        this.data.add(series);</span>
+<span class="fc" id="L118">        series.addChangeListener(this);</span>
+<span class="fc" id="L119">        fireDatasetChanged();</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Returns the number of series in the collection.
@@ -126,7 +126,7 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L129">        return this.data.size();</span>
+<span class="fc" id="L129">        return this.data.size();</span>
     }
 
     /**
@@ -140,10 +140,10 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      *     range {@code 0} to {@code getSeriesCount() - 1}.
      */
     public OHLCSeries getSeries(int series) {
-<span class="nc bnc" id="L143" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L144">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L144">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
-<span class="nc" id="L146">        return (OHLCSeries) this.data.get(series);</span>
+<span class="fc" id="L146">        return (OHLCSeries) this.data.get(series);</span>
     }
 
     /**
@@ -393,11 +393,11 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      * @since 1.0.14
      */
     public void removeSeries(int index) {
-<span class="nc" id="L396">        OHLCSeries series = getSeries(index);</span>
-<span class="nc bnc" id="L397" title="All 2 branches missed.">        if (series != null) {</span>
-<span class="nc" id="L398">            removeSeries(series);</span>
+<span class="fc" id="L396">        OHLCSeries series = getSeries(index);</span>
+<span class="pc bpc" id="L397" title="1 of 2 branches missed.">        if (series != null) {</span>
+<span class="fc" id="L398">            removeSeries(series);</span>
         }
-<span class="nc" id="L400">    }</span>
+<span class="fc" id="L400">    }</span>
 
     /**
      * Removes the specified series from the dataset and sends a
@@ -411,13 +411,13 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      * @since 1.0.14
      */
     public boolean removeSeries(OHLCSeries series) {
-<span class="nc" id="L414">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L415">        boolean removed = this.data.remove(series);</span>
-<span class="nc bnc" id="L416" title="All 2 branches missed.">        if (removed) {</span>
-<span class="nc" id="L417">            series.removeChangeListener(this);</span>
-<span class="nc" id="L418">            fireDatasetChanged();</span>
+<span class="fc" id="L414">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L415">        boolean removed = this.data.remove(series);</span>
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">        if (removed) {</span>
+<span class="fc" id="L417">            series.removeChangeListener(this);</span>
+<span class="fc" id="L418">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L420">        return removed;</span>
+<span class="fc" id="L420">        return removed;</span>
     }
 
     /**
@@ -428,22 +428,22 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      */
     public void removeAllSeries() {
 
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (this.data.isEmpty()) {</span>
-<span class="nc" id="L432">            return;  // nothing to do</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">        if (this.data.isEmpty()) {</span>
+<span class="fc" id="L432">            return;  // nothing to do</span>
         }
 
         // deregister the collection as a change listener to each series in the
         // collection
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L438">            OHLCSeries series = (OHLCSeries) this.data.get(i);</span>
-<span class="nc" id="L439">            series.removeChangeListener(this);</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L438">            OHLCSeries series = (OHLCSeries) this.data.get(i);</span>
+<span class="fc" id="L439">            series.removeChangeListener(this);</span>
         }
 
         // remove all the series from the collection and notify listeners.
-<span class="nc" id="L443">        this.data.clear();</span>
-<span class="nc" id="L444">        fireDatasetChanged();</span>
+<span class="fc" id="L443">        this.data.clear();</span>
+<span class="fc" id="L444">        fireDatasetChanged();</span>
 
-<span class="nc" id="L446">    }</span>
+<span class="fc" id="L446">    }</span>
 
     /**
      * Tests this instance for equality with an arbitrary object.
@@ -454,17 +454,17 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L457" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L458">            return true;</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L458">            return true;</span>
         }
-<span class="nc bnc" id="L460" title="All 2 branches missed.">        if (!(obj instanceof OHLCSeriesCollection)) {</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (!(obj instanceof OHLCSeriesCollection)) {</span>
 <span class="nc" id="L461">            return false;</span>
         }
-<span class="nc" id="L463">        OHLCSeriesCollection that = (OHLCSeriesCollection) obj;</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">        if (!this.xPosition.equals(that.xPosition)) {</span>
-<span class="nc" id="L465">            return false;</span>
+<span class="fc" id="L463">        OHLCSeriesCollection that = (OHLCSeriesCollection) obj;</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        if (!this.xPosition.equals(that.xPosition)) {</span>
+<span class="fc" id="L465">            return false;</span>
         }
-<span class="nc" id="L467">        return ObjectUtils.equal(this.data, that.data);</span>
+<span class="fc" id="L467">        return ObjectUtils.equal(this.data, that.data);</span>
     }
 
     /**
@@ -474,12 +474,12 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L477">        int result = 137;</span>
-<span class="nc" id="L478">        result = HashUtils.hashCode(result, this.xPosition);</span>
-<span class="nc bnc" id="L479" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L480">            result = HashUtils.hashCode(result, this.data.get(i));</span>
+<span class="fc" id="L477">        int result = 137;</span>
+<span class="fc" id="L478">        result = HashUtils.hashCode(result, this.xPosition);</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L480">            result = HashUtils.hashCode(result, this.data.get(i));</span>
         }
-<span class="nc" id="L482">        return result;</span>
+<span class="fc" id="L482">        return result;</span>
     }
 
     /**
@@ -491,11 +491,11 @@ public class OHLCSeriesCollection extends AbstractXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L494">        OHLCSeriesCollection clone</span>
-<span class="nc" id="L495">                = (OHLCSeriesCollection) super.clone();</span>
-<span class="nc" id="L496">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
-<span class="nc" id="L497">        return clone;</span>
+<span class="fc" id="L494">        OHLCSeriesCollection clone</span>
+<span class="fc" id="L495">                = (OHLCSeriesCollection) super.clone();</span>
+<span class="fc" id="L496">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
+<span class="fc" id="L497">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

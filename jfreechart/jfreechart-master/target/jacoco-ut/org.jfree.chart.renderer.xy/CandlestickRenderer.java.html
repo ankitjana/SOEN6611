@@ -148,23 +148,23 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
     public static final int WIDTHMETHOD_INTERVALDATA = 2;
 
     /** The method of automatically calculating the candle width. */
-<span class="nc" id="L151">    private int autoWidthMethod = WIDTHMETHOD_AVERAGE;</span>
+<span class="fc" id="L151">    private int autoWidthMethod = WIDTHMETHOD_AVERAGE;</span>
 
     /**
      * The number (generally between 0.0 and 1.0) by which the available space
      * automatically calculated for the candles will be multiplied to determine
      * the actual width to use.
      */
-<span class="nc" id="L158">    private double autoWidthFactor = 4.5 / 7;</span>
+<span class="fc" id="L158">    private double autoWidthFactor = 4.5 / 7;</span>
 
     /** The minimum gap between one candle and the next */
-<span class="nc" id="L161">    private double autoWidthGap = 0.0;</span>
+<span class="fc" id="L161">    private double autoWidthGap = 0.0;</span>
 
     /** The candle width. */
     private double candleWidth;
 
     /** The maximum candlewidth in milliseconds. */
-<span class="nc" id="L167">    private double maxCandleWidthInMilliseconds = 1000.0 * 60.0 * 60.0 * 20.0;</span>
+<span class="fc" id="L167">    private double maxCandleWidthInMilliseconds = 1000.0 * 60.0 * 60.0 * 20.0;</span>
 
     /** Temporary storage for the maximum candle width. */
     private double maxCandleWidth;
@@ -208,8 +208,8 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * Creates a new renderer for candlestick charts.
      */
     public CandlestickRenderer() {
-<span class="nc" id="L211">        this(-1.0);</span>
-<span class="nc" id="L212">    }</span>
+<span class="fc" id="L211">        this(-1.0);</span>
+<span class="fc" id="L212">    }</span>
 
     /**
      * Creates a new renderer for candlestick charts.
@@ -220,8 +220,8 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @param candleWidth  The candle width.
      */
     public CandlestickRenderer(double candleWidth) {
-<span class="nc" id="L223">        this(candleWidth, true, new HighLowItemLabelGenerator());</span>
-<span class="nc" id="L224">    }</span>
+<span class="fc" id="L223">        this(candleWidth, true, new HighLowItemLabelGenerator());</span>
+<span class="fc" id="L224">    }</span>
 
     /**
      * Creates a new renderer for candlestick charts.
@@ -237,16 +237,16 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      */
     public CandlestickRenderer(double candleWidth, boolean drawVolume,
                                XYToolTipGenerator toolTipGenerator) {
-<span class="nc" id="L240">        super();</span>
-<span class="nc" id="L241">        setDefaultToolTipGenerator(toolTipGenerator);</span>
-<span class="nc" id="L242">        this.candleWidth = candleWidth;</span>
-<span class="nc" id="L243">        this.drawVolume = drawVolume;</span>
-<span class="nc" id="L244">        this.volumePaint = Color.gray;</span>
-<span class="nc" id="L245">        this.upPaint = Color.green;</span>
-<span class="nc" id="L246">        this.downPaint = Color.RED;</span>
-<span class="nc" id="L247">        this.useOutlinePaint = false;  // false preserves the old behaviour</span>
+<span class="fc" id="L240">        super();</span>
+<span class="fc" id="L241">        setDefaultToolTipGenerator(toolTipGenerator);</span>
+<span class="fc" id="L242">        this.candleWidth = candleWidth;</span>
+<span class="fc" id="L243">        this.drawVolume = drawVolume;</span>
+<span class="fc" id="L244">        this.volumePaint = Color.gray;</span>
+<span class="fc" id="L245">        this.upPaint = Color.green;</span>
+<span class="fc" id="L246">        this.downPaint = Color.RED;</span>
+<span class="fc" id="L247">        this.useOutlinePaint = false;  // false preserves the old behaviour</span>
                                        // prior to introducing this flag
-<span class="nc" id="L249">    }</span>
+<span class="fc" id="L249">    }</span>
 
     /**
      * Returns the width of each candle.
@@ -256,7 +256,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setCandleWidth(double)
      */
     public double getCandleWidth() {
-<span class="nc" id="L259">        return this.candleWidth;</span>
+<span class="fc" id="L259">        return this.candleWidth;</span>
     }
 
     /**
@@ -273,11 +273,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setMaxCandleWidthInMilliseconds(double)
      */
     public void setCandleWidth(double width) {
-<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (width != this.candleWidth) {</span>
-<span class="nc" id="L277">            this.candleWidth = width;</span>
-<span class="nc" id="L278">            fireChangeEvent();</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if (width != this.candleWidth) {</span>
+<span class="fc" id="L277">            this.candleWidth = width;</span>
+<span class="fc" id="L278">            fireChangeEvent();</span>
         }
-<span class="nc" id="L280">    }</span>
+<span class="fc" id="L280">    }</span>
 
     /**
      * Returns the maximum width (in milliseconds) of each candle.
@@ -303,9 +303,9 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setAutoWidthFactor(double)
      */
     public void setMaxCandleWidthInMilliseconds(double millis) {
-<span class="nc" id="L306">        this.maxCandleWidthInMilliseconds = millis;</span>
-<span class="nc" id="L307">        fireChangeEvent();</span>
-<span class="nc" id="L308">    }</span>
+<span class="fc" id="L306">        this.maxCandleWidthInMilliseconds = millis;</span>
+<span class="fc" id="L307">        fireChangeEvent();</span>
+<span class="fc" id="L308">    }</span>
 
     /**
      * Returns the method of automatically calculating the candle width.
@@ -345,11 +345,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setMaxCandleWidthInMilliseconds(double)
      */
     public void setAutoWidthMethod(int autoWidthMethod) {
-<span class="nc bnc" id="L348" title="All 2 branches missed.">        if (this.autoWidthMethod != autoWidthMethod) {</span>
-<span class="nc" id="L349">            this.autoWidthMethod = autoWidthMethod;</span>
-<span class="nc" id="L350">            fireChangeEvent();</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">        if (this.autoWidthMethod != autoWidthMethod) {</span>
+<span class="fc" id="L349">            this.autoWidthMethod = autoWidthMethod;</span>
+<span class="fc" id="L350">            fireChangeEvent();</span>
         }
-<span class="nc" id="L352">    }</span>
+<span class="fc" id="L352">    }</span>
 
     /**
      * Returns the factor by which the available space automatically
@@ -377,11 +377,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setMaxCandleWidthInMilliseconds(double)
      */
     public void setAutoWidthFactor(double autoWidthFactor) {
-<span class="nc bnc" id="L380" title="All 2 branches missed.">        if (this.autoWidthFactor != autoWidthFactor) {</span>
-<span class="nc" id="L381">            this.autoWidthFactor = autoWidthFactor;</span>
-<span class="nc" id="L382">            fireChangeEvent();</span>
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">        if (this.autoWidthFactor != autoWidthFactor) {</span>
+<span class="fc" id="L381">            this.autoWidthFactor = autoWidthFactor;</span>
+<span class="fc" id="L382">            fireChangeEvent();</span>
         }
-<span class="nc" id="L384">    }</span>
+<span class="fc" id="L384">    }</span>
 
     /**
      * Returns the amount of space to leave on the left and right of each
@@ -409,11 +409,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setMaxCandleWidthInMilliseconds(double)
      */
     public void setAutoWidthGap(double autoWidthGap) {
-<span class="nc bnc" id="L412" title="All 2 branches missed.">        if (this.autoWidthGap != autoWidthGap) {</span>
-<span class="nc" id="L413">            this.autoWidthGap = autoWidthGap;</span>
-<span class="nc" id="L414">            fireChangeEvent();</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">        if (this.autoWidthGap != autoWidthGap) {</span>
+<span class="fc" id="L413">            this.autoWidthGap = autoWidthGap;</span>
+<span class="fc" id="L414">            fireChangeEvent();</span>
         }
-<span class="nc" id="L416">    }</span>
+<span class="fc" id="L416">    }</span>
 
     /**
      * Returns the paint used to fill candles when the price moves up from open
@@ -424,7 +424,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setUpPaint(Paint)
      */
     public Paint getUpPaint() {
-<span class="nc" id="L427">        return this.upPaint;</span>
+<span class="fc" id="L427">        return this.upPaint;</span>
     }
 
     /**
@@ -437,9 +437,9 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #getUpPaint()
      */
     public void setUpPaint(Paint paint) {
-<span class="nc" id="L440">        this.upPaint = paint;</span>
-<span class="nc" id="L441">        fireChangeEvent();</span>
-<span class="nc" id="L442">    }</span>
+<span class="fc" id="L440">        this.upPaint = paint;</span>
+<span class="fc" id="L441">        fireChangeEvent();</span>
+<span class="fc" id="L442">    }</span>
 
     /**
      * Returns the paint used to fill candles when the price moves down from
@@ -450,7 +450,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setDownPaint(Paint)
      */
     public Paint getDownPaint() {
-<span class="nc" id="L453">        return this.downPaint;</span>
+<span class="fc" id="L453">        return this.downPaint;</span>
     }
 
     /**
@@ -461,9 +461,9 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @param paint  The paint ({@code null} permitted).
      */
     public void setDownPaint(Paint paint) {
-<span class="nc" id="L464">        this.downPaint = paint;</span>
-<span class="nc" id="L465">        fireChangeEvent();</span>
-<span class="nc" id="L466">    }</span>
+<span class="fc" id="L464">        this.downPaint = paint;</span>
+<span class="fc" id="L465">        fireChangeEvent();</span>
+<span class="fc" id="L466">    }</span>
 
     /**
      * Returns a flag indicating whether or not volume bars are drawn on the
@@ -476,7 +476,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setDrawVolume(boolean)
      */
     public boolean getDrawVolume() {
-<span class="nc" id="L479">        return this.drawVolume;</span>
+<span class="fc" id="L479">        return this.drawVolume;</span>
     }
 
     /**
@@ -489,11 +489,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #getDrawVolume()
      */
     public void setDrawVolume(boolean flag) {
-<span class="nc bnc" id="L492" title="All 2 branches missed.">        if (this.drawVolume != flag) {</span>
-<span class="nc" id="L493">            this.drawVolume = flag;</span>
-<span class="nc" id="L494">            fireChangeEvent();</span>
+<span class="pc bpc" id="L492" title="1 of 2 branches missed.">        if (this.drawVolume != flag) {</span>
+<span class="fc" id="L493">            this.drawVolume = flag;</span>
+<span class="fc" id="L494">            fireChangeEvent();</span>
         }
-<span class="nc" id="L496">    }</span>
+<span class="fc" id="L496">    }</span>
 
     /**
      * Returns the paint that is used to fill the volume bars if they are
@@ -506,7 +506,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @since 1.0.7
      */
     public Paint getVolumePaint() {
-<span class="nc" id="L509">        return this.volumePaint;</span>
+<span class="fc" id="L509">        return this.volumePaint;</span>
     }
 
     /**
@@ -521,10 +521,10 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @since 1.0.7
      */
     public void setVolumePaint(Paint paint) {
-<span class="nc" id="L524">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L525">        this.volumePaint = paint;</span>
-<span class="nc" id="L526">        fireChangeEvent();</span>
-<span class="nc" id="L527">    }</span>
+<span class="fc" id="L524">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L525">        this.volumePaint = paint;</span>
+<span class="fc" id="L526">        fireChangeEvent();</span>
+<span class="fc" id="L527">    }</span>
 
     /**
      * Returns the flag that controls whether or not the renderer's outline
@@ -538,7 +538,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #setUseOutlinePaint(boolean)
      */
     public boolean getUseOutlinePaint() {
-<span class="nc" id="L541">        return this.useOutlinePaint;</span>
+<span class="fc" id="L541">        return this.useOutlinePaint;</span>
     }
 
     /**
@@ -553,11 +553,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @see #getUseOutlinePaint()
      */
     public void setUseOutlinePaint(boolean use) {
-<span class="nc bnc" id="L556" title="All 2 branches missed.">        if (this.useOutlinePaint != use) {</span>
-<span class="nc" id="L557">            this.useOutlinePaint = use;</span>
-<span class="nc" id="L558">            fireChangeEvent();</span>
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">        if (this.useOutlinePaint != use) {</span>
+<span class="fc" id="L557">            this.useOutlinePaint = use;</span>
+<span class="fc" id="L558">            fireChangeEvent();</span>
         }
-<span class="nc" id="L560">    }</span>
+<span class="fc" id="L560">    }</span>
 
     /**
      * Returns the range of values the renderer requires to display all the
@@ -570,7 +570,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Range findRangeBounds(XYDataset dataset) {
-<span class="nc" id="L573">        return findRangeBounds(dataset, true);</span>
+<span class="fc" id="L573">        return findRangeBounds(dataset, true);</span>
     }
 
     /**
@@ -876,45 +876,45 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L879" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L879" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L880">            return true;</span>
         }
-<span class="nc bnc" id="L882" title="All 2 branches missed.">        if (!(obj instanceof CandlestickRenderer)) {</span>
+<span class="pc bpc" id="L882" title="1 of 2 branches missed.">        if (!(obj instanceof CandlestickRenderer)) {</span>
 <span class="nc" id="L883">            return false;</span>
         }
-<span class="nc" id="L885">        CandlestickRenderer that = (CandlestickRenderer) obj;</span>
-<span class="nc bnc" id="L886" title="All 2 branches missed.">        if (this.candleWidth != that.candleWidth) {</span>
-<span class="nc" id="L887">            return false;</span>
+<span class="fc" id="L885">        CandlestickRenderer that = (CandlestickRenderer) obj;</span>
+<span class="fc bfc" id="L886" title="All 2 branches covered.">        if (this.candleWidth != that.candleWidth) {</span>
+<span class="fc" id="L887">            return false;</span>
         }
-<span class="nc bnc" id="L889" title="All 2 branches missed.">        if (!PaintUtils.equal(this.upPaint, that.upPaint)) {</span>
-<span class="nc" id="L890">            return false;</span>
+<span class="fc bfc" id="L889" title="All 2 branches covered.">        if (!PaintUtils.equal(this.upPaint, that.upPaint)) {</span>
+<span class="fc" id="L890">            return false;</span>
         }
-<span class="nc bnc" id="L892" title="All 2 branches missed.">        if (!PaintUtils.equal(this.downPaint, that.downPaint)) {</span>
-<span class="nc" id="L893">            return false;</span>
+<span class="fc bfc" id="L892" title="All 2 branches covered.">        if (!PaintUtils.equal(this.downPaint, that.downPaint)) {</span>
+<span class="fc" id="L893">            return false;</span>
         }
-<span class="nc bnc" id="L895" title="All 2 branches missed.">        if (this.drawVolume != that.drawVolume) {</span>
-<span class="nc" id="L896">            return false;</span>
+<span class="fc bfc" id="L895" title="All 2 branches covered.">        if (this.drawVolume != that.drawVolume) {</span>
+<span class="fc" id="L896">            return false;</span>
         }
-<span class="nc bnc" id="L898" title="All 2 branches missed.">        if (this.maxCandleWidthInMilliseconds</span>
+<span class="fc bfc" id="L898" title="All 2 branches covered.">        if (this.maxCandleWidthInMilliseconds</span>
                 != that.maxCandleWidthInMilliseconds) {
-<span class="nc" id="L900">            return false;</span>
+<span class="fc" id="L900">            return false;</span>
         }
-<span class="nc bnc" id="L902" title="All 2 branches missed.">        if (this.autoWidthMethod != that.autoWidthMethod) {</span>
-<span class="nc" id="L903">            return false;</span>
+<span class="fc bfc" id="L902" title="All 2 branches covered.">        if (this.autoWidthMethod != that.autoWidthMethod) {</span>
+<span class="fc" id="L903">            return false;</span>
         }
-<span class="nc bnc" id="L905" title="All 2 branches missed.">        if (this.autoWidthFactor != that.autoWidthFactor) {</span>
-<span class="nc" id="L906">            return false;</span>
+<span class="fc bfc" id="L905" title="All 2 branches covered.">        if (this.autoWidthFactor != that.autoWidthFactor) {</span>
+<span class="fc" id="L906">            return false;</span>
         }
-<span class="nc bnc" id="L908" title="All 2 branches missed.">        if (this.autoWidthGap != that.autoWidthGap) {</span>
-<span class="nc" id="L909">            return false;</span>
+<span class="fc bfc" id="L908" title="All 2 branches covered.">        if (this.autoWidthGap != that.autoWidthGap) {</span>
+<span class="fc" id="L909">            return false;</span>
         }
-<span class="nc bnc" id="L911" title="All 2 branches missed.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
-<span class="nc" id="L912">            return false;</span>
+<span class="fc bfc" id="L911" title="All 2 branches covered.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
+<span class="fc" id="L912">            return false;</span>
         }
-<span class="nc bnc" id="L914" title="All 2 branches missed.">        if (!PaintUtils.equal(this.volumePaint, that.volumePaint)) {</span>
-<span class="nc" id="L915">            return false;</span>
+<span class="fc bfc" id="L914" title="All 2 branches covered.">        if (!PaintUtils.equal(this.volumePaint, that.volumePaint)) {</span>
+<span class="fc" id="L915">            return false;</span>
         }
-<span class="nc" id="L917">        return super.equals(obj);</span>
+<span class="fc" id="L917">        return super.equals(obj);</span>
     }
 
     /**
@@ -926,7 +926,7 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L929">        return super.clone();</span>
+<span class="fc" id="L929">        return super.clone();</span>
     }
 
     /**
@@ -937,11 +937,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L940">        stream.defaultWriteObject();</span>
-<span class="nc" id="L941">        SerialUtils.writePaint(this.upPaint, stream);</span>
-<span class="nc" id="L942">        SerialUtils.writePaint(this.downPaint, stream);</span>
-<span class="nc" id="L943">        SerialUtils.writePaint(this.volumePaint, stream);</span>
-<span class="nc" id="L944">    }</span>
+<span class="fc" id="L940">        stream.defaultWriteObject();</span>
+<span class="fc" id="L941">        SerialUtils.writePaint(this.upPaint, stream);</span>
+<span class="fc" id="L942">        SerialUtils.writePaint(this.downPaint, stream);</span>
+<span class="fc" id="L943">        SerialUtils.writePaint(this.volumePaint, stream);</span>
+<span class="fc" id="L944">    }</span>
 
     /**
      * Provides serialization support.
@@ -953,11 +953,11 @@ public class CandlestickRenderer extends AbstractXYItemRenderer
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L956">        stream.defaultReadObject();</span>
-<span class="nc" id="L957">        this.upPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L958">        this.downPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L959">        this.volumePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L960">    }</span>
+<span class="fc" id="L956">        stream.defaultReadObject();</span>
+<span class="fc" id="L957">        this.upPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L958">        this.downPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L959">        this.volumePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L960">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

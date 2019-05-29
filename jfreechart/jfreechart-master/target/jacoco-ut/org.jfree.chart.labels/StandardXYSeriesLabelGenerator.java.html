@@ -76,18 +76,18 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      * {@link #DEFAULT_LABEL_FORMAT}).
      */
     public StandardXYSeriesLabelGenerator() {
-<span class="nc" id="L79">        this(DEFAULT_LABEL_FORMAT);</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L79">        this(DEFAULT_LABEL_FORMAT);</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Creates a new series label generator.
      *
      * @param format  the format pattern ({@code null} not permitted).
      */
-<span class="nc" id="L87">    public StandardXYSeriesLabelGenerator(String format) {</span>
-<span class="nc" id="L88">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
-<span class="nc" id="L89">        this.formatPattern = format;</span>
-<span class="nc" id="L90">    }</span>
+<span class="fc" id="L87">    public StandardXYSeriesLabelGenerator(String format) {</span>
+<span class="fc" id="L88">        Args.nullNotPermitted(format, &quot;format&quot;);</span>
+<span class="fc" id="L89">        this.formatPattern = format;</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Generates a label for the specified series.  This label will be
@@ -100,11 +100,11 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      */
     @Override
     public String generateLabel(XYDataset dataset, int series) {
-<span class="nc" id="L103">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L104">        String label = MessageFormat.format(</span>
-<span class="nc" id="L105">            this.formatPattern, createItemArray(dataset, series)</span>
+<span class="fc" id="L103">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L104">        String label = MessageFormat.format(</span>
+<span class="fc" id="L105">            this.formatPattern, createItemArray(dataset, series)</span>
         );
-<span class="nc" id="L107">        return label;</span>
+<span class="fc" id="L107">        return label;</span>
     }
 
     /**
@@ -117,9 +117,9 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      * @return The items (never {@code null}).
      */
     protected Object[] createItemArray(XYDataset dataset, int series) {
-<span class="nc" id="L120">        Object[] result = new Object[1];</span>
-<span class="nc" id="L121">        result[0] = dataset.getSeriesKey(series).toString();</span>
-<span class="nc" id="L122">        return result;</span>
+<span class="fc" id="L120">        Object[] result = new Object[1];</span>
+<span class="fc" id="L121">        result[0] = dataset.getSeriesKey(series).toString();</span>
+<span class="fc" id="L122">        return result;</span>
     }
 
     /**
@@ -133,7 +133,7 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L136">        return super.clone();</span>
+<span class="fc" id="L136">        return super.clone();</span>
     }
 
     /**
@@ -145,18 +145,18 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L149">            return true;</span>
         }
-<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (!(obj instanceof StandardXYSeriesLabelGenerator)) {</span>
-<span class="nc" id="L152">            return false;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (!(obj instanceof StandardXYSeriesLabelGenerator)) {</span>
+<span class="fc" id="L152">            return false;</span>
         }
-<span class="nc" id="L154">        StandardXYSeriesLabelGenerator that</span>
+<span class="fc" id="L154">        StandardXYSeriesLabelGenerator that</span>
                 = (StandardXYSeriesLabelGenerator) obj;
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (!this.formatPattern.equals(that.formatPattern)) {</span>
-<span class="nc" id="L157">            return false;</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (!this.formatPattern.equals(that.formatPattern)) {</span>
+<span class="fc" id="L157">            return false;</span>
         }
-<span class="nc" id="L159">        return true;</span>
+<span class="fc" id="L159">        return true;</span>
     }
 
     /**
@@ -166,10 +166,10 @@ public class StandardXYSeriesLabelGenerator implements XYSeriesLabelGenerator,
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L169">        int result = 127;</span>
-<span class="nc" id="L170">        result = HashUtils.hashCode(result, this.formatPattern);</span>
-<span class="nc" id="L171">        return result;</span>
+<span class="fc" id="L169">        int result = 127;</span>
+<span class="fc" id="L170">        result = HashUtils.hashCode(result, this.formatPattern);</span>
+<span class="fc" id="L171">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

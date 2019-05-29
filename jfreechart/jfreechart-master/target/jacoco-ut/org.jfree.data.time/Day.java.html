@@ -61,20 +61,20 @@ public class Day extends RegularTimePeriod implements Serializable {
      * A date formatter - used for parsing, therefore we fix the locale 
      * so we get dependable results. 
      */
-<span class="nc" id="L64">    protected static final DateFormat DATE_FORMAT</span>
+<span class="fc" id="L64">    protected static final DateFormat DATE_FORMAT</span>
             = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;, Locale.UK);
 
     /** A date formatter for the default locale. */
-<span class="nc" id="L68">    protected static final DateFormat DATE_FORMAT_SHORT </span>
-<span class="nc" id="L69">            = DateFormat.getDateInstance(DateFormat.SHORT);</span>
+<span class="fc" id="L68">    protected static final DateFormat DATE_FORMAT_SHORT </span>
+<span class="fc" id="L69">            = DateFormat.getDateInstance(DateFormat.SHORT);</span>
 
     /** A date formatter for the default locale. */
-<span class="nc" id="L72">    protected static final DateFormat DATE_FORMAT_MEDIUM </span>
-<span class="nc" id="L73">            = DateFormat.getDateInstance(DateFormat.MEDIUM);</span>
+<span class="fc" id="L72">    protected static final DateFormat DATE_FORMAT_MEDIUM </span>
+<span class="fc" id="L73">            = DateFormat.getDateInstance(DateFormat.MEDIUM);</span>
 
     /** A date formatter for the default locale. */
-<span class="nc" id="L76">    protected static final DateFormat DATE_FORMAT_LONG </span>
-<span class="nc" id="L77">            = DateFormat.getDateInstance(DateFormat.LONG);</span>
+<span class="fc" id="L76">    protected static final DateFormat DATE_FORMAT_LONG </span>
+<span class="fc" id="L77">            = DateFormat.getDateInstance(DateFormat.LONG);</span>
 
     /** The day (uses SerialDate for convenience). */
     private SerialDate serialDate;
@@ -90,8 +90,8 @@ public class Day extends RegularTimePeriod implements Serializable {
      * the default timezone).
      */
     public Day() {
-<span class="nc" id="L93">        this(new Date());</span>
-<span class="nc" id="L94">    }</span>
+<span class="fc" id="L93">        this(new Date());</span>
+<span class="fc" id="L94">    }</span>
 
     /**
      * Constructs a new one day time period.
@@ -100,21 +100,21 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @param month  the month (1 to 12).
      * @param year  the year (1900 &amp;lt;= year &amp;lt;= 9999).
      */
-<span class="nc" id="L103">    public Day(int day, int month, int year) {</span>
-<span class="nc" id="L104">        this.serialDate = SerialDate.createInstance(day, month, year);</span>
-<span class="nc" id="L105">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L106">    }</span>
+<span class="fc" id="L103">    public Day(int day, int month, int year) {</span>
+<span class="fc" id="L104">        this.serialDate = SerialDate.createInstance(day, month, year);</span>
+<span class="fc" id="L105">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L106">    }</span>
 
     /**
      * Constructs a new one day time period.
      *
      * @param serialDate  the day ({@code null} not permitted).
      */
-<span class="nc" id="L113">    public Day(SerialDate serialDate) {</span>
-<span class="nc" id="L114">        Args.nullNotPermitted(serialDate, &quot;serialDate&quot;);</span>
-<span class="nc" id="L115">        this.serialDate = serialDate;</span>
-<span class="nc" id="L116">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L113">    public Day(SerialDate serialDate) {</span>
+<span class="fc" id="L114">        Args.nullNotPermitted(serialDate, &quot;serialDate&quot;);</span>
+<span class="fc" id="L115">        this.serialDate = serialDate;</span>
+<span class="fc" id="L116">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Constructs a new instance, based on a particular date/time and the
@@ -126,8 +126,8 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     public Day(Date time) {
         // defer argument checking...
-<span class="nc" id="L129">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L130">    }</span>
+<span class="fc" id="L129">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L130">    }</span>
 
     /**
      * Constructs a new instance, based on a particular date/time and time zone.
@@ -136,18 +136,18 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @param zone  the time zone ({@code null} not permitted).
      * @param locale  the locale ({@code null} not permitted).
      */
-<span class="nc" id="L139">    public Day(Date time, TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L140">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
-<span class="nc" id="L141">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L142">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L143">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L144">        calendar.setTime(time);</span>
-<span class="nc" id="L145">        int d = calendar.get(Calendar.DAY_OF_MONTH);</span>
-<span class="nc" id="L146">        int m = calendar.get(Calendar.MONTH) + 1;</span>
-<span class="nc" id="L147">        int y = calendar.get(Calendar.YEAR);</span>
-<span class="nc" id="L148">        this.serialDate = SerialDate.createInstance(d, m, y);</span>
-<span class="nc" id="L149">        peg(calendar);</span>
-<span class="nc" id="L150">    }</span>
+<span class="fc" id="L139">    public Day(Date time, TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L140">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
+<span class="fc" id="L141">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L142">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L143">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L144">        calendar.setTime(time);</span>
+<span class="fc" id="L145">        int d = calendar.get(Calendar.DAY_OF_MONTH);</span>
+<span class="fc" id="L146">        int m = calendar.get(Calendar.MONTH) + 1;</span>
+<span class="fc" id="L147">        int y = calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L148">        this.serialDate = SerialDate.createInstance(d, m, y);</span>
+<span class="fc" id="L149">        peg(calendar);</span>
+<span class="fc" id="L150">    }</span>
 
     /**
      * Returns the day as a {@link SerialDate}.  Note: the reference that is
@@ -159,7 +159,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @return The day as a {@link SerialDate}.
      */
     public SerialDate getSerialDate() {
-<span class="nc" id="L162">        return this.serialDate;</span>
+<span class="fc" id="L162">        return this.serialDate;</span>
     }
 
     /**
@@ -168,7 +168,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @return The year.
      */
     public int getYear() {
-<span class="nc" id="L171">        return this.serialDate.getYYYY();</span>
+<span class="fc" id="L171">        return this.serialDate.getYYYY();</span>
     }
 
     /**
@@ -177,7 +177,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @return The month.
      */
     public int getMonth() {
-<span class="nc" id="L180">        return this.serialDate.getMonth();</span>
+<span class="fc" id="L180">        return this.serialDate.getMonth();</span>
     }
 
     /**
@@ -186,7 +186,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      * @return The day of the month.
      */
     public int getDayOfMonth() {
-<span class="nc" id="L189">        return this.serialDate.getDayOfMonth();</span>
+<span class="fc" id="L189">        return this.serialDate.getDayOfMonth();</span>
     }
 
     /**
@@ -201,7 +201,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond() {
-<span class="nc" id="L204">        return this.firstMillisecond;</span>
+<span class="fc" id="L204">        return this.firstMillisecond;</span>
     }
 
     /**
@@ -216,7 +216,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond() {
-<span class="nc" id="L219">        return this.lastMillisecond;</span>
+<span class="fc" id="L219">        return this.lastMillisecond;</span>
     }
 
     /**
@@ -229,9 +229,9 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public void peg(Calendar calendar) {
-<span class="nc" id="L232">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L233">        this.lastMillisecond = getLastMillisecond(calendar);</span>
-<span class="nc" id="L234">    }</span>
+<span class="fc" id="L232">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L233">        this.lastMillisecond = getLastMillisecond(calendar);</span>
+<span class="fc" id="L234">    }</span>
 
     /**
      * Returns the day preceding this one.
@@ -241,15 +241,15 @@ public class Day extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod previous() {
         Day result;
-<span class="nc" id="L244">        int serial = this.serialDate.toSerial();</span>
-<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (serial &gt; SerialDate.SERIAL_LOWER_BOUND) {</span>
-<span class="nc" id="L246">            SerialDate yesterday = SerialDate.createInstance(serial - 1);</span>
-<span class="nc" id="L247">            return new Day(yesterday);</span>
+<span class="fc" id="L244">        int serial = this.serialDate.toSerial();</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (serial &gt; SerialDate.SERIAL_LOWER_BOUND) {</span>
+<span class="fc" id="L246">            SerialDate yesterday = SerialDate.createInstance(serial - 1);</span>
+<span class="fc" id="L247">            return new Day(yesterday);</span>
         }
         else {
-<span class="nc" id="L250">            result = null;</span>
+<span class="fc" id="L250">            result = null;</span>
         }
-<span class="nc" id="L252">        return result;</span>
+<span class="fc" id="L252">        return result;</span>
     }
 
     /**
@@ -262,15 +262,15 @@ public class Day extends RegularTimePeriod implements Serializable {
     @Override
     public RegularTimePeriod next() {
         Day result;
-<span class="nc" id="L265">        int serial = this.serialDate.toSerial();</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (serial &lt; SerialDate.SERIAL_UPPER_BOUND) {</span>
-<span class="nc" id="L267">            SerialDate tomorrow = SerialDate.createInstance(serial + 1);</span>
-<span class="nc" id="L268">            return new Day(tomorrow);</span>
+<span class="fc" id="L265">        int serial = this.serialDate.toSerial();</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (serial &lt; SerialDate.SERIAL_UPPER_BOUND) {</span>
+<span class="fc" id="L267">            SerialDate tomorrow = SerialDate.createInstance(serial + 1);</span>
+<span class="fc" id="L268">            return new Day(tomorrow);</span>
         }
         else {
-<span class="nc" id="L271">            result = null;</span>
+<span class="fc" id="L271">            result = null;</span>
         }
-<span class="nc" id="L273">        return result;</span>
+<span class="fc" id="L273">        return result;</span>
     }
 
     /**
@@ -280,7 +280,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getSerialIndex() {
-<span class="nc" id="L283">        return this.serialDate.toSerial();</span>
+<span class="fc" id="L283">        return this.serialDate.toSerial();</span>
     }
 
     /**
@@ -296,13 +296,13 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond(Calendar calendar) {
-<span class="nc" id="L299">        int year = this.serialDate.getYYYY();</span>
-<span class="nc" id="L300">        int month = this.serialDate.getMonth();</span>
-<span class="nc" id="L301">        int day = this.serialDate.getDayOfMonth();</span>
-<span class="nc" id="L302">        calendar.clear();</span>
-<span class="nc" id="L303">        calendar.set(year, month - 1, day, 0, 0, 0);</span>
-<span class="nc" id="L304">        calendar.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L305">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L299">        int year = this.serialDate.getYYYY();</span>
+<span class="fc" id="L300">        int month = this.serialDate.getMonth();</span>
+<span class="fc" id="L301">        int day = this.serialDate.getDayOfMonth();</span>
+<span class="fc" id="L302">        calendar.clear();</span>
+<span class="fc" id="L303">        calendar.set(year, month - 1, day, 0, 0, 0);</span>
+<span class="fc" id="L304">        calendar.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L305">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -318,13 +318,13 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond(Calendar calendar) {
-<span class="nc" id="L321">        int year = this.serialDate.getYYYY();</span>
-<span class="nc" id="L322">        int month = this.serialDate.getMonth();</span>
-<span class="nc" id="L323">        int day = this.serialDate.getDayOfMonth();</span>
-<span class="nc" id="L324">        calendar.clear();</span>
-<span class="nc" id="L325">        calendar.set(year, month - 1, day, 23, 59, 59);</span>
-<span class="nc" id="L326">        calendar.set(Calendar.MILLISECOND, 999);</span>
-<span class="nc" id="L327">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L321">        int year = this.serialDate.getYYYY();</span>
+<span class="fc" id="L322">        int month = this.serialDate.getMonth();</span>
+<span class="fc" id="L323">        int day = this.serialDate.getDayOfMonth();</span>
+<span class="fc" id="L324">        calendar.clear();</span>
+<span class="fc" id="L325">        calendar.set(year, month - 1, day, 23, 59, 59);</span>
+<span class="fc" id="L326">        calendar.set(Calendar.MILLISECOND, 999);</span>
+<span class="fc" id="L327">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -339,17 +339,17 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L343">            return true;</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L343">            return true;</span>
         }
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (!(obj instanceof Day)) {</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (!(obj instanceof Day)) {</span>
 <span class="nc" id="L346">            return false;</span>
         }
-<span class="nc" id="L348">        Day that = (Day) obj;</span>
-<span class="nc bnc" id="L349" title="All 2 branches missed.">        if (!this.serialDate.equals(that.getSerialDate())) {</span>
+<span class="fc" id="L348">        Day that = (Day) obj;</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">        if (!this.serialDate.equals(that.getSerialDate())) {</span>
 <span class="nc" id="L350">            return false;</span>
         }
-<span class="nc" id="L352">        return true;</span>
+<span class="fc" id="L352">        return true;</span>
     }
 
     /**
@@ -363,7 +363,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L366">        return this.serialDate.hashCode();</span>
+<span class="fc" id="L366">        return this.serialDate.hashCode();</span>
     }
 
     /**
@@ -382,10 +382,10 @@ public class Day extends RegularTimePeriod implements Serializable {
 
         // CASE 1 : Comparing to another Day object
         // ----------------------------------------
-<span class="nc bnc" id="L385" title="All 2 branches missed.">        if (o1 instanceof Day) {</span>
-<span class="nc" id="L386">            Day d = (Day) o1;</span>
-<span class="nc" id="L387">            result = -d.getSerialDate().compare(this.serialDate);</span>
-<span class="nc" id="L388">        }</span>
+<span class="pc bpc" id="L385" title="1 of 2 branches missed.">        if (o1 instanceof Day) {</span>
+<span class="fc" id="L386">            Day d = (Day) o1;</span>
+<span class="fc" id="L387">            result = -d.getSerialDate().compare(this.serialDate);</span>
+<span class="fc" id="L388">        }</span>
 
         // CASE 2 : Comparing to another TimePeriod object
         // -----------------------------------------------
@@ -401,7 +401,7 @@ public class Day extends RegularTimePeriod implements Serializable {
 <span class="nc" id="L401">            result = 1;</span>
         }
 
-<span class="nc" id="L404">        return result;</span>
+<span class="fc" id="L404">        return result;</span>
     }
 
     /**
@@ -427,7 +427,7 @@ public class Day extends RegularTimePeriod implements Serializable {
      */
     public static Day parseDay(String s) {
         try {
-<span class="nc" id="L430">            return new Day (Day.DATE_FORMAT.parse(s));</span>
+<span class="fc" id="L430">            return new Day (Day.DATE_FORMAT.parse(s));</span>
         }
 <span class="nc" id="L432">        catch (ParseException e1) {</span>
             try {
@@ -441,4 +441,4 @@ public class Day extends RegularTimePeriod implements Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

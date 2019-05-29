@@ -110,8 +110,8 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * Default constructor.
      */
     public CombinedDomainCategoryPlot() {
-<span class="nc" id="L113">        this(new CategoryAxis());</span>
-<span class="nc" id="L114">    }</span>
+<span class="fc" id="L113">        this(new CategoryAxis());</span>
+<span class="fc" id="L114">    }</span>
 
     /**
      * Creates a new plot.
@@ -120,10 +120,10 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      *                    permitted).
      */
     public CombinedDomainCategoryPlot(CategoryAxis domainAxis) {
-<span class="nc" id="L123">        super(null, domainAxis, null, null);</span>
-<span class="nc" id="L124">        this.subplots = new java.util.ArrayList();</span>
-<span class="nc" id="L125">        this.gap = 5.0;</span>
-<span class="nc" id="L126">    }</span>
+<span class="fc" id="L123">        super(null, domainAxis, null, null);</span>
+<span class="fc" id="L124">        this.subplots = new java.util.ArrayList();</span>
+<span class="fc" id="L125">        this.gap = 5.0;</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Returns the space between subplots.  The default value is 5.0.
@@ -159,8 +159,8 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * @param subplot  the subplot ({@code null} not permitted).
      */
     public void add(CategoryPlot subplot) {
-<span class="nc" id="L162">        add(subplot, 1);</span>
-<span class="nc" id="L163">    }</span>
+<span class="fc" id="L162">        add(subplot, 1);</span>
+<span class="fc" id="L163">    }</span>
 
     /**
      * Adds a subplot to the combined chart and sends a {@link PlotChangeEvent}
@@ -173,23 +173,23 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * @param weight  the weight (must be &amp;gt;= 1).
      */
     public void add(CategoryPlot subplot, int weight) {
-<span class="nc" id="L176">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
-<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (weight &lt; 1) {</span>
+<span class="fc" id="L176">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if (weight &lt; 1) {</span>
 <span class="nc" id="L178">            throw new IllegalArgumentException(&quot;Require weight &gt;= 1.&quot;);</span>
         }
-<span class="nc" id="L180">        subplot.setParent(this);</span>
-<span class="nc" id="L181">        subplot.setWeight(weight);</span>
-<span class="nc" id="L182">        subplot.setInsets(new RectangleInsets(0.0, 0.0, 0.0, 0.0));</span>
-<span class="nc" id="L183">        subplot.setDomainAxis(null);</span>
-<span class="nc" id="L184">        subplot.setOrientation(getOrientation());</span>
-<span class="nc" id="L185">        subplot.addChangeListener(this);</span>
-<span class="nc" id="L186">        this.subplots.add(subplot);</span>
-<span class="nc" id="L187">        CategoryAxis axis = getDomainAxis();</span>
-<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (axis != null) {</span>
-<span class="nc" id="L189">            axis.configure();</span>
+<span class="fc" id="L180">        subplot.setParent(this);</span>
+<span class="fc" id="L181">        subplot.setWeight(weight);</span>
+<span class="fc" id="L182">        subplot.setInsets(new RectangleInsets(0.0, 0.0, 0.0, 0.0));</span>
+<span class="fc" id="L183">        subplot.setDomainAxis(null);</span>
+<span class="fc" id="L184">        subplot.setOrientation(getOrientation());</span>
+<span class="fc" id="L185">        subplot.addChangeListener(this);</span>
+<span class="fc" id="L186">        this.subplots.add(subplot);</span>
+<span class="fc" id="L187">        CategoryAxis axis = getDomainAxis();</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (axis != null) {</span>
+<span class="fc" id="L189">            axis.configure();</span>
         }
-<span class="nc" id="L191">        fireChangeEvent();</span>
-<span class="nc" id="L192">    }</span>
+<span class="fc" id="L191">        fireChangeEvent();</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Removes a subplot from the combined chart.  Potentially, this removes
@@ -200,27 +200,27 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * @param subplot  the subplot ({@code null} not permitted).
      */
     public void remove(CategoryPlot subplot) {
-<span class="nc" id="L203">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
-<span class="nc" id="L204">        int position = -1;</span>
-<span class="nc" id="L205">        int size = this.subplots.size();</span>
-<span class="nc" id="L206">        int i = 0;</span>
-<span class="nc bnc" id="L207" title="All 4 branches missed.">        while (position == -1 &amp;&amp; i &lt; size) {</span>
-<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (this.subplots.get(i) == subplot) {</span>
-<span class="nc" id="L209">                position = i;</span>
+<span class="fc" id="L203">        Args.nullNotPermitted(subplot, &quot;subplot&quot;);</span>
+<span class="fc" id="L204">        int position = -1;</span>
+<span class="fc" id="L205">        int size = this.subplots.size();</span>
+<span class="fc" id="L206">        int i = 0;</span>
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">        while (position == -1 &amp;&amp; i &lt; size) {</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            if (this.subplots.get(i) == subplot) {</span>
+<span class="fc" id="L209">                position = i;</span>
             }
-<span class="nc" id="L211">            i++;</span>
+<span class="fc" id="L211">            i++;</span>
         }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (position != -1) {</span>
-<span class="nc" id="L214">            this.subplots.remove(position);</span>
-<span class="nc" id="L215">            subplot.setParent(null);</span>
-<span class="nc" id="L216">            subplot.removeChangeListener(this);</span>
-<span class="nc" id="L217">            CategoryAxis domain = getDomainAxis();</span>
-<span class="nc bnc" id="L218" title="All 2 branches missed.">            if (domain != null) {</span>
-<span class="nc" id="L219">                domain.configure();</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (position != -1) {</span>
+<span class="fc" id="L214">            this.subplots.remove(position);</span>
+<span class="fc" id="L215">            subplot.setParent(null);</span>
+<span class="fc" id="L216">            subplot.removeChangeListener(this);</span>
+<span class="fc" id="L217">            CategoryAxis domain = getDomainAxis();</span>
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">            if (domain != null) {</span>
+<span class="fc" id="L219">                domain.configure();</span>
             }
-<span class="nc" id="L221">            fireChangeEvent();</span>
+<span class="fc" id="L221">            fireChangeEvent();</span>
         }
-<span class="nc" id="L223">    }</span>
+<span class="fc" id="L223">    }</span>
 
     /**
      * Returns the list of subplots.  The returned list may be empty, but is
@@ -229,8 +229,8 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * @return An unmodifiable list of subplots.
      */
     public List getSubplots() {
-<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (this.subplots != null) {</span>
-<span class="nc" id="L233">            return Collections.unmodifiableList(this.subplots);</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if (this.subplots != null) {</span>
+<span class="fc" id="L233">            return Collections.unmodifiableList(this.subplots);</span>
         }
         else {
 <span class="nc" id="L236">            return Collections.EMPTY_LIST;</span>
@@ -336,12 +336,12 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
     protected AxisSpace calculateAxisSpace(Graphics2D g2,
                                            Rectangle2D plotArea) {
 
-<span class="nc" id="L339">        AxisSpace space = new AxisSpace();</span>
-<span class="nc" id="L340">        PlotOrientation orientation = getOrientation();</span>
+<span class="fc" id="L339">        AxisSpace space = new AxisSpace();</span>
+<span class="fc" id="L340">        PlotOrientation orientation = getOrientation();</span>
 
         // work out the space required by the domain axis...
-<span class="nc" id="L343">        AxisSpace fixed = getFixedDomainAxisSpace();</span>
-<span class="nc bnc" id="L344" title="All 2 branches missed.">        if (fixed != null) {</span>
+<span class="fc" id="L343">        AxisSpace fixed = getFixedDomainAxisSpace();</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (fixed != null) {</span>
 <span class="nc bnc" id="L345" title="All 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L346">                space.setLeft(fixed.getLeft());</span>
 <span class="nc" id="L347">                space.setRight(fixed.getRight());</span>
@@ -352,11 +352,11 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
             }
         }
         else {
-<span class="nc" id="L355">            CategoryAxis categoryAxis = getDomainAxis();</span>
-<span class="nc" id="L356">            RectangleEdge categoryEdge = Plot.resolveDomainAxisLocation(</span>
-<span class="nc" id="L357">                    getDomainAxisLocation(), orientation);</span>
-<span class="nc bnc" id="L358" title="All 2 branches missed.">            if (categoryAxis != null) {</span>
-<span class="nc" id="L359">                space = categoryAxis.reserveSpace(g2, this, plotArea,</span>
+<span class="fc" id="L355">            CategoryAxis categoryAxis = getDomainAxis();</span>
+<span class="fc" id="L356">            RectangleEdge categoryEdge = Plot.resolveDomainAxisLocation(</span>
+<span class="fc" id="L357">                    getDomainAxisLocation(), orientation);</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">            if (categoryAxis != null) {</span>
+<span class="fc" id="L359">                space = categoryAxis.reserveSpace(g2, this, plotArea,</span>
                         categoryEdge, space);
             }
             else {
@@ -367,50 +367,50 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
             }
         }
 
-<span class="nc" id="L370">        Rectangle2D adjustedPlotArea = space.shrink(plotArea, null);</span>
+<span class="fc" id="L370">        Rectangle2D adjustedPlotArea = space.shrink(plotArea, null);</span>
 
         // work out the maximum height or width of the non-shared axes...
-<span class="nc" id="L373">        int n = this.subplots.size();</span>
-<span class="nc" id="L374">        int totalWeight = 0;</span>
-<span class="nc bnc" id="L375" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
-<span class="nc" id="L376">            CategoryPlot sub = (CategoryPlot) this.subplots.get(i);</span>
-<span class="nc" id="L377">            totalWeight += sub.getWeight();</span>
+<span class="fc" id="L373">        int n = this.subplots.size();</span>
+<span class="fc" id="L374">        int totalWeight = 0;</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L376">            CategoryPlot sub = (CategoryPlot) this.subplots.get(i);</span>
+<span class="fc" id="L377">            totalWeight += sub.getWeight();</span>
         }
-<span class="nc" id="L379">        this.subplotAreas = new Rectangle2D[n];</span>
-<span class="nc" id="L380">        double x = adjustedPlotArea.getX();</span>
-<span class="nc" id="L381">        double y = adjustedPlotArea.getY();</span>
-<span class="nc" id="L382">        double usableSize = 0.0;</span>
-<span class="nc bnc" id="L383" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L379">        this.subplotAreas = new Rectangle2D[n];</span>
+<span class="fc" id="L380">        double x = adjustedPlotArea.getX();</span>
+<span class="fc" id="L381">        double y = adjustedPlotArea.getY();</span>
+<span class="fc" id="L382">        double usableSize = 0.0;</span>
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L384">            usableSize = adjustedPlotArea.getWidth() - this.gap * (n - 1);</span>
         }
-<span class="nc bnc" id="L386" title="All 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L387">            usableSize = adjustedPlotArea.getHeight() - this.gap * (n - 1);</span>
+<span class="pc bpc" id="L386" title="1 of 2 branches missed.">        else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L387">            usableSize = adjustedPlotArea.getHeight() - this.gap * (n - 1);</span>
         }
 
-<span class="nc bnc" id="L390" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
-<span class="nc" id="L391">            CategoryPlot plot = (CategoryPlot) this.subplots.get(i);</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L391">            CategoryPlot plot = (CategoryPlot) this.subplots.get(i);</span>
 
             // calculate sub-plot area
-<span class="nc bnc" id="L394" title="All 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L394" title="1 of 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L395">                double w = usableSize * plot.getWeight() / totalWeight;</span>
 <span class="nc" id="L396">                this.subplotAreas[i] = new Rectangle2D.Double(x, y, w,</span>
 <span class="nc" id="L397">                        adjustedPlotArea.getHeight());</span>
 <span class="nc" id="L398">                x = x + w + this.gap;</span>
 <span class="nc" id="L399">            }</span>
-<span class="nc bnc" id="L400" title="All 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L401">                double h = usableSize * plot.getWeight() / totalWeight;</span>
-<span class="nc" id="L402">                this.subplotAreas[i] = new Rectangle2D.Double(x, y,</span>
-<span class="nc" id="L403">                        adjustedPlotArea.getWidth(), h);</span>
-<span class="nc" id="L404">                y = y + h + this.gap;</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L401">                double h = usableSize * plot.getWeight() / totalWeight;</span>
+<span class="fc" id="L402">                this.subplotAreas[i] = new Rectangle2D.Double(x, y,</span>
+<span class="fc" id="L403">                        adjustedPlotArea.getWidth(), h);</span>
+<span class="fc" id="L404">                y = y + h + this.gap;</span>
             }
 
-<span class="nc" id="L407">            AxisSpace subSpace = plot.calculateRangeAxisSpace(g2,</span>
+<span class="fc" id="L407">            AxisSpace subSpace = plot.calculateRangeAxisSpace(g2,</span>
                     this.subplotAreas[i], null);
-<span class="nc" id="L409">            space.ensureAtLeast(subSpace);</span>
+<span class="fc" id="L409">            space.ensureAtLeast(subSpace);</span>
 
         }
 
-<span class="nc" id="L413">        return space;</span>
+<span class="fc" id="L413">        return space;</span>
     }
 
     /**
@@ -431,58 +431,58 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
             PlotState parentState, PlotRenderingInfo info) {
 
         // set up info collection...
-<span class="nc bnc" id="L434" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L434" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L435">            info.setPlotArea(area);</span>
         }
 
         // adjust the drawing area for plot insets (if any)...
-<span class="nc" id="L439">        RectangleInsets insets = getInsets();</span>
-<span class="nc" id="L440">        area.setRect(area.getX() + insets.getLeft(),</span>
-<span class="nc" id="L441">                area.getY() + insets.getTop(),</span>
-<span class="nc" id="L442">                area.getWidth() - insets.getLeft() - insets.getRight(),</span>
-<span class="nc" id="L443">                area.getHeight() - insets.getTop() - insets.getBottom());</span>
+<span class="fc" id="L439">        RectangleInsets insets = getInsets();</span>
+<span class="fc" id="L440">        area.setRect(area.getX() + insets.getLeft(),</span>
+<span class="fc" id="L441">                area.getY() + insets.getTop(),</span>
+<span class="fc" id="L442">                area.getWidth() - insets.getLeft() - insets.getRight(),</span>
+<span class="fc" id="L443">                area.getHeight() - insets.getTop() - insets.getBottom());</span>
 
 
         // calculate the data area...
-<span class="nc" id="L447">        setFixedRangeAxisSpaceForSubplots(null);</span>
-<span class="nc" id="L448">        AxisSpace space = calculateAxisSpace(g2, area);</span>
-<span class="nc" id="L449">        Rectangle2D dataArea = space.shrink(area, null);</span>
+<span class="fc" id="L447">        setFixedRangeAxisSpaceForSubplots(null);</span>
+<span class="fc" id="L448">        AxisSpace space = calculateAxisSpace(g2, area);</span>
+<span class="fc" id="L449">        Rectangle2D dataArea = space.shrink(area, null);</span>
 
         // set the width and height of non-shared axis of all sub-plots
-<span class="nc" id="L452">        setFixedRangeAxisSpaceForSubplots(space);</span>
+<span class="fc" id="L452">        setFixedRangeAxisSpaceForSubplots(space);</span>
 
         // draw the shared axis
-<span class="nc" id="L455">        CategoryAxis axis = getDomainAxis();</span>
-<span class="nc" id="L456">        RectangleEdge domainEdge = getDomainAxisEdge();</span>
-<span class="nc" id="L457">        double cursor = RectangleEdge.coordinate(dataArea, domainEdge);</span>
-<span class="nc" id="L458">        AxisState axisState = axis.draw(g2, cursor, area, dataArea,</span>
+<span class="fc" id="L455">        CategoryAxis axis = getDomainAxis();</span>
+<span class="fc" id="L456">        RectangleEdge domainEdge = getDomainAxisEdge();</span>
+<span class="fc" id="L457">        double cursor = RectangleEdge.coordinate(dataArea, domainEdge);</span>
+<span class="fc" id="L458">        AxisState axisState = axis.draw(g2, cursor, area, dataArea,</span>
                 domainEdge, info);
-<span class="nc bnc" id="L460" title="All 2 branches missed.">        if (parentState == null) {</span>
-<span class="nc" id="L461">            parentState = new PlotState();</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (parentState == null) {</span>
+<span class="fc" id="L461">            parentState = new PlotState();</span>
         }
-<span class="nc" id="L463">        parentState.getSharedAxisStates().put(axis, axisState);</span>
+<span class="fc" id="L463">        parentState.getSharedAxisStates().put(axis, axisState);</span>
 
         // draw all the subplots
-<span class="nc bnc" id="L466" title="All 2 branches missed.">        for (int i = 0; i &lt; this.subplots.size(); i++) {</span>
-<span class="nc" id="L467">            CategoryPlot plot = (CategoryPlot) this.subplots.get(i);</span>
-<span class="nc" id="L468">            PlotRenderingInfo subplotInfo = null;</span>
-<span class="nc bnc" id="L469" title="All 2 branches missed.">            if (info != null) {</span>
+<span class="fc bfc" id="L466" title="All 2 branches covered.">        for (int i = 0; i &lt; this.subplots.size(); i++) {</span>
+<span class="fc" id="L467">            CategoryPlot plot = (CategoryPlot) this.subplots.get(i);</span>
+<span class="fc" id="L468">            PlotRenderingInfo subplotInfo = null;</span>
+<span class="pc bpc" id="L469" title="1 of 2 branches missed.">            if (info != null) {</span>
 <span class="nc" id="L470">                subplotInfo = new PlotRenderingInfo(info.getOwner());</span>
 <span class="nc" id="L471">                info.addSubplotInfo(subplotInfo);</span>
             }
-<span class="nc" id="L473">            Point2D subAnchor = null;</span>
-<span class="nc bnc" id="L474" title="All 4 branches missed.">            if (anchor != null &amp;&amp; this.subplotAreas[i].contains(anchor)) {</span>
+<span class="fc" id="L473">            Point2D subAnchor = null;</span>
+<span class="pc bpc" id="L474" title="3 of 4 branches missed.">            if (anchor != null &amp;&amp; this.subplotAreas[i].contains(anchor)) {</span>
 <span class="nc" id="L475">                subAnchor = anchor;</span>
             }
-<span class="nc" id="L477">            plot.draw(g2, this.subplotAreas[i], subAnchor, parentState,</span>
+<span class="fc" id="L477">            plot.draw(g2, this.subplotAreas[i], subAnchor, parentState,</span>
                     subplotInfo);
         }
 
-<span class="nc bnc" id="L481" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L481" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L482">            info.setDataArea(dataArea);</span>
         }
 
-<span class="nc" id="L485">    }</span>
+<span class="fc" id="L485">    }</span>
 
     /**
      * Sets the size (width or height, depending on the orientation of the
@@ -491,12 +491,12 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      * @param space  the space ({@code null} permitted).
      */
     protected void setFixedRangeAxisSpaceForSubplots(AxisSpace space) {
-<span class="nc" id="L494">        Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L495" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L496">            CategoryPlot plot = (CategoryPlot) iterator.next();</span>
-<span class="nc" id="L497">            plot.setFixedRangeAxisSpace(space, false);</span>
-<span class="nc" id="L498">        }</span>
-<span class="nc" id="L499">    }</span>
+<span class="fc" id="L494">        Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L495" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L496">            CategoryPlot plot = (CategoryPlot) iterator.next();</span>
+<span class="fc" id="L497">            plot.setFixedRangeAxisSpace(space, false);</span>
+<span class="fc" id="L498">        }</span>
+<span class="fc" id="L499">    }</span>
 
     /**
      * Sets the orientation of the plot (and all subplots).
@@ -559,19 +559,19 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      */
     @Override
     public LegendItemCollection getLegendItems() {
-<span class="nc" id="L562">        LegendItemCollection result = getFixedLegendItems();</span>
-<span class="nc bnc" id="L563" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L564">            result = new LegendItemCollection();</span>
-<span class="nc bnc" id="L565" title="All 2 branches missed.">            if (this.subplots != null) {</span>
-<span class="nc" id="L566">                Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L567" title="All 2 branches missed.">                while (iterator.hasNext()) {</span>
-<span class="nc" id="L568">                    CategoryPlot plot = (CategoryPlot) iterator.next();</span>
-<span class="nc" id="L569">                    LegendItemCollection more = plot.getLegendItems();</span>
-<span class="nc" id="L570">                    result.addAll(more);</span>
-<span class="nc" id="L571">                }</span>
+<span class="fc" id="L562">        LegendItemCollection result = getFixedLegendItems();</span>
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L564">            result = new LegendItemCollection();</span>
+<span class="pc bpc" id="L565" title="1 of 2 branches missed.">            if (this.subplots != null) {</span>
+<span class="fc" id="L566">                Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L567" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L568">                    CategoryPlot plot = (CategoryPlot) iterator.next();</span>
+<span class="fc" id="L569">                    LegendItemCollection more = plot.getLegendItems();</span>
+<span class="fc" id="L570">                    result.addAll(more);</span>
+<span class="fc" id="L571">                }</span>
             }
         }
-<span class="nc" id="L574">        return result;</span>
+<span class="fc" id="L574">        return result;</span>
     }
 
     /**
@@ -582,22 +582,22 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      */
     @Override
     public List getCategories() {
-<span class="nc" id="L585">        List result = new java.util.ArrayList();</span>
-<span class="nc bnc" id="L586" title="All 2 branches missed.">        if (this.subplots != null) {</span>
-<span class="nc" id="L587">            Iterator iterator = this.subplots.iterator();</span>
-<span class="nc bnc" id="L588" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L589">                CategoryPlot plot = (CategoryPlot) iterator.next();</span>
-<span class="nc" id="L590">                List more = plot.getCategories();</span>
-<span class="nc" id="L591">                Iterator moreIterator = more.iterator();</span>
-<span class="nc bnc" id="L592" title="All 2 branches missed.">                while (moreIterator.hasNext()) {</span>
-<span class="nc" id="L593">                    Comparable category = (Comparable) moreIterator.next();</span>
-<span class="nc bnc" id="L594" title="All 2 branches missed.">                    if (!result.contains(category)) {</span>
-<span class="nc" id="L595">                        result.add(category);</span>
+<span class="fc" id="L585">        List result = new java.util.ArrayList();</span>
+<span class="pc bpc" id="L586" title="1 of 2 branches missed.">        if (this.subplots != null) {</span>
+<span class="fc" id="L587">            Iterator iterator = this.subplots.iterator();</span>
+<span class="fc bfc" id="L588" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L589">                CategoryPlot plot = (CategoryPlot) iterator.next();</span>
+<span class="fc" id="L590">                List more = plot.getCategories();</span>
+<span class="fc" id="L591">                Iterator moreIterator = more.iterator();</span>
+<span class="fc bfc" id="L592" title="All 2 branches covered.">                while (moreIterator.hasNext()) {</span>
+<span class="fc" id="L593">                    Comparable category = (Comparable) moreIterator.next();</span>
+<span class="fc bfc" id="L594" title="All 2 branches covered.">                    if (!result.contains(category)) {</span>
+<span class="fc" id="L595">                        result.add(category);</span>
                     }
-<span class="nc" id="L597">                }</span>
-<span class="nc" id="L598">            }</span>
+<span class="fc" id="L597">                }</span>
+<span class="fc" id="L598">            }</span>
         }
-<span class="nc" id="L600">        return Collections.unmodifiableList(result);</span>
+<span class="fc" id="L600">        return Collections.unmodifiableList(result);</span>
     }
 
     /**
@@ -613,7 +613,7 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
     public List getCategoriesForAxis(CategoryAxis axis) {
         // FIXME:  this code means that it is not possible to use more than
         // one domain axis for the combined plots...
-<span class="nc" id="L616">        return getCategories();</span>
+<span class="fc" id="L616">        return getCategories();</span>
     }
 
     /**
@@ -646,8 +646,8 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      */
     @Override
     public void plotChanged(PlotChangeEvent event) {
-<span class="nc" id="L649">        notifyListeners(event);</span>
-<span class="nc" id="L650">    }</span>
+<span class="fc" id="L649">        notifyListeners(event);</span>
+<span class="fc" id="L650">    }</span>
 
     /**
      * Tests the plot for equality with an arbitrary object.
@@ -658,20 +658,20 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L661" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L662">            return true;</span>
+<span class="fc bfc" id="L661" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L662">            return true;</span>
         }
-<span class="nc bnc" id="L664" title="All 2 branches missed.">        if (!(obj instanceof CombinedDomainCategoryPlot)) {</span>
+<span class="pc bpc" id="L664" title="1 of 2 branches missed.">        if (!(obj instanceof CombinedDomainCategoryPlot)) {</span>
 <span class="nc" id="L665">            return false;</span>
         }
-<span class="nc" id="L667">        CombinedDomainCategoryPlot that = (CombinedDomainCategoryPlot) obj;</span>
-<span class="nc bnc" id="L668" title="All 2 branches missed.">        if (this.gap != that.gap) {</span>
+<span class="fc" id="L667">        CombinedDomainCategoryPlot that = (CombinedDomainCategoryPlot) obj;</span>
+<span class="pc bpc" id="L668" title="1 of 2 branches missed.">        if (this.gap != that.gap) {</span>
 <span class="nc" id="L669">            return false;</span>
         }
-<span class="nc bnc" id="L671" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.subplots, that.subplots)) {</span>
+<span class="pc bpc" id="L671" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.subplots, that.subplots)) {</span>
 <span class="nc" id="L672">            return false;</span>
         }
-<span class="nc" id="L674">        return super.equals(obj);</span>
+<span class="fc" id="L674">        return super.equals(obj);</span>
     }
 
     /**
@@ -685,16 +685,16 @@ public class CombinedDomainCategoryPlot extends CategoryPlot
     @Override
     public Object clone() throws CloneNotSupportedException {
 
-<span class="nc" id="L688">        CombinedDomainCategoryPlot result</span>
-<span class="nc" id="L689">            = (CombinedDomainCategoryPlot) super.clone();</span>
-<span class="nc" id="L690">        result.subplots = (List) ObjectUtils.deepClone(this.subplots);</span>
-<span class="nc bnc" id="L691" title="All 2 branches missed.">        for (Iterator it = result.subplots.iterator(); it.hasNext();) {</span>
-<span class="nc" id="L692">            Plot child = (Plot) it.next();</span>
-<span class="nc" id="L693">            child.setParent(result);</span>
-<span class="nc" id="L694">        }</span>
-<span class="nc" id="L695">        return result;</span>
+<span class="fc" id="L688">        CombinedDomainCategoryPlot result</span>
+<span class="fc" id="L689">            = (CombinedDomainCategoryPlot) super.clone();</span>
+<span class="fc" id="L690">        result.subplots = (List) ObjectUtils.deepClone(this.subplots);</span>
+<span class="fc bfc" id="L691" title="All 2 branches covered.">        for (Iterator it = result.subplots.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L692">            Plot child = (Plot) it.next();</span>
+<span class="fc" id="L693">            child.setParent(result);</span>
+<span class="fc" id="L694">        }</span>
+<span class="fc" id="L695">        return result;</span>
 
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

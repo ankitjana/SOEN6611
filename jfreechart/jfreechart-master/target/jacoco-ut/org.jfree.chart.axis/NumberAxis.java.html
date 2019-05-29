@@ -152,7 +152,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     public static final boolean DEFAULT_AUTO_RANGE_STICKY_ZERO = true;
 
     /** The default tick unit. */
-<span class="nc" id="L155">    public static final NumberTickUnit DEFAULT_TICK_UNIT = new NumberTickUnit(</span>
+<span class="fc" id="L155">    public static final NumberTickUnit DEFAULT_TICK_UNIT = new NumberTickUnit(</span>
             1.0, new DecimalFormat(&quot;0&quot;));
 
     /** The default setting for the vertical tick labels flag. */
@@ -191,8 +191,8 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * Default constructor.
      */
     public NumberAxis() {
-<span class="nc" id="L194">        this(null);</span>
-<span class="nc" id="L195">    }</span>
+<span class="fc" id="L194">        this(null);</span>
+<span class="fc" id="L195">    }</span>
 
     /**
      * Constructs a number axis, using default values where necessary.
@@ -200,14 +200,14 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @param label  the axis label ({@code null} permitted).
      */
     public NumberAxis(String label) {
-<span class="nc" id="L203">        super(label, NumberAxis.createStandardTickUnits());</span>
-<span class="nc" id="L204">        this.rangeType = RangeType.FULL;</span>
-<span class="nc" id="L205">        this.autoRangeIncludesZero = DEFAULT_AUTO_RANGE_INCLUDES_ZERO;</span>
-<span class="nc" id="L206">        this.autoRangeStickyZero = DEFAULT_AUTO_RANGE_STICKY_ZERO;</span>
-<span class="nc" id="L207">        this.tickUnit = DEFAULT_TICK_UNIT;</span>
-<span class="nc" id="L208">        this.numberFormatOverride = null;</span>
-<span class="nc" id="L209">        this.markerBand = null;</span>
-<span class="nc" id="L210">    }</span>
+<span class="fc" id="L203">        super(label, NumberAxis.createStandardTickUnits());</span>
+<span class="fc" id="L204">        this.rangeType = RangeType.FULL;</span>
+<span class="fc" id="L205">        this.autoRangeIncludesZero = DEFAULT_AUTO_RANGE_INCLUDES_ZERO;</span>
+<span class="fc" id="L206">        this.autoRangeStickyZero = DEFAULT_AUTO_RANGE_STICKY_ZERO;</span>
+<span class="fc" id="L207">        this.tickUnit = DEFAULT_TICK_UNIT;</span>
+<span class="fc" id="L208">        this.numberFormatOverride = null;</span>
+<span class="fc" id="L209">        this.markerBand = null;</span>
+<span class="fc" id="L210">    }</span>
 
     /**
      * Returns the axis range type.
@@ -228,10 +228,10 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #getRangeType()
      */
     public void setRangeType(RangeType rangeType) {
-<span class="nc" id="L231">        Args.nullNotPermitted(rangeType, &quot;rangeType&quot;);</span>
-<span class="nc" id="L232">        this.rangeType = rangeType;</span>
-<span class="nc" id="L233">        notifyListeners(new AxisChangeEvent(this));</span>
-<span class="nc" id="L234">    }</span>
+<span class="fc" id="L231">        Args.nullNotPermitted(rangeType, &quot;rangeType&quot;);</span>
+<span class="fc" id="L232">        this.rangeType = rangeType;</span>
+<span class="fc" id="L233">        notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L234">    }</span>
 
     /**
      * Returns the flag that indicates whether or not the automatic axis range
@@ -240,7 +240,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @return The flag.
      */
     public boolean getAutoRangeIncludesZero() {
-<span class="nc" id="L243">        return this.autoRangeIncludesZero;</span>
+<span class="fc" id="L243">        return this.autoRangeIncludesZero;</span>
     }
 
     /**
@@ -257,14 +257,14 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #getAutoRangeIncludesZero()
      */
     public void setAutoRangeIncludesZero(boolean flag) {
-<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (this.autoRangeIncludesZero != flag) {</span>
-<span class="nc" id="L261">            this.autoRangeIncludesZero = flag;</span>
-<span class="nc bnc" id="L262" title="All 2 branches missed.">            if (isAutoRange()) {</span>
-<span class="nc" id="L263">                autoAdjustRange();</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        if (this.autoRangeIncludesZero != flag) {</span>
+<span class="fc" id="L261">            this.autoRangeIncludesZero = flag;</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (isAutoRange()) {</span>
+<span class="fc" id="L263">                autoAdjustRange();</span>
             }
-<span class="nc" id="L265">            notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L265">            notifyListeners(new AxisChangeEvent(this));</span>
         }
-<span class="nc" id="L267">    }</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Returns a flag that affects the auto-range when zero falls outside the
@@ -275,7 +275,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #setAutoRangeStickyZero(boolean)
      */
     public boolean getAutoRangeStickyZero() {
-<span class="nc" id="L278">        return this.autoRangeStickyZero;</span>
+<span class="fc" id="L278">        return this.autoRangeStickyZero;</span>
     }
 
     /**
@@ -287,14 +287,14 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #getAutoRangeStickyZero()
      */
     public void setAutoRangeStickyZero(boolean flag) {
-<span class="nc bnc" id="L290" title="All 2 branches missed.">        if (this.autoRangeStickyZero != flag) {</span>
-<span class="nc" id="L291">            this.autoRangeStickyZero = flag;</span>
-<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (isAutoRange()) {</span>
-<span class="nc" id="L293">                autoAdjustRange();</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">        if (this.autoRangeStickyZero != flag) {</span>
+<span class="fc" id="L291">            this.autoRangeStickyZero = flag;</span>
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">            if (isAutoRange()) {</span>
+<span class="fc" id="L293">                autoAdjustRange();</span>
             }
-<span class="nc" id="L295">            notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L295">            notifyListeners(new AxisChangeEvent(this));</span>
         }
-<span class="nc" id="L297">    }</span>
+<span class="fc" id="L297">    }</span>
 
     /**
      * Returns the tick unit for the axis.
@@ -310,7 +310,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see ValueAxis#isAutoTickUnitSelection()
      */
     public NumberTickUnit getTickUnit() {
-<span class="nc" id="L313">        return this.tickUnit;</span>
+<span class="fc" id="L313">        return this.tickUnit;</span>
     }
 
     /**
@@ -327,8 +327,8 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      */
     public void setTickUnit(NumberTickUnit unit) {
         // defer argument checking...
-<span class="nc" id="L330">        setTickUnit(unit, true, true);</span>
-<span class="nc" id="L331">    }</span>
+<span class="fc" id="L330">        setTickUnit(unit, true, true);</span>
+<span class="fc" id="L331">    }</span>
 
     /**
      * Sets the tick unit for the axis and, if requested, sends an
@@ -344,16 +344,16 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     public void setTickUnit(NumberTickUnit unit, boolean notify,
             boolean turnOffAutoSelect) {
 
-<span class="nc" id="L347">        Args.nullNotPermitted(unit, &quot;unit&quot;);</span>
-<span class="nc" id="L348">        this.tickUnit = unit;</span>
-<span class="nc bnc" id="L349" title="All 2 branches missed.">        if (turnOffAutoSelect) {</span>
-<span class="nc" id="L350">            setAutoTickUnitSelection(false, false);</span>
+<span class="fc" id="L347">        Args.nullNotPermitted(unit, &quot;unit&quot;);</span>
+<span class="fc" id="L348">        this.tickUnit = unit;</span>
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (turnOffAutoSelect) {</span>
+<span class="fc" id="L350">            setAutoTickUnitSelection(false, false);</span>
         }
-<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L353">            notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (notify) {</span>
+<span class="fc" id="L353">            notifyListeners(new AxisChangeEvent(this));</span>
         }
 
-<span class="nc" id="L356">    }</span>
+<span class="fc" id="L356">    }</span>
 
     /**
      * Returns the number format override.  If this is non-null, then it will
@@ -364,7 +364,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #setNumberFormatOverride(NumberFormat)
      */
     public NumberFormat getNumberFormatOverride() {
-<span class="nc" id="L367">        return this.numberFormatOverride;</span>
+<span class="fc" id="L367">        return this.numberFormatOverride;</span>
     }
 
     /**
@@ -376,9 +376,9 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #getNumberFormatOverride()
      */
     public void setNumberFormatOverride(NumberFormat formatter) {
-<span class="nc" id="L379">        this.numberFormatOverride = formatter;</span>
-<span class="nc" id="L380">        notifyListeners(new AxisChangeEvent(this));</span>
-<span class="nc" id="L381">    }</span>
+<span class="fc" id="L379">        this.numberFormatOverride = formatter;</span>
+<span class="fc" id="L380">        notifyListeners(new AxisChangeEvent(this));</span>
+<span class="fc" id="L381">    }</span>
 
     /**
      * Returns the (optional) marker band for the axis.
@@ -412,10 +412,10 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      */
     @Override
     public void configure() {
-<span class="nc bnc" id="L415" title="All 2 branches missed.">        if (isAutoRange()) {</span>
-<span class="nc" id="L416">            autoAdjustRange();</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">        if (isAutoRange()) {</span>
+<span class="fc" id="L416">            autoAdjustRange();</span>
         }
-<span class="nc" id="L418">    }</span>
+<span class="fc" id="L418">    }</span>
 
     /**
      * Rescales the axis to ensure that all data is visible.
@@ -423,60 +423,60 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     @Override
     protected void autoAdjustRange() {
 
-<span class="nc" id="L426">        Plot plot = getPlot();</span>
-<span class="nc bnc" id="L427" title="All 2 branches missed.">        if (plot == null) {</span>
-<span class="nc" id="L428">            return;  // no plot, no data</span>
+<span class="fc" id="L426">        Plot plot = getPlot();</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">        if (plot == null) {</span>
+<span class="fc" id="L428">            return;  // no plot, no data</span>
         }
 
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (plot instanceof ValueAxisPlot) {</span>
-<span class="nc" id="L432">            ValueAxisPlot vap = (ValueAxisPlot) plot;</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">        if (plot instanceof ValueAxisPlot) {</span>
+<span class="fc" id="L432">            ValueAxisPlot vap = (ValueAxisPlot) plot;</span>
 
-<span class="nc" id="L434">            Range r = vap.getDataRange(this);</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">            if (r == null) {</span>
-<span class="nc" id="L436">                r = getDefaultAutoRange();</span>
+<span class="fc" id="L434">            Range r = vap.getDataRange(this);</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">            if (r == null) {</span>
+<span class="fc" id="L436">                r = getDefaultAutoRange();</span>
             }
 
-<span class="nc" id="L439">            double upper = r.getUpperBound();</span>
-<span class="nc" id="L440">            double lower = r.getLowerBound();</span>
-<span class="nc bnc" id="L441" title="All 2 branches missed.">            if (this.rangeType == RangeType.POSITIVE) {</span>
+<span class="fc" id="L439">            double upper = r.getUpperBound();</span>
+<span class="fc" id="L440">            double lower = r.getLowerBound();</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">            if (this.rangeType == RangeType.POSITIVE) {</span>
 <span class="nc" id="L442">                lower = Math.max(0.0, lower);</span>
 <span class="nc" id="L443">                upper = Math.max(0.0, upper);</span>
             }
-<span class="nc bnc" id="L445" title="All 2 branches missed.">            else if (this.rangeType == RangeType.NEGATIVE) {</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">            else if (this.rangeType == RangeType.NEGATIVE) {</span>
 <span class="nc" id="L446">                lower = Math.min(0.0, lower);</span>
 <span class="nc" id="L447">                upper = Math.min(0.0, upper);</span>
             }
 
-<span class="nc bnc" id="L450" title="All 2 branches missed.">            if (getAutoRangeIncludesZero()) {</span>
-<span class="nc" id="L451">                lower = Math.min(lower, 0.0);</span>
-<span class="nc" id="L452">                upper = Math.max(upper, 0.0);</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">            if (getAutoRangeIncludesZero()) {</span>
+<span class="fc" id="L451">                lower = Math.min(lower, 0.0);</span>
+<span class="fc" id="L452">                upper = Math.max(upper, 0.0);</span>
             }
-<span class="nc" id="L454">            double range = upper - lower;</span>
+<span class="fc" id="L454">            double range = upper - lower;</span>
 
             // if fixed auto range, then derive lower bound...
-<span class="nc" id="L457">            double fixedAutoRange = getFixedAutoRange();</span>
-<span class="nc bnc" id="L458" title="All 2 branches missed.">            if (fixedAutoRange &gt; 0.0) {</span>
+<span class="fc" id="L457">            double fixedAutoRange = getFixedAutoRange();</span>
+<span class="pc bpc" id="L458" title="1 of 2 branches missed.">            if (fixedAutoRange &gt; 0.0) {</span>
 <span class="nc" id="L459">                lower = upper - fixedAutoRange;</span>
             }
             else {
                 // ensure the autorange is at least &lt;minRange&gt; in size...
-<span class="nc" id="L463">                double minRange = getAutoRangeMinimumSize();</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">                if (range &lt; minRange) {</span>
-<span class="nc" id="L465">                    double expand = (minRange - range) / 2;</span>
-<span class="nc" id="L466">                    upper = upper + expand;</span>
-<span class="nc" id="L467">                    lower = lower - expand;</span>
-<span class="nc bnc" id="L468" title="All 2 branches missed.">                    if (lower == upper) { // see bug report 1549218</span>
+<span class="fc" id="L463">                double minRange = getAutoRangeMinimumSize();</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">                if (range &lt; minRange) {</span>
+<span class="fc" id="L465">                    double expand = (minRange - range) / 2;</span>
+<span class="fc" id="L466">                    upper = upper + expand;</span>
+<span class="fc" id="L467">                    lower = lower - expand;</span>
+<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                    if (lower == upper) { // see bug report 1549218</span>
 <span class="nc" id="L469">                        double adjust = Math.abs(lower) / 10.0;</span>
 <span class="nc" id="L470">                        lower = lower - adjust;</span>
 <span class="nc" id="L471">                        upper = upper + adjust;</span>
                     }
-<span class="nc bnc" id="L473" title="All 2 branches missed.">                    if (this.rangeType == RangeType.POSITIVE) {</span>
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">                    if (this.rangeType == RangeType.POSITIVE) {</span>
 <span class="nc bnc" id="L474" title="All 2 branches missed.">                        if (lower &lt; 0.0) {</span>
 <span class="nc" id="L475">                            upper = upper - lower;</span>
 <span class="nc" id="L476">                            lower = 0.0;</span>
                         }
                     }
-<span class="nc bnc" id="L479" title="All 2 branches missed.">                    else if (this.rangeType == RangeType.NEGATIVE) {</span>
+<span class="pc bpc" id="L479" title="1 of 2 branches missed.">                    else if (this.rangeType == RangeType.NEGATIVE) {</span>
 <span class="nc bnc" id="L480" title="All 2 branches missed.">                        if (upper &gt; 0.0) {</span>
 <span class="nc" id="L481">                            lower = lower - upper;</span>
 <span class="nc" id="L482">                            upper = 0.0;</span>
@@ -484,18 +484,18 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
                     }
                 }
 
-<span class="nc bnc" id="L487" title="All 2 branches missed.">                if (getAutoRangeStickyZero()) {</span>
-<span class="nc bnc" id="L488" title="All 2 branches missed.">                    if (upper &lt;= 0.0) {</span>
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">                if (getAutoRangeStickyZero()) {</span>
+<span class="pc bpc" id="L488" title="1 of 2 branches missed.">                    if (upper &lt;= 0.0) {</span>
 <span class="nc" id="L489">                        upper = Math.min(0.0, upper + getUpperMargin() * range);</span>
                     }
                     else {
-<span class="nc" id="L492">                        upper = upper + getUpperMargin() * range;</span>
+<span class="fc" id="L492">                        upper = upper + getUpperMargin() * range;</span>
                     }
-<span class="nc bnc" id="L494" title="All 2 branches missed.">                    if (lower &gt;= 0.0) {</span>
-<span class="nc" id="L495">                        lower = Math.max(0.0, lower - getLowerMargin() * range);</span>
+<span class="fc bfc" id="L494" title="All 2 branches covered.">                    if (lower &gt;= 0.0) {</span>
+<span class="fc" id="L495">                        lower = Math.max(0.0, lower - getLowerMargin() * range);</span>
                     }
                     else {
-<span class="nc" id="L498">                        lower = lower - getLowerMargin() * range;</span>
+<span class="fc" id="L498">                        lower = lower - getLowerMargin() * range;</span>
                     }
                 }
                 else {
@@ -504,10 +504,10 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
                 }
             }
 
-<span class="nc" id="L507">            setRange(new Range(lower, upper), false, false);</span>
+<span class="fc" id="L507">            setRange(new Range(lower, upper), false, false);</span>
         }
 
-<span class="nc" id="L510">    }</span>
+<span class="fc" id="L510">    }</span>
 
     /**
      * Converts a data value to a coordinate in Java2D space, assuming that the
@@ -527,26 +527,26 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     public double valueToJava2D(double value, Rectangle2D area,
             RectangleEdge edge) {
 
-<span class="nc" id="L530">        Range range = getRange();</span>
-<span class="nc" id="L531">        double axisMin = range.getLowerBound();</span>
-<span class="nc" id="L532">        double axisMax = range.getUpperBound();</span>
+<span class="fc" id="L530">        Range range = getRange();</span>
+<span class="fc" id="L531">        double axisMin = range.getLowerBound();</span>
+<span class="fc" id="L532">        double axisMax = range.getUpperBound();</span>
 
-<span class="nc" id="L534">        double min = 0.0;</span>
-<span class="nc" id="L535">        double max = 0.0;</span>
-<span class="nc bnc" id="L536" title="All 2 branches missed.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
-<span class="nc" id="L537">            min = area.getX();</span>
-<span class="nc" id="L538">            max = area.getMaxX();</span>
+<span class="fc" id="L534">        double min = 0.0;</span>
+<span class="fc" id="L535">        double max = 0.0;</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
+<span class="fc" id="L537">            min = area.getX();</span>
+<span class="fc" id="L538">            max = area.getMaxX();</span>
         }
-<span class="nc bnc" id="L540" title="All 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
-<span class="nc" id="L541">            max = area.getMinY();</span>
-<span class="nc" id="L542">            min = area.getMaxY();</span>
+<span class="pc bpc" id="L540" title="1 of 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
+<span class="fc" id="L541">            max = area.getMinY();</span>
+<span class="fc" id="L542">            min = area.getMaxY();</span>
         }
-<span class="nc bnc" id="L544" title="All 2 branches missed.">        if (isInverted()) {</span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">        if (isInverted()) {</span>
 <span class="nc" id="L545">            return max</span>
                    - ((value - axisMin) / (axisMax - axisMin)) * (max - min);
         }
         else {
-<span class="nc" id="L549">            return min</span>
+<span class="fc" id="L549">            return min</span>
                    + ((value - axisMin) / (axisMax - axisMin)) * (max - min);
         }
 
@@ -568,26 +568,26 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     public double java2DToValue(double java2DValue, Rectangle2D area,
             RectangleEdge edge) {
 
-<span class="nc" id="L571">        Range range = getRange();</span>
-<span class="nc" id="L572">        double axisMin = range.getLowerBound();</span>
-<span class="nc" id="L573">        double axisMax = range.getUpperBound();</span>
+<span class="fc" id="L571">        Range range = getRange();</span>
+<span class="fc" id="L572">        double axisMin = range.getLowerBound();</span>
+<span class="fc" id="L573">        double axisMax = range.getUpperBound();</span>
 
-<span class="nc" id="L575">        double min = 0.0;</span>
-<span class="nc" id="L576">        double max = 0.0;</span>
-<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
-<span class="nc" id="L578">            min = area.getX();</span>
-<span class="nc" id="L579">            max = area.getMaxX();</span>
+<span class="fc" id="L575">        double min = 0.0;</span>
+<span class="fc" id="L576">        double max = 0.0;</span>
+<span class="fc bfc" id="L577" title="All 2 branches covered.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
+<span class="fc" id="L578">            min = area.getX();</span>
+<span class="fc" id="L579">            max = area.getMaxX();</span>
         }
-<span class="nc bnc" id="L581" title="All 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
-<span class="nc" id="L582">            min = area.getMaxY();</span>
-<span class="nc" id="L583">            max = area.getY();</span>
+<span class="pc bpc" id="L581" title="1 of 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
+<span class="fc" id="L582">            min = area.getMaxY();</span>
+<span class="fc" id="L583">            max = area.getY();</span>
         }
-<span class="nc bnc" id="L585" title="All 2 branches missed.">        if (isInverted()) {</span>
-<span class="nc" id="L586">            return axisMax</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">        if (isInverted()) {</span>
+<span class="fc" id="L586">            return axisMax</span>
                    - (java2DValue - min) / (max - min) * (axisMax - axisMin);
         }
         else {
-<span class="nc" id="L590">            return axisMin</span>
+<span class="fc" id="L590">            return axisMin</span>
                    + (java2DValue - min) / (max - min) * (axisMax - axisMin);
         }
 
@@ -601,9 +601,9 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #calculateHighestVisibleTickValue()
      */
     protected double calculateLowestVisibleTickValue() {
-<span class="nc" id="L604">        double unit = getTickUnit().getSize();</span>
-<span class="nc" id="L605">        double index = Math.ceil(getRange().getLowerBound() / unit);</span>
-<span class="nc" id="L606">        return index * unit;</span>
+<span class="fc" id="L604">        double unit = getTickUnit().getSize();</span>
+<span class="fc" id="L605">        double index = Math.ceil(getRange().getLowerBound() / unit);</span>
+<span class="fc" id="L606">        return index * unit;</span>
     }
 
     /**
@@ -625,10 +625,10 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @return The number of visible ticks on the axis.
      */
     protected int calculateVisibleTickCount() {
-<span class="nc" id="L628">        double unit = getTickUnit().getSize();</span>
-<span class="nc" id="L629">        Range range = getRange();</span>
-<span class="nc" id="L630">        return (int) (Math.floor(range.getUpperBound() / unit)</span>
-<span class="nc" id="L631">                      - Math.ceil(range.getLowerBound() / unit) + 1);</span>
+<span class="fc" id="L628">        double unit = getTickUnit().getSize();</span>
+<span class="fc" id="L629">        Range range = getRange();</span>
+<span class="fc" id="L630">        return (int) (Math.floor(range.getUpperBound() / unit)</span>
+<span class="fc" id="L631">                      - Math.ceil(range.getLowerBound() / unit) + 1);</span>
     }
 
     /**
@@ -654,7 +654,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
 
         AxisState state;
         // if the axis is not visible, don't draw it...
-<span class="nc bnc" id="L657" title="All 2 branches missed.">        if (!isVisible()) {</span>
+<span class="pc bpc" id="L657" title="1 of 2 branches missed.">        if (!isVisible()) {</span>
 <span class="nc" id="L658">            state = new AxisState(cursor);</span>
             // even though the axis is not visible, we need ticks for the
             // gridlines...
@@ -664,17 +664,17 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
         }
 
         // draw the tick marks and labels...
-<span class="nc" id="L667">        state = drawTickMarksAndLabels(g2, cursor, plotArea, dataArea, edge);</span>
+<span class="fc" id="L667">        state = drawTickMarksAndLabels(g2, cursor, plotArea, dataArea, edge);</span>
 
-<span class="nc bnc" id="L669" title="All 2 branches missed.">        if (getAttributedLabel() != null) {</span>
+<span class="pc bpc" id="L669" title="1 of 2 branches missed.">        if (getAttributedLabel() != null) {</span>
 <span class="nc" id="L670">            state = drawAttributedLabel(getAttributedLabel(), g2, plotArea, </span>
                     dataArea, edge, state);
             
         } else {
-<span class="nc" id="L674">            state = drawLabel(getLabel(), g2, plotArea, dataArea, edge, state);</span>
+<span class="fc" id="L674">            state = drawLabel(getLabel(), g2, plotArea, dataArea, edge, state);</span>
         }
-<span class="nc" id="L676">        createAndAddEntity(cursor, state, dataArea, edge, plotState);</span>
-<span class="nc" id="L677">        return state;</span>
+<span class="fc" id="L676">        createAndAddEntity(cursor, state, dataArea, edge, plotState);</span>
+<span class="fc" id="L677">        return state;</span>
 
     }
 
@@ -691,7 +691,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #createIntegerTickUnits()
      */
     public static TickUnitSource createStandardTickUnits() {
-<span class="nc" id="L694">        return new NumberTickUnitSource();</span>
+<span class="fc" id="L694">        return new NumberTickUnitSource();</span>
     }
 
     /**
@@ -703,7 +703,7 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @see #createStandardTickUnits()
      */
     public static TickUnitSource createIntegerTickUnits() {
-<span class="nc" id="L706">        return new NumberTickUnitSource(true);</span>
+<span class="fc" id="L706">        return new NumberTickUnitSource(true);</span>
     }
 
     /**
@@ -749,13 +749,13 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      * @return The maximum height.
      */
     protected double estimateMaximumTickLabelHeight(Graphics2D g2) {
-<span class="nc" id="L752">        RectangleInsets tickLabelInsets = getTickLabelInsets();</span>
-<span class="nc" id="L753">        double result = tickLabelInsets.getTop() + tickLabelInsets.getBottom();</span>
+<span class="fc" id="L752">        RectangleInsets tickLabelInsets = getTickLabelInsets();</span>
+<span class="fc" id="L753">        double result = tickLabelInsets.getTop() + tickLabelInsets.getBottom();</span>
 
-<span class="nc" id="L755">        Font tickLabelFont = getTickLabelFont();</span>
-<span class="nc" id="L756">        FontRenderContext frc = g2.getFontRenderContext();</span>
-<span class="nc" id="L757">        result += tickLabelFont.getLineMetrics(&quot;123&quot;, frc).getHeight();</span>
-<span class="nc" id="L758">        return result;</span>
+<span class="fc" id="L755">        Font tickLabelFont = getTickLabelFont();</span>
+<span class="fc" id="L756">        FontRenderContext frc = g2.getFontRenderContext();</span>
+<span class="fc" id="L757">        result += tickLabelFont.getLineMetrics(&quot;123&quot;, frc).getHeight();</span>
+<span class="fc" id="L758">        return result;</span>
     }
 
     /**
@@ -774,10 +774,10 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected double estimateMaximumTickLabelWidth(Graphics2D g2,
                                                    TickUnit unit) {
 
-<span class="nc" id="L777">        RectangleInsets tickLabelInsets = getTickLabelInsets();</span>
-<span class="nc" id="L778">        double result = tickLabelInsets.getLeft() + tickLabelInsets.getRight();</span>
+<span class="fc" id="L777">        RectangleInsets tickLabelInsets = getTickLabelInsets();</span>
+<span class="fc" id="L778">        double result = tickLabelInsets.getLeft() + tickLabelInsets.getRight();</span>
 
-<span class="nc bnc" id="L780" title="All 2 branches missed.">        if (isVerticalTickLabels()) {</span>
+<span class="pc bpc" id="L780" title="1 of 2 branches missed.">        if (isVerticalTickLabels()) {</span>
             // all tick labels have the same width (equal to the height of the
             // font)...
 <span class="nc" id="L783">            FontRenderContext frc = g2.getFontRenderContext();</span>
@@ -786,26 +786,26 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
 <span class="nc" id="L786">        }</span>
         else {
             // look at lower and upper bounds...
-<span class="nc" id="L789">            FontMetrics fm = g2.getFontMetrics(getTickLabelFont());</span>
-<span class="nc" id="L790">            Range range = getRange();</span>
-<span class="nc" id="L791">            double lower = range.getLowerBound();</span>
-<span class="nc" id="L792">            double upper = range.getUpperBound();</span>
+<span class="fc" id="L789">            FontMetrics fm = g2.getFontMetrics(getTickLabelFont());</span>
+<span class="fc" id="L790">            Range range = getRange();</span>
+<span class="fc" id="L791">            double lower = range.getLowerBound();</span>
+<span class="fc" id="L792">            double upper = range.getUpperBound();</span>
             String lowerStr, upperStr;
-<span class="nc" id="L794">            NumberFormat formatter = getNumberFormatOverride();</span>
-<span class="nc bnc" id="L795" title="All 2 branches missed.">            if (formatter != null) {</span>
+<span class="fc" id="L794">            NumberFormat formatter = getNumberFormatOverride();</span>
+<span class="pc bpc" id="L795" title="1 of 2 branches missed.">            if (formatter != null) {</span>
 <span class="nc" id="L796">                lowerStr = formatter.format(lower);</span>
 <span class="nc" id="L797">                upperStr = formatter.format(upper);</span>
             }
             else {
-<span class="nc" id="L800">                lowerStr = unit.valueToString(lower);</span>
-<span class="nc" id="L801">                upperStr = unit.valueToString(upper);</span>
+<span class="fc" id="L800">                lowerStr = unit.valueToString(lower);</span>
+<span class="fc" id="L801">                upperStr = unit.valueToString(upper);</span>
             }
-<span class="nc" id="L803">            double w1 = fm.stringWidth(lowerStr);</span>
-<span class="nc" id="L804">            double w2 = fm.stringWidth(upperStr);</span>
-<span class="nc" id="L805">            result += Math.max(w1, w2);</span>
+<span class="fc" id="L803">            double w1 = fm.stringWidth(lowerStr);</span>
+<span class="fc" id="L804">            double w2 = fm.stringWidth(upperStr);</span>
+<span class="fc" id="L805">            result += Math.max(w1, w2);</span>
         }
 
-<span class="nc" id="L808">        return result;</span>
+<span class="fc" id="L808">        return result;</span>
 
     }
 
@@ -821,14 +821,14 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected void selectAutoTickUnit(Graphics2D g2, Rectangle2D dataArea,
             RectangleEdge edge) {
 
-<span class="nc bnc" id="L824" title="All 2 branches missed.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
-<span class="nc" id="L825">            selectHorizontalAutoTickUnit(g2, dataArea, edge);</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
+<span class="fc" id="L825">            selectHorizontalAutoTickUnit(g2, dataArea, edge);</span>
         }
-<span class="nc bnc" id="L827" title="All 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
-<span class="nc" id="L828">            selectVerticalAutoTickUnit(g2, dataArea, edge);</span>
+<span class="pc bpc" id="L827" title="1 of 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
+<span class="fc" id="L828">            selectVerticalAutoTickUnit(g2, dataArea, edge);</span>
         }
 
-<span class="nc" id="L831">    }</span>
+<span class="fc" id="L831">    }</span>
 
     /**
      * Selects an appropriate tick value for the axis.  The strategy is to
@@ -842,32 +842,32 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected void selectHorizontalAutoTickUnit(Graphics2D g2,
             Rectangle2D dataArea, RectangleEdge edge) {
 
-<span class="nc" id="L845">        TickUnit unit = getTickUnit();</span>
-<span class="nc" id="L846">        TickUnitSource tickUnitSource = getStandardTickUnits();</span>
+<span class="fc" id="L845">        TickUnit unit = getTickUnit();</span>
+<span class="fc" id="L846">        TickUnitSource tickUnitSource = getStandardTickUnits();</span>
         // we should use the current tick unit if it gives a count in the range
         // 2 to 40 otherwise just estimate one that will give a count &lt;= 20
-<span class="nc" id="L849">        double length = getRange().getLength();</span>
-<span class="nc" id="L850">        int count = (int) (length / unit.getSize());</span>
-<span class="nc bnc" id="L851" title="All 4 branches missed.">        if (count &lt; 2 || count &gt; 40) {</span>
-<span class="nc" id="L852">            unit = tickUnitSource.getCeilingTickUnit(length / 20);</span>
+<span class="fc" id="L849">        double length = getRange().getLength();</span>
+<span class="fc" id="L850">        int count = (int) (length / unit.getSize());</span>
+<span class="fc bfc" id="L851" title="All 4 branches covered.">        if (count &lt; 2 || count &gt; 40) {</span>
+<span class="fc" id="L852">            unit = tickUnitSource.getCeilingTickUnit(length / 20);</span>
         }
-<span class="nc" id="L854">        double tickLabelWidth = estimateMaximumTickLabelWidth(g2, unit);</span>
+<span class="fc" id="L854">        double tickLabelWidth = estimateMaximumTickLabelWidth(g2, unit);</span>
 
-<span class="nc" id="L856">        TickUnit unit1 = tickUnitSource.getCeilingTickUnit(unit);</span>
-<span class="nc" id="L857">        double unit1Width = lengthToJava2D(unit1.getSize(), dataArea, edge);</span>
+<span class="fc" id="L856">        TickUnit unit1 = tickUnitSource.getCeilingTickUnit(unit);</span>
+<span class="fc" id="L857">        double unit1Width = lengthToJava2D(unit1.getSize(), dataArea, edge);</span>
 
         // then extrapolate...
-<span class="nc" id="L860">        double guess = (tickLabelWidth / unit1Width) * unit1.getSize();</span>
-<span class="nc" id="L861">        NumberTickUnit unit2 = (NumberTickUnit) </span>
-<span class="nc" id="L862">                tickUnitSource.getCeilingTickUnit(guess);</span>
-<span class="nc" id="L863">        double unit2Width = lengthToJava2D(unit2.getSize(), dataArea, edge);</span>
+<span class="fc" id="L860">        double guess = (tickLabelWidth / unit1Width) * unit1.getSize();</span>
+<span class="fc" id="L861">        NumberTickUnit unit2 = (NumberTickUnit) </span>
+<span class="fc" id="L862">                tickUnitSource.getCeilingTickUnit(guess);</span>
+<span class="fc" id="L863">        double unit2Width = lengthToJava2D(unit2.getSize(), dataArea, edge);</span>
 
-<span class="nc" id="L865">        tickLabelWidth = estimateMaximumTickLabelWidth(g2, unit2);</span>
-<span class="nc bnc" id="L866" title="All 2 branches missed.">        if (tickLabelWidth &gt; unit2Width) {</span>
-<span class="nc" id="L867">            unit2 = (NumberTickUnit) tickUnitSource.getLargerTickUnit(unit2);</span>
+<span class="fc" id="L865">        tickLabelWidth = estimateMaximumTickLabelWidth(g2, unit2);</span>
+<span class="fc bfc" id="L866" title="All 2 branches covered.">        if (tickLabelWidth &gt; unit2Width) {</span>
+<span class="fc" id="L867">            unit2 = (NumberTickUnit) tickUnitSource.getLargerTickUnit(unit2);</span>
         }
-<span class="nc" id="L869">        setTickUnit(unit2, false, false);</span>
-<span class="nc" id="L870">    }</span>
+<span class="fc" id="L869">        setTickUnit(unit2, false, false);</span>
+<span class="fc" id="L870">    }</span>
 
     /**
      * Selects an appropriate tick value for the axis.  The strategy is to
@@ -881,30 +881,30 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected void selectVerticalAutoTickUnit(Graphics2D g2, 
             Rectangle2D dataArea, RectangleEdge edge) {
 
-<span class="nc" id="L884">        double tickLabelHeight = estimateMaximumTickLabelHeight(g2);</span>
+<span class="fc" id="L884">        double tickLabelHeight = estimateMaximumTickLabelHeight(g2);</span>
 
         // start with the current tick unit...
-<span class="nc" id="L887">        TickUnitSource tickUnits = getStandardTickUnits();</span>
-<span class="nc" id="L888">        TickUnit unit1 = tickUnits.getCeilingTickUnit(getTickUnit());</span>
-<span class="nc" id="L889">        double unitHeight = lengthToJava2D(unit1.getSize(), dataArea, edge);</span>
+<span class="fc" id="L887">        TickUnitSource tickUnits = getStandardTickUnits();</span>
+<span class="fc" id="L888">        TickUnit unit1 = tickUnits.getCeilingTickUnit(getTickUnit());</span>
+<span class="fc" id="L889">        double unitHeight = lengthToJava2D(unit1.getSize(), dataArea, edge);</span>
         double guess;
-<span class="nc bnc" id="L891" title="All 2 branches missed.">        if (unitHeight &gt; 0) { // then extrapolate...</span>
-<span class="nc" id="L892">            guess = (tickLabelHeight / unitHeight) * unit1.getSize();</span>
+<span class="pc bpc" id="L891" title="1 of 2 branches missed.">        if (unitHeight &gt; 0) { // then extrapolate...</span>
+<span class="fc" id="L892">            guess = (tickLabelHeight / unitHeight) * unit1.getSize();</span>
         } else { 
 <span class="nc" id="L894">            guess = getRange().getLength() / 20.0;</span>
         }
-<span class="nc" id="L896">        NumberTickUnit unit2 = (NumberTickUnit) tickUnits.getCeilingTickUnit(</span>
+<span class="fc" id="L896">        NumberTickUnit unit2 = (NumberTickUnit) tickUnits.getCeilingTickUnit(</span>
                 guess);
-<span class="nc" id="L898">        double unit2Height = lengthToJava2D(unit2.getSize(), dataArea, edge);</span>
+<span class="fc" id="L898">        double unit2Height = lengthToJava2D(unit2.getSize(), dataArea, edge);</span>
 
-<span class="nc" id="L900">        tickLabelHeight = estimateMaximumTickLabelHeight(g2);</span>
-<span class="nc bnc" id="L901" title="All 2 branches missed.">        if (tickLabelHeight &gt; unit2Height) {</span>
+<span class="fc" id="L900">        tickLabelHeight = estimateMaximumTickLabelHeight(g2);</span>
+<span class="pc bpc" id="L901" title="1 of 2 branches missed.">        if (tickLabelHeight &gt; unit2Height) {</span>
 <span class="nc" id="L902">            unit2 = (NumberTickUnit) tickUnits.getLargerTickUnit(unit2);</span>
         }
 
-<span class="nc" id="L905">        setTickUnit(unit2, false, false);</span>
+<span class="fc" id="L905">        setTickUnit(unit2, false, false);</span>
 
-<span class="nc" id="L907">    }</span>
+<span class="fc" id="L907">    }</span>
 
     /**
      * Calculates the positions of the tick labels for the axis, storing the
@@ -921,14 +921,14 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     public List refreshTicks(Graphics2D g2, AxisState state, 
             Rectangle2D dataArea, RectangleEdge edge) {
 
-<span class="nc" id="L924">        List result = new java.util.ArrayList();</span>
-<span class="nc bnc" id="L925" title="All 2 branches missed.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
-<span class="nc" id="L926">            result = refreshTicksHorizontal(g2, dataArea, edge);</span>
+<span class="fc" id="L924">        List result = new java.util.ArrayList();</span>
+<span class="fc bfc" id="L925" title="All 2 branches covered.">        if (RectangleEdge.isTopOrBottom(edge)) {</span>
+<span class="fc" id="L926">            result = refreshTicksHorizontal(g2, dataArea, edge);</span>
         }
-<span class="nc bnc" id="L928" title="All 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
-<span class="nc" id="L929">            result = refreshTicksVertical(g2, dataArea, edge);</span>
+<span class="pc bpc" id="L928" title="1 of 2 branches missed.">        else if (RectangleEdge.isLeftOrRight(edge)) {</span>
+<span class="fc" id="L929">            result = refreshTicksVertical(g2, dataArea, edge);</span>
         }
-<span class="nc" id="L931">        return result;</span>
+<span class="fc" id="L931">        return result;</span>
 
     }
 
@@ -945,47 +945,47 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected List refreshTicksHorizontal(Graphics2D g2,
             Rectangle2D dataArea, RectangleEdge edge) {
 
-<span class="nc" id="L948">        List result = new java.util.ArrayList();</span>
+<span class="fc" id="L948">        List result = new java.util.ArrayList();</span>
 
-<span class="nc" id="L950">        Font tickLabelFont = getTickLabelFont();</span>
-<span class="nc" id="L951">        g2.setFont(tickLabelFont);</span>
+<span class="fc" id="L950">        Font tickLabelFont = getTickLabelFont();</span>
+<span class="fc" id="L951">        g2.setFont(tickLabelFont);</span>
 
-<span class="nc bnc" id="L953" title="All 2 branches missed.">        if (isAutoTickUnitSelection()) {</span>
-<span class="nc" id="L954">            selectAutoTickUnit(g2, dataArea, edge);</span>
+<span class="pc bpc" id="L953" title="1 of 2 branches missed.">        if (isAutoTickUnitSelection()) {</span>
+<span class="fc" id="L954">            selectAutoTickUnit(g2, dataArea, edge);</span>
         }
 
-<span class="nc" id="L957">        TickUnit tu = getTickUnit();</span>
-<span class="nc" id="L958">        double size = tu.getSize();</span>
-<span class="nc" id="L959">        int count = calculateVisibleTickCount();</span>
-<span class="nc" id="L960">        double lowestTickValue = calculateLowestVisibleTickValue();</span>
+<span class="fc" id="L957">        TickUnit tu = getTickUnit();</span>
+<span class="fc" id="L958">        double size = tu.getSize();</span>
+<span class="fc" id="L959">        int count = calculateVisibleTickCount();</span>
+<span class="fc" id="L960">        double lowestTickValue = calculateLowestVisibleTickValue();</span>
 
-<span class="nc bnc" id="L962" title="All 2 branches missed.">        if (count &lt;= ValueAxis.MAXIMUM_TICK_COUNT) {</span>
-<span class="nc" id="L963">            int minorTickSpaces = getMinorTickCount();</span>
-<span class="nc bnc" id="L964" title="All 2 branches missed.">            if (minorTickSpaces &lt;= 0) {</span>
-<span class="nc" id="L965">                minorTickSpaces = tu.getMinorTickCount();</span>
+<span class="pc bpc" id="L962" title="1 of 2 branches missed.">        if (count &lt;= ValueAxis.MAXIMUM_TICK_COUNT) {</span>
+<span class="fc" id="L963">            int minorTickSpaces = getMinorTickCount();</span>
+<span class="pc bpc" id="L964" title="1 of 2 branches missed.">            if (minorTickSpaces &lt;= 0) {</span>
+<span class="fc" id="L965">                minorTickSpaces = tu.getMinorTickCount();</span>
             }
-<span class="nc bnc" id="L967" title="All 2 branches missed.">            for (int minorTick = 1; minorTick &lt; minorTickSpaces; minorTick++) {</span>
-<span class="nc" id="L968">                double minorTickValue = lowestTickValue </span>
+<span class="fc bfc" id="L967" title="All 2 branches covered.">            for (int minorTick = 1; minorTick &lt; minorTickSpaces; minorTick++) {</span>
+<span class="fc" id="L968">                double minorTickValue = lowestTickValue </span>
                         - size * minorTick / minorTickSpaces;
-<span class="nc bnc" id="L970" title="All 2 branches missed.">                if (getRange().contains(minorTickValue)) {</span>
-<span class="nc" id="L971">                    result.add(new NumberTick(TickType.MINOR, minorTickValue,</span>
+<span class="fc bfc" id="L970" title="All 2 branches covered.">                if (getRange().contains(minorTickValue)) {</span>
+<span class="fc" id="L971">                    result.add(new NumberTick(TickType.MINOR, minorTickValue,</span>
                             &quot;&quot;, TextAnchor.TOP_CENTER, TextAnchor.CENTER,
                             0.0));
                 }
             }
-<span class="nc bnc" id="L976" title="All 2 branches missed.">            for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L977">                double currentTickValue = lowestTickValue + (i * size);</span>
+<span class="fc bfc" id="L976" title="All 2 branches covered.">            for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L977">                double currentTickValue = lowestTickValue + (i * size);</span>
                 String tickLabel;
-<span class="nc" id="L979">                NumberFormat formatter = getNumberFormatOverride();</span>
-<span class="nc bnc" id="L980" title="All 2 branches missed.">                if (formatter != null) {</span>
+<span class="fc" id="L979">                NumberFormat formatter = getNumberFormatOverride();</span>
+<span class="pc bpc" id="L980" title="1 of 2 branches missed.">                if (formatter != null) {</span>
 <span class="nc" id="L981">                    tickLabel = formatter.format(currentTickValue);</span>
                 }
                 else {
-<span class="nc" id="L984">                    tickLabel = getTickUnit().valueToString(currentTickValue);</span>
+<span class="fc" id="L984">                    tickLabel = getTickUnit().valueToString(currentTickValue);</span>
                 }
                 TextAnchor anchor, rotationAnchor;
-<span class="nc" id="L987">                double angle = 0.0;</span>
-<span class="nc bnc" id="L988" title="All 2 branches missed.">                if (isVerticalTickLabels()) {</span>
+<span class="fc" id="L987">                double angle = 0.0;</span>
+<span class="pc bpc" id="L988" title="1 of 2 branches missed.">                if (isVerticalTickLabels()) {</span>
 <span class="nc" id="L989">                    anchor = TextAnchor.CENTER_RIGHT;</span>
 <span class="nc" id="L990">                    rotationAnchor = TextAnchor.CENTER_RIGHT;</span>
 <span class="nc bnc" id="L991" title="All 2 branches missed.">                    if (edge == RectangleEdge.TOP) {</span>
@@ -996,34 +996,34 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
                     }
                 }
                 else {
-<span class="nc bnc" id="L999" title="All 2 branches missed.">                    if (edge == RectangleEdge.TOP) {</span>
-<span class="nc" id="L1000">                        anchor = TextAnchor.BOTTOM_CENTER;</span>
-<span class="nc" id="L1001">                        rotationAnchor = TextAnchor.BOTTOM_CENTER;</span>
+<span class="fc bfc" id="L999" title="All 2 branches covered.">                    if (edge == RectangleEdge.TOP) {</span>
+<span class="fc" id="L1000">                        anchor = TextAnchor.BOTTOM_CENTER;</span>
+<span class="fc" id="L1001">                        rotationAnchor = TextAnchor.BOTTOM_CENTER;</span>
                     }
                     else {
-<span class="nc" id="L1004">                        anchor = TextAnchor.TOP_CENTER;</span>
-<span class="nc" id="L1005">                        rotationAnchor = TextAnchor.TOP_CENTER;</span>
+<span class="fc" id="L1004">                        anchor = TextAnchor.TOP_CENTER;</span>
+<span class="fc" id="L1005">                        rotationAnchor = TextAnchor.TOP_CENTER;</span>
                     }
                 }
 
-<span class="nc" id="L1009">                Tick tick = new NumberTick(new Double(currentTickValue),</span>
+<span class="fc" id="L1009">                Tick tick = new NumberTick(new Double(currentTickValue),</span>
                         tickLabel, anchor, rotationAnchor, angle);
-<span class="nc" id="L1011">                result.add(tick);</span>
-<span class="nc" id="L1012">                double nextTickValue = lowestTickValue + ((i + 1) * size);</span>
-<span class="nc bnc" id="L1013" title="All 2 branches missed.">                for (int minorTick = 1; minorTick &lt; minorTickSpaces;</span>
-<span class="nc" id="L1014">                        minorTick++) {</span>
-<span class="nc" id="L1015">                    double minorTickValue = currentTickValue</span>
+<span class="fc" id="L1011">                result.add(tick);</span>
+<span class="fc" id="L1012">                double nextTickValue = lowestTickValue + ((i + 1) * size);</span>
+<span class="fc bfc" id="L1013" title="All 2 branches covered.">                for (int minorTick = 1; minorTick &lt; minorTickSpaces;</span>
+<span class="fc" id="L1014">                        minorTick++) {</span>
+<span class="fc" id="L1015">                    double minorTickValue = currentTickValue</span>
                             + (nextTickValue - currentTickValue)
                             * minorTick / minorTickSpaces;
-<span class="nc bnc" id="L1018" title="All 2 branches missed.">                    if (getRange().contains(minorTickValue)) {</span>
-<span class="nc" id="L1019">                        result.add(new NumberTick(TickType.MINOR,</span>
+<span class="fc bfc" id="L1018" title="All 2 branches covered.">                    if (getRange().contains(minorTickValue)) {</span>
+<span class="fc" id="L1019">                        result.add(new NumberTick(TickType.MINOR,</span>
                                 minorTickValue, &quot;&quot;, TextAnchor.TOP_CENTER,
                                 TextAnchor.CENTER, 0.0));
                     }
                 }
             }
         }
-<span class="nc" id="L1026">        return result;</span>
+<span class="fc" id="L1026">        return result;</span>
 
     }
 
@@ -1040,50 +1040,50 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
     protected List refreshTicksVertical(Graphics2D g2,
             Rectangle2D dataArea, RectangleEdge edge) {
 
-<span class="nc" id="L1043">        List result = new java.util.ArrayList();</span>
-<span class="nc" id="L1044">        result.clear();</span>
+<span class="fc" id="L1043">        List result = new java.util.ArrayList();</span>
+<span class="fc" id="L1044">        result.clear();</span>
 
-<span class="nc" id="L1046">        Font tickLabelFont = getTickLabelFont();</span>
-<span class="nc" id="L1047">        g2.setFont(tickLabelFont);</span>
-<span class="nc bnc" id="L1048" title="All 2 branches missed.">        if (isAutoTickUnitSelection()) {</span>
-<span class="nc" id="L1049">            selectAutoTickUnit(g2, dataArea, edge);</span>
+<span class="fc" id="L1046">        Font tickLabelFont = getTickLabelFont();</span>
+<span class="fc" id="L1047">        g2.setFont(tickLabelFont);</span>
+<span class="pc bpc" id="L1048" title="1 of 2 branches missed.">        if (isAutoTickUnitSelection()) {</span>
+<span class="fc" id="L1049">            selectAutoTickUnit(g2, dataArea, edge);</span>
         }
 
-<span class="nc" id="L1052">        TickUnit tu = getTickUnit();</span>
-<span class="nc" id="L1053">        double size = tu.getSize();</span>
-<span class="nc" id="L1054">        int count = calculateVisibleTickCount();</span>
-<span class="nc" id="L1055">        double lowestTickValue = calculateLowestVisibleTickValue();</span>
+<span class="fc" id="L1052">        TickUnit tu = getTickUnit();</span>
+<span class="fc" id="L1053">        double size = tu.getSize();</span>
+<span class="fc" id="L1054">        int count = calculateVisibleTickCount();</span>
+<span class="fc" id="L1055">        double lowestTickValue = calculateLowestVisibleTickValue();</span>
 
-<span class="nc bnc" id="L1057" title="All 2 branches missed.">        if (count &lt;= ValueAxis.MAXIMUM_TICK_COUNT) {</span>
-<span class="nc" id="L1058">            int minorTickSpaces = getMinorTickCount();</span>
-<span class="nc bnc" id="L1059" title="All 2 branches missed.">            if (minorTickSpaces &lt;= 0) {</span>
-<span class="nc" id="L1060">                minorTickSpaces = tu.getMinorTickCount();</span>
+<span class="pc bpc" id="L1057" title="1 of 2 branches missed.">        if (count &lt;= ValueAxis.MAXIMUM_TICK_COUNT) {</span>
+<span class="fc" id="L1058">            int minorTickSpaces = getMinorTickCount();</span>
+<span class="pc bpc" id="L1059" title="1 of 2 branches missed.">            if (minorTickSpaces &lt;= 0) {</span>
+<span class="fc" id="L1060">                minorTickSpaces = tu.getMinorTickCount();</span>
             }
-<span class="nc bnc" id="L1062" title="All 2 branches missed.">            for (int minorTick = 1; minorTick &lt; minorTickSpaces; minorTick++) {</span>
-<span class="nc" id="L1063">                double minorTickValue = lowestTickValue</span>
+<span class="fc bfc" id="L1062" title="All 2 branches covered.">            for (int minorTick = 1; minorTick &lt; minorTickSpaces; minorTick++) {</span>
+<span class="fc" id="L1063">                double minorTickValue = lowestTickValue</span>
                         - size * minorTick / minorTickSpaces;
-<span class="nc bnc" id="L1065" title="All 2 branches missed.">                if (getRange().contains(minorTickValue)) {</span>
-<span class="nc" id="L1066">                    result.add(new NumberTick(TickType.MINOR, minorTickValue,</span>
+<span class="fc bfc" id="L1065" title="All 2 branches covered.">                if (getRange().contains(minorTickValue)) {</span>
+<span class="fc" id="L1066">                    result.add(new NumberTick(TickType.MINOR, minorTickValue,</span>
                             &quot;&quot;, TextAnchor.TOP_CENTER, TextAnchor.CENTER,
                             0.0));
                 }
             }
 
-<span class="nc bnc" id="L1072" title="All 2 branches missed.">            for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L1073">                double currentTickValue = lowestTickValue + (i * size);</span>
+<span class="fc bfc" id="L1072" title="All 2 branches covered.">            for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L1073">                double currentTickValue = lowestTickValue + (i * size);</span>
                 String tickLabel;
-<span class="nc" id="L1075">                NumberFormat formatter = getNumberFormatOverride();</span>
-<span class="nc bnc" id="L1076" title="All 2 branches missed.">                if (formatter != null) {</span>
+<span class="fc" id="L1075">                NumberFormat formatter = getNumberFormatOverride();</span>
+<span class="pc bpc" id="L1076" title="1 of 2 branches missed.">                if (formatter != null) {</span>
 <span class="nc" id="L1077">                    tickLabel = formatter.format(currentTickValue);</span>
                 }
                 else {
-<span class="nc" id="L1080">                    tickLabel = getTickUnit().valueToString(currentTickValue);</span>
+<span class="fc" id="L1080">                    tickLabel = getTickUnit().valueToString(currentTickValue);</span>
                 }
 
                 TextAnchor anchor;
                 TextAnchor rotationAnchor;
-<span class="nc" id="L1085">                double angle = 0.0;</span>
-<span class="nc bnc" id="L1086" title="All 2 branches missed.">                if (isVerticalTickLabels()) {</span>
+<span class="fc" id="L1085">                double angle = 0.0;</span>
+<span class="pc bpc" id="L1086" title="1 of 2 branches missed.">                if (isVerticalTickLabels()) {</span>
 <span class="nc bnc" id="L1087" title="All 2 branches missed.">                    if (edge == RectangleEdge.LEFT) {</span>
 <span class="nc" id="L1088">                        anchor = TextAnchor.BOTTOM_CENTER;</span>
 <span class="nc" id="L1089">                        rotationAnchor = TextAnchor.BOTTOM_CENTER;</span>
@@ -1096,9 +1096,9 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
                     }
                 }
                 else {
-<span class="nc bnc" id="L1099" title="All 2 branches missed.">                    if (edge == RectangleEdge.LEFT) {</span>
-<span class="nc" id="L1100">                        anchor = TextAnchor.CENTER_RIGHT;</span>
-<span class="nc" id="L1101">                        rotationAnchor = TextAnchor.CENTER_RIGHT;</span>
+<span class="pc bpc" id="L1099" title="1 of 2 branches missed.">                    if (edge == RectangleEdge.LEFT) {</span>
+<span class="fc" id="L1100">                        anchor = TextAnchor.CENTER_RIGHT;</span>
+<span class="fc" id="L1101">                        rotationAnchor = TextAnchor.CENTER_RIGHT;</span>
                     }
                     else {
 <span class="nc" id="L1104">                        anchor = TextAnchor.CENTER_LEFT;</span>
@@ -1106,25 +1106,25 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
                     }
                 }
 
-<span class="nc" id="L1109">                Tick tick = new NumberTick(new Double(currentTickValue),</span>
+<span class="fc" id="L1109">                Tick tick = new NumberTick(new Double(currentTickValue),</span>
                         tickLabel, anchor, rotationAnchor, angle);
-<span class="nc" id="L1111">                result.add(tick);</span>
+<span class="fc" id="L1111">                result.add(tick);</span>
 
-<span class="nc" id="L1113">                double nextTickValue = lowestTickValue + ((i + 1) * size);</span>
-<span class="nc bnc" id="L1114" title="All 2 branches missed.">                for (int minorTick = 1; minorTick &lt; minorTickSpaces;</span>
-<span class="nc" id="L1115">                        minorTick++) {</span>
-<span class="nc" id="L1116">                    double minorTickValue = currentTickValue</span>
+<span class="fc" id="L1113">                double nextTickValue = lowestTickValue + ((i + 1) * size);</span>
+<span class="fc bfc" id="L1114" title="All 2 branches covered.">                for (int minorTick = 1; minorTick &lt; minorTickSpaces;</span>
+<span class="fc" id="L1115">                        minorTick++) {</span>
+<span class="fc" id="L1116">                    double minorTickValue = currentTickValue</span>
                             + (nextTickValue - currentTickValue)
                             * minorTick / minorTickSpaces;
-<span class="nc bnc" id="L1119" title="All 2 branches missed.">                    if (getRange().contains(minorTickValue)) {</span>
-<span class="nc" id="L1120">                        result.add(new NumberTick(TickType.MINOR,</span>
+<span class="fc bfc" id="L1119" title="All 2 branches covered.">                    if (getRange().contains(minorTickValue)) {</span>
+<span class="fc" id="L1120">                        result.add(new NumberTick(TickType.MINOR,</span>
                                 minorTickValue, &quot;&quot;, TextAnchor.TOP_CENTER,
                                 TextAnchor.CENTER, 0.0));
                     }
                 }
             }
         }
-<span class="nc" id="L1127">        return result;</span>
+<span class="fc" id="L1127">        return result;</span>
 
     }
 
@@ -1138,12 +1138,12 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1141">        NumberAxis clone = (NumberAxis) super.clone();</span>
-<span class="nc bnc" id="L1142" title="All 2 branches missed.">        if (this.numberFormatOverride != null) {</span>
+<span class="fc" id="L1141">        NumberAxis clone = (NumberAxis) super.clone();</span>
+<span class="pc bpc" id="L1142" title="1 of 2 branches missed.">        if (this.numberFormatOverride != null) {</span>
 <span class="nc" id="L1143">            clone.numberFormatOverride</span>
 <span class="nc" id="L1144">                = (NumberFormat) this.numberFormatOverride.clone();</span>
         }
-<span class="nc" id="L1146">        return clone;</span>
+<span class="fc" id="L1146">        return clone;</span>
     }
 
     /**
@@ -1155,30 +1155,30 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1158" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L1159">            return true;</span>
+<span class="fc bfc" id="L1158" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L1159">            return true;</span>
         }
-<span class="nc bnc" id="L1161" title="All 2 branches missed.">        if (!(obj instanceof NumberAxis)) {</span>
-<span class="nc" id="L1162">            return false;</span>
+<span class="fc bfc" id="L1161" title="All 2 branches covered.">        if (!(obj instanceof NumberAxis)) {</span>
+<span class="fc" id="L1162">            return false;</span>
         }
-<span class="nc" id="L1164">        NumberAxis that = (NumberAxis) obj;</span>
-<span class="nc bnc" id="L1165" title="All 2 branches missed.">        if (this.autoRangeIncludesZero != that.autoRangeIncludesZero) {</span>
-<span class="nc" id="L1166">            return false;</span>
+<span class="fc" id="L1164">        NumberAxis that = (NumberAxis) obj;</span>
+<span class="fc bfc" id="L1165" title="All 2 branches covered.">        if (this.autoRangeIncludesZero != that.autoRangeIncludesZero) {</span>
+<span class="fc" id="L1166">            return false;</span>
         }
-<span class="nc bnc" id="L1168" title="All 2 branches missed.">        if (this.autoRangeStickyZero != that.autoRangeStickyZero) {</span>
-<span class="nc" id="L1169">            return false;</span>
+<span class="fc bfc" id="L1168" title="All 2 branches covered.">        if (this.autoRangeStickyZero != that.autoRangeStickyZero) {</span>
+<span class="fc" id="L1169">            return false;</span>
         }
-<span class="nc bnc" id="L1171" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.tickUnit, that.tickUnit)) {</span>
-<span class="nc" id="L1172">            return false;</span>
+<span class="fc bfc" id="L1171" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.tickUnit, that.tickUnit)) {</span>
+<span class="fc" id="L1172">            return false;</span>
         }
-<span class="nc bnc" id="L1174" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.numberFormatOverride,</span>
+<span class="fc bfc" id="L1174" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.numberFormatOverride,</span>
                 that.numberFormatOverride)) {
-<span class="nc" id="L1176">            return false;</span>
+<span class="fc" id="L1176">            return false;</span>
         }
-<span class="nc bnc" id="L1178" title="All 2 branches missed.">        if (!this.rangeType.equals(that.rangeType)) {</span>
-<span class="nc" id="L1179">            return false;</span>
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">        if (!this.rangeType.equals(that.rangeType)) {</span>
+<span class="fc" id="L1179">            return false;</span>
         }
-<span class="nc" id="L1181">        return super.equals(obj);</span>
+<span class="fc" id="L1181">        return super.equals(obj);</span>
     }
 
     /**
@@ -1188,8 +1188,8 @@ public class NumberAxis extends ValueAxis implements Cloneable, Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L1191">        return super.hashCode();</span>
+<span class="fc" id="L1191">        return super.hashCode();</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

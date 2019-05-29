@@ -62,7 +62,7 @@ public class CategoryLabelPositions implements Serializable {
 
     /** STANDARD category label positions. */
     public static final CategoryLabelPositions
-<span class="nc" id="L65">        STANDARD = new CategoryLabelPositions(</span>
+<span class="fc" id="L65">        STANDARD = new CategoryLabelPositions(</span>
             new CategoryLabelPosition(
                 RectangleAnchor.BOTTOM, TextBlockAnchor.BOTTOM_CENTER), // TOP
             new CategoryLabelPosition(
@@ -77,7 +77,7 @@ public class CategoryLabelPositions implements Serializable {
 
     /** UP_90 category label positions. */
     public static final CategoryLabelPositions
-<span class="nc" id="L80">        UP_90 = new CategoryLabelPositions(</span>
+<span class="fc" id="L80">        UP_90 = new CategoryLabelPositions(</span>
             new CategoryLabelPosition(
                 RectangleAnchor.BOTTOM, TextBlockAnchor.CENTER_LEFT,
                 TextAnchor.CENTER_LEFT, -Math.PI / 2.0,
@@ -98,7 +98,7 @@ public class CategoryLabelPositions implements Serializable {
 
     /** DOWN_90 category label positions. */
     public static final CategoryLabelPositions
-<span class="nc" id="L101">        DOWN_90 = new CategoryLabelPositions(</span>
+<span class="fc" id="L101">        DOWN_90 = new CategoryLabelPositions(</span>
             new CategoryLabelPosition(
                 RectangleAnchor.BOTTOM, TextBlockAnchor.CENTER_RIGHT,
                 TextAnchor.CENTER_RIGHT, Math.PI / 2.0,
@@ -118,12 +118,12 @@ public class CategoryLabelPositions implements Serializable {
         );
 
     /** UP_45 category label positions. */
-<span class="nc" id="L121">    public static final CategoryLabelPositions UP_45</span>
-<span class="nc" id="L122">        = createUpRotationLabelPositions(Math.PI / 4.0);</span>
+<span class="fc" id="L121">    public static final CategoryLabelPositions UP_45</span>
+<span class="fc" id="L122">        = createUpRotationLabelPositions(Math.PI / 4.0);</span>
 
     /** DOWN_45 category label positions. */
-<span class="nc" id="L125">    public static final CategoryLabelPositions DOWN_45</span>
-<span class="nc" id="L126">        = createDownRotationLabelPositions(Math.PI / 4.0);</span>
+<span class="fc" id="L125">    public static final CategoryLabelPositions DOWN_45</span>
+<span class="fc" id="L126">        = createDownRotationLabelPositions(Math.PI / 4.0);</span>
 
     /**
      * Creates a new instance where the category labels angled upwards by the
@@ -135,7 +135,7 @@ public class CategoryLabelPositions implements Serializable {
      */
     public static CategoryLabelPositions createUpRotationLabelPositions(
             double angle) {
-<span class="nc" id="L138">        return new CategoryLabelPositions(</span>
+<span class="fc" id="L138">        return new CategoryLabelPositions(</span>
             new CategoryLabelPosition(
                 RectangleAnchor.BOTTOM, TextBlockAnchor.BOTTOM_LEFT,
                 TextAnchor.BOTTOM_LEFT, -angle,
@@ -165,7 +165,7 @@ public class CategoryLabelPositions implements Serializable {
      */
     public static CategoryLabelPositions createDownRotationLabelPositions(
             double angle) {
-<span class="nc" id="L168">        return new CategoryLabelPositions(</span>
+<span class="fc" id="L168">        return new CategoryLabelPositions(</span>
             new CategoryLabelPosition(
                 RectangleAnchor.BOTTOM, TextBlockAnchor.BOTTOM_RIGHT,
                 TextAnchor.BOTTOM_RIGHT, angle,
@@ -233,18 +233,18 @@ public class CategoryLabelPositions implements Serializable {
      */
     public CategoryLabelPositions(CategoryLabelPosition top,
             CategoryLabelPosition bottom, CategoryLabelPosition left,
-<span class="nc" id="L236">            CategoryLabelPosition right) {</span>
+<span class="fc" id="L236">            CategoryLabelPosition right) {</span>
 
-<span class="nc" id="L238">        Args.nullNotPermitted(top, &quot;top&quot;);</span>
-<span class="nc" id="L239">        Args.nullNotPermitted(bottom, &quot;bottom&quot;);</span>
-<span class="nc" id="L240">        Args.nullNotPermitted(left, &quot;left&quot;);</span>
-<span class="nc" id="L241">        Args.nullNotPermitted(right, &quot;right&quot;);</span>
+<span class="fc" id="L238">        Args.nullNotPermitted(top, &quot;top&quot;);</span>
+<span class="fc" id="L239">        Args.nullNotPermitted(bottom, &quot;bottom&quot;);</span>
+<span class="fc" id="L240">        Args.nullNotPermitted(left, &quot;left&quot;);</span>
+<span class="fc" id="L241">        Args.nullNotPermitted(right, &quot;right&quot;);</span>
 
-<span class="nc" id="L243">        this.positionForAxisAtTop = top;</span>
-<span class="nc" id="L244">        this.positionForAxisAtBottom = bottom;</span>
-<span class="nc" id="L245">        this.positionForAxisAtLeft = left;</span>
-<span class="nc" id="L246">        this.positionForAxisAtRight = right;</span>
-<span class="nc" id="L247">    }</span>
+<span class="fc" id="L243">        this.positionForAxisAtTop = top;</span>
+<span class="fc" id="L244">        this.positionForAxisAtBottom = bottom;</span>
+<span class="fc" id="L245">        this.positionForAxisAtLeft = left;</span>
+<span class="fc" id="L246">        this.positionForAxisAtRight = right;</span>
+<span class="fc" id="L247">    }</span>
 
     /**
      * Returns the category label position specification for an axis at the
@@ -255,20 +255,20 @@ public class CategoryLabelPositions implements Serializable {
      * @return The category label position specification.
      */
     public CategoryLabelPosition getLabelPosition(RectangleEdge edge) {
-<span class="nc" id="L258">        CategoryLabelPosition result = null;</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (edge == RectangleEdge.TOP) {</span>
+<span class="fc" id="L258">        CategoryLabelPosition result = null;</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (edge == RectangleEdge.TOP) {</span>
 <span class="nc" id="L260">            result = this.positionForAxisAtTop;</span>
         }
-<span class="nc bnc" id="L262" title="All 2 branches missed.">        else if (edge == RectangleEdge.BOTTOM) {</span>
-<span class="nc" id="L263">            result = this.positionForAxisAtBottom;</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        else if (edge == RectangleEdge.BOTTOM) {</span>
+<span class="fc" id="L263">            result = this.positionForAxisAtBottom;</span>
         }
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        else if (edge == RectangleEdge.LEFT) {</span>
-<span class="nc" id="L266">            result = this.positionForAxisAtLeft;</span>
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        else if (edge == RectangleEdge.LEFT) {</span>
+<span class="fc" id="L266">            result = this.positionForAxisAtLeft;</span>
         }
 <span class="nc bnc" id="L268" title="All 2 branches missed.">        else if (edge == RectangleEdge.RIGHT) {</span>
 <span class="nc" id="L269">            result = this.positionForAxisAtRight;</span>
         }
-<span class="nc" id="L271">        return result;</span>
+<span class="fc" id="L271">        return result;</span>
     }
 
     /**
@@ -367,28 +367,28 @@ public class CategoryLabelPositions implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L370" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (this == obj) {</span>
 <span class="nc" id="L371">            return true;</span>
         }
-<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (!(obj instanceof CategoryLabelPositions)) {</span>
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">        if (!(obj instanceof CategoryLabelPositions)) {</span>
 <span class="nc" id="L374">            return false;</span>
         }
 
-<span class="nc" id="L377">        CategoryLabelPositions that = (CategoryLabelPositions) obj;</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">        if (!this.positionForAxisAtTop.equals(that.positionForAxisAtTop)) {</span>
-<span class="nc" id="L379">            return false;</span>
+<span class="fc" id="L377">        CategoryLabelPositions that = (CategoryLabelPositions) obj;</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">        if (!this.positionForAxisAtTop.equals(that.positionForAxisAtTop)) {</span>
+<span class="fc" id="L379">            return false;</span>
         }
-<span class="nc bnc" id="L381" title="All 2 branches missed.">        if (!this.positionForAxisAtBottom.equals(</span>
+<span class="fc bfc" id="L381" title="All 2 branches covered.">        if (!this.positionForAxisAtBottom.equals(</span>
                 that.positionForAxisAtBottom)) {
-<span class="nc" id="L383">            return false;</span>
+<span class="fc" id="L383">            return false;</span>
         }
-<span class="nc bnc" id="L385" title="All 2 branches missed.">        if (!this.positionForAxisAtLeft.equals(that.positionForAxisAtLeft)) {</span>
-<span class="nc" id="L386">            return false;</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        if (!this.positionForAxisAtLeft.equals(that.positionForAxisAtLeft)) {</span>
+<span class="fc" id="L386">            return false;</span>
         }
-<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (!this.positionForAxisAtRight.equals(that.positionForAxisAtRight)) {</span>
-<span class="nc" id="L389">            return false;</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        if (!this.positionForAxisAtRight.equals(that.positionForAxisAtRight)) {</span>
+<span class="fc" id="L389">            return false;</span>
         }
-<span class="nc" id="L391">        return true;</span>
+<span class="fc" id="L391">        return true;</span>
     }
 
     /**
@@ -398,12 +398,12 @@ public class CategoryLabelPositions implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L401">        int result = 19;</span>
-<span class="nc" id="L402">        result = 37 * result + this.positionForAxisAtTop.hashCode();</span>
-<span class="nc" id="L403">        result = 37 * result + this.positionForAxisAtBottom.hashCode();</span>
-<span class="nc" id="L404">        result = 37 * result + this.positionForAxisAtLeft.hashCode();</span>
-<span class="nc" id="L405">        result = 37 * result + this.positionForAxisAtRight.hashCode();</span>
-<span class="nc" id="L406">        return result;</span>
+<span class="fc" id="L401">        int result = 19;</span>
+<span class="fc" id="L402">        result = 37 * result + this.positionForAxisAtTop.hashCode();</span>
+<span class="fc" id="L403">        result = 37 * result + this.positionForAxisAtBottom.hashCode();</span>
+<span class="fc" id="L404">        result = 37 * result + this.positionForAxisAtLeft.hashCode();</span>
+<span class="fc" id="L405">        result = 37 * result + this.positionForAxisAtRight.hashCode();</span>
+<span class="fc" id="L406">        return result;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

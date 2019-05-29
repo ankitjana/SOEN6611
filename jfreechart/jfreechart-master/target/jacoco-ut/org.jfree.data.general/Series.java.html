@@ -107,8 +107,8 @@ public abstract class Series implements Cloneable, Serializable {
      * @param key  the series key ({@code null} not permitted).
      */
     protected Series(Comparable key) {
-<span class="nc" id="L110">        this(key, null);</span>
-<span class="nc" id="L111">    }</span>
+<span class="fc" id="L110">        this(key, null);</span>
+<span class="fc" id="L111">    }</span>
 
     /**
      * Creates a new series with the specified key and description.
@@ -116,15 +116,15 @@ public abstract class Series implements Cloneable, Serializable {
      * @param key  the series key ({@code null} NOT permitted).
      * @param description  the series description ({@code null} permitted).
      */
-<span class="nc" id="L119">    protected Series(Comparable key, String description) {</span>
-<span class="nc" id="L120">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L121">        this.key = key;</span>
-<span class="nc" id="L122">        this.description = description;</span>
-<span class="nc" id="L123">        this.listeners = new EventListenerList();</span>
-<span class="nc" id="L124">        this.propertyChangeSupport = new PropertyChangeSupport(this);</span>
-<span class="nc" id="L125">        this.vetoableChangeSupport = new VetoableChangeSupport(this);</span>
-<span class="nc" id="L126">        this.notify = true;</span>
-<span class="nc" id="L127">    }</span>
+<span class="fc" id="L119">    protected Series(Comparable key, String description) {</span>
+<span class="fc" id="L120">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L121">        this.key = key;</span>
+<span class="fc" id="L122">        this.description = description;</span>
+<span class="fc" id="L123">        this.listeners = new EventListenerList();</span>
+<span class="fc" id="L124">        this.propertyChangeSupport = new PropertyChangeSupport(this);</span>
+<span class="fc" id="L125">        this.vetoableChangeSupport = new VetoableChangeSupport(this);</span>
+<span class="fc" id="L126">        this.notify = true;</span>
+<span class="fc" id="L127">    }</span>
 
     /**
      * Returns the key for the series.
@@ -134,7 +134,7 @@ public abstract class Series implements Cloneable, Serializable {
      * @see #setKey(Comparable)
      */
     public Comparable getKey() {
-<span class="nc" id="L137">        return this.key;</span>
+<span class="fc" id="L137">        return this.key;</span>
     }
 
     /**
@@ -149,21 +149,21 @@ public abstract class Series implements Cloneable, Serializable {
      * @see #getKey()
      */
     public void setKey(Comparable key) {
-<span class="nc" id="L152">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L153">        Comparable old = this.key;</span>
+<span class="fc" id="L152">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L153">        Comparable old = this.key;</span>
         try {
             // if this series belongs to a dataset, the dataset might veto the
             // change if it results in two series within the dataset having the
             // same key
-<span class="nc" id="L158">            this.vetoableChangeSupport.fireVetoableChange(&quot;Key&quot;, old, key);</span>
-<span class="nc" id="L159">            this.key = key;</span>
+<span class="fc" id="L158">            this.vetoableChangeSupport.fireVetoableChange(&quot;Key&quot;, old, key);</span>
+<span class="fc" id="L159">            this.key = key;</span>
             // prior to 1.0.14, we just fired a PropertyChange - so we need to
             // keep doing this
-<span class="nc" id="L162">            this.propertyChangeSupport.firePropertyChange(&quot;Key&quot;, old, key);</span>
-<span class="nc" id="L163">        } catch (PropertyVetoException e) {</span>
-<span class="nc" id="L164">            throw new IllegalArgumentException(e.getMessage());</span>
-<span class="nc" id="L165">        }</span>
-<span class="nc" id="L166">    }</span>
+<span class="fc" id="L162">            this.propertyChangeSupport.firePropertyChange(&quot;Key&quot;, old, key);</span>
+<span class="fc" id="L163">        } catch (PropertyVetoException e) {</span>
+<span class="fc" id="L164">            throw new IllegalArgumentException(e.getMessage());</span>
+<span class="fc" id="L165">        }</span>
+<span class="fc" id="L166">    }</span>
 
     /**
      * Returns a description of the series.
@@ -173,7 +173,7 @@ public abstract class Series implements Cloneable, Serializable {
      * @see #setDescription(String)
      */
     public String getDescription() {
-<span class="nc" id="L176">        return this.description;</span>
+<span class="fc" id="L176">        return this.description;</span>
     }
 
     /**
@@ -185,11 +185,11 @@ public abstract class Series implements Cloneable, Serializable {
      * @see #getDescription()
      */
     public void setDescription(String description) {
-<span class="nc" id="L188">        String old = this.description;</span>
-<span class="nc" id="L189">        this.description = description;</span>
-<span class="nc" id="L190">        this.propertyChangeSupport.firePropertyChange(&quot;Description&quot;, old,</span>
+<span class="fc" id="L188">        String old = this.description;</span>
+<span class="fc" id="L189">        this.description = description;</span>
+<span class="fc" id="L190">        this.propertyChangeSupport.firePropertyChange(&quot;Description&quot;, old,</span>
                 description);
-<span class="nc" id="L192">    }</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Returns the flag that controls whether or not change events are sent to
@@ -227,7 +227,7 @@ public abstract class Series implements Cloneable, Serializable {
      * @since 1.0.7
      */
     public boolean isEmpty() {
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        return (getItemCount() == 0);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        return (getItemCount() == 0);</span>
     }
 
     /**
@@ -256,11 +256,11 @@ public abstract class Series implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L259">        Series clone = (Series) super.clone();</span>
-<span class="nc" id="L260">        clone.listeners = new EventListenerList();</span>
-<span class="nc" id="L261">        clone.propertyChangeSupport = new PropertyChangeSupport(clone);</span>
-<span class="nc" id="L262">        clone.vetoableChangeSupport = new VetoableChangeSupport(clone);</span>
-<span class="nc" id="L263">        return clone;</span>
+<span class="fc" id="L259">        Series clone = (Series) super.clone();</span>
+<span class="fc" id="L260">        clone.listeners = new EventListenerList();</span>
+<span class="fc" id="L261">        clone.propertyChangeSupport = new PropertyChangeSupport(clone);</span>
+<span class="fc" id="L262">        clone.vetoableChangeSupport = new VetoableChangeSupport(clone);</span>
+<span class="fc" id="L263">        return clone;</span>
     }
 
     /**
@@ -272,20 +272,20 @@ public abstract class Series implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L275" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L276">            return true;</span>
         }
-<span class="nc bnc" id="L278" title="All 2 branches missed.">        if (!(obj instanceof Series)) {</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        if (!(obj instanceof Series)) {</span>
 <span class="nc" id="L279">            return false;</span>
         }
-<span class="nc" id="L281">        Series that = (Series) obj;</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">        if (!getKey().equals(that.getKey())) {</span>
-<span class="nc" id="L283">            return false;</span>
+<span class="fc" id="L281">        Series that = (Series) obj;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (!getKey().equals(that.getKey())) {</span>
+<span class="fc" id="L283">            return false;</span>
         }
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (!ObjectUtils.equal(getDescription(), that.getDescription())) {</span>
-<span class="nc" id="L286">            return false;</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (!ObjectUtils.equal(getDescription(), that.getDescription())) {</span>
+<span class="fc" id="L286">            return false;</span>
         }
-<span class="nc" id="L288">        return true;</span>
+<span class="fc" id="L288">        return true;</span>
     }
 
     /**
@@ -296,10 +296,10 @@ public abstract class Series implements Cloneable, Serializable {
     @Override
     public int hashCode() {
         int result;
-<span class="nc" id="L299">        result = this.key.hashCode();</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">        result = 29 * result + (this.description != null</span>
-<span class="nc" id="L301">                ? this.description.hashCode() : 0);</span>
-<span class="nc" id="L302">        return result;</span>
+<span class="fc" id="L299">        result = this.key.hashCode();</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        result = 29 * result + (this.description != null</span>
+<span class="pc" id="L301">                ? this.description.hashCode() : 0);</span>
+<span class="fc" id="L302">        return result;</span>
     }
 
     /**
@@ -312,8 +312,8 @@ public abstract class Series implements Cloneable, Serializable {
      * @param listener  the listener to register.
      */
     public void addChangeListener(SeriesChangeListener listener) {
-<span class="nc" id="L315">        this.listeners.add(SeriesChangeListener.class, listener);</span>
-<span class="nc" id="L316">    }</span>
+<span class="fc" id="L315">        this.listeners.add(SeriesChangeListener.class, listener);</span>
+<span class="fc" id="L316">    }</span>
 
     /**
      * Deregisters an object, so that it not longer receives notification
@@ -322,18 +322,18 @@ public abstract class Series implements Cloneable, Serializable {
      * @param listener  the listener to deregister.
      */
     public void removeChangeListener(SeriesChangeListener listener) {
-<span class="nc" id="L325">        this.listeners.remove(SeriesChangeListener.class, listener);</span>
-<span class="nc" id="L326">    }</span>
+<span class="fc" id="L325">        this.listeners.remove(SeriesChangeListener.class, listener);</span>
+<span class="fc" id="L326">    }</span>
 
     /**
      * General method for signalling to registered listeners that the series
      * has been changed.
      */
     public void fireSeriesChanged() {
-<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (this.notify) {</span>
-<span class="nc" id="L334">            notifyListeners(new SeriesChangeEvent(this));</span>
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">        if (this.notify) {</span>
+<span class="fc" id="L334">            notifyListeners(new SeriesChangeEvent(this));</span>
         }
-<span class="nc" id="L336">    }</span>
+<span class="fc" id="L336">    }</span>
 
     /**
      * Sends a change event to all registered listeners.
@@ -343,15 +343,15 @@ public abstract class Series implements Cloneable, Serializable {
      */
     protected void notifyListeners(SeriesChangeEvent event) {
 
-<span class="nc" id="L346">        Object[] listenerList = this.listeners.getListenerList();</span>
-<span class="nc bnc" id="L347" title="All 2 branches missed.">        for (int i = listenerList.length - 2; i &gt;= 0; i -= 2) {</span>
-<span class="nc bnc" id="L348" title="All 2 branches missed.">            if (listenerList[i] == SeriesChangeListener.class) {</span>
-<span class="nc" id="L349">                ((SeriesChangeListener) listenerList[i + 1]).seriesChanged(</span>
+<span class="fc" id="L346">        Object[] listenerList = this.listeners.getListenerList();</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        for (int i = listenerList.length - 2; i &gt;= 0; i -= 2) {</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">            if (listenerList[i] == SeriesChangeListener.class) {</span>
+<span class="fc" id="L349">                ((SeriesChangeListener) listenerList[i + 1]).seriesChanged(</span>
                         event);
             }
         }
 
-<span class="nc" id="L354">    }</span>
+<span class="fc" id="L354">    }</span>
 
     /**
      * Adds a property change listener to the series.
@@ -380,9 +380,9 @@ public abstract class Series implements Cloneable, Serializable {
      */
     protected void firePropertyChange(String property, Object oldValue,
             Object newValue) {
-<span class="nc" id="L383">        this.propertyChangeSupport.firePropertyChange(property, oldValue,</span>
+<span class="fc" id="L383">        this.propertyChangeSupport.firePropertyChange(property, oldValue,</span>
                 newValue);
-<span class="nc" id="L385">    }</span>
+<span class="fc" id="L385">    }</span>
     
     /**
      * Adds a vetoable property change listener to the series.
@@ -392,8 +392,8 @@ public abstract class Series implements Cloneable, Serializable {
      * @since 1.0.14
      */
     public void addVetoableChangeListener(VetoableChangeListener listener) {
-<span class="nc" id="L395">        this.vetoableChangeSupport.addVetoableChangeListener(listener);</span>
-<span class="nc" id="L396">    }</span>
+<span class="fc" id="L395">        this.vetoableChangeSupport.addVetoableChangeListener(listener);</span>
+<span class="fc" id="L396">    }</span>
 
     /**
      * Removes a vetoable property change listener from the series.
@@ -403,8 +403,8 @@ public abstract class Series implements Cloneable, Serializable {
      * @since 1.0.14 
      */
     public void removeVetoableChangeListener(VetoableChangeListener listener) {
-<span class="nc" id="L406">        this.vetoableChangeSupport.removeVetoableChangeListener(listener);</span>
-<span class="nc" id="L407">    }    </span>
+<span class="fc" id="L406">        this.vetoableChangeSupport.removeVetoableChangeListener(listener);</span>
+<span class="fc" id="L407">    }    </span>
 
     /**
      * Fires a vetoable property change event.
@@ -422,4 +422,4 @@ public abstract class Series implements Cloneable, Serializable {
 <span class="nc" id="L422">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

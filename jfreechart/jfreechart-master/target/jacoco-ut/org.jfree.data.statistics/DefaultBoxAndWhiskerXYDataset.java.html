@@ -101,7 +101,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      * * outlier coefficient) is considered to be an outlier.  Can be altered
      * if the data is particularly skewed.
      */
-<span class="nc" id="L104">    private double outlierCoefficient = 1.5;</span>
+<span class="fc" id="L104">    private double outlierCoefficient = 1.5;</span>
 
     /**
      * The coefficient used to calculate farouts. Tukey's default value is 2
@@ -109,7 +109,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      * farout coefficient) is considered to be a farout.  Can be altered if the
      * data is particularly skewed.
      */
-<span class="nc" id="L112">    private double faroutCoefficient = 2.0;</span>
+<span class="fc" id="L112">    private double faroutCoefficient = 2.0;</span>
 
     /**
      * Constructs a new box and whisker dataset.
@@ -119,14 +119,14 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      *
      * @param seriesKey  the key for the series.
      */
-<span class="nc" id="L122">    public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey) {</span>
-<span class="nc" id="L123">        this.seriesKey = seriesKey;</span>
-<span class="nc" id="L124">        this.dates = new ArrayList();</span>
-<span class="nc" id="L125">        this.items = new ArrayList();</span>
-<span class="nc" id="L126">        this.minimumRangeValue = null;</span>
-<span class="nc" id="L127">        this.maximumRangeValue = null;</span>
-<span class="nc" id="L128">        this.rangeBounds = null;</span>
-<span class="nc" id="L129">    }</span>
+<span class="fc" id="L122">    public DefaultBoxAndWhiskerXYDataset(Comparable seriesKey) {</span>
+<span class="fc" id="L123">        this.seriesKey = seriesKey;</span>
+<span class="fc" id="L124">        this.dates = new ArrayList();</span>
+<span class="fc" id="L125">        this.items = new ArrayList();</span>
+<span class="fc" id="L126">        this.minimumRangeValue = null;</span>
+<span class="fc" id="L127">        this.maximumRangeValue = null;</span>
+<span class="fc" id="L128">        this.rangeBounds = null;</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Returns the value used as the outlier coefficient. The outlier
@@ -201,7 +201,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L204">        return 1;</span>
+<span class="fc" id="L204">        return 1;</span>
     }
 
     /**
@@ -213,7 +213,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public int getItemCount(int series) {
-<span class="nc" id="L216">        return this.dates.size();</span>
+<span class="fc" id="L216">        return this.dates.size();</span>
     }
 
     /**
@@ -224,30 +224,30 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      * @param item  the item ({@code null} not permitted).
      */
     public void add(Date date, BoxAndWhiskerItem item) {
-<span class="nc" id="L227">        this.dates.add(date);</span>
-<span class="nc" id="L228">        this.items.add(item);</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (this.minimumRangeValue == null) {</span>
-<span class="nc" id="L230">            this.minimumRangeValue = item.getMinRegularValue();</span>
+<span class="fc" id="L227">        this.dates.add(date);</span>
+<span class="fc" id="L228">        this.items.add(item);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (this.minimumRangeValue == null) {</span>
+<span class="fc" id="L230">            this.minimumRangeValue = item.getMinRegularValue();</span>
         }
         else {
-<span class="nc" id="L233">            if (item.getMinRegularValue().doubleValue()</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                    &lt; this.minimumRangeValue.doubleValue()) {</span>
+<span class="fc" id="L233">            if (item.getMinRegularValue().doubleValue()</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                    &lt; this.minimumRangeValue.doubleValue()) {</span>
 <span class="nc" id="L235">                this.minimumRangeValue = item.getMinRegularValue();</span>
             }
         }
-<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (this.maximumRangeValue == null) {</span>
-<span class="nc" id="L239">            this.maximumRangeValue = item.getMaxRegularValue();</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (this.maximumRangeValue == null) {</span>
+<span class="fc" id="L239">            this.maximumRangeValue = item.getMaxRegularValue();</span>
         }
         else {
-<span class="nc" id="L242">            if (item.getMaxRegularValue().doubleValue()</span>
-<span class="nc bnc" id="L243" title="All 2 branches missed.">                    &gt; this.maximumRangeValue.doubleValue()) {</span>
-<span class="nc" id="L244">                this.maximumRangeValue = item.getMaxRegularValue();</span>
+<span class="fc" id="L242">            if (item.getMaxRegularValue().doubleValue()</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">                    &gt; this.maximumRangeValue.doubleValue()) {</span>
+<span class="fc" id="L244">                this.maximumRangeValue = item.getMaxRegularValue();</span>
             }
         }
-<span class="nc" id="L247">        this.rangeBounds = new Range(this.minimumRangeValue.doubleValue(),</span>
-<span class="nc" id="L248">                this.maximumRangeValue.doubleValue());</span>
-<span class="nc" id="L249">        fireDatasetChanged();</span>
-<span class="nc" id="L250">    }</span>
+<span class="fc" id="L247">        this.rangeBounds = new Range(this.minimumRangeValue.doubleValue(),</span>
+<span class="fc" id="L248">                this.maximumRangeValue.doubleValue());</span>
+<span class="fc" id="L249">        fireDatasetChanged();</span>
+<span class="fc" id="L250">    }</span>
 
     /**
      * Returns the name of the series stored in this dataset.
@@ -258,7 +258,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Comparable getSeriesKey(int i) {
-<span class="nc" id="L261">        return this.seriesKey;</span>
+<span class="fc" id="L261">        return this.seriesKey;</span>
     }
 
     /**
@@ -287,7 +287,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getX(int series, int item) {
-<span class="nc" id="L290">        return new Long(((Date) this.dates.get(item)).getTime());</span>
+<span class="fc" id="L290">        return new Long(((Date) this.dates.get(item)).getTime());</span>
     }
 
     /**
@@ -317,7 +317,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getY(int series, int item) {
-<span class="nc" id="L320">        return getMeanValue(series, item);</span>
+<span class="fc" id="L320">        return getMeanValue(series, item);</span>
     }
 
     /**
@@ -330,12 +330,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMeanValue(int series, int item) {
-<span class="nc" id="L333">        Number result = null;</span>
-<span class="nc" id="L334">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L335" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L336">            result = stats.getMean();</span>
+<span class="fc" id="L333">        Number result = null;</span>
+<span class="fc" id="L334">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L336">            result = stats.getMean();</span>
         }
-<span class="nc" id="L338">        return result;</span>
+<span class="fc" id="L338">        return result;</span>
     }
 
     /**
@@ -348,12 +348,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMedianValue(int series, int item) {
-<span class="nc" id="L351">        Number result = null;</span>
-<span class="nc" id="L352">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L353" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L354">            result = stats.getMedian();</span>
+<span class="fc" id="L351">        Number result = null;</span>
+<span class="fc" id="L352">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L353" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L354">            result = stats.getMedian();</span>
         }
-<span class="nc" id="L356">        return result;</span>
+<span class="fc" id="L356">        return result;</span>
     }
 
     /**
@@ -366,12 +366,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getQ1Value(int series, int item) {
-<span class="nc" id="L369">        Number result = null;</span>
-<span class="nc" id="L370">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L371" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L372">            result = stats.getQ1();</span>
+<span class="fc" id="L369">        Number result = null;</span>
+<span class="fc" id="L370">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L372">            result = stats.getQ1();</span>
         }
-<span class="nc" id="L374">        return result;</span>
+<span class="fc" id="L374">        return result;</span>
     }
 
     /**
@@ -384,12 +384,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getQ3Value(int series, int item) {
-<span class="nc" id="L387">        Number result = null;</span>
-<span class="nc" id="L388">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L389" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L390">            result = stats.getQ3();</span>
+<span class="fc" id="L387">        Number result = null;</span>
+<span class="fc" id="L388">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L390">            result = stats.getQ3();</span>
         }
-<span class="nc" id="L392">        return result;</span>
+<span class="fc" id="L392">        return result;</span>
     }
 
     /**
@@ -402,12 +402,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMinRegularValue(int series, int item) {
-<span class="nc" id="L405">        Number result = null;</span>
-<span class="nc" id="L406">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L407" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L408">            result = stats.getMinRegularValue();</span>
+<span class="fc" id="L405">        Number result = null;</span>
+<span class="fc" id="L406">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L407" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L408">            result = stats.getMinRegularValue();</span>
         }
-<span class="nc" id="L410">        return result;</span>
+<span class="fc" id="L410">        return result;</span>
     }
 
     /**
@@ -420,12 +420,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMaxRegularValue(int series, int item) {
-<span class="nc" id="L423">        Number result = null;</span>
-<span class="nc" id="L424">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L426">            result = stats.getMaxRegularValue();</span>
+<span class="fc" id="L423">        Number result = null;</span>
+<span class="fc" id="L424">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L426">            result = stats.getMaxRegularValue();</span>
         }
-<span class="nc" id="L428">        return result;</span>
+<span class="fc" id="L428">        return result;</span>
     }
 
     /**
@@ -437,12 +437,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMinOutlier(int series, int item) {
-<span class="nc" id="L440">        Number result = null;</span>
-<span class="nc" id="L441">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L442" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L443">            result = stats.getMinOutlier();</span>
+<span class="fc" id="L440">        Number result = null;</span>
+<span class="fc" id="L441">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L442" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L443">            result = stats.getMinOutlier();</span>
         }
-<span class="nc" id="L445">        return result;</span>
+<span class="fc" id="L445">        return result;</span>
     }
 
     /**
@@ -456,12 +456,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Number getMaxOutlier(int series, int item) {
-<span class="nc" id="L459">        Number result = null;</span>
-<span class="nc" id="L460">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L462">            result = stats.getMaxOutlier();</span>
+<span class="fc" id="L459">        Number result = null;</span>
+<span class="fc" id="L460">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L461" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L462">            result = stats.getMaxOutlier();</span>
         }
-<span class="nc" id="L464">        return result;</span>
+<span class="fc" id="L464">        return result;</span>
     }
 
     /**
@@ -475,12 +475,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public List getOutliers(int series, int item) {
-<span class="nc" id="L478">        List result = null;</span>
-<span class="nc" id="L479">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
-<span class="nc bnc" id="L480" title="All 2 branches missed.">        if (stats != null) {</span>
-<span class="nc" id="L481">            result = stats.getOutliers();</span>
+<span class="fc" id="L478">        List result = null;</span>
+<span class="fc" id="L479">        BoxAndWhiskerItem stats = (BoxAndWhiskerItem) this.items.get(item);</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">        if (stats != null) {</span>
+<span class="fc" id="L481">            result = stats.getOutliers();</span>
         }
-<span class="nc" id="L483">        return result;</span>
+<span class="fc" id="L483">        return result;</span>
     }
 
     /**
@@ -493,11 +493,11 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public double getRangeLowerBound(boolean includeInterval) {
-<span class="nc" id="L496">        double result = Double.NaN;</span>
-<span class="nc bnc" id="L497" title="All 2 branches missed.">        if (this.minimumRangeValue != null) {</span>
+<span class="fc" id="L496">        double result = Double.NaN;</span>
+<span class="pc bpc" id="L497" title="1 of 2 branches missed.">        if (this.minimumRangeValue != null) {</span>
 <span class="nc" id="L498">            result = this.minimumRangeValue.doubleValue();</span>
         }
-<span class="nc" id="L500">        return result;</span>
+<span class="fc" id="L500">        return result;</span>
     }
 
     /**
@@ -510,11 +510,11 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public double getRangeUpperBound(boolean includeInterval) {
-<span class="nc" id="L513">        double result = Double.NaN;</span>
-<span class="nc bnc" id="L514" title="All 2 branches missed.">        if (this.maximumRangeValue != null) {</span>
+<span class="fc" id="L513">        double result = Double.NaN;</span>
+<span class="pc bpc" id="L514" title="1 of 2 branches missed.">        if (this.maximumRangeValue != null) {</span>
 <span class="nc" id="L515">            result = this.maximumRangeValue.doubleValue();</span>
         }
-<span class="nc" id="L517">        return result;</span>
+<span class="fc" id="L517">        return result;</span>
     }
 
     /**
@@ -527,7 +527,7 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Range getRangeBounds(boolean includeInterval) {
-<span class="nc" id="L530">        return this.rangeBounds;</span>
+<span class="fc" id="L530">        return this.rangeBounds;</span>
     }
 
     /**
@@ -539,24 +539,24 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L542" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L542" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L543">            return true;</span>
         }
-<span class="nc bnc" id="L545" title="All 2 branches missed.">        if (!(obj instanceof DefaultBoxAndWhiskerXYDataset)) {</span>
+<span class="pc bpc" id="L545" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultBoxAndWhiskerXYDataset)) {</span>
 <span class="nc" id="L546">            return false;</span>
         }
-<span class="nc" id="L548">        DefaultBoxAndWhiskerXYDataset that</span>
+<span class="fc" id="L548">        DefaultBoxAndWhiskerXYDataset that</span>
                 = (DefaultBoxAndWhiskerXYDataset) obj;
-<span class="nc bnc" id="L550" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.seriesKey, that.seriesKey)) {</span>
+<span class="pc bpc" id="L550" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.seriesKey, that.seriesKey)) {</span>
 <span class="nc" id="L551">            return false;</span>
         }
-<span class="nc bnc" id="L553" title="All 2 branches missed.">        if (!this.dates.equals(that.dates)) {</span>
-<span class="nc" id="L554">            return false;</span>
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        if (!this.dates.equals(that.dates)) {</span>
+<span class="fc" id="L554">            return false;</span>
         }
-<span class="nc bnc" id="L556" title="All 2 branches missed.">        if (!this.items.equals(that.items)) {</span>
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">        if (!this.items.equals(that.items)) {</span>
 <span class="nc" id="L557">            return false;</span>
         }
-<span class="nc" id="L559">        return true;</span>
+<span class="fc" id="L559">        return true;</span>
     }
 
     /**
@@ -568,12 +568,12 @@ public class DefaultBoxAndWhiskerXYDataset extends AbstractXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L571">        DefaultBoxAndWhiskerXYDataset clone</span>
-<span class="nc" id="L572">                = (DefaultBoxAndWhiskerXYDataset) super.clone();</span>
-<span class="nc" id="L573">        clone.dates = new java.util.ArrayList(this.dates);</span>
-<span class="nc" id="L574">        clone.items = new java.util.ArrayList(this.items);</span>
-<span class="nc" id="L575">        return clone;</span>
+<span class="fc" id="L571">        DefaultBoxAndWhiskerXYDataset clone</span>
+<span class="fc" id="L572">                = (DefaultBoxAndWhiskerXYDataset) super.clone();</span>
+<span class="fc" id="L573">        clone.dates = new java.util.ArrayList(this.dates);</span>
+<span class="fc" id="L574">        clone.items = new java.util.ArrayList(this.items);</span>
+<span class="fc" id="L575">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -85,9 +85,9 @@ public class LineBorder implements BlockFrame, Serializable {
      * Creates a default border.
      */
     public LineBorder() {
-<span class="nc" id="L88">        this(Color.BLACK, new BasicStroke(1.0f), new RectangleInsets(1.0, 1.0,</span>
+<span class="fc" id="L88">        this(Color.BLACK, new BasicStroke(1.0f), new RectangleInsets(1.0, 1.0,</span>
                 1.0, 1.0));
-<span class="nc" id="L90">    }</span>
+<span class="fc" id="L90">    }</span>
 
     /**
      * Creates a new border with the specified color.
@@ -96,14 +96,14 @@ public class LineBorder implements BlockFrame, Serializable {
      * @param stroke  the border stroke ({@code null} not permitted).
      * @param insets  the insets ({@code null} not permitted).
      */
-<span class="nc" id="L99">    public LineBorder(Paint paint, Stroke stroke, RectangleInsets insets) {</span>
-<span class="nc" id="L100">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L101">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L102">        Args.nullNotPermitted(insets, &quot;insets&quot;);</span>
-<span class="nc" id="L103">        this.paint = paint;</span>
-<span class="nc" id="L104">        this.stroke = stroke;</span>
-<span class="nc" id="L105">        this.insets = insets;</span>
-<span class="nc" id="L106">    }</span>
+<span class="fc" id="L99">    public LineBorder(Paint paint, Stroke stroke, RectangleInsets insets) {</span>
+<span class="fc" id="L100">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L101">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L102">        Args.nullNotPermitted(insets, &quot;insets&quot;);</span>
+<span class="fc" id="L103">        this.paint = paint;</span>
+<span class="fc" id="L104">        this.stroke = stroke;</span>
+<span class="fc" id="L105">        this.insets = insets;</span>
+<span class="fc" id="L106">    }</span>
 
     /**
      * Returns the paint.
@@ -191,23 +191,23 @@ public class LineBorder implements BlockFrame, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L195">            return true;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L195">            return true;</span>
         }
-<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (!(obj instanceof LineBorder)) {</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (!(obj instanceof LineBorder)) {</span>
 <span class="nc" id="L198">            return false;</span>
         }
-<span class="nc" id="L200">        LineBorder that = (LineBorder) obj;</span>
-<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L202">            return false;</span>
+<span class="fc" id="L200">        LineBorder that = (LineBorder) obj;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L202">            return false;</span>
         }
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
-<span class="nc" id="L205">            return false;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
+<span class="fc" id="L205">            return false;</span>
         }
-<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (!this.insets.equals(that.insets)) {</span>
-<span class="nc" id="L208">            return false;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (!this.insets.equals(that.insets)) {</span>
+<span class="fc" id="L208">            return false;</span>
         }
-<span class="nc" id="L210">        return true;</span>
+<span class="fc" id="L210">        return true;</span>
     }
 
     /**
@@ -218,10 +218,10 @@ public class LineBorder implements BlockFrame, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L221">        stream.defaultWriteObject();</span>
-<span class="nc" id="L222">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L223">        SerialUtils.writeStroke(this.stroke, stream);</span>
-<span class="nc" id="L224">    }</span>
+<span class="fc" id="L221">        stream.defaultWriteObject();</span>
+<span class="fc" id="L222">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L223">        SerialUtils.writeStroke(this.stroke, stream);</span>
+<span class="fc" id="L224">    }</span>
 
     /**
      * Provides serialization support.
@@ -233,11 +233,11 @@ public class LineBorder implements BlockFrame, Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L236">        stream.defaultReadObject();</span>
-<span class="nc" id="L237">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L238">        this.stroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L239">    }</span>
+<span class="fc" id="L236">        stream.defaultReadObject();</span>
+<span class="fc" id="L237">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L238">        this.stroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L239">    }</span>
 }
 
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

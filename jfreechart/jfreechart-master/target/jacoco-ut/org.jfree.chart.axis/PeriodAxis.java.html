@@ -167,16 +167,16 @@ public class PeriodAxis extends ValueAxis
     private Class minorTickTimePeriodClass;
 
     /** The length of the tick mark inside the data area (zero permitted). */
-<span class="nc" id="L170">    private float minorTickMarkInsideLength = 0.0f;</span>
+<span class="fc" id="L170">    private float minorTickMarkInsideLength = 0.0f;</span>
 
     /** The length of the tick mark outside the data area (zero permitted). */
-<span class="nc" id="L173">    private float minorTickMarkOutsideLength = 2.0f;</span>
+<span class="fc" id="L173">    private float minorTickMarkOutsideLength = 2.0f;</span>
 
     /** The stroke used to draw tick marks. */
-<span class="nc" id="L176">    private transient Stroke minorTickMarkStroke = new BasicStroke(0.5f);</span>
+<span class="fc" id="L176">    private transient Stroke minorTickMarkStroke = new BasicStroke(0.5f);</span>
 
     /** The paint used to draw tick marks. */
-<span class="nc" id="L179">    private transient Paint minorTickMarkPaint = Color.BLACK;</span>
+<span class="fc" id="L179">    private transient Paint minorTickMarkPaint = Color.BLACK;</span>
 
     /** Info for each labeling band. */
     private PeriodAxisLabelInfo[] labelInfo;
@@ -187,8 +187,8 @@ public class PeriodAxis extends ValueAxis
      * @param label  the axis label.
      */
     public PeriodAxis(String label) {
-<span class="nc" id="L190">        this(label, new Day(), new Day());</span>
-<span class="nc" id="L191">    }</span>
+<span class="fc" id="L190">        this(label, new Day(), new Day());</span>
+<span class="fc" id="L191">    }</span>
 
     /**
      * Creates a new axis.
@@ -201,8 +201,8 @@ public class PeriodAxis extends ValueAxis
      */
     public PeriodAxis(String label,
                       RegularTimePeriod first, RegularTimePeriod last) {
-<span class="nc" id="L204">        this(label, first, last, TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L205">    }</span>
+<span class="fc" id="L204">        this(label, first, last, TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L205">    }</span>
 
     /**
      * Creates a new axis.
@@ -219,30 +219,30 @@ public class PeriodAxis extends ValueAxis
      */
     public PeriodAxis(String label, RegularTimePeriod first,
             RegularTimePeriod last, TimeZone timeZone, Locale locale) {
-<span class="nc" id="L222">        super(label, null);</span>
-<span class="nc" id="L223">        Args.nullNotPermitted(timeZone, &quot;timeZone&quot;);</span>
-<span class="nc" id="L224">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L225">        this.first = first;</span>
-<span class="nc" id="L226">        this.last = last;</span>
-<span class="nc" id="L227">        this.timeZone = timeZone;</span>
-<span class="nc" id="L228">        this.locale = locale;</span>
-<span class="nc" id="L229">        this.calendar = Calendar.getInstance(timeZone, locale);</span>
-<span class="nc" id="L230">        this.first.peg(this.calendar);</span>
-<span class="nc" id="L231">        this.last.peg(this.calendar);</span>
-<span class="nc" id="L232">        this.autoRangeTimePeriodClass = first.getClass();</span>
-<span class="nc" id="L233">        this.majorTickTimePeriodClass = first.getClass();</span>
-<span class="nc" id="L234">        this.minorTickMarksVisible = false;</span>
-<span class="nc" id="L235">        this.minorTickTimePeriodClass = RegularTimePeriod.downsize(</span>
+<span class="fc" id="L222">        super(label, null);</span>
+<span class="fc" id="L223">        Args.nullNotPermitted(timeZone, &quot;timeZone&quot;);</span>
+<span class="fc" id="L224">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L225">        this.first = first;</span>
+<span class="fc" id="L226">        this.last = last;</span>
+<span class="fc" id="L227">        this.timeZone = timeZone;</span>
+<span class="fc" id="L228">        this.locale = locale;</span>
+<span class="fc" id="L229">        this.calendar = Calendar.getInstance(timeZone, locale);</span>
+<span class="fc" id="L230">        this.first.peg(this.calendar);</span>
+<span class="fc" id="L231">        this.last.peg(this.calendar);</span>
+<span class="fc" id="L232">        this.autoRangeTimePeriodClass = first.getClass();</span>
+<span class="fc" id="L233">        this.majorTickTimePeriodClass = first.getClass();</span>
+<span class="fc" id="L234">        this.minorTickMarksVisible = false;</span>
+<span class="fc" id="L235">        this.minorTickTimePeriodClass = RegularTimePeriod.downsize(</span>
                 this.majorTickTimePeriodClass);
-<span class="nc" id="L237">        setAutoRange(true);</span>
-<span class="nc" id="L238">        this.labelInfo = new PeriodAxisLabelInfo[2];</span>
-<span class="nc" id="L239">        SimpleDateFormat df0 = new SimpleDateFormat(&quot;MMM&quot;, locale);</span>
-<span class="nc" id="L240">        df0.setTimeZone(timeZone);</span>
-<span class="nc" id="L241">        this.labelInfo[0] = new PeriodAxisLabelInfo(Month.class, df0);</span>
-<span class="nc" id="L242">        SimpleDateFormat df1 = new SimpleDateFormat(&quot;yyyy&quot;, locale);</span>
-<span class="nc" id="L243">        df1.setTimeZone(timeZone);</span>
-<span class="nc" id="L244">        this.labelInfo[1] = new PeriodAxisLabelInfo(Year.class, df1);</span>
-<span class="nc" id="L245">    }</span>
+<span class="fc" id="L237">        setAutoRange(true);</span>
+<span class="fc" id="L238">        this.labelInfo = new PeriodAxisLabelInfo[2];</span>
+<span class="fc" id="L239">        SimpleDateFormat df0 = new SimpleDateFormat(&quot;MMM&quot;, locale);</span>
+<span class="fc" id="L240">        df0.setTimeZone(timeZone);</span>
+<span class="fc" id="L241">        this.labelInfo[0] = new PeriodAxisLabelInfo(Month.class, df0);</span>
+<span class="fc" id="L242">        SimpleDateFormat df1 = new SimpleDateFormat(&quot;yyyy&quot;, locale);</span>
+<span class="fc" id="L243">        df1.setTimeZone(timeZone);</span>
+<span class="fc" id="L244">        this.labelInfo[1] = new PeriodAxisLabelInfo(Year.class, df1);</span>
+<span class="fc" id="L245">    }</span>
 
     /**
      * Returns the first time period in the axis range.
@@ -260,11 +260,11 @@ public class PeriodAxis extends ValueAxis
      * @param first  the time period ({@code null} not permitted).
      */
     public void setFirst(RegularTimePeriod first) {
-<span class="nc" id="L263">        Args.nullNotPermitted(first, &quot;first&quot;);</span>
-<span class="nc" id="L264">        this.first = first;</span>
-<span class="nc" id="L265">        this.first.peg(this.calendar);</span>
-<span class="nc" id="L266">        fireChangeEvent();</span>
-<span class="nc" id="L267">    }</span>
+<span class="fc" id="L263">        Args.nullNotPermitted(first, &quot;first&quot;);</span>
+<span class="fc" id="L264">        this.first = first;</span>
+<span class="fc" id="L265">        this.first.peg(this.calendar);</span>
+<span class="fc" id="L266">        fireChangeEvent();</span>
+<span class="fc" id="L267">    }</span>
 
     /**
      * Returns the last time period in the axis range.
@@ -282,11 +282,11 @@ public class PeriodAxis extends ValueAxis
      * @param last  the time period ({@code null} not permitted).
      */
     public void setLast(RegularTimePeriod last) {
-<span class="nc" id="L285">        Args.nullNotPermitted(last, &quot;last&quot;);</span>
-<span class="nc" id="L286">        this.last = last;</span>
-<span class="nc" id="L287">        this.last.peg(this.calendar);</span>
-<span class="nc" id="L288">        fireChangeEvent();</span>
-<span class="nc" id="L289">    }</span>
+<span class="fc" id="L285">        Args.nullNotPermitted(last, &quot;last&quot;);</span>
+<span class="fc" id="L286">        this.last = last;</span>
+<span class="fc" id="L287">        this.last.peg(this.calendar);</span>
+<span class="fc" id="L288">        fireChangeEvent();</span>
+<span class="fc" id="L289">    }</span>
 
     /**
      * Returns the time zone used to convert the periods defining the axis
@@ -305,13 +305,13 @@ public class PeriodAxis extends ValueAxis
      * @param zone  the time zone ({@code null} not permitted).
      */
     public void setTimeZone(TimeZone zone) {
-<span class="nc" id="L308">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L309">        this.timeZone = zone;</span>
-<span class="nc" id="L310">        this.calendar = Calendar.getInstance(zone, this.locale);</span>
-<span class="nc" id="L311">        this.first.peg(this.calendar);</span>
-<span class="nc" id="L312">        this.last.peg(this.calendar);</span>
-<span class="nc" id="L313">        fireChangeEvent();</span>
-<span class="nc" id="L314">    }</span>
+<span class="fc" id="L308">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L309">        this.timeZone = zone;</span>
+<span class="fc" id="L310">        this.calendar = Calendar.getInstance(zone, this.locale);</span>
+<span class="fc" id="L311">        this.first.peg(this.calendar);</span>
+<span class="fc" id="L312">        this.last.peg(this.calendar);</span>
+<span class="fc" id="L313">        fireChangeEvent();</span>
+<span class="fc" id="L314">    }</span>
 
     /**
      * Returns the locale for this axis.
@@ -342,10 +342,10 @@ public class PeriodAxis extends ValueAxis
      * @param c  the class ({@code null} not permitted).
      */
     public void setAutoRangeTimePeriodClass(Class c) {
-<span class="nc" id="L345">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
-<span class="nc" id="L346">        this.autoRangeTimePeriodClass = c;</span>
-<span class="nc" id="L347">        fireChangeEvent();</span>
-<span class="nc" id="L348">    }</span>
+<span class="fc" id="L345">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
+<span class="fc" id="L346">        this.autoRangeTimePeriodClass = c;</span>
+<span class="fc" id="L347">        fireChangeEvent();</span>
+<span class="fc" id="L348">    }</span>
 
     /**
      * Returns the class that controls the spacing of the major tick marks.
@@ -364,10 +364,10 @@ public class PeriodAxis extends ValueAxis
      *           expected).
      */
     public void setMajorTickTimePeriodClass(Class c) {
-<span class="nc" id="L367">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
-<span class="nc" id="L368">        this.majorTickTimePeriodClass = c;</span>
-<span class="nc" id="L369">        fireChangeEvent();</span>
-<span class="nc" id="L370">    }</span>
+<span class="fc" id="L367">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
+<span class="fc" id="L368">        this.majorTickTimePeriodClass = c;</span>
+<span class="fc" id="L369">        fireChangeEvent();</span>
+<span class="fc" id="L370">    }</span>
 
     /**
      * Returns the flag that controls whether or not minor tick marks
@@ -377,7 +377,7 @@ public class PeriodAxis extends ValueAxis
      */
     @Override
     public boolean isMinorTickMarksVisible() {
-<span class="nc" id="L380">        return this.minorTickMarksVisible;</span>
+<span class="fc" id="L380">        return this.minorTickMarksVisible;</span>
     }
 
     /**
@@ -389,9 +389,9 @@ public class PeriodAxis extends ValueAxis
      */
     @Override
     public void setMinorTickMarksVisible(boolean visible) {
-<span class="nc" id="L392">        this.minorTickMarksVisible = visible;</span>
-<span class="nc" id="L393">        fireChangeEvent();</span>
-<span class="nc" id="L394">    }</span>
+<span class="fc" id="L392">        this.minorTickMarksVisible = visible;</span>
+<span class="fc" id="L393">        fireChangeEvent();</span>
+<span class="fc" id="L394">    }</span>
 
     /**
      * Returns the class that controls the spacing of the minor tick marks.
@@ -410,10 +410,10 @@ public class PeriodAxis extends ValueAxis
      *           expected).
      */
     public void setMinorTickTimePeriodClass(Class c) {
-<span class="nc" id="L413">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
-<span class="nc" id="L414">        this.minorTickTimePeriodClass = c;</span>
-<span class="nc" id="L415">        fireChangeEvent();</span>
-<span class="nc" id="L416">    }</span>
+<span class="fc" id="L413">        Args.nullNotPermitted(c, &quot;c&quot;);</span>
+<span class="fc" id="L414">        this.minorTickTimePeriodClass = c;</span>
+<span class="fc" id="L415">        fireChangeEvent();</span>
+<span class="fc" id="L416">    }</span>
 
     /**
      * Returns the stroke used to display minor tick marks, if they are
@@ -433,10 +433,10 @@ public class PeriodAxis extends ValueAxis
      * @param stroke  the stroke ({@code null} not permitted).
      */
     public void setMinorTickMarkStroke(Stroke stroke) {
-<span class="nc" id="L436">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L437">        this.minorTickMarkStroke = stroke;</span>
-<span class="nc" id="L438">        fireChangeEvent();</span>
-<span class="nc" id="L439">    }</span>
+<span class="fc" id="L436">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L437">        this.minorTickMarkStroke = stroke;</span>
+<span class="fc" id="L438">        fireChangeEvent();</span>
+<span class="fc" id="L439">    }</span>
 
     /**
      * Returns the paint used to display minor tick marks, if they are
@@ -456,10 +456,10 @@ public class PeriodAxis extends ValueAxis
      * @param paint  the paint ({@code null} not permitted).
      */
     public void setMinorTickMarkPaint(Paint paint) {
-<span class="nc" id="L459">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L460">        this.minorTickMarkPaint = paint;</span>
-<span class="nc" id="L461">        fireChangeEvent();</span>
-<span class="nc" id="L462">    }</span>
+<span class="fc" id="L459">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L460">        this.minorTickMarkPaint = paint;</span>
+<span class="fc" id="L461">        fireChangeEvent();</span>
+<span class="fc" id="L462">    }</span>
 
     /**
      * Returns the inside length for the minor tick marks.
@@ -521,9 +521,9 @@ public class PeriodAxis extends ValueAxis
      * @param info  the info.
      */
     public void setLabelInfo(PeriodAxisLabelInfo[] info) {
-<span class="nc" id="L524">        this.labelInfo = info;</span>
-<span class="nc" id="L525">        fireChangeEvent();</span>
-<span class="nc" id="L526">    }</span>
+<span class="fc" id="L524">        this.labelInfo = info;</span>
+<span class="fc" id="L525">        fireChangeEvent();</span>
+<span class="fc" id="L526">    }</span>
 
     /**
      * Sets the range for the axis, if requested, sends an
@@ -539,16 +539,16 @@ public class PeriodAxis extends ValueAxis
     @Override
     public void setRange(Range range, boolean turnOffAutoRange, 
             boolean notify) {
-<span class="nc" id="L542">        long upper = Math.round(range.getUpperBound());</span>
-<span class="nc" id="L543">        long lower = Math.round(range.getLowerBound());</span>
-<span class="nc" id="L544">        this.first = createInstance(this.autoRangeTimePeriodClass,</span>
+<span class="fc" id="L542">        long upper = Math.round(range.getUpperBound());</span>
+<span class="fc" id="L543">        long lower = Math.round(range.getLowerBound());</span>
+<span class="fc" id="L544">        this.first = createInstance(this.autoRangeTimePeriodClass,</span>
                 new Date(lower), this.timeZone, this.locale);
-<span class="nc" id="L546">        this.last = createInstance(this.autoRangeTimePeriodClass,</span>
+<span class="fc" id="L546">        this.last = createInstance(this.autoRangeTimePeriodClass,</span>
                 new Date(upper), this.timeZone, this.locale);
-<span class="nc" id="L548">        super.setRange(new Range(this.first.getFirstMillisecond(),</span>
-<span class="nc" id="L549">                this.last.getLastMillisecond() + 1.0), turnOffAutoRange,</span>
+<span class="fc" id="L548">        super.setRange(new Range(this.first.getFirstMillisecond(),</span>
+<span class="fc" id="L549">                this.last.getLastMillisecond() + 1.0), turnOffAutoRange,</span>
                 notify);
-<span class="nc" id="L551">    }</span>
+<span class="fc" id="L551">    }</span>
 
     /**
      * Configures the axis to work with the current plot.  Override this method
@@ -1041,9 +1041,9 @@ public class PeriodAxis extends ValueAxis
     @Override
     protected void autoAdjustRange() {
 
-<span class="nc" id="L1044">        Plot plot = getPlot();</span>
-<span class="nc bnc" id="L1045" title="All 2 branches missed.">        if (plot == null) {</span>
-<span class="nc" id="L1046">            return;  // no plot, no data</span>
+<span class="fc" id="L1044">        Plot plot = getPlot();</span>
+<span class="pc bpc" id="L1045" title="1 of 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L1046">            return;  // no plot, no data</span>
         }
 
 <span class="nc bnc" id="L1049" title="All 2 branches missed.">        if (plot instanceof ValueAxisPlot) {</span>
@@ -1074,50 +1074,50 @@ public class PeriodAxis extends ValueAxis
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1077" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1077" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1078">            return true;</span>
         }
-<span class="nc bnc" id="L1080" title="All 2 branches missed.">        if (!(obj instanceof PeriodAxis)) {</span>
+<span class="pc bpc" id="L1080" title="1 of 2 branches missed.">        if (!(obj instanceof PeriodAxis)) {</span>
 <span class="nc" id="L1081">            return false;</span>
         }
-<span class="nc" id="L1083">        PeriodAxis that = (PeriodAxis) obj;</span>
-<span class="nc bnc" id="L1084" title="All 2 branches missed.">        if (!this.first.equals(that.first)) {</span>
-<span class="nc" id="L1085">            return false;</span>
+<span class="fc" id="L1083">        PeriodAxis that = (PeriodAxis) obj;</span>
+<span class="fc bfc" id="L1084" title="All 2 branches covered.">        if (!this.first.equals(that.first)) {</span>
+<span class="fc" id="L1085">            return false;</span>
         }
-<span class="nc bnc" id="L1087" title="All 2 branches missed.">        if (!this.last.equals(that.last)) {</span>
-<span class="nc" id="L1088">            return false;</span>
+<span class="fc bfc" id="L1087" title="All 2 branches covered.">        if (!this.last.equals(that.last)) {</span>
+<span class="fc" id="L1088">            return false;</span>
         }
-<span class="nc bnc" id="L1090" title="All 2 branches missed.">        if (!this.timeZone.equals(that.timeZone)) {</span>
-<span class="nc" id="L1091">            return false;</span>
+<span class="fc bfc" id="L1090" title="All 2 branches covered.">        if (!this.timeZone.equals(that.timeZone)) {</span>
+<span class="fc" id="L1091">            return false;</span>
         }
-<span class="nc bnc" id="L1093" title="All 2 branches missed.">        if (!this.locale.equals(that.locale)) {</span>
-<span class="nc" id="L1094">            return false;</span>
+<span class="fc bfc" id="L1093" title="All 2 branches covered.">        if (!this.locale.equals(that.locale)) {</span>
+<span class="fc" id="L1094">            return false;</span>
         }
-<span class="nc bnc" id="L1096" title="All 2 branches missed.">        if (!this.autoRangeTimePeriodClass.equals(</span>
+<span class="fc bfc" id="L1096" title="All 2 branches covered.">        if (!this.autoRangeTimePeriodClass.equals(</span>
                 that.autoRangeTimePeriodClass)) {
-<span class="nc" id="L1098">            return false;</span>
+<span class="fc" id="L1098">            return false;</span>
         }
-<span class="nc bnc" id="L1100" title="All 2 branches missed.">        if (!(isMinorTickMarksVisible() == that.isMinorTickMarksVisible())) {</span>
-<span class="nc" id="L1101">            return false;</span>
+<span class="fc bfc" id="L1100" title="All 2 branches covered.">        if (!(isMinorTickMarksVisible() == that.isMinorTickMarksVisible())) {</span>
+<span class="fc" id="L1101">            return false;</span>
         }
-<span class="nc bnc" id="L1103" title="All 2 branches missed.">        if (!this.majorTickTimePeriodClass.equals(</span>
+<span class="fc bfc" id="L1103" title="All 2 branches covered.">        if (!this.majorTickTimePeriodClass.equals(</span>
                 that.majorTickTimePeriodClass)) {
-<span class="nc" id="L1105">            return false;</span>
+<span class="fc" id="L1105">            return false;</span>
         }
-<span class="nc bnc" id="L1107" title="All 2 branches missed.">        if (!this.minorTickTimePeriodClass.equals(</span>
+<span class="fc bfc" id="L1107" title="All 2 branches covered.">        if (!this.minorTickTimePeriodClass.equals(</span>
                 that.minorTickTimePeriodClass)) {
-<span class="nc" id="L1109">            return false;</span>
+<span class="fc" id="L1109">            return false;</span>
         }
-<span class="nc bnc" id="L1111" title="All 2 branches missed.">        if (!this.minorTickMarkPaint.equals(that.minorTickMarkPaint)) {</span>
-<span class="nc" id="L1112">            return false;</span>
+<span class="fc bfc" id="L1111" title="All 2 branches covered.">        if (!this.minorTickMarkPaint.equals(that.minorTickMarkPaint)) {</span>
+<span class="fc" id="L1112">            return false;</span>
         }
-<span class="nc bnc" id="L1114" title="All 2 branches missed.">        if (!this.minorTickMarkStroke.equals(that.minorTickMarkStroke)) {</span>
-<span class="nc" id="L1115">            return false;</span>
+<span class="fc bfc" id="L1114" title="All 2 branches covered.">        if (!this.minorTickMarkStroke.equals(that.minorTickMarkStroke)) {</span>
+<span class="fc" id="L1115">            return false;</span>
         }
-<span class="nc bnc" id="L1117" title="All 2 branches missed.">        if (!Arrays.equals(this.labelInfo, that.labelInfo)) {</span>
-<span class="nc" id="L1118">            return false;</span>
+<span class="fc bfc" id="L1117" title="All 2 branches covered.">        if (!Arrays.equals(this.labelInfo, that.labelInfo)) {</span>
+<span class="fc" id="L1118">            return false;</span>
         }
-<span class="nc" id="L1120">        return super.equals(obj);</span>
+<span class="fc" id="L1120">        return super.equals(obj);</span>
     }
 
     /**
@@ -1127,7 +1127,7 @@ public class PeriodAxis extends ValueAxis
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L1130">        return super.hashCode();</span>
+<span class="fc" id="L1130">        return super.hashCode();</span>
     }
 
     /**
@@ -1140,10 +1140,10 @@ public class PeriodAxis extends ValueAxis
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1143">        PeriodAxis clone = (PeriodAxis) super.clone();</span>
-<span class="nc" id="L1144">        clone.timeZone = (TimeZone) this.timeZone.clone();</span>
-<span class="nc" id="L1145">        clone.labelInfo = (PeriodAxisLabelInfo[]) this.labelInfo.clone();</span>
-<span class="nc" id="L1146">        return clone;</span>
+<span class="fc" id="L1143">        PeriodAxis clone = (PeriodAxis) super.clone();</span>
+<span class="fc" id="L1144">        clone.timeZone = (TimeZone) this.timeZone.clone();</span>
+<span class="fc" id="L1145">        clone.labelInfo = (PeriodAxisLabelInfo[]) this.labelInfo.clone();</span>
+<span class="fc" id="L1146">        return clone;</span>
     }
 
     /**
@@ -1160,11 +1160,11 @@ public class PeriodAxis extends ValueAxis
      */
     private RegularTimePeriod createInstance(Class periodClass, 
             Date millisecond, TimeZone zone, Locale locale) {
-<span class="nc" id="L1163">        RegularTimePeriod result = null;</span>
+<span class="fc" id="L1163">        RegularTimePeriod result = null;</span>
         try {
-<span class="nc" id="L1165">            Constructor c = periodClass.getDeclaredConstructor(new Class[] {</span>
+<span class="fc" id="L1165">            Constructor c = periodClass.getDeclaredConstructor(new Class[] {</span>
                     Date.class, TimeZone.class, Locale.class});
-<span class="nc" id="L1167">            result = (RegularTimePeriod) c.newInstance(new Object[] {</span>
+<span class="fc" id="L1167">            result = (RegularTimePeriod) c.newInstance(new Object[] {</span>
                     millisecond, zone, locale});
         }
 <span class="nc" id="L1170">        catch (Exception e) {</span>
@@ -1177,8 +1177,8 @@ public class PeriodAxis extends ValueAxis
 <span class="nc" id="L1177">            catch (Exception e2) {</span>
                 // do nothing
 <span class="nc" id="L1179">            }</span>
-<span class="nc" id="L1180">        }</span>
-<span class="nc" id="L1181">        return result;</span>
+<span class="fc" id="L1180">        }</span>
+<span class="fc" id="L1181">        return result;</span>
     }
 
     /**
@@ -1189,10 +1189,10 @@ public class PeriodAxis extends ValueAxis
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1192">        stream.defaultWriteObject();</span>
-<span class="nc" id="L1193">        SerialUtils.writeStroke(this.minorTickMarkStroke, stream);</span>
-<span class="nc" id="L1194">        SerialUtils.writePaint(this.minorTickMarkPaint, stream);</span>
-<span class="nc" id="L1195">    }</span>
+<span class="fc" id="L1192">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1193">        SerialUtils.writeStroke(this.minorTickMarkStroke, stream);</span>
+<span class="fc" id="L1194">        SerialUtils.writePaint(this.minorTickMarkPaint, stream);</span>
+<span class="fc" id="L1195">    }</span>
 
     /**
      * Provides serialization support.
@@ -1204,10 +1204,10 @@ public class PeriodAxis extends ValueAxis
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L1207">        stream.defaultReadObject();</span>
-<span class="nc" id="L1208">        this.minorTickMarkStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1209">        this.minorTickMarkPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1210">    }</span>
+<span class="fc" id="L1207">        stream.defaultReadObject();</span>
+<span class="fc" id="L1208">        this.minorTickMarkStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1209">        this.minorTickMarkPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1210">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

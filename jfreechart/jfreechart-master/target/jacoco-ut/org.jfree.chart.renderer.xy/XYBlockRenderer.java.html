@@ -76,18 +76,18 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
     /**
      * The block width (defaults to 1.0).
      */
-<span class="nc" id="L79">    private double blockWidth = 1.0;</span>
+<span class="fc" id="L79">    private double blockWidth = 1.0;</span>
 
     /**
      * The block height (defaults to 1.0).
      */
-<span class="nc" id="L84">    private double blockHeight = 1.0;</span>
+<span class="fc" id="L84">    private double blockHeight = 1.0;</span>
 
     /**
      * The anchor point used to align each block to its (x, y) location.  The
      * default value is {@code RectangleAnchor.CENTER}.
      */
-<span class="nc" id="L90">    private RectangleAnchor blockAnchor = RectangleAnchor.CENTER;</span>
+<span class="fc" id="L90">    private RectangleAnchor blockAnchor = RectangleAnchor.CENTER;</span>
 
     /** Temporary storage for the x-offset used to align the block anchor. */
     private double xOffset;
@@ -111,12 +111,12 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * Creates a new {@code XYBlockRenderer} instance with default
      * attributes.
      */
-<span class="nc" id="L114">    public XYBlockRenderer() {</span>
-<span class="nc" id="L115">        updateOffsets();</span>
-<span class="nc" id="L116">        this.paintScale = new LookupPaintScale();</span>
-<span class="nc" id="L117">        this.drawOutlines = true;</span>
-<span class="nc" id="L118">        this.useOutlinePaint = false; // use item paint by default</span>
-<span class="nc" id="L119">    }</span>
+<span class="fc" id="L114">    public XYBlockRenderer() {</span>
+<span class="fc" id="L115">        updateOffsets();</span>
+<span class="fc" id="L116">        this.paintScale = new LookupPaintScale();</span>
+<span class="fc" id="L117">        this.drawOutlines = true;</span>
+<span class="fc" id="L118">        this.useOutlinePaint = false; // use item paint by default</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Returns the block width, in data/axis units.
@@ -138,14 +138,14 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * @see #getBlockWidth()
      */
     public void setBlockWidth(double width) {
-<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (width &lt;= 0.0) {</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (width &lt;= 0.0) {</span>
 <span class="nc" id="L142">            throw new IllegalArgumentException(</span>
                     &quot;The 'width' argument must be &gt; 0.0&quot;);
         }
-<span class="nc" id="L145">        this.blockWidth = width;</span>
-<span class="nc" id="L146">        updateOffsets();</span>
-<span class="nc" id="L147">        fireChangeEvent();</span>
-<span class="nc" id="L148">    }</span>
+<span class="fc" id="L145">        this.blockWidth = width;</span>
+<span class="fc" id="L146">        updateOffsets();</span>
+<span class="fc" id="L147">        fireChangeEvent();</span>
+<span class="fc" id="L148">    }</span>
 
     /**
      * Returns the block height, in data/axis units.
@@ -167,14 +167,14 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * @see #getBlockHeight()
      */
     public void setBlockHeight(double height) {
-<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (height &lt;= 0.0) {</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (height &lt;= 0.0) {</span>
 <span class="nc" id="L171">            throw new IllegalArgumentException(</span>
                     &quot;The 'height' argument must be &gt; 0.0&quot;);
         }
-<span class="nc" id="L174">        this.blockHeight = height;</span>
-<span class="nc" id="L175">        updateOffsets();</span>
-<span class="nc" id="L176">        fireChangeEvent();</span>
-<span class="nc" id="L177">    }</span>
+<span class="fc" id="L174">        this.blockHeight = height;</span>
+<span class="fc" id="L175">        updateOffsets();</span>
+<span class="fc" id="L176">        fireChangeEvent();</span>
+<span class="fc" id="L177">    }</span>
 
     /**
      * Returns the anchor point used to align a block at its (x, y) location.
@@ -215,7 +215,7 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * @since 1.0.4
      */
     public PaintScale getPaintScale() {
-<span class="nc" id="L218">        return this.paintScale;</span>
+<span class="fc" id="L218">        return this.paintScale;</span>
     }
 
     /**
@@ -228,10 +228,10 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * @since 1.0.4
      */
     public void setPaintScale(PaintScale scale) {
-<span class="nc" id="L231">        Args.nullNotPermitted(scale, &quot;scale&quot;);</span>
-<span class="nc" id="L232">        this.paintScale = scale;</span>
-<span class="nc" id="L233">        fireChangeEvent();</span>
-<span class="nc" id="L234">    }</span>
+<span class="fc" id="L231">        Args.nullNotPermitted(scale, &quot;scale&quot;);</span>
+<span class="fc" id="L232">        this.paintScale = scale;</span>
+<span class="fc" id="L233">        fireChangeEvent();</span>
+<span class="fc" id="L234">    }</span>
 
     /**
      * Returns {@code true} if outlines should be drawn for blocks, and
@@ -291,25 +291,25 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      * anchor.
      */
     private void updateOffsets() {
-<span class="nc bnc" id="L294" title="All 2 branches missed.">        if (this.blockAnchor.equals(RectangleAnchor.BOTTOM_LEFT)) {</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">        if (this.blockAnchor.equals(RectangleAnchor.BOTTOM_LEFT)) {</span>
 <span class="nc" id="L295">            this.xOffset = 0.0;</span>
 <span class="nc" id="L296">            this.yOffset = 0.0;</span>
         }
-<span class="nc bnc" id="L298" title="All 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.BOTTOM)) {</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.BOTTOM)) {</span>
 <span class="nc" id="L299">            this.xOffset = -this.blockWidth / 2.0;</span>
 <span class="nc" id="L300">            this.yOffset = 0.0;</span>
         }
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.BOTTOM_RIGHT)) {</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.BOTTOM_RIGHT)) {</span>
 <span class="nc" id="L303">            this.xOffset = -this.blockWidth;</span>
 <span class="nc" id="L304">            this.yOffset = 0.0;</span>
         }
-<span class="nc bnc" id="L306" title="All 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.LEFT)) {</span>
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.LEFT)) {</span>
 <span class="nc" id="L307">            this.xOffset = 0.0;</span>
 <span class="nc" id="L308">            this.yOffset = -this.blockHeight / 2.0;</span>
         }
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.CENTER)) {</span>
-<span class="nc" id="L311">            this.xOffset = -this.blockWidth / 2.0;</span>
-<span class="nc" id="L312">            this.yOffset = -this.blockHeight / 2.0;</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.CENTER)) {</span>
+<span class="fc" id="L311">            this.xOffset = -this.blockWidth / 2.0;</span>
+<span class="fc" id="L312">            this.yOffset = -this.blockHeight / 2.0;</span>
         }
 <span class="nc bnc" id="L314" title="All 2 branches missed.">        else if (this.blockAnchor.equals(RectangleAnchor.RIGHT)) {</span>
 <span class="nc" id="L315">            this.xOffset = -this.blockWidth;</span>
@@ -327,7 +327,7 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
 <span class="nc" id="L327">            this.xOffset = -this.blockWidth;</span>
 <span class="nc" id="L328">            this.yOffset = -this.blockHeight;</span>
         }
-<span class="nc" id="L330">    }</span>
+<span class="fc" id="L330">    }</span>
 
     /**
      * Returns the lower and upper bounds (range) of the x-values in the
@@ -342,15 +342,15 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Range findDomainBounds(XYDataset dataset) {
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L346">            return null;</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L346">            return null;</span>
         }
-<span class="nc" id="L348">        Range r = DatasetUtils.findDomainBounds(dataset, false);</span>
-<span class="nc bnc" id="L349" title="All 2 branches missed.">        if (r == null) {</span>
-<span class="nc" id="L350">            return null;</span>
+<span class="fc" id="L348">        Range r = DatasetUtils.findDomainBounds(dataset, false);</span>
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (r == null) {</span>
+<span class="fc" id="L350">            return null;</span>
         }
-<span class="nc" id="L352">        return new Range(r.getLowerBound() + this.xOffset,</span>
-<span class="nc" id="L353">                         r.getUpperBound() + this.blockWidth + this.xOffset);</span>
+<span class="fc" id="L352">        return new Range(r.getLowerBound() + this.xOffset,</span>
+<span class="fc" id="L353">                         r.getUpperBound() + this.blockWidth + this.xOffset);</span>
     }
 
     /**
@@ -366,10 +366,10 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Range findRangeBounds(XYDataset dataset) {
-<span class="nc bnc" id="L369" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L370">            Range r = DatasetUtils.findRangeBounds(dataset, false);</span>
-<span class="nc bnc" id="L371" title="All 2 branches missed.">            if (r == null) {</span>
-<span class="nc" id="L372">                return null;</span>
+<span class="fc bfc" id="L369" title="All 2 branches covered.">        if (dataset != null) {</span>
+<span class="fc" id="L370">            Range r = DatasetUtils.findRangeBounds(dataset, false);</span>
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">            if (r == null) {</span>
+<span class="fc" id="L372">                return null;</span>
             }
             else {
 <span class="nc" id="L375">                return new Range(r.getLowerBound() + this.yOffset,</span>
@@ -377,7 +377,7 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
             }
         }
         else {
-<span class="nc" id="L380">            return null;</span>
+<span class="fc" id="L380">            return null;</span>
         }
     }
 
@@ -478,32 +478,32 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L481" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L481" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L482">            return true;</span>
         }
-<span class="nc bnc" id="L484" title="All 2 branches missed.">        if (!(obj instanceof XYBlockRenderer)) {</span>
+<span class="pc bpc" id="L484" title="1 of 2 branches missed.">        if (!(obj instanceof XYBlockRenderer)) {</span>
 <span class="nc" id="L485">            return false;</span>
         }
-<span class="nc" id="L487">        XYBlockRenderer that = (XYBlockRenderer) obj;</span>
-<span class="nc bnc" id="L488" title="All 2 branches missed.">        if (this.blockHeight != that.blockHeight) {</span>
-<span class="nc" id="L489">            return false;</span>
+<span class="fc" id="L487">        XYBlockRenderer that = (XYBlockRenderer) obj;</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if (this.blockHeight != that.blockHeight) {</span>
+<span class="fc" id="L489">            return false;</span>
         }
-<span class="nc bnc" id="L491" title="All 2 branches missed.">        if (this.blockWidth != that.blockWidth) {</span>
-<span class="nc" id="L492">            return false;</span>
+<span class="fc bfc" id="L491" title="All 2 branches covered.">        if (this.blockWidth != that.blockWidth) {</span>
+<span class="fc" id="L492">            return false;</span>
         }
-<span class="nc bnc" id="L494" title="All 2 branches missed.">        if (!this.blockAnchor.equals(that.blockAnchor)) {</span>
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">        if (!this.blockAnchor.equals(that.blockAnchor)) {</span>
 <span class="nc" id="L495">            return false;</span>
         }
-<span class="nc bnc" id="L497" title="All 2 branches missed.">        if (!this.paintScale.equals(that.paintScale)) {</span>
-<span class="nc" id="L498">            return false;</span>
+<span class="fc bfc" id="L497" title="All 2 branches covered.">        if (!this.paintScale.equals(that.paintScale)) {</span>
+<span class="fc" id="L498">            return false;</span>
         }
-<span class="nc bnc" id="L500" title="All 2 branches missed.">        if (this.drawOutlines != that.drawOutlines) {</span>
+<span class="pc bpc" id="L500" title="1 of 2 branches missed.">        if (this.drawOutlines != that.drawOutlines) {</span>
 <span class="nc" id="L501">            return false;</span>
         }
-<span class="nc bnc" id="L503" title="All 2 branches missed.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
+<span class="pc bpc" id="L503" title="1 of 2 branches missed.">        if (this.useOutlinePaint != that.useOutlinePaint) {</span>
 <span class="nc" id="L504">            return false;</span>
         }
-<span class="nc" id="L506">        return super.equals(obj);</span>
+<span class="fc" id="L506">        return super.equals(obj);</span>
     }
 
     /**
@@ -516,13 +516,13 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L519">        XYBlockRenderer clone = (XYBlockRenderer) super.clone();</span>
-<span class="nc bnc" id="L520" title="All 2 branches missed.">        if (this.paintScale instanceof PublicCloneable) {</span>
-<span class="nc" id="L521">            PublicCloneable pc = (PublicCloneable) this.paintScale;</span>
-<span class="nc" id="L522">            clone.paintScale = (PaintScale) pc.clone();</span>
+<span class="fc" id="L519">        XYBlockRenderer clone = (XYBlockRenderer) super.clone();</span>
+<span class="pc bpc" id="L520" title="1 of 2 branches missed.">        if (this.paintScale instanceof PublicCloneable) {</span>
+<span class="fc" id="L521">            PublicCloneable pc = (PublicCloneable) this.paintScale;</span>
+<span class="fc" id="L522">            clone.paintScale = (PaintScale) pc.clone();</span>
         }
-<span class="nc" id="L524">        return clone;</span>
+<span class="fc" id="L524">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

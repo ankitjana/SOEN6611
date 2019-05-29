@@ -68,9 +68,9 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
     /**
      * Creates a new {@code XIntervalSeriesCollection} instance.
      */
-<span class="nc" id="L71">    public XIntervalSeriesCollection() {</span>
-<span class="nc" id="L72">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L71">    public XIntervalSeriesCollection() {</span>
+<span class="fc" id="L72">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L73">    }</span>
 
     /**
      * Adds a series to the collection and sends a {@link DatasetChangeEvent}
@@ -79,11 +79,11 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void addSeries(XIntervalSeries series) {
-<span class="nc" id="L82">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L83">        this.data.add(series);</span>
-<span class="nc" id="L84">        series.addChangeListener(this);</span>
-<span class="nc" id="L85">        fireDatasetChanged();</span>
-<span class="nc" id="L86">    }</span>
+<span class="fc" id="L82">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L83">        this.data.add(series);</span>
+<span class="fc" id="L84">        series.addChangeListener(this);</span>
+<span class="fc" id="L85">        fireDatasetChanged();</span>
+<span class="fc" id="L86">    }</span>
 
     /**
      * Returns the number of series in the collection.
@@ -92,7 +92,7 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L95">        return this.data.size();</span>
+<span class="fc" id="L95">        return this.data.size();</span>
     }
 
     /**
@@ -106,8 +106,8 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      *     range {@code 0} to {@code getSeriesCount() - 1}.
      */
     public XIntervalSeries getSeries(int series) {
-<span class="nc bnc" id="L109" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L110">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
+<span class="pc bpc" id="L109" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L110">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
 <span class="nc" id="L112">        return (XIntervalSeries) this.data.get(series);</span>
     }
@@ -287,14 +287,14 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.10
      */
     public void removeSeries(int series) {
-<span class="nc bnc" id="L290" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L291">            throw new IllegalArgumentException(&quot;Series index out of bounds.&quot;);</span>
+<span class="fc bfc" id="L290" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L291">            throw new IllegalArgumentException(&quot;Series index out of bounds.&quot;);</span>
         }
-<span class="nc" id="L293">        XIntervalSeries ts = (XIntervalSeries) this.data.get(series);</span>
-<span class="nc" id="L294">        ts.removeChangeListener(this);</span>
-<span class="nc" id="L295">        this.data.remove(series);</span>
-<span class="nc" id="L296">        fireDatasetChanged();</span>
-<span class="nc" id="L297">    }</span>
+<span class="fc" id="L293">        XIntervalSeries ts = (XIntervalSeries) this.data.get(series);</span>
+<span class="fc" id="L294">        ts.removeChangeListener(this);</span>
+<span class="fc" id="L295">        this.data.remove(series);</span>
+<span class="fc" id="L296">        fireDatasetChanged();</span>
+<span class="fc" id="L297">    }</span>
 
     /**
      * Removes a series from the collection and sends a
@@ -339,14 +339,14 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L343">            return true;</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L343">            return true;</span>
         }
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (!(obj instanceof XIntervalSeriesCollection)) {</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (!(obj instanceof XIntervalSeriesCollection)) {</span>
 <span class="nc" id="L346">            return false;</span>
         }
-<span class="nc" id="L348">        XIntervalSeriesCollection that = (XIntervalSeriesCollection) obj;</span>
-<span class="nc" id="L349">        return ObjectUtils.equal(this.data, that.data);</span>
+<span class="fc" id="L348">        XIntervalSeriesCollection that = (XIntervalSeriesCollection) obj;</span>
+<span class="fc" id="L349">        return ObjectUtils.equal(this.data, that.data);</span>
     }
 
     /**
@@ -358,11 +358,11 @@ public class XIntervalSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L361">        XIntervalSeriesCollection clone</span>
-<span class="nc" id="L362">                = (XIntervalSeriesCollection) super.clone();</span>
-<span class="nc" id="L363">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
-<span class="nc" id="L364">        return clone;</span>
+<span class="fc" id="L361">        XIntervalSeriesCollection clone</span>
+<span class="fc" id="L362">                = (XIntervalSeriesCollection) super.clone();</span>
+<span class="fc" id="L363">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
+<span class="fc" id="L364">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

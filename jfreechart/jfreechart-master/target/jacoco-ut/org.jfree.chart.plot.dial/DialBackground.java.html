@@ -88,8 +88,8 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      * default background paint is {@code Color.WHITE}.
      */
     public DialBackground() {
-<span class="nc" id="L91">        this(Color.WHITE);</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L91">        this(Color.WHITE);</span>
+<span class="fc" id="L92">    }</span>
 
     /**
      * Creates a new instance of {@code DialBackground}.
@@ -99,11 +99,11 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      * @throws IllegalArgumentException if {@code Paint} is
      *     {@code null}.
      */
-<span class="nc" id="L102">    public DialBackground(Paint paint) {</span>
-<span class="nc" id="L103">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L104">        this.paint = paint;</span>
-<span class="nc" id="L105">        this.gradientPaintTransformer = new StandardGradientPaintTransformer();</span>
-<span class="nc" id="L106">    }</span>
+<span class="fc" id="L102">    public DialBackground(Paint paint) {</span>
+<span class="fc" id="L103">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L104">        this.paint = paint;</span>
+<span class="fc" id="L105">        this.gradientPaintTransformer = new StandardGradientPaintTransformer();</span>
+<span class="fc" id="L106">    }</span>
 
     /**
      * Returns the paint used to fill the background.
@@ -125,10 +125,10 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      * @see #getPaint()
      */
     public void setPaint(Paint paint) {
-<span class="nc" id="L128">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L129">        this.paint = paint;</span>
-<span class="nc" id="L130">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L131">    }</span>
+<span class="fc" id="L128">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L129">        this.paint = paint;</span>
+<span class="fc" id="L130">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L131">    }</span>
 
     /**
      * Returns the transformer used to adjust the coordinates of any
@@ -152,10 +152,10 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      * @see #getGradientPaintTransformer()
      */
     public void setGradientPaintTransformer(GradientPaintTransformer t) {
-<span class="nc" id="L155">        Args.nullNotPermitted(t, &quot;t&quot;);</span>
-<span class="nc" id="L156">        this.gradientPaintTransformer = t;</span>
-<span class="nc" id="L157">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L158">    }</span>
+<span class="fc" id="L155">        Args.nullNotPermitted(t, &quot;t&quot;);</span>
+<span class="fc" id="L156">        this.gradientPaintTransformer = t;</span>
+<span class="fc" id="L157">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L158">    }</span>
 
     /**
      * Returns {@code true} to indicate that this layer should be
@@ -200,21 +200,21 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L204">            return true;</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L204">            return true;</span>
         }
-<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (!(obj instanceof DialBackground)) {</span>
-<span class="nc" id="L207">            return false;</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (!(obj instanceof DialBackground)) {</span>
+<span class="fc" id="L207">            return false;</span>
         }
-<span class="nc" id="L209">        DialBackground that = (DialBackground) obj;</span>
-<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L211">            return false;</span>
+<span class="fc" id="L209">        DialBackground that = (DialBackground) obj;</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L211">            return false;</span>
         }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (!this.gradientPaintTransformer.equals(</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (!this.gradientPaintTransformer.equals(</span>
                 that.gradientPaintTransformer)) {
-<span class="nc" id="L215">            return false;</span>
+<span class="fc" id="L215">            return false;</span>
         }
-<span class="nc" id="L217">        return super.equals(obj);</span>
+<span class="fc" id="L217">        return super.equals(obj);</span>
     }
 
     /**
@@ -224,10 +224,10 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L227">        int result = 193;</span>
-<span class="nc" id="L228">        result = 37 * result + HashUtils.hashCodeForPaint(this.paint);</span>
-<span class="nc" id="L229">        result = 37 * result + this.gradientPaintTransformer.hashCode();</span>
-<span class="nc" id="L230">        return result;</span>
+<span class="fc" id="L227">        int result = 193;</span>
+<span class="fc" id="L228">        result = 37 * result + HashUtils.hashCodeForPaint(this.paint);</span>
+<span class="fc" id="L229">        result = 37 * result + this.gradientPaintTransformer.hashCode();</span>
+<span class="fc" id="L230">        return result;</span>
     }
 
     /**
@@ -240,7 +240,7 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L243">        return super.clone();</span>
+<span class="fc" id="L243">        return super.clone();</span>
     }
 
     /**
@@ -251,9 +251,9 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L254">        stream.defaultWriteObject();</span>
-<span class="nc" id="L255">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L256">    }</span>
+<span class="fc" id="L254">        stream.defaultWriteObject();</span>
+<span class="fc" id="L255">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L256">    }</span>
 
     /**
      * Provides serialization support.
@@ -265,9 +265,9 @@ public class DialBackground extends AbstractDialLayer implements DialLayer,
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L268">        stream.defaultReadObject();</span>
-<span class="nc" id="L269">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L270">    }</span>
+<span class="fc" id="L268">        stream.defaultReadObject();</span>
+<span class="fc" id="L269">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L270">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

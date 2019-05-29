@@ -105,8 +105,8 @@ public class DateTickUnit extends TickUnit implements Serializable {
      * @since 1.0.13
      */
     public DateTickUnit(DateTickUnitType unitType, int multiple) {
-<span class="nc" id="L108">        this(unitType, multiple, DateFormat.getDateInstance(DateFormat.SHORT));</span>
-<span class="nc" id="L109">    }</span>
+<span class="fc" id="L108">        this(unitType, multiple, DateFormat.getDateInstance(DateFormat.SHORT));</span>
+<span class="fc" id="L109">    }</span>
 
     /**
      * Creates a new date tick unit.
@@ -119,8 +119,8 @@ public class DateTickUnit extends TickUnit implements Serializable {
      */
     public DateTickUnit(DateTickUnitType unitType, int multiple,
             DateFormat formatter) {
-<span class="nc" id="L122">        this(unitType, multiple, unitType, multiple, formatter);</span>
-<span class="nc" id="L123">    }</span>
+<span class="fc" id="L122">        this(unitType, multiple, unitType, multiple, formatter);</span>
+<span class="fc" id="L123">    }</span>
 
     /**
      * Creates a new unit.
@@ -138,20 +138,20 @@ public class DateTickUnit extends TickUnit implements Serializable {
     public DateTickUnit(DateTickUnitType unitType, int multiple,
             DateTickUnitType rollUnitType, int rollMultiple,
             DateFormat formatter) {
-<span class="nc" id="L141">        super(DateTickUnit.getMillisecondCount(unitType, multiple));</span>
-<span class="nc" id="L142">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
-<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (multiple &lt;= 0) {</span>
+<span class="fc" id="L141">        super(DateTickUnit.getMillisecondCount(unitType, multiple));</span>
+<span class="fc" id="L142">        Args.nullNotPermitted(formatter, &quot;formatter&quot;);</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (multiple &lt;= 0) {</span>
 <span class="nc" id="L144">            throw new IllegalArgumentException(&quot;Requires 'multiple' &gt; 0.&quot;);</span>
         }
-<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (rollMultiple &lt;= 0) {</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (rollMultiple &lt;= 0) {</span>
 <span class="nc" id="L147">            throw new IllegalArgumentException(&quot;Requires 'rollMultiple' &gt; 0.&quot;);</span>
         }
-<span class="nc" id="L149">        this.unitType = unitType;</span>
-<span class="nc" id="L150">        this.count = multiple;</span>
-<span class="nc" id="L151">        this.rollUnitType = rollUnitType;</span>
-<span class="nc" id="L152">        this.rollCount = rollMultiple;</span>
-<span class="nc" id="L153">        this.formatter = formatter;</span>
-<span class="nc" id="L154">    }</span>
+<span class="fc" id="L149">        this.unitType = unitType;</span>
+<span class="fc" id="L150">        this.count = multiple;</span>
+<span class="fc" id="L151">        this.rollUnitType = rollUnitType;</span>
+<span class="fc" id="L152">        this.rollCount = rollMultiple;</span>
+<span class="fc" id="L153">        this.formatter = formatter;</span>
+<span class="fc" id="L154">    }</span>
 
     /**
      * Returns the unit type.
@@ -161,7 +161,7 @@ public class DateTickUnit extends TickUnit implements Serializable {
      * @since 1.0.13
      */
     public DateTickUnitType getUnitType() {
-<span class="nc" id="L164">        return this.unitType;</span>
+<span class="fc" id="L164">        return this.unitType;</span>
     }
 
     /**
@@ -170,7 +170,7 @@ public class DateTickUnit extends TickUnit implements Serializable {
      * @return The unit multiple (always &amp;gt; 0).
      */
     public int getMultiple() {
-<span class="nc" id="L173">        return this.count;</span>
+<span class="fc" id="L173">        return this.count;</span>
     }
 
     /**
@@ -215,7 +215,7 @@ public class DateTickUnit extends TickUnit implements Serializable {
      * @return The formatted date.
      */
     public String dateToString(Date date) {
-<span class="nc" id="L218">        return this.formatter.format(date);</span>
+<span class="fc" id="L218">        return this.formatter.format(date);</span>
     }
 
     /**
@@ -233,10 +233,10 @@ public class DateTickUnit extends TickUnit implements Serializable {
         // number calculations, and since DateTickUnit doesn't do week
         // arithmetic, the default locale (whatever it is) should be fine
         // here...
-<span class="nc" id="L236">        Calendar calendar = Calendar.getInstance(zone);</span>
-<span class="nc" id="L237">        calendar.setTime(base);</span>
-<span class="nc" id="L238">        calendar.add(this.unitType.getCalendarField(), this.count);</span>
-<span class="nc" id="L239">        return calendar.getTime();</span>
+<span class="fc" id="L236">        Calendar calendar = Calendar.getInstance(zone);</span>
+<span class="fc" id="L237">        calendar.setTime(base);</span>
+<span class="fc" id="L238">        calendar.add(this.unitType.getCalendarField(), this.count);</span>
+<span class="fc" id="L239">        return calendar.getTime();</span>
     }
 
     /**
@@ -282,7 +282,7 @@ public class DateTickUnit extends TickUnit implements Serializable {
      * @return The field code.
      */
     public int getCalendarField() {
-<span class="nc" id="L285">        return this.unitType.getCalendarField();</span>
+<span class="fc" id="L285">        return this.unitType.getCalendarField();</span>
     }
 
     /**
@@ -301,26 +301,26 @@ public class DateTickUnit extends TickUnit implements Serializable {
      */
     private static long getMillisecondCount(DateTickUnitType unit, int count) {
 
-<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (unit.equals(DateTickUnitType.YEAR)) {</span>
-<span class="nc" id="L305">            return (365L * 24L * 60L * 60L * 1000L) * count;</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (unit.equals(DateTickUnitType.YEAR)) {</span>
+<span class="fc" id="L305">            return (365L * 24L * 60L * 60L * 1000L) * count;</span>
         }
-<span class="nc bnc" id="L307" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.MONTH)) {</span>
-<span class="nc" id="L308">            return (31L * 24L * 60L * 60L * 1000L) * count;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        else if (unit.equals(DateTickUnitType.MONTH)) {</span>
+<span class="fc" id="L308">            return (31L * 24L * 60L * 60L * 1000L) * count;</span>
         }
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.DAY)) {</span>
-<span class="nc" id="L311">            return (24L * 60L * 60L * 1000L) * count;</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        else if (unit.equals(DateTickUnitType.DAY)) {</span>
+<span class="fc" id="L311">            return (24L * 60L * 60L * 1000L) * count;</span>
         }
-<span class="nc bnc" id="L313" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.HOUR)) {</span>
-<span class="nc" id="L314">            return (60L * 60L * 1000L) * count;</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        else if (unit.equals(DateTickUnitType.HOUR)) {</span>
+<span class="fc" id="L314">            return (60L * 60L * 1000L) * count;</span>
         }
-<span class="nc bnc" id="L316" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.MINUTE)) {</span>
-<span class="nc" id="L317">            return (60L * 1000L) * count;</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        else if (unit.equals(DateTickUnitType.MINUTE)) {</span>
+<span class="fc" id="L317">            return (60L * 1000L) * count;</span>
         }
-<span class="nc bnc" id="L319" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.SECOND)) {</span>
-<span class="nc" id="L320">            return 1000L * count;</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        else if (unit.equals(DateTickUnitType.SECOND)) {</span>
+<span class="fc" id="L320">            return 1000L * count;</span>
         }
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        else if (unit.equals(DateTickUnitType.MILLISECOND)) {</span>
-<span class="nc" id="L323">            return count;</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        else if (unit.equals(DateTickUnitType.MILLISECOND)) {</span>
+<span class="fc" id="L323">            return count;</span>
         }
         else {
 <span class="nc" id="L326">            throw new IllegalArgumentException(&quot;The 'unit' argument has a &quot; </span>
@@ -338,26 +338,26 @@ public class DateTickUnit extends TickUnit implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L341" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L342">            return true;</span>
         }
-<span class="nc bnc" id="L344" title="All 2 branches missed.">        if (!(obj instanceof DateTickUnit)) {</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (!(obj instanceof DateTickUnit)) {</span>
 <span class="nc" id="L345">            return false;</span>
         }
-<span class="nc bnc" id="L347" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L348">            return false;</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L348">            return false;</span>
         }
-<span class="nc" id="L350">        DateTickUnit that = (DateTickUnit) obj;</span>
-<span class="nc bnc" id="L351" title="All 2 branches missed.">        if (!(this.unitType.equals(that.unitType))) {</span>
+<span class="fc" id="L350">        DateTickUnit that = (DateTickUnit) obj;</span>
+<span class="pc bpc" id="L351" title="1 of 2 branches missed.">        if (!(this.unitType.equals(that.unitType))) {</span>
 <span class="nc" id="L352">            return false;</span>
         }
-<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (this.count != that.count) {</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">        if (this.count != that.count) {</span>
 <span class="nc" id="L355">            return false;</span>
         }
-<span class="nc bnc" id="L357" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.formatter, that.formatter)) {</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if (!ObjectUtils.equal(this.formatter, that.formatter)) {</span>
 <span class="nc" id="L358">            return false;</span>
         }
-<span class="nc" id="L360">        return true;</span>
+<span class="fc" id="L360">        return true;</span>
     }
 
     /**
@@ -367,11 +367,11 @@ public class DateTickUnit extends TickUnit implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L370">        int result = 19;</span>
-<span class="nc" id="L371">        result = 37 * result + this.unitType.hashCode();</span>
-<span class="nc" id="L372">        result = 37 * result + this.count;</span>
-<span class="nc" id="L373">        result = 37 * result + this.formatter.hashCode();</span>
-<span class="nc" id="L374">        return result;</span>
+<span class="fc" id="L370">        int result = 19;</span>
+<span class="fc" id="L371">        result = 37 * result + this.unitType.hashCode();</span>
+<span class="fc" id="L372">        result = 37 * result + this.count;</span>
+<span class="fc" id="L373">        result = 37 * result + this.formatter.hashCode();</span>
+<span class="fc" id="L374">        return result;</span>
     }
 
     /**
@@ -387,4 +387,4 @@ public class DateTickUnit extends TickUnit implements Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

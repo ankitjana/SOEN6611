@@ -128,15 +128,15 @@ public class Week extends RegularTimePeriod implements Serializable {
      * @param week  the week (1 to 53).
      * @param year  the year (1900 to 9999).
      */
-<span class="nc" id="L131">    public Week(int week, int year) {</span>
-<span class="nc bnc" id="L132" title="All 4 branches missed.">        if ((week &lt; FIRST_WEEK_IN_YEAR) &amp;&amp; (week &gt; LAST_WEEK_IN_YEAR)) {</span>
+<span class="fc" id="L131">    public Week(int week, int year) {</span>
+<span class="pc bpc" id="L132" title="3 of 4 branches missed.">        if ((week &lt; FIRST_WEEK_IN_YEAR) &amp;&amp; (week &gt; LAST_WEEK_IN_YEAR)) {</span>
 <span class="nc" id="L133">            throw new IllegalArgumentException(</span>
                     &quot;The 'week' argument must be in the range 1 - 53.&quot;);
         }
-<span class="nc" id="L136">        this.week = (byte) week;</span>
-<span class="nc" id="L137">        this.year = (short) year;</span>
-<span class="nc" id="L138">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L136">        this.week = (byte) week;</span>
+<span class="fc" id="L137">        this.year = (short) year;</span>
+<span class="fc" id="L138">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L139">    }</span>
 
     /**
      * Creates a time period representing the week in the specified year.
@@ -179,35 +179,35 @@ public class Week extends RegularTimePeriod implements Serializable {
      *
      * @since 1.0.7
      */
-<span class="nc" id="L182">    public Week(Date time, TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L183">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
-<span class="nc" id="L184">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L185">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L186">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L187">        calendar.setTime(time);</span>
+<span class="fc" id="L182">    public Week(Date time, TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L183">        Args.nullNotPermitted(time, &quot;time&quot;);</span>
+<span class="fc" id="L184">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L185">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L186">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L187">        calendar.setTime(time);</span>
 
         // sometimes the last few days of the year are considered to fall in
         // the *first* week of the following year.  Refer to the Javadocs for
         // GregorianCalendar.
-<span class="nc" id="L192">        int tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);</span>
-<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (tempWeek == 1</span>
+<span class="fc" id="L192">        int tempWeek = calendar.get(Calendar.WEEK_OF_YEAR);</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (tempWeek == 1</span>
 <span class="nc bnc" id="L194" title="All 2 branches missed.">                &amp;&amp; calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {</span>
 <span class="nc" id="L195">            this.week = 1;</span>
 <span class="nc" id="L196">            this.year = (short) (calendar.get(Calendar.YEAR) + 1);</span>
         }
         else {
-<span class="nc" id="L199">            this.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR);</span>
-<span class="nc" id="L200">            int yyyy = calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L199">            this.week = (byte) Math.min(tempWeek, LAST_WEEK_IN_YEAR);</span>
+<span class="fc" id="L200">            int yyyy = calendar.get(Calendar.YEAR);</span>
             // alternatively, sometimes the first few days of the year are
             // considered to fall in the *last* week of the previous year...
-<span class="nc bnc" id="L203" title="All 4 branches missed.">            if (calendar.get(Calendar.MONTH) == Calendar.JANUARY</span>
+<span class="pc bpc" id="L203" title="1 of 4 branches missed.">            if (calendar.get(Calendar.MONTH) == Calendar.JANUARY</span>
                     &amp;&amp; this.week &gt;= 52) {
-<span class="nc" id="L205">                yyyy--;</span>
+<span class="fc" id="L205">                yyyy--;</span>
             }
-<span class="nc" id="L207">            this.year = (short) yyyy;</span>
+<span class="fc" id="L207">            this.year = (short) yyyy;</span>
         }
-<span class="nc" id="L209">        peg(calendar);</span>
-<span class="nc" id="L210">    }</span>
+<span class="fc" id="L209">        peg(calendar);</span>
+<span class="fc" id="L210">    }</span>
 
     /**
      * Returns the year in which the week falls.
@@ -215,7 +215,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      * @return The year (never {@code null}).
      */
     public Year getYear() {
-<span class="nc" id="L218">        return new Year(this.year);</span>
+<span class="fc" id="L218">        return new Year(this.year);</span>
     }
 
     /**
@@ -224,7 +224,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      * @return The year.
      */
     public int getYearValue() {
-<span class="nc" id="L227">        return this.year;</span>
+<span class="fc" id="L227">        return this.year;</span>
     }
 
     /**
@@ -233,7 +233,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      * @return The week.
      */
     public int getWeek() {
-<span class="nc" id="L236">        return this.week;</span>
+<span class="fc" id="L236">        return this.week;</span>
     }
 
     /**
@@ -248,7 +248,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond() {
-<span class="nc" id="L251">        return this.firstMillisecond;</span>
+<span class="fc" id="L251">        return this.firstMillisecond;</span>
     }
 
     /**
@@ -263,7 +263,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond() {
-<span class="nc" id="L266">        return this.lastMillisecond;</span>
+<span class="fc" id="L266">        return this.lastMillisecond;</span>
     }
 
     /**
@@ -276,9 +276,9 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public void peg(Calendar calendar) {
-<span class="nc" id="L279">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L280">        this.lastMillisecond = getLastMillisecond(calendar);</span>
-<span class="nc" id="L281">    }</span>
+<span class="fc" id="L279">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L280">        this.lastMillisecond = getLastMillisecond(calendar);</span>
+<span class="fc" id="L281">    }</span>
 
     /**
      * Returns the week preceding this one.  This method will return
@@ -292,12 +292,12 @@ public class Week extends RegularTimePeriod implements Serializable {
     public RegularTimePeriod previous() {
 
         Week result;
-<span class="nc bnc" id="L295" title="All 2 branches missed.">        if (this.week != FIRST_WEEK_IN_YEAR) {</span>
-<span class="nc" id="L296">            result = new Week(this.week - 1, this.year);</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">        if (this.week != FIRST_WEEK_IN_YEAR) {</span>
+<span class="fc" id="L296">            result = new Week(this.week - 1, this.year);</span>
         }
         else {
             // we need to work out if the previous year has 52 or 53 weeks...
-<span class="nc bnc" id="L300" title="All 2 branches missed.">            if (this.year &gt; 1900) {</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">            if (this.year &gt; 1900) {</span>
 <span class="nc" id="L301">                int yy = this.year - 1;</span>
 <span class="nc" id="L302">                Calendar prevYearCalendar = Calendar.getInstance();</span>
 <span class="nc" id="L303">                prevYearCalendar.set(yy, Calendar.DECEMBER, 31);</span>
@@ -305,10 +305,10 @@ public class Week extends RegularTimePeriod implements Serializable {
                         Calendar.WEEK_OF_YEAR), yy);
 <span class="nc" id="L306">            }</span>
             else {
-<span class="nc" id="L308">                result = null;</span>
+<span class="fc" id="L308">                result = null;</span>
             }
         }
-<span class="nc" id="L311">        return result;</span>
+<span class="fc" id="L311">        return result;</span>
 
     }
 
@@ -325,27 +325,27 @@ public class Week extends RegularTimePeriod implements Serializable {
     public RegularTimePeriod next() {
 
         Week result;
-<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (this.week &lt; 52) {</span>
-<span class="nc" id="L329">            result = new Week(this.week + 1, this.year);</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        if (this.week &lt; 52) {</span>
+<span class="fc" id="L329">            result = new Week(this.week + 1, this.year);</span>
         }
         else {
-<span class="nc" id="L332">            Calendar calendar = Calendar.getInstance();</span>
-<span class="nc" id="L333">            calendar.set(this.year, Calendar.DECEMBER, 31);</span>
-<span class="nc" id="L334">            int actualMaxWeek</span>
-<span class="nc" id="L335">                = calendar.getActualMaximum(Calendar.WEEK_OF_YEAR);</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">            if (this.week &lt; actualMaxWeek) {</span>
+<span class="fc" id="L332">            Calendar calendar = Calendar.getInstance();</span>
+<span class="fc" id="L333">            calendar.set(this.year, Calendar.DECEMBER, 31);</span>
+<span class="fc" id="L334">            int actualMaxWeek</span>
+<span class="fc" id="L335">                = calendar.getActualMaximum(Calendar.WEEK_OF_YEAR);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">            if (this.week &lt; actualMaxWeek) {</span>
 <span class="nc" id="L337">                result = new Week(this.week + 1, this.year);</span>
             }
             else {
-<span class="nc bnc" id="L340" title="All 2 branches missed.">                if (this.year &lt; 9999) {</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">                if (this.year &lt; 9999) {</span>
 <span class="nc" id="L341">                    result = new Week(FIRST_WEEK_IN_YEAR, this.year + 1);</span>
                 }
                 else {
-<span class="nc" id="L344">                    result = null;</span>
+<span class="fc" id="L344">                    result = null;</span>
                 }
             }
         }
-<span class="nc" id="L348">        return result;</span>
+<span class="fc" id="L348">        return result;</span>
 
     }
 
@@ -356,7 +356,7 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getSerialIndex() {
-<span class="nc" id="L359">        return this.year * 53L + this.week;</span>
+<span class="fc" id="L359">        return this.year * 53L + this.week;</span>
     }
 
     /**
@@ -372,16 +372,16 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond(Calendar calendar) {
-<span class="nc" id="L375">        Calendar c = (Calendar) calendar.clone();</span>
-<span class="nc" id="L376">        c.clear();</span>
-<span class="nc" id="L377">        c.set(Calendar.YEAR, this.year);</span>
-<span class="nc" id="L378">        c.set(Calendar.WEEK_OF_YEAR, this.week);</span>
-<span class="nc" id="L379">        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());</span>
-<span class="nc" id="L380">        c.set(Calendar.HOUR, 0);</span>
-<span class="nc" id="L381">        c.set(Calendar.MINUTE, 0);</span>
-<span class="nc" id="L382">        c.set(Calendar.SECOND, 0);</span>
-<span class="nc" id="L383">        c.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L384">        return c.getTimeInMillis();</span>
+<span class="fc" id="L375">        Calendar c = (Calendar) calendar.clone();</span>
+<span class="fc" id="L376">        c.clear();</span>
+<span class="fc" id="L377">        c.set(Calendar.YEAR, this.year);</span>
+<span class="fc" id="L378">        c.set(Calendar.WEEK_OF_YEAR, this.week);</span>
+<span class="fc" id="L379">        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());</span>
+<span class="fc" id="L380">        c.set(Calendar.HOUR, 0);</span>
+<span class="fc" id="L381">        c.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L382">        c.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L383">        c.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L384">        return c.getTimeInMillis();</span>
     }
 
     /**
@@ -397,16 +397,16 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond(Calendar calendar) {
-<span class="nc" id="L400">        Calendar c = (Calendar) calendar.clone();</span>
-<span class="nc" id="L401">        c.clear();</span>
-<span class="nc" id="L402">        c.set(Calendar.YEAR, this.year);</span>
-<span class="nc" id="L403">        c.set(Calendar.WEEK_OF_YEAR, this.week + 1);</span>
-<span class="nc" id="L404">        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());</span>
-<span class="nc" id="L405">        c.set(Calendar.HOUR, 0);</span>
-<span class="nc" id="L406">        c.set(Calendar.MINUTE, 0);</span>
-<span class="nc" id="L407">        c.set(Calendar.SECOND, 0);</span>
-<span class="nc" id="L408">        c.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L409">        return c.getTimeInMillis() - 1;</span>
+<span class="fc" id="L400">        Calendar c = (Calendar) calendar.clone();</span>
+<span class="fc" id="L401">        c.clear();</span>
+<span class="fc" id="L402">        c.set(Calendar.YEAR, this.year);</span>
+<span class="fc" id="L403">        c.set(Calendar.WEEK_OF_YEAR, this.week + 1);</span>
+<span class="fc" id="L404">        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());</span>
+<span class="fc" id="L405">        c.set(Calendar.HOUR, 0);</span>
+<span class="fc" id="L406">        c.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L407">        c.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L408">        c.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L409">        return c.getTimeInMillis() - 1;</span>
     }
 
     /**
@@ -434,20 +434,20 @@ public class Week extends RegularTimePeriod implements Serializable {
     @Override
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L438">            return true;</span>
         }
-<span class="nc bnc" id="L440" title="All 2 branches missed.">        if (!(obj instanceof Week)) {</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">        if (!(obj instanceof Week)) {</span>
 <span class="nc" id="L441">            return false;</span>
         }
-<span class="nc" id="L443">        Week that = (Week) obj;</span>
-<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (this.week != that.week) {</span>
-<span class="nc" id="L445">            return false;</span>
+<span class="fc" id="L443">        Week that = (Week) obj;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (this.week != that.week) {</span>
+<span class="fc" id="L445">            return false;</span>
         }
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        if (this.year != that.year) {</span>
-<span class="nc" id="L448">            return false;</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (this.year != that.year) {</span>
+<span class="fc" id="L448">            return false;</span>
         }
-<span class="nc" id="L450">        return true;</span>
+<span class="fc" id="L450">        return true;</span>
 
     }
 
@@ -462,10 +462,10 @@ public class Week extends RegularTimePeriod implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L465">        int result = 17;</span>
-<span class="nc" id="L466">        result = 37 * result + this.week;</span>
-<span class="nc" id="L467">        result = 37 * result + this.year;</span>
-<span class="nc" id="L468">        return result;</span>
+<span class="fc" id="L465">        int result = 17;</span>
+<span class="fc" id="L466">        result = 37 * result + this.week;</span>
+<span class="fc" id="L467">        result = 37 * result + this.year;</span>
+<span class="fc" id="L468">        return result;</span>
     }
 
     /**
@@ -643,4 +643,4 @@ public class Week extends RegularTimePeriod implements Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -69,11 +69,11 @@ public class QuarterDateFormat extends DateFormat
     private static final long serialVersionUID = -6738465248529797176L;
 
     /** Symbols for regular quarters. */
-<span class="nc" id="L72">    public static final String[] REGULAR_QUARTERS = new String[] {&quot;1&quot;, &quot;2&quot;,</span>
+<span class="fc" id="L72">    public static final String[] REGULAR_QUARTERS = new String[] {&quot;1&quot;, &quot;2&quot;,</span>
             &quot;3&quot;, &quot;4&quot;};
 
     /** Symbols for roman numbered quarters. */
-<span class="nc" id="L76">    public static final String[] ROMAN_QUARTERS  = new String[] {&quot;I&quot;, &quot;II&quot;,</span>
+<span class="fc" id="L76">    public static final String[] ROMAN_QUARTERS  = new String[] {&quot;I&quot;, &quot;II&quot;,</span>
             &quot;III&quot;, &quot;IV&quot;};
 
     /**
@@ -81,11 +81,11 @@ public class QuarterDateFormat extends DateFormat
      *
      * @since 1.0.6
      */
-<span class="nc" id="L84">    public static final String[] GREEK_QUARTERS = new String[] {&quot;\u0391&quot;,</span>
+<span class="fc" id="L84">    public static final String[] GREEK_QUARTERS = new String[] {&quot;\u0391&quot;,</span>
             &quot;\u0392&quot;, &quot;\u0393&quot;, &quot;\u0394&quot;};
 
     /** The strings. */
-<span class="nc" id="L88">    private String[] quarters = REGULAR_QUARTERS;</span>
+<span class="fc" id="L88">    private String[] quarters = REGULAR_QUARTERS;</span>
 
     /** A flag that controls whether the quarter or the year goes first. */
     private boolean quarterFirst;
@@ -113,8 +113,8 @@ public class QuarterDateFormat extends DateFormat
      * @param quarterSymbols  the quarter symbols.
      */
     public QuarterDateFormat(TimeZone zone, String[] quarterSymbols) {
-<span class="nc" id="L116">        this(zone, quarterSymbols, false);</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L116">        this(zone, quarterSymbols, false);</span>
+<span class="fc" id="L117">    }</span>
 
     /**
      * Creates a new instance for the specified time zone.
@@ -127,18 +127,18 @@ public class QuarterDateFormat extends DateFormat
      * @since 1.0.6
      */
     public QuarterDateFormat(TimeZone zone, String[] quarterSymbols,
-<span class="nc" id="L130">            boolean quarterFirst) {</span>
-<span class="nc" id="L131">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
-<span class="nc" id="L132">        this.calendar = new GregorianCalendar(zone);</span>
-<span class="nc" id="L133">        this.quarters = quarterSymbols;</span>
-<span class="nc" id="L134">        this.quarterFirst = quarterFirst;</span>
+<span class="fc" id="L130">            boolean quarterFirst) {</span>
+<span class="fc" id="L131">        Args.nullNotPermitted(zone, &quot;zone&quot;);</span>
+<span class="fc" id="L132">        this.calendar = new GregorianCalendar(zone);</span>
+<span class="fc" id="L133">        this.quarters = quarterSymbols;</span>
+<span class="fc" id="L134">        this.quarterFirst = quarterFirst;</span>
 
         // the following is never used, but it seems that DateFormat requires
         // it to be non-null.  It isn't well covered in the spec, refer to
         // bug parade 5061189 for more info.
-<span class="nc" id="L139">        this.numberFormat = NumberFormat.getNumberInstance();</span>
+<span class="fc" id="L139">        this.numberFormat = NumberFormat.getNumberInstance();</span>
 
-<span class="nc" id="L141">    }</span>
+<span class="fc" id="L141">    }</span>
 
     /**
      * Formats the given date.
@@ -191,21 +191,21 @@ public class QuarterDateFormat extends DateFormat
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L195">            return true;</span>
         }
-<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (!(obj instanceof QuarterDateFormat)) {</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (!(obj instanceof QuarterDateFormat)) {</span>
 <span class="nc" id="L198">            return false;</span>
         }
-<span class="nc" id="L200">        QuarterDateFormat that = (QuarterDateFormat) obj;</span>
-<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (!Arrays.equals(this.quarters, that.quarters)) {</span>
-<span class="nc" id="L202">            return false;</span>
+<span class="fc" id="L200">        QuarterDateFormat that = (QuarterDateFormat) obj;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (!Arrays.equals(this.quarters, that.quarters)) {</span>
+<span class="fc" id="L202">            return false;</span>
         }
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (this.quarterFirst != that.quarterFirst) {</span>
-<span class="nc" id="L205">            return false;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (this.quarterFirst != that.quarterFirst) {</span>
+<span class="fc" id="L205">            return false;</span>
         }
-<span class="nc" id="L207">        return super.equals(obj);</span>
+<span class="fc" id="L207">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

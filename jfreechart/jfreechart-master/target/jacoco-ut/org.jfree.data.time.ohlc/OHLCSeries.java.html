@@ -64,8 +64,8 @@ public class OHLCSeries extends ComparableObjectSeries {
      * @param key  the series key ({@code null} not permitted).
      */
     public OHLCSeries(Comparable key) {
-<span class="nc" id="L67">        super(key, true, false);</span>
-<span class="nc" id="L68">    }</span>
+<span class="fc" id="L67">        super(key, true, false);</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Returns the time period for the specified item.
@@ -75,8 +75,8 @@ public class OHLCSeries extends ComparableObjectSeries {
      * @return The time period.
      */
     public RegularTimePeriod getPeriod(int index) {
-<span class="nc" id="L78">        OHLCItem item = (OHLCItem) getDataItem(index);</span>
-<span class="nc" id="L79">        return item.getPeriod();</span>
+<span class="fc" id="L78">        OHLCItem item = (OHLCItem) getDataItem(index);</span>
+<span class="fc" id="L79">        return item.getPeriod();</span>
     }
 
     /**
@@ -88,7 +88,7 @@ public class OHLCSeries extends ComparableObjectSeries {
      */
     @Override
     public ComparableObjectItem getDataItem(int index) {
-<span class="nc" id="L91">        return super.getDataItem(index);</span>
+<span class="fc" id="L91">        return super.getDataItem(index);</span>
     }
 
     /**
@@ -102,15 +102,15 @@ public class OHLCSeries extends ComparableObjectSeries {
      */
     public void add(RegularTimePeriod period, double open, double high,
             double low, double close) {
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (getItemCount() &gt; 0) {</span>
-<span class="nc" id="L106">            OHLCItem item0 = (OHLCItem) this.getDataItem(0);</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">            if (!period.getClass().equals(item0.getPeriod().getClass())) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (getItemCount() &gt; 0) {</span>
+<span class="fc" id="L106">            OHLCItem item0 = (OHLCItem) this.getDataItem(0);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            if (!period.getClass().equals(item0.getPeriod().getClass())) {</span>
 <span class="nc" id="L108">                throw new IllegalArgumentException(</span>
                         &quot;Can't mix RegularTimePeriod class types.&quot;);
             }
         }
-<span class="nc" id="L112">        super.add(new OHLCItem(period, open, high, low, close), true);</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        super.add(new OHLCItem(period, open, high, low, close), true);</span>
+<span class="fc" id="L113">    }</span>
     
     /**
      * Adds a data item to the series.  The values from the item passed to
@@ -137,8 +137,8 @@ public class OHLCSeries extends ComparableObjectSeries {
      */
     @Override
     public ComparableObjectItem remove(int index) {
-<span class="nc" id="L140">        return super.remove(index);</span>
+<span class="fc" id="L140">        return super.remove(index);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

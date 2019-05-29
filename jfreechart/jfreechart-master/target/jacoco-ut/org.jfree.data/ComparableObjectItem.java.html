@@ -69,11 +69,11 @@ public class ComparableObjectItem implements Cloneable, Comparable,
      * @param x  the x-value ({@code null} NOT permitted).
      * @param y  the y-value ({@code null} permitted).
      */
-<span class="nc" id="L72">    public ComparableObjectItem(Comparable x, Object y) {</span>
-<span class="nc" id="L73">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
-<span class="nc" id="L74">        this.x = x;</span>
-<span class="nc" id="L75">        this.obj = y;</span>
-<span class="nc" id="L76">    }</span>
+<span class="fc" id="L72">    public ComparableObjectItem(Comparable x, Object y) {</span>
+<span class="fc" id="L73">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
+<span class="fc" id="L74">        this.x = x;</span>
+<span class="fc" id="L75">        this.obj = y;</span>
+<span class="fc" id="L76">    }</span>
 
     /**
      * Returns the x-value.
@@ -81,7 +81,7 @@ public class ComparableObjectItem implements Cloneable, Comparable,
      * @return The x-value (never {@code null}).
      */
     protected Comparable getComparable() {
-<span class="nc" id="L84">        return this.x;</span>
+<span class="fc" id="L84">        return this.x;</span>
     }
 
     /**
@@ -90,7 +90,7 @@ public class ComparableObjectItem implements Cloneable, Comparable,
      * @return The y-value (possibly {@code null}).
      */
     protected Object getObject() {
-<span class="nc" id="L93">        return this.obj;</span>
+<span class="fc" id="L93">        return this.obj;</span>
     }
 
     /**
@@ -122,9 +122,9 @@ public class ComparableObjectItem implements Cloneable, Comparable,
 
         // CASE 1 : Comparing to another ComparableObjectItem object
         // ---------------------------------------------------------
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (o1 instanceof ComparableObjectItem) {</span>
-<span class="nc" id="L126">            ComparableObjectItem that = (ComparableObjectItem) o1;</span>
-<span class="nc" id="L127">            return this.x.compareTo(that.x);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (o1 instanceof ComparableObjectItem) {</span>
+<span class="fc" id="L126">            ComparableObjectItem that = (ComparableObjectItem) o1;</span>
+<span class="fc" id="L127">            return this.x.compareTo(that.x);</span>
         }
 
         // CASE 2 : Comparing to a general object
@@ -148,7 +148,7 @@ public class ComparableObjectItem implements Cloneable, Comparable,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L151">        return super.clone();</span>
+<span class="fc" id="L151">        return super.clone();</span>
     }
 
     /**
@@ -161,20 +161,20 @@ public class ComparableObjectItem implements Cloneable, Comparable,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L165">            return true;</span>
         }
-<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (!(obj instanceof ComparableObjectItem)) {</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        if (!(obj instanceof ComparableObjectItem)) {</span>
 <span class="nc" id="L168">            return false;</span>
         }
-<span class="nc" id="L170">        ComparableObjectItem that = (ComparableObjectItem) obj;</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (!this.x.equals(that.x)) {</span>
-<span class="nc" id="L172">            return false;</span>
+<span class="fc" id="L170">        ComparableObjectItem that = (ComparableObjectItem) obj;</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (!this.x.equals(that.x)) {</span>
+<span class="fc" id="L172">            return false;</span>
         }
-<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.obj, that.obj)) {</span>
-<span class="nc" id="L175">            return false;</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.obj, that.obj)) {</span>
+<span class="fc" id="L175">            return false;</span>
         }
-<span class="nc" id="L177">        return true;</span>
+<span class="fc" id="L177">        return true;</span>
     }
 
     /**
@@ -185,10 +185,10 @@ public class ComparableObjectItem implements Cloneable, Comparable,
     @Override
     public int hashCode() {
         int result;
-<span class="nc" id="L188">        result = this.x.hashCode();</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        result = 29 * result + (this.obj != null ? this.obj.hashCode() : 0);</span>
-<span class="nc" id="L190">        return result;</span>
+<span class="fc" id="L188">        result = this.x.hashCode();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        result = 29 * result + (this.obj != null ? this.obj.hashCode() : 0);</span>
+<span class="fc" id="L190">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

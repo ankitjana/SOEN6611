@@ -89,16 +89,16 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * Storage for the data - this list will contain zero, one or many
      * XYSeries objects.
      */
-<span class="nc" id="L92">    private List data = null;</span>
+<span class="fc" id="L92">    private List data = null;</span>
 
     /** Storage for the x values. */
-<span class="nc" id="L95">    private HashSet xPoints = null;</span>
+<span class="fc" id="L95">    private HashSet xPoints = null;</span>
 
     /** A flag that controls whether or not events are propogated. */
-<span class="nc" id="L98">    private boolean propagateEvents = true;</span>
+<span class="fc" id="L98">    private boolean propagateEvents = true;</span>
 
     /** A flag that controls auto pruning. */
-<span class="nc" id="L101">    private boolean autoPrune = false;</span>
+<span class="fc" id="L101">    private boolean autoPrune = false;</span>
 
     /** The delegate used to control the interval width. */
     private IntervalXYDelegate intervalDelegate;
@@ -107,8 +107,8 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * Creates a new empty dataset.
      */
     public DefaultTableXYDataset() {
-<span class="nc" id="L110">        this(false);</span>
-<span class="nc" id="L111">    }</span>
+<span class="fc" id="L110">        this(false);</span>
+<span class="fc" id="L111">    }</span>
 
     /**
      * Creates a new empty dataset.
@@ -117,13 +117,13 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      *                   removed whenever the corresponding y-values are all
      *                   {@code null}.
      */
-<span class="nc" id="L120">    public DefaultTableXYDataset(boolean autoPrune) {</span>
-<span class="nc" id="L121">        this.autoPrune = autoPrune;</span>
-<span class="nc" id="L122">        this.data = new ArrayList();</span>
-<span class="nc" id="L123">        this.xPoints = new HashSet();</span>
-<span class="nc" id="L124">        this.intervalDelegate = new IntervalXYDelegate(this, false);</span>
-<span class="nc" id="L125">        addChangeListener(this.intervalDelegate);</span>
-<span class="nc" id="L126">    }</span>
+<span class="fc" id="L120">    public DefaultTableXYDataset(boolean autoPrune) {</span>
+<span class="fc" id="L121">        this.autoPrune = autoPrune;</span>
+<span class="fc" id="L122">        this.data = new ArrayList();</span>
+<span class="fc" id="L123">        this.xPoints = new HashSet();</span>
+<span class="fc" id="L124">        this.intervalDelegate = new IntervalXYDelegate(this, false);</span>
+<span class="fc" id="L125">        addChangeListener(this.intervalDelegate);</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Returns the flag that controls whether or not x-values are removed from
@@ -143,18 +143,18 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void addSeries(XYSeries series) {
-<span class="nc" id="L146">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (series.getAllowDuplicateXValues()) {</span>
+<span class="fc" id="L146">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (series.getAllowDuplicateXValues()) {</span>
 <span class="nc" id="L148">            throw new IllegalArgumentException(</span>
                 &quot;Cannot accept XYSeries that allow duplicate values. &quot;
                 + &quot;Use XYSeries(seriesName, &lt;sort&gt;, false) constructor.&quot;
             );
         }
-<span class="nc" id="L153">        updateXPoints(series);</span>
-<span class="nc" id="L154">        this.data.add(series);</span>
-<span class="nc" id="L155">        series.addChangeListener(this);</span>
-<span class="nc" id="L156">        fireDatasetChanged();</span>
-<span class="nc" id="L157">    }</span>
+<span class="fc" id="L153">        updateXPoints(series);</span>
+<span class="fc" id="L154">        this.data.add(series);</span>
+<span class="fc" id="L155">        series.addChangeListener(this);</span>
+<span class="fc" id="L156">        fireDatasetChanged();</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Adds any unique x-values from 'series' to the dataset, and also adds any
@@ -163,47 +163,47 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     private void updateXPoints(XYSeries series) {
-<span class="nc" id="L166">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L167">        HashSet seriesXPoints = new HashSet();</span>
-<span class="nc" id="L168">        boolean savedState = this.propagateEvents;</span>
-<span class="nc" id="L169">        this.propagateEvents = false;</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">        for (int itemNo = 0; itemNo &lt; series.getItemCount(); itemNo++) {</span>
-<span class="nc" id="L171">            Number xValue = series.getX(itemNo);</span>
-<span class="nc" id="L172">            seriesXPoints.add(xValue);</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (!this.xPoints.contains(xValue)) {</span>
-<span class="nc" id="L174">                this.xPoints.add(xValue);</span>
-<span class="nc" id="L175">                int seriesCount = this.data.size();</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">                for (int seriesNo = 0; seriesNo &lt; seriesCount; seriesNo++) {</span>
-<span class="nc" id="L177">                    XYSeries dataSeries = (XYSeries) this.data.get(seriesNo);</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">                    if (!dataSeries.equals(series)) {</span>
-<span class="nc" id="L179">                        dataSeries.add(xValue, null);</span>
+<span class="fc" id="L166">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L167">        HashSet seriesXPoints = new HashSet();</span>
+<span class="fc" id="L168">        boolean savedState = this.propagateEvents;</span>
+<span class="fc" id="L169">        this.propagateEvents = false;</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        for (int itemNo = 0; itemNo &lt; series.getItemCount(); itemNo++) {</span>
+<span class="fc" id="L171">            Number xValue = series.getX(itemNo);</span>
+<span class="fc" id="L172">            seriesXPoints.add(xValue);</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">            if (!this.xPoints.contains(xValue)) {</span>
+<span class="fc" id="L174">                this.xPoints.add(xValue);</span>
+<span class="fc" id="L175">                int seriesCount = this.data.size();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                for (int seriesNo = 0; seriesNo &lt; seriesCount; seriesNo++) {</span>
+<span class="fc" id="L177">                    XYSeries dataSeries = (XYSeries) this.data.get(seriesNo);</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                    if (!dataSeries.equals(series)) {</span>
+<span class="fc" id="L179">                        dataSeries.add(xValue, null);</span>
                     }
                 }
             }
         }
-<span class="nc" id="L184">        Iterator iterator = this.xPoints.iterator();</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L186">            Number xPoint = (Number) iterator.next();</span>
-<span class="nc bnc" id="L187" title="All 2 branches missed.">            if (!seriesXPoints.contains(xPoint)) {</span>
-<span class="nc" id="L188">                series.add(xPoint, null);</span>
+<span class="fc" id="L184">        Iterator iterator = this.xPoints.iterator();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L186">            Number xPoint = (Number) iterator.next();</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">            if (!seriesXPoints.contains(xPoint)) {</span>
+<span class="fc" id="L188">                series.add(xPoint, null);</span>
             }
-<span class="nc" id="L190">        }</span>
-<span class="nc" id="L191">        this.propagateEvents = savedState;</span>
-<span class="nc" id="L192">    }</span>
+<span class="fc" id="L190">        }</span>
+<span class="fc" id="L191">        this.propagateEvents = savedState;</span>
+<span class="fc" id="L192">    }</span>
 
     /**
      * Updates the x-values for all the series in the dataset.
      */
     public void updateXPoints() {
-<span class="nc" id="L198">        this.propagateEvents = false;</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
-<span class="nc" id="L200">            updateXPoints((XYSeries) this.data.get(s));</span>
+<span class="fc" id="L198">        this.propagateEvents = false;</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
+<span class="fc" id="L200">            updateXPoints((XYSeries) this.data.get(s));</span>
         }
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (this.autoPrune) {</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (this.autoPrune) {</span>
 <span class="nc" id="L203">            prune();</span>
         }
-<span class="nc" id="L205">        this.propagateEvents = true;</span>
-<span class="nc" id="L206">    }</span>
+<span class="fc" id="L205">        this.propagateEvents = true;</span>
+<span class="fc" id="L206">    }</span>
 
     /**
      * Returns the number of series in the collection.
@@ -212,7 +212,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L215">        return this.data.size();</span>
+<span class="fc" id="L215">        return this.data.size();</span>
     }
 
     /**
@@ -222,11 +222,11 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public int getItemCount() {
-<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (this.xPoints == null) {</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        if (this.xPoints == null) {</span>
 <span class="nc" id="L226">            return 0;</span>
         }
         else {
-<span class="nc" id="L229">            return this.xPoints.size();</span>
+<span class="fc" id="L229">            return this.xPoints.size();</span>
         }
     }
 
@@ -238,10 +238,10 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @return The series (never {@code null}).
      */
     public XYSeries getSeries(int series) {
-<span class="nc bnc" id="L241" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L242">            throw new IllegalArgumentException(&quot;Index outside valid range.&quot;);</span>
+<span class="fc bfc" id="L241" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L242">            throw new IllegalArgumentException(&quot;Index outside valid range.&quot;);</span>
         }
-<span class="nc" id="L244">        return (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L244">        return (XYSeries) this.data.get(series);</span>
     }
 
     /**
@@ -254,7 +254,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
     @Override
     public Comparable getSeriesKey(int series) {
         // check arguments...delegated
-<span class="nc" id="L257">        return getSeries(series).getKey();</span>
+<span class="fc" id="L257">        return getSeries(series).getKey();</span>
     }
 
     /**
@@ -267,7 +267,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
     @Override
     public int getItemCount(int series) {
         // check arguments...delegated
-<span class="nc" id="L270">        return getSeries(series).getItemCount();</span>
+<span class="fc" id="L270">        return getSeries(series).getItemCount();</span>
     }
 
     /**
@@ -280,8 +280,8 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getX(int series, int item) {
-<span class="nc" id="L283">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc" id="L284">        return s.getX(item);</span>
+<span class="fc" id="L283">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L284">        return s.getX(item);</span>
 
     }
 
@@ -295,7 +295,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getStartX(int series, int item) {
-<span class="nc" id="L298">        return this.intervalDelegate.getStartX(series, item);</span>
+<span class="fc" id="L298">        return this.intervalDelegate.getStartX(series, item);</span>
     }
 
     /**
@@ -308,7 +308,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getEndX(int series, int item) {
-<span class="nc" id="L311">        return this.intervalDelegate.getEndX(series, item);</span>
+<span class="fc" id="L311">        return this.intervalDelegate.getEndX(series, item);</span>
     }
 
     /**
@@ -322,8 +322,8 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Number getY(int series, int index) {
-<span class="nc" id="L325">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc" id="L326">        return s.getY(index);</span>
+<span class="fc" id="L325">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L326">        return s.getY(index);</span>
     }
 
     /**
@@ -360,16 +360,16 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
 
         // Unregister the collection as a change listener to each series in
         // the collection.
-<span class="nc bnc" id="L363" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L364">            XYSeries series = (XYSeries) this.data.get(i);</span>
-<span class="nc" id="L365">            series.removeChangeListener(this);</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L364">            XYSeries series = (XYSeries) this.data.get(i);</span>
+<span class="fc" id="L365">            series.removeChangeListener(this);</span>
         }
 
         // Remove all the series from the collection and notify listeners.
-<span class="nc" id="L369">        this.data.clear();</span>
-<span class="nc" id="L370">        this.xPoints.clear();</span>
-<span class="nc" id="L371">        fireDatasetChanged();</span>
-<span class="nc" id="L372">    }</span>
+<span class="fc" id="L369">        this.data.clear();</span>
+<span class="fc" id="L370">        this.xPoints.clear();</span>
+<span class="fc" id="L371">        fireDatasetChanged();</span>
+<span class="fc" id="L372">    }</span>
 
     /**
      * Removes a series from the collection and sends a
@@ -378,16 +378,16 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void removeSeries(XYSeries series) {
-<span class="nc" id="L381">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc bnc" id="L382" title="All 2 branches missed.">        if (this.data.contains(series)) {</span>
-<span class="nc" id="L383">            series.removeChangeListener(this);</span>
-<span class="nc" id="L384">            this.data.remove(series);</span>
-<span class="nc bnc" id="L385" title="All 2 branches missed.">            if (this.data.isEmpty()) {</span>
-<span class="nc" id="L386">                this.xPoints.clear();</span>
+<span class="fc" id="L381">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="pc bpc" id="L382" title="1 of 2 branches missed.">        if (this.data.contains(series)) {</span>
+<span class="fc" id="L383">            series.removeChangeListener(this);</span>
+<span class="fc" id="L384">            this.data.remove(series);</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">            if (this.data.isEmpty()) {</span>
+<span class="fc" id="L386">                this.xPoints.clear();</span>
             }
-<span class="nc" id="L388">            fireDatasetChanged();</span>
+<span class="fc" id="L388">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L390">    }</span>
+<span class="fc" id="L390">    }</span>
 
     /**
      * Removes a series from the collection and sends a
@@ -398,23 +398,23 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
     public void removeSeries(int series) {
 
         // check arguments...
-<span class="nc bnc" id="L401" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt; getSeriesCount())) {</span>
+<span class="pc bpc" id="L401" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt; getSeriesCount())) {</span>
 <span class="nc" id="L402">            throw new IllegalArgumentException(&quot;Index outside valid range.&quot;);</span>
         }
 
         // fetch the series, remove the change listener, then remove the series.
-<span class="nc" id="L406">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc" id="L407">        s.removeChangeListener(this);</span>
-<span class="nc" id="L408">        this.data.remove(series);</span>
-<span class="nc bnc" id="L409" title="All 2 branches missed.">        if (this.data.isEmpty()) {</span>
+<span class="fc" id="L406">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L407">        s.removeChangeListener(this);</span>
+<span class="fc" id="L408">        this.data.remove(series);</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">        if (this.data.isEmpty()) {</span>
 <span class="nc" id="L410">            this.xPoints.clear();</span>
         }
-<span class="nc bnc" id="L412" title="All 2 branches missed.">        else if (this.autoPrune) {</span>
-<span class="nc" id="L413">            prune();</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">        else if (this.autoPrune) {</span>
+<span class="fc" id="L413">            prune();</span>
         }
-<span class="nc" id="L415">        fireDatasetChanged();</span>
+<span class="fc" id="L415">        fireDatasetChanged();</span>
 
-<span class="nc" id="L417">    }</span>
+<span class="fc" id="L417">    }</span>
 
     /**
      * Removes the items from all series for a given x value.
@@ -422,17 +422,17 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @param x  the x-value.
      */
     public void removeAllValuesForX(Number x) {
-<span class="nc" id="L425">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
-<span class="nc" id="L426">        boolean savedState = this.propagateEvents;</span>
-<span class="nc" id="L427">        this.propagateEvents = false;</span>
-<span class="nc bnc" id="L428" title="All 2 branches missed.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
-<span class="nc" id="L429">            XYSeries series = (XYSeries) this.data.get(s);</span>
-<span class="nc" id="L430">            series.remove(x);</span>
+<span class="fc" id="L425">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
+<span class="fc" id="L426">        boolean savedState = this.propagateEvents;</span>
+<span class="fc" id="L427">        this.propagateEvents = false;</span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
+<span class="fc" id="L429">            XYSeries series = (XYSeries) this.data.get(s);</span>
+<span class="fc" id="L430">            series.remove(x);</span>
         }
-<span class="nc" id="L432">        this.propagateEvents = savedState;</span>
-<span class="nc" id="L433">        this.xPoints.remove(x);</span>
-<span class="nc" id="L434">        fireDatasetChanged();</span>
-<span class="nc" id="L435">    }</span>
+<span class="fc" id="L432">        this.propagateEvents = savedState;</span>
+<span class="fc" id="L433">        this.xPoints.remove(x);</span>
+<span class="fc" id="L434">        fireDatasetChanged();</span>
+<span class="fc" id="L435">    }</span>
 
     /**
      * Returns {@code true} if all the y-values for the specified x-value
@@ -443,28 +443,28 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @return A boolean.
      */
     protected boolean canPrune(Number x) {
-<span class="nc bnc" id="L446" title="All 2 branches missed.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
-<span class="nc" id="L447">            XYSeries series = (XYSeries) this.data.get(s);</span>
-<span class="nc bnc" id="L448" title="All 2 branches missed.">            if (series.getY(series.indexOf(x)) != null) {</span>
-<span class="nc" id="L449">                return false;</span>
+<span class="fc bfc" id="L446" title="All 2 branches covered.">        for (int s = 0; s &lt; this.data.size(); s++) {</span>
+<span class="fc" id="L447">            XYSeries series = (XYSeries) this.data.get(s);</span>
+<span class="fc bfc" id="L448" title="All 2 branches covered.">            if (series.getY(series.indexOf(x)) != null) {</span>
+<span class="fc" id="L449">                return false;</span>
             }
         }
-<span class="nc" id="L452">        return true;</span>
+<span class="fc" id="L452">        return true;</span>
     }
 
     /**
      * Removes all x-values for which all the y-values are {@code null}.
      */
     public void prune() {
-<span class="nc" id="L459">        HashSet hs = (HashSet) this.xPoints.clone();</span>
-<span class="nc" id="L460">        Iterator iterator = hs.iterator();</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L462">            Number x = (Number) iterator.next();</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">            if (canPrune(x)) {</span>
-<span class="nc" id="L464">                removeAllValuesForX(x);</span>
+<span class="fc" id="L459">        HashSet hs = (HashSet) this.xPoints.clone();</span>
+<span class="fc" id="L460">        Iterator iterator = hs.iterator();</span>
+<span class="fc bfc" id="L461" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L462">            Number x = (Number) iterator.next();</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">            if (canPrune(x)) {</span>
+<span class="fc" id="L464">                removeAllValuesForX(x);</span>
             }
-<span class="nc" id="L466">        }</span>
-<span class="nc" id="L467">    }</span>
+<span class="fc" id="L466">        }</span>
+<span class="fc" id="L467">    }</span>
 
     /**
      * This method receives notification when a series belonging to the dataset
@@ -475,11 +475,11 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public void seriesChanged(SeriesChangeEvent event) {
-<span class="nc bnc" id="L478" title="All 2 branches missed.">        if (this.propagateEvents) {</span>
-<span class="nc" id="L479">            updateXPoints();</span>
-<span class="nc" id="L480">            fireDatasetChanged();</span>
+<span class="fc bfc" id="L478" title="All 2 branches covered.">        if (this.propagateEvents) {</span>
+<span class="fc" id="L479">            updateXPoints();</span>
+<span class="fc" id="L480">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L482">    }</span>
+<span class="fc" id="L482">    }</span>
 
     /**
      * Tests this collection for equality with an arbitrary object.
@@ -490,26 +490,26 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L493" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L494">            return true;</span>
+<span class="fc bfc" id="L493" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L494">            return true;</span>
         }
-<span class="nc bnc" id="L496" title="All 2 branches missed.">        if (!(obj instanceof DefaultTableXYDataset)) {</span>
+<span class="pc bpc" id="L496" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultTableXYDataset)) {</span>
 <span class="nc" id="L497">            return false;</span>
         }
-<span class="nc" id="L499">        DefaultTableXYDataset that = (DefaultTableXYDataset) obj;</span>
-<span class="nc bnc" id="L500" title="All 2 branches missed.">        if (this.autoPrune != that.autoPrune) {</span>
+<span class="fc" id="L499">        DefaultTableXYDataset that = (DefaultTableXYDataset) obj;</span>
+<span class="pc bpc" id="L500" title="1 of 2 branches missed.">        if (this.autoPrune != that.autoPrune) {</span>
 <span class="nc" id="L501">            return false;</span>
         }
-<span class="nc bnc" id="L503" title="All 2 branches missed.">        if (this.propagateEvents != that.propagateEvents) {</span>
+<span class="pc bpc" id="L503" title="1 of 2 branches missed.">        if (this.propagateEvents != that.propagateEvents) {</span>
 <span class="nc" id="L504">            return false;</span>
         }
-<span class="nc bnc" id="L506" title="All 2 branches missed.">        if (!this.intervalDelegate.equals(that.intervalDelegate)) {</span>
+<span class="pc bpc" id="L506" title="1 of 2 branches missed.">        if (!this.intervalDelegate.equals(that.intervalDelegate)) {</span>
 <span class="nc" id="L507">            return false;</span>
         }
-<span class="nc bnc" id="L509" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
-<span class="nc" id="L510">            return false;</span>
+<span class="fc bfc" id="L509" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
+<span class="fc" id="L510">            return false;</span>
         }
-<span class="nc" id="L512">        return true;</span>
+<span class="fc" id="L512">        return true;</span>
     }
 
     /**
@@ -538,22 +538,22 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L541">        DefaultTableXYDataset clone = (DefaultTableXYDataset) super.clone();</span>
-<span class="nc" id="L542">        int seriesCount = this.data.size();</span>
-<span class="nc" id="L543">        clone.data = new java.util.ArrayList(seriesCount);</span>
-<span class="nc bnc" id="L544" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L545">            XYSeries series = (XYSeries) this.data.get(i);</span>
-<span class="nc" id="L546">            clone.data.add(series.clone());</span>
+<span class="fc" id="L541">        DefaultTableXYDataset clone = (DefaultTableXYDataset) super.clone();</span>
+<span class="fc" id="L542">        int seriesCount = this.data.size();</span>
+<span class="fc" id="L543">        clone.data = new java.util.ArrayList(seriesCount);</span>
+<span class="fc bfc" id="L544" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L545">            XYSeries series = (XYSeries) this.data.get(i);</span>
+<span class="fc" id="L546">            clone.data.add(series.clone());</span>
         }
 
-<span class="nc" id="L549">        clone.intervalDelegate = new IntervalXYDelegate(clone);</span>
+<span class="fc" id="L549">        clone.intervalDelegate = new IntervalXYDelegate(clone);</span>
         // need to configure the intervalDelegate to match the original
-<span class="nc" id="L551">        clone.intervalDelegate.setFixedIntervalWidth(getIntervalWidth());</span>
-<span class="nc" id="L552">        clone.intervalDelegate.setAutoWidth(isAutoWidth());</span>
-<span class="nc" id="L553">        clone.intervalDelegate.setIntervalPositionFactor(</span>
-<span class="nc" id="L554">                getIntervalPositionFactor());</span>
-<span class="nc" id="L555">        clone.updateXPoints();</span>
-<span class="nc" id="L556">        return clone;</span>
+<span class="fc" id="L551">        clone.intervalDelegate.setFixedIntervalWidth(getIntervalWidth());</span>
+<span class="fc" id="L552">        clone.intervalDelegate.setAutoWidth(isAutoWidth());</span>
+<span class="fc" id="L553">        clone.intervalDelegate.setIntervalPositionFactor(</span>
+<span class="fc" id="L554">                getIntervalPositionFactor());</span>
+<span class="fc" id="L555">        clone.updateXPoints();</span>
+<span class="fc" id="L556">        return clone;</span>
     }
 
     /**
@@ -606,7 +606,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @return The interval position factor.
      */
     public double getIntervalPositionFactor() {
-<span class="nc" id="L609">        return this.intervalDelegate.getIntervalPositionFactor();</span>
+<span class="fc" id="L609">        return this.intervalDelegate.getIntervalPositionFactor();</span>
     }
 
     /**
@@ -628,7 +628,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @return The interval width to use.
      */
     public double getIntervalWidth() {
-<span class="nc" id="L631">        return this.intervalDelegate.getIntervalWidth();</span>
+<span class="fc" id="L631">        return this.intervalDelegate.getIntervalWidth();</span>
     }
 
     /**
@@ -649,7 +649,7 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      *         automatically calculated.
      */
     public boolean isAutoWidth() {
-<span class="nc" id="L652">        return this.intervalDelegate.isAutoWidth();</span>
+<span class="fc" id="L652">        return this.intervalDelegate.isAutoWidth();</span>
     }
 
     /**
@@ -659,9 +659,9 @@ public class DefaultTableXYDataset extends AbstractIntervalXYDataset
      * @param b  a boolean.
      */
     public void setAutoWidth(boolean b) {
-<span class="nc" id="L662">        this.intervalDelegate.setAutoWidth(b);</span>
-<span class="nc" id="L663">        fireDatasetChanged();</span>
-<span class="nc" id="L664">    }</span>
+<span class="fc" id="L662">        this.intervalDelegate.setAutoWidth(b);</span>
+<span class="fc" id="L663">        fireDatasetChanged();</span>
+<span class="fc" id="L664">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

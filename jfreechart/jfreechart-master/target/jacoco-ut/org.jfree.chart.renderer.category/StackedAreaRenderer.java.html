@@ -109,8 +109,8 @@ public class StackedAreaRenderer extends AreaRenderer
      * Creates a new renderer.
      */
     public StackedAreaRenderer() {
-<span class="nc" id="L112">        this(false);</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        this(false);</span>
+<span class="fc" id="L113">    }</span>
 
     /**
      * Creates a new renderer.
@@ -119,9 +119,9 @@ public class StackedAreaRenderer extends AreaRenderer
      *                             are rendered as percentages.
      */
     public StackedAreaRenderer(boolean renderAsPercentages) {
-<span class="nc" id="L122">        super();</span>
-<span class="nc" id="L123">        this.renderAsPercentages = renderAsPercentages;</span>
-<span class="nc" id="L124">    }</span>
+<span class="fc" id="L122">        super();</span>
+<span class="fc" id="L123">        this.renderAsPercentages = renderAsPercentages;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Returns {@code true} if the renderer displays each item value as
@@ -146,9 +146,9 @@ public class StackedAreaRenderer extends AreaRenderer
      * @since 1.0.3
      */
     public void setRenderAsPercentages(boolean asPercentages) {
-<span class="nc" id="L149">        this.renderAsPercentages = asPercentages;</span>
-<span class="nc" id="L150">        fireChangeEvent();</span>
-<span class="nc" id="L151">    }</span>
+<span class="fc" id="L149">        this.renderAsPercentages = asPercentages;</span>
+<span class="fc" id="L150">        fireChangeEvent();</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Returns the number of passes ({@code 2}) required by this renderer.
@@ -172,14 +172,14 @@ public class StackedAreaRenderer extends AreaRenderer
      */
     @Override
     public Range findRangeBounds(CategoryDataset dataset) {
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L176">            return null;</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L176">            return null;</span>
         }
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (this.renderAsPercentages) {</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (this.renderAsPercentages) {</span>
 <span class="nc" id="L179">            return new Range(0.0, 1.0);</span>
         }
         else {
-<span class="nc" id="L182">            return DatasetUtils.findStackedRangeBounds(dataset);</span>
+<span class="fc" id="L182">            return DatasetUtils.findStackedRangeBounds(dataset);</span>
         }
     }
 
@@ -495,18 +495,18 @@ public class StackedAreaRenderer extends AreaRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L498" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L498" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L499">            return true;</span>
         }
-<span class="nc bnc" id="L501" title="All 2 branches missed.">        if (!(obj instanceof StackedAreaRenderer)) {</span>
+<span class="pc bpc" id="L501" title="1 of 2 branches missed.">        if (!(obj instanceof StackedAreaRenderer)) {</span>
 <span class="nc" id="L502">            return false;</span>
         }
-<span class="nc" id="L504">        StackedAreaRenderer that = (StackedAreaRenderer) obj;</span>
-<span class="nc bnc" id="L505" title="All 2 branches missed.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
-<span class="nc" id="L506">            return false;</span>
+<span class="fc" id="L504">        StackedAreaRenderer that = (StackedAreaRenderer) obj;</span>
+<span class="fc bfc" id="L505" title="All 2 branches covered.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
+<span class="fc" id="L506">            return false;</span>
         }
-<span class="nc" id="L508">        return super.equals(obj);</span>
+<span class="fc" id="L508">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

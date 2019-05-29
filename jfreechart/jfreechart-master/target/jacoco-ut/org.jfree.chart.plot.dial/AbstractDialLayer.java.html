@@ -69,10 +69,10 @@ public abstract class AbstractDialLayer implements DialLayer {
     /**
      * Creates a new instance.
      */
-<span class="nc" id="L72">    protected AbstractDialLayer() {</span>
-<span class="nc" id="L73">        this.visible = true;</span>
-<span class="nc" id="L74">        this.listenerList = new EventListenerList();</span>
-<span class="nc" id="L75">    }</span>
+<span class="fc" id="L72">    protected AbstractDialLayer() {</span>
+<span class="fc" id="L73">        this.visible = true;</span>
+<span class="fc" id="L74">        this.listenerList = new EventListenerList();</span>
+<span class="fc" id="L75">    }</span>
 
     /**
      * Returns {@code true} if this layer is visible (should be displayed),
@@ -97,9 +97,9 @@ public abstract class AbstractDialLayer implements DialLayer {
      * @see #isVisible()
      */
     public void setVisible(boolean visible) {
-<span class="nc" id="L100">        this.visible = visible;</span>
-<span class="nc" id="L101">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L100">        this.visible = visible;</span>
+<span class="fc" id="L101">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Tests this instance for equality with an arbitrary object.
@@ -110,14 +110,14 @@ public abstract class AbstractDialLayer implements DialLayer {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L114">            return true;</span>
         }
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (!(obj instanceof AbstractDialLayer)) {</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (!(obj instanceof AbstractDialLayer)) {</span>
 <span class="nc" id="L117">            return false;</span>
         }
-<span class="nc" id="L119">        AbstractDialLayer that = (AbstractDialLayer) obj;</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">        return this.visible == that.visible;</span>
+<span class="fc" id="L119">        AbstractDialLayer that = (AbstractDialLayer) obj;</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        return this.visible == that.visible;</span>
     }
 
     /**
@@ -142,10 +142,10 @@ public abstract class AbstractDialLayer implements DialLayer {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L145">        AbstractDialLayer clone = (AbstractDialLayer) super.clone();</span>
+<span class="fc" id="L145">        AbstractDialLayer clone = (AbstractDialLayer) super.clone();</span>
         // we don't clone the listeners
-<span class="nc" id="L147">        clone.listenerList = new EventListenerList();</span>
-<span class="nc" id="L148">        return clone;</span>
+<span class="fc" id="L147">        clone.listenerList = new EventListenerList();</span>
+<span class="fc" id="L148">        return clone;</span>
     }
 
     /**
@@ -157,8 +157,8 @@ public abstract class AbstractDialLayer implements DialLayer {
      */
     @Override
     public void addChangeListener(DialLayerChangeListener listener) {
-<span class="nc" id="L160">        this.listenerList.add(DialLayerChangeListener.class, listener);</span>
-<span class="nc" id="L161">    }</span>
+<span class="fc" id="L160">        this.listenerList.add(DialLayerChangeListener.class, listener);</span>
+<span class="fc" id="L161">    }</span>
 
     /**
      * Deregisters an object for notification of changes to the dial layer.
@@ -169,8 +169,8 @@ public abstract class AbstractDialLayer implements DialLayer {
      */
     @Override
     public void removeChangeListener(DialLayerChangeListener listener) {
-<span class="nc" id="L172">        this.listenerList.remove(DialLayerChangeListener.class, listener);</span>
-<span class="nc" id="L173">    }</span>
+<span class="fc" id="L172">        this.listenerList.remove(DialLayerChangeListener.class, listener);</span>
+<span class="fc" id="L173">    }</span>
 
     /**
      * Returns {@code true} if the specified object is registered with
@@ -183,8 +183,8 @@ public abstract class AbstractDialLayer implements DialLayer {
      */
     @Override
     public boolean hasListener(EventListener listener) {
-<span class="nc" id="L186">        List list = Arrays.asList(this.listenerList.getListenerList());</span>
-<span class="nc" id="L187">        return list.contains(listener);</span>
+<span class="fc" id="L186">        List list = Arrays.asList(this.listenerList.getListenerList());</span>
+<span class="fc" id="L187">        return list.contains(listener);</span>
     }
 
     /**
@@ -194,14 +194,14 @@ public abstract class AbstractDialLayer implements DialLayer {
      * @param event  information about the change to the axis.
      */
     protected void notifyListeners(DialLayerChangeEvent event) {
-<span class="nc" id="L197">        Object[] listeners = this.listenerList.getListenerList();</span>
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
-<span class="nc bnc" id="L199" title="All 2 branches missed.">            if (listeners[i] == DialLayerChangeListener.class) {</span>
-<span class="nc" id="L200">                ((DialLayerChangeListener) listeners[i + 1]).dialLayerChanged(</span>
+<span class="fc" id="L197">        Object[] listeners = this.listenerList.getListenerList();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            if (listeners[i] == DialLayerChangeListener.class) {</span>
+<span class="fc" id="L200">                ((DialLayerChangeListener) listeners[i + 1]).dialLayerChanged(</span>
                         event);
             }
         }
-<span class="nc" id="L204">    }</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Provides serialization support.
@@ -218,4 +218,4 @@ public abstract class AbstractDialLayer implements DialLayer {
 <span class="nc" id="L218">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -120,8 +120,8 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @param dataset  the underlying dataset ({@code null} not permitted).
      */
     public IntervalXYDelegate(XYDataset dataset) {
-<span class="nc" id="L123">        this(dataset, true);</span>
-<span class="nc" id="L124">    }</span>
+<span class="fc" id="L123">        this(dataset, true);</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Creates a new delegate for the specified dataset.
@@ -130,14 +130,14 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @param autoWidth  a flag that controls whether the interval width is
      *                   calculated automatically.
      */
-<span class="nc" id="L133">    public IntervalXYDelegate(XYDataset dataset, boolean autoWidth) {</span>
-<span class="nc" id="L134">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L135">        this.dataset = dataset;</span>
-<span class="nc" id="L136">        this.autoWidth = autoWidth;</span>
-<span class="nc" id="L137">        this.intervalPositionFactor = 0.5;</span>
-<span class="nc" id="L138">        this.autoIntervalWidth = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L139">        this.fixedIntervalWidth = 1.0;</span>
-<span class="nc" id="L140">    }</span>
+<span class="fc" id="L133">    public IntervalXYDelegate(XYDataset dataset, boolean autoWidth) {</span>
+<span class="fc" id="L134">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L135">        this.dataset = dataset;</span>
+<span class="fc" id="L136">        this.autoWidth = autoWidth;</span>
+<span class="fc" id="L137">        this.intervalPositionFactor = 0.5;</span>
+<span class="fc" id="L138">        this.autoIntervalWidth = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L139">        this.fixedIntervalWidth = 1.0;</span>
+<span class="fc" id="L140">    }</span>
 
     /**
      * Returns {@code true} if the interval width is automatically
@@ -146,7 +146,7 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @return A boolean.
      */
     public boolean isAutoWidth() {
-<span class="nc" id="L149">        return this.autoWidth;</span>
+<span class="fc" id="L149">        return this.autoWidth;</span>
     }
 
     /**
@@ -161,11 +161,11 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @param b  a boolean.
      */
     public void setAutoWidth(boolean b) {
-<span class="nc" id="L164">        this.autoWidth = b;</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (b) {</span>
-<span class="nc" id="L166">            this.autoIntervalWidth = recalculateInterval();</span>
+<span class="fc" id="L164">        this.autoWidth = b;</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (b) {</span>
+<span class="fc" id="L166">            this.autoIntervalWidth = recalculateInterval();</span>
         }
-<span class="nc" id="L168">    }</span>
+<span class="fc" id="L168">    }</span>
 
     /**
      * Returns the interval position factor.
@@ -173,7 +173,7 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @return The interval position factor.
      */
     public double getIntervalPositionFactor() {
-<span class="nc" id="L176">        return this.intervalPositionFactor;</span>
+<span class="fc" id="L176">        return this.intervalPositionFactor;</span>
     }
 
     /**
@@ -193,12 +193,12 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      *           {@code 0.0} to {@code 1.0} inclusive).
      */
     public void setIntervalPositionFactor(double d) {
-<span class="nc bnc" id="L196" title="All 4 branches missed.">        if (d &lt; 0.0 || 1.0 &lt; d) {</span>
+<span class="pc bpc" id="L196" title="2 of 4 branches missed.">        if (d &lt; 0.0 || 1.0 &lt; d) {</span>
 <span class="nc" id="L197">            throw new IllegalArgumentException(</span>
                     &quot;Argument 'd' outside valid range.&quot;);
         }
-<span class="nc" id="L200">        this.intervalPositionFactor = d;</span>
-<span class="nc" id="L201">    }</span>
+<span class="fc" id="L200">        this.intervalPositionFactor = d;</span>
+<span class="fc" id="L201">    }</span>
 
     /**
      * Returns the fixed interval width.
@@ -221,12 +221,12 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @param w  the width (negative values not permitted).
      */
     public void setFixedIntervalWidth(double w) {
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (w &lt; 0.0) {</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">        if (w &lt; 0.0) {</span>
 <span class="nc" id="L225">            throw new IllegalArgumentException(&quot;Negative 'w' argument.&quot;);</span>
         }
-<span class="nc" id="L227">        this.fixedIntervalWidth = w;</span>
-<span class="nc" id="L228">        this.autoWidth = false;</span>
-<span class="nc" id="L229">    }</span>
+<span class="fc" id="L227">        this.fixedIntervalWidth = w;</span>
+<span class="fc" id="L228">        this.autoWidth = false;</span>
+<span class="fc" id="L229">    }</span>
 
     /**
      * Returns the interval width.  This method will return either the
@@ -236,14 +236,14 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @return The interval width to use.
      */
     public double getIntervalWidth() {
-<span class="nc bnc" id="L239" title="All 4 branches missed.">        if (isAutoWidth() &amp;&amp; !Double.isInfinite(this.autoIntervalWidth)) {</span>
+<span class="pc bpc" id="L239" title="1 of 4 branches missed.">        if (isAutoWidth() &amp;&amp; !Double.isInfinite(this.autoIntervalWidth)) {</span>
             // everything is fine: autoWidth is on, and an autoIntervalWidth
             // was set.
-<span class="nc" id="L242">            return this.autoIntervalWidth;</span>
+<span class="fc" id="L242">            return this.autoIntervalWidth;</span>
         }
         else {
             // either autoWidth is off or autoIntervalWidth was not set.
-<span class="nc" id="L246">            return this.fixedIntervalWidth;</span>
+<span class="fc" id="L246">            return this.fixedIntervalWidth;</span>
         }
     }
 
@@ -258,13 +258,13 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @see #getStartXValue(int, int)
      */
     public Number getStartX(int series, int item) {
-<span class="nc" id="L261">        Number startX = null;</span>
-<span class="nc" id="L262">        Number x = this.dataset.getX(series, item);</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (x != null) {</span>
-<span class="nc" id="L264">            startX = new Double(x.doubleValue()</span>
-<span class="nc" id="L265">                     - (getIntervalPositionFactor() * getIntervalWidth()));</span>
+<span class="fc" id="L261">        Number startX = null;</span>
+<span class="fc" id="L262">        Number x = this.dataset.getX(series, item);</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">        if (x != null) {</span>
+<span class="fc" id="L264">            startX = new Double(x.doubleValue()</span>
+<span class="fc" id="L265">                     - (getIntervalPositionFactor() * getIntervalWidth()));</span>
         }
-<span class="nc" id="L267">        return startX;</span>
+<span class="fc" id="L267">        return startX;</span>
     }
 
     /**
@@ -293,13 +293,13 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @see #getEndXValue(int, int)
      */
     public Number getEndX(int series, int item) {
-<span class="nc" id="L296">        Number endX = null;</span>
-<span class="nc" id="L297">        Number x = this.dataset.getX(series, item);</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (x != null) {</span>
-<span class="nc" id="L299">            endX = new Double(x.doubleValue()</span>
-<span class="nc" id="L300">                + ((1.0 - getIntervalPositionFactor()) * getIntervalWidth()));</span>
+<span class="fc" id="L296">        Number endX = null;</span>
+<span class="fc" id="L297">        Number x = this.dataset.getX(series, item);</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (x != null) {</span>
+<span class="fc" id="L299">            endX = new Double(x.doubleValue()</span>
+<span class="fc" id="L300">                + ((1.0 - getIntervalPositionFactor()) * getIntervalWidth()));</span>
         }
-<span class="nc" id="L302">        return endX;</span>
+<span class="fc" id="L302">        return endX;</span>
     }
 
     /**
@@ -327,12 +327,12 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      */
     @Override
     public double getDomainLowerBound(boolean includeInterval) {
-<span class="nc" id="L330">        double result = Double.NaN;</span>
-<span class="nc" id="L331">        Range r = getDomainBounds(includeInterval);</span>
-<span class="nc bnc" id="L332" title="All 2 branches missed.">        if (r != null) {</span>
-<span class="nc" id="L333">            result = r.getLowerBound();</span>
+<span class="fc" id="L330">        double result = Double.NaN;</span>
+<span class="fc" id="L331">        Range r = getDomainBounds(includeInterval);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">        if (r != null) {</span>
+<span class="fc" id="L333">            result = r.getLowerBound();</span>
         }
-<span class="nc" id="L335">        return result;</span>
+<span class="fc" id="L335">        return result;</span>
     }
 
     /**
@@ -345,12 +345,12 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      */
     @Override
     public double getDomainUpperBound(boolean includeInterval) {
-<span class="nc" id="L348">        double result = Double.NaN;</span>
-<span class="nc" id="L349">        Range r = getDomainBounds(includeInterval);</span>
-<span class="nc bnc" id="L350" title="All 2 branches missed.">        if (r != null) {</span>
-<span class="nc" id="L351">            result = r.getUpperBound();</span>
+<span class="fc" id="L348">        double result = Double.NaN;</span>
+<span class="fc" id="L349">        Range r = getDomainBounds(includeInterval);</span>
+<span class="pc bpc" id="L350" title="1 of 2 branches missed.">        if (r != null) {</span>
+<span class="fc" id="L351">            result = r.getUpperBound();</span>
         }
-<span class="nc" id="L353">        return result;</span>
+<span class="fc" id="L353">        return result;</span>
     }
 
     /**
@@ -366,14 +366,14 @@ public class IntervalXYDelegate implements DatasetChangeListener,
     public Range getDomainBounds(boolean includeInterval) {
         // first get the range without the interval, then expand it for the
         // interval width
-<span class="nc" id="L369">        Range range = DatasetUtils.findDomainBounds(this.dataset, false);</span>
-<span class="nc bnc" id="L370" title="All 4 branches missed.">        if (includeInterval &amp;&amp; range != null) {</span>
-<span class="nc" id="L371">            double lowerAdj = getIntervalWidth() * getIntervalPositionFactor();</span>
-<span class="nc" id="L372">            double upperAdj = getIntervalWidth() - lowerAdj;</span>
-<span class="nc" id="L373">            range = new Range(range.getLowerBound() - lowerAdj,</span>
-<span class="nc" id="L374">                range.getUpperBound() + upperAdj);</span>
+<span class="fc" id="L369">        Range range = DatasetUtils.findDomainBounds(this.dataset, false);</span>
+<span class="pc bpc" id="L370" title="1 of 4 branches missed.">        if (includeInterval &amp;&amp; range != null) {</span>
+<span class="fc" id="L371">            double lowerAdj = getIntervalWidth() * getIntervalPositionFactor();</span>
+<span class="fc" id="L372">            double upperAdj = getIntervalWidth() - lowerAdj;</span>
+<span class="fc" id="L373">            range = new Range(range.getLowerBound() - lowerAdj,</span>
+<span class="fc" id="L374">                range.getUpperBound() + upperAdj);</span>
         }
-<span class="nc" id="L376">        return range;</span>
+<span class="fc" id="L376">        return range;</span>
     }
 
     /**
@@ -389,10 +389,10 @@ public class IntervalXYDelegate implements DatasetChangeListener,
         // more efficient in some cases (for instance, if the change is
         // just an update to a y-value, then the x-interval doesn't need
         // updating)...
-<span class="nc bnc" id="L392" title="All 2 branches missed.">        if (this.autoWidth) {</span>
-<span class="nc" id="L393">            this.autoIntervalWidth = recalculateInterval();</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (this.autoWidth) {</span>
+<span class="fc" id="L393">            this.autoIntervalWidth = recalculateInterval();</span>
         }
-<span class="nc" id="L395">    }</span>
+<span class="fc" id="L395">    }</span>
 
     /**
      * Recalculate the minimum width &quot;from scratch&quot;.
@@ -400,12 +400,12 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @return The minimum width.
      */
     private double recalculateInterval() {
-<span class="nc" id="L403">        double result = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L404">        int seriesCount = this.dataset.getSeriesCount();</span>
-<span class="nc bnc" id="L405" title="All 2 branches missed.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L406">            result = Math.min(result, calculateIntervalForSeries(series));</span>
+<span class="fc" id="L403">        double result = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L404">        int seriesCount = this.dataset.getSeriesCount();</span>
+<span class="fc bfc" id="L405" title="All 2 branches covered.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L406">            result = Math.min(result, calculateIntervalForSeries(series));</span>
         }
-<span class="nc" id="L408">        return result;</span>
+<span class="fc" id="L408">        return result;</span>
     }
 
     /**
@@ -416,17 +416,17 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      * @return The interval width.
      */
     private double calculateIntervalForSeries(int series) {
-<span class="nc" id="L419">        double result = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L420">        int itemCount = this.dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L421" title="All 2 branches missed.">        if (itemCount &gt; 1) {</span>
-<span class="nc" id="L422">            double prev = this.dataset.getXValue(series, 0);</span>
-<span class="nc bnc" id="L423" title="All 2 branches missed.">            for (int item = 1; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L424">                double x = this.dataset.getXValue(series, item);</span>
-<span class="nc" id="L425">                result = Math.min(result, x - prev);</span>
-<span class="nc" id="L426">                prev = x;</span>
+<span class="fc" id="L419">        double result = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L420">        int itemCount = this.dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        if (itemCount &gt; 1) {</span>
+<span class="fc" id="L422">            double prev = this.dataset.getXValue(series, 0);</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">            for (int item = 1; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L424">                double x = this.dataset.getXValue(series, item);</span>
+<span class="fc" id="L425">                result = Math.min(result, x - prev);</span>
+<span class="fc" id="L426">                prev = x;</span>
             }
         }
-<span class="nc" id="L429">        return result;</span>
+<span class="fc" id="L429">        return result;</span>
     }
 
     /**
@@ -442,23 +442,23 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L445" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L446">            return true;</span>
         }
-<span class="nc bnc" id="L448" title="All 2 branches missed.">        if (!(obj instanceof IntervalXYDelegate)) {</span>
+<span class="pc bpc" id="L448" title="1 of 2 branches missed.">        if (!(obj instanceof IntervalXYDelegate)) {</span>
 <span class="nc" id="L449">            return false;</span>
         }
-<span class="nc" id="L451">        IntervalXYDelegate that = (IntervalXYDelegate) obj;</span>
-<span class="nc bnc" id="L452" title="All 2 branches missed.">        if (this.autoWidth != that.autoWidth) {</span>
-<span class="nc" id="L453">            return false;</span>
+<span class="fc" id="L451">        IntervalXYDelegate that = (IntervalXYDelegate) obj;</span>
+<span class="fc bfc" id="L452" title="All 2 branches covered.">        if (this.autoWidth != that.autoWidth) {</span>
+<span class="fc" id="L453">            return false;</span>
         }
-<span class="nc bnc" id="L455" title="All 2 branches missed.">        if (this.intervalPositionFactor != that.intervalPositionFactor) {</span>
-<span class="nc" id="L456">            return false;</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">        if (this.intervalPositionFactor != that.intervalPositionFactor) {</span>
+<span class="fc" id="L456">            return false;</span>
         }
-<span class="nc bnc" id="L458" title="All 2 branches missed.">        if (this.fixedIntervalWidth != that.fixedIntervalWidth) {</span>
-<span class="nc" id="L459">            return false;</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">        if (this.fixedIntervalWidth != that.fixedIntervalWidth) {</span>
+<span class="fc" id="L459">            return false;</span>
         }
-<span class="nc" id="L461">        return true;</span>
+<span class="fc" id="L461">        return true;</span>
     }
 
     /**
@@ -468,7 +468,7 @@ public class IntervalXYDelegate implements DatasetChangeListener,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L471">        return super.clone();</span>
+<span class="fc" id="L471">        return super.clone();</span>
     }
 
     /**
@@ -486,4 +486,4 @@ public class IntervalXYDelegate implements DatasetChangeListener,
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

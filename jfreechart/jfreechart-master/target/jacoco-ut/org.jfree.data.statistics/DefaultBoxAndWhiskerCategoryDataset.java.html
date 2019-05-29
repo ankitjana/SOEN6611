@@ -101,15 +101,15 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
     /**
      * Creates a new dataset.
      */
-<span class="nc" id="L104">    public DefaultBoxAndWhiskerCategoryDataset() {</span>
-<span class="nc" id="L105">        this.data = new KeyedObjects2D();</span>
-<span class="nc" id="L106">        this.minimumRangeValue = Double.NaN;</span>
-<span class="nc" id="L107">        this.minimumRangeValueRow = -1;</span>
-<span class="nc" id="L108">        this.minimumRangeValueColumn = -1;</span>
-<span class="nc" id="L109">        this.maximumRangeValue = Double.NaN;</span>
-<span class="nc" id="L110">        this.maximumRangeValueRow = -1;</span>
-<span class="nc" id="L111">        this.maximumRangeValueColumn = -1;</span>
-<span class="nc" id="L112">    }</span>
+<span class="fc" id="L104">    public DefaultBoxAndWhiskerCategoryDataset() {</span>
+<span class="fc" id="L105">        this.data = new KeyedObjects2D();</span>
+<span class="fc" id="L106">        this.minimumRangeValue = Double.NaN;</span>
+<span class="fc" id="L107">        this.minimumRangeValueRow = -1;</span>
+<span class="fc" id="L108">        this.minimumRangeValueColumn = -1;</span>
+<span class="fc" id="L109">        this.maximumRangeValue = Double.NaN;</span>
+<span class="fc" id="L110">        this.maximumRangeValueRow = -1;</span>
+<span class="fc" id="L111">        this.maximumRangeValueColumn = -1;</span>
+<span class="fc" id="L112">    }</span>
 
     /**
      * Adds a list of values relating to one box-and-whisker entity to the
@@ -123,10 +123,10 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      * @see #add(BoxAndWhiskerItem, Comparable, Comparable)
      */
     public void add(List list, Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L126">        BoxAndWhiskerItem item = BoxAndWhiskerCalculator</span>
-<span class="nc" id="L127">                .calculateBoxAndWhiskerStatistics(list);</span>
-<span class="nc" id="L128">        add(item, rowKey, columnKey);</span>
-<span class="nc" id="L129">    }</span>
+<span class="fc" id="L126">        BoxAndWhiskerItem item = BoxAndWhiskerCalculator</span>
+<span class="fc" id="L127">                .calculateBoxAndWhiskerStatistics(list);</span>
+<span class="fc" id="L128">        add(item, rowKey, columnKey);</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * Adds a list of values relating to one Box and Whisker entity to the
@@ -141,53 +141,53 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
     public void add(BoxAndWhiskerItem item, Comparable rowKey,
             Comparable columnKey) {
 
-<span class="nc" id="L144">        this.data.addObject(item, rowKey, columnKey);</span>
+<span class="fc" id="L144">        this.data.addObject(item, rowKey, columnKey);</span>
 
         // update cached min and max values
-<span class="nc" id="L147">        int r = this.data.getRowIndex(rowKey);</span>
-<span class="nc" id="L148">        int c = this.data.getColumnIndex(columnKey);</span>
-<span class="nc bnc" id="L149" title="All 8 branches missed.">        if ((this.maximumRangeValueRow == r &amp;&amp; this.maximumRangeValueColumn</span>
+<span class="fc" id="L147">        int r = this.data.getRowIndex(rowKey);</span>
+<span class="fc" id="L148">        int c = this.data.getColumnIndex(columnKey);</span>
+<span class="fc bfc" id="L149" title="All 8 branches covered.">        if ((this.maximumRangeValueRow == r &amp;&amp; this.maximumRangeValueColumn</span>
                 == c) || (this.minimumRangeValueRow == r
                 &amp;&amp; this.minimumRangeValueColumn == c))  {
-<span class="nc" id="L152">            updateBounds();</span>
+<span class="fc" id="L152">            updateBounds();</span>
         }
         else {
 
-<span class="nc" id="L156">            double minval = Double.NaN;</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (item.getMinOutlier() != null) {</span>
-<span class="nc" id="L158">                minval = item.getMinOutlier().doubleValue();</span>
+<span class="fc" id="L156">            double minval = Double.NaN;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (item.getMinOutlier() != null) {</span>
+<span class="fc" id="L158">                minval = item.getMinOutlier().doubleValue();</span>
             }
-<span class="nc" id="L160">            double maxval = Double.NaN;</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (item.getMaxOutlier() != null) {</span>
-<span class="nc" id="L162">                maxval = item.getMaxOutlier().doubleValue();</span>
-            }
-
-<span class="nc bnc" id="L165" title="All 2 branches missed.">            if (Double.isNaN(this.maximumRangeValue)) {</span>
-<span class="nc" id="L166">                this.maximumRangeValue = maxval;</span>
-<span class="nc" id="L167">                this.maximumRangeValueRow = r;</span>
-<span class="nc" id="L168">                this.maximumRangeValueColumn = c;</span>
-            }
-<span class="nc bnc" id="L170" title="All 2 branches missed.">            else if (maxval &gt; this.maximumRangeValue) {</span>
-<span class="nc" id="L171">                this.maximumRangeValue = maxval;</span>
-<span class="nc" id="L172">                this.maximumRangeValueRow = r;</span>
-<span class="nc" id="L173">                this.maximumRangeValueColumn = c;</span>
+<span class="fc" id="L160">            double maxval = Double.NaN;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">            if (item.getMaxOutlier() != null) {</span>
+<span class="fc" id="L162">                maxval = item.getMaxOutlier().doubleValue();</span>
             }
 
-<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (Double.isNaN(this.minimumRangeValue)) {</span>
-<span class="nc" id="L177">                this.minimumRangeValue = minval;</span>
-<span class="nc" id="L178">                this.minimumRangeValueRow = r;</span>
-<span class="nc" id="L179">                this.minimumRangeValueColumn = c;</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (Double.isNaN(this.maximumRangeValue)) {</span>
+<span class="fc" id="L166">                this.maximumRangeValue = maxval;</span>
+<span class="fc" id="L167">                this.maximumRangeValueRow = r;</span>
+<span class="fc" id="L168">                this.maximumRangeValueColumn = c;</span>
             }
-<span class="nc bnc" id="L181" title="All 2 branches missed.">            else if (minval &lt; this.minimumRangeValue) {</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            else if (maxval &gt; this.maximumRangeValue) {</span>
+<span class="fc" id="L171">                this.maximumRangeValue = maxval;</span>
+<span class="fc" id="L172">                this.maximumRangeValueRow = r;</span>
+<span class="fc" id="L173">                this.maximumRangeValueColumn = c;</span>
+            }
+
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (Double.isNaN(this.minimumRangeValue)) {</span>
+<span class="fc" id="L177">                this.minimumRangeValue = minval;</span>
+<span class="fc" id="L178">                this.minimumRangeValueRow = r;</span>
+<span class="fc" id="L179">                this.minimumRangeValueColumn = c;</span>
+            }
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">            else if (minval &lt; this.minimumRangeValue) {</span>
 <span class="nc" id="L182">                this.minimumRangeValue = minval;</span>
 <span class="nc" id="L183">                this.minimumRangeValueRow = r;</span>
 <span class="nc" id="L184">                this.minimumRangeValueColumn = c;</span>
             }
         }
 
-<span class="nc" id="L188">        fireDatasetChanged();</span>
+<span class="fc" id="L188">        fireDatasetChanged();</span>
 
-<span class="nc" id="L190">    }</span>
+<span class="fc" id="L190">    }</span>
 
     /**
      * Removes an item from the dataset and sends a {@link DatasetChangeEvent}
@@ -202,20 +202,20 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     public void remove(Comparable rowKey, Comparable columnKey) {
         // defer null argument checks
-<span class="nc" id="L205">        int r = getRowIndex(rowKey);</span>
-<span class="nc" id="L206">        int c = getColumnIndex(columnKey);</span>
-<span class="nc" id="L207">        this.data.removeObject(rowKey, columnKey);</span>
+<span class="fc" id="L205">        int r = getRowIndex(rowKey);</span>
+<span class="fc" id="L206">        int c = getColumnIndex(columnKey);</span>
+<span class="fc" id="L207">        this.data.removeObject(rowKey, columnKey);</span>
 
         // if this cell held a maximum and/or minimum value, we'll need to
         // update the cached bounds...
-<span class="nc bnc" id="L211" title="All 8 branches missed.">        if ((this.maximumRangeValueRow == r &amp;&amp; this.maximumRangeValueColumn</span>
+<span class="pc bpc" id="L211" title="5 of 8 branches missed.">        if ((this.maximumRangeValueRow == r &amp;&amp; this.maximumRangeValueColumn</span>
                 == c) || (this.minimumRangeValueRow == r
                 &amp;&amp; this.minimumRangeValueColumn == c))  {
-<span class="nc" id="L214">            updateBounds();</span>
+<span class="fc" id="L214">            updateBounds();</span>
         }
 
-<span class="nc" id="L217">        fireDatasetChanged();</span>
-<span class="nc" id="L218">    }</span>
+<span class="fc" id="L217">        fireDatasetChanged();</span>
+<span class="fc" id="L218">    }</span>
 
     /**
      * Removes a row from the dataset and sends a {@link DatasetChangeEvent}
@@ -302,7 +302,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      * @return The item.
      */
     public BoxAndWhiskerItem getItem(int row, int column) {
-<span class="nc" id="L305">        return (BoxAndWhiskerItem) this.data.getObject(row, column);</span>
+<span class="fc" id="L305">        return (BoxAndWhiskerItem) this.data.getObject(row, column);</span>
     }
 
     /**
@@ -318,7 +318,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getValue(int row, int column) {
-<span class="nc" id="L321">        return getMedianValue(row, column);</span>
+<span class="fc" id="L321">        return getMedianValue(row, column);</span>
     }
 
     /**
@@ -334,7 +334,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L337">        return getMedianValue(rowKey, columnKey);</span>
+<span class="fc" id="L337">        return getMedianValue(rowKey, columnKey);</span>
     }
 
     /**
@@ -350,13 +350,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
     @Override
     public Number getMeanValue(int row, int column) {
 
-<span class="nc" id="L353">        Number result = null;</span>
-<span class="nc" id="L354">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row,</span>
+<span class="fc" id="L353">        Number result = null;</span>
+<span class="fc" id="L354">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row,</span>
                 column);
-<span class="nc bnc" id="L356" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L357">            result = item.getMean();</span>
+<span class="pc bpc" id="L356" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L357">            result = item.getMean();</span>
         }
-<span class="nc" id="L359">        return result;</span>
+<span class="fc" id="L359">        return result;</span>
 
     }
 
@@ -372,13 +372,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMeanValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L375">        Number result = null;</span>
-<span class="nc" id="L376">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L375">        Number result = null;</span>
+<span class="fc" id="L376">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L378" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L379">            result = item.getMean();</span>
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L379">            result = item.getMean();</span>
         }
-<span class="nc" id="L381">        return result;</span>
+<span class="fc" id="L381">        return result;</span>
     }
 
     /**
@@ -393,13 +393,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMedianValue(int row, int column) {
-<span class="nc" id="L396">        Number result = null;</span>
-<span class="nc" id="L397">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row,</span>
+<span class="fc" id="L396">        Number result = null;</span>
+<span class="fc" id="L397">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(row,</span>
                 column);
-<span class="nc bnc" id="L399" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L400">            result = item.getMedian();</span>
+<span class="pc bpc" id="L399" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L400">            result = item.getMedian();</span>
         }
-<span class="nc" id="L402">        return result;</span>
+<span class="fc" id="L402">        return result;</span>
     }
 
     /**
@@ -414,13 +414,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMedianValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L417">        Number result = null;</span>
-<span class="nc" id="L418">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L417">        Number result = null;</span>
+<span class="fc" id="L418">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L420" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L421">            result = item.getMedian();</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L421">            result = item.getMedian();</span>
         }
-<span class="nc" id="L423">        return result;</span>
+<span class="fc" id="L423">        return result;</span>
     }
 
     /**
@@ -435,13 +435,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getQ1Value(int row, int column) {
-<span class="nc" id="L438">        Number result = null;</span>
-<span class="nc" id="L439">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L438">        Number result = null;</span>
+<span class="fc" id="L439">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 row, column);
-<span class="nc bnc" id="L441" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L442">            result = item.getQ1();</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L442">            result = item.getQ1();</span>
         }
-<span class="nc" id="L444">        return result;</span>
+<span class="fc" id="L444">        return result;</span>
     }
 
     /**
@@ -456,13 +456,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getQ1Value(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L459">        Number result = null;</span>
-<span class="nc" id="L460">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L459">        Number result = null;</span>
+<span class="fc" id="L460">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L462" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L463">            result = item.getQ1();</span>
+<span class="pc bpc" id="L462" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L463">            result = item.getQ1();</span>
         }
-<span class="nc" id="L465">        return result;</span>
+<span class="fc" id="L465">        return result;</span>
     }
 
     /**
@@ -477,13 +477,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getQ3Value(int row, int column) {
-<span class="nc" id="L480">        Number result = null;</span>
-<span class="nc" id="L481">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L480">        Number result = null;</span>
+<span class="fc" id="L481">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 row, column);
-<span class="nc bnc" id="L483" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L484">            result = item.getQ3();</span>
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L484">            result = item.getQ3();</span>
         }
-<span class="nc" id="L486">        return result;</span>
+<span class="fc" id="L486">        return result;</span>
     }
 
     /**
@@ -498,13 +498,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getQ3Value(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L501">        Number result = null;</span>
-<span class="nc" id="L502">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L501">        Number result = null;</span>
+<span class="fc" id="L502">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L504" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L505">            result = item.getQ3();</span>
+<span class="pc bpc" id="L504" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L505">            result = item.getQ3();</span>
         }
-<span class="nc" id="L507">        return result;</span>
+<span class="fc" id="L507">        return result;</span>
     }
 
     /**
@@ -518,7 +518,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public int getColumnIndex(Comparable key) {
-<span class="nc" id="L521">        return this.data.getColumnIndex(key);</span>
+<span class="fc" id="L521">        return this.data.getColumnIndex(key);</span>
     }
 
     /**
@@ -532,7 +532,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Comparable getColumnKey(int column) {
-<span class="nc" id="L535">        return this.data.getColumnKey(column);</span>
+<span class="fc" id="L535">        return this.data.getColumnKey(column);</span>
     }
 
     /**
@@ -559,7 +559,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
     @Override
     public int getRowIndex(Comparable key) {
         // defer null argument check
-<span class="nc" id="L562">        return this.data.getRowIndex(key);</span>
+<span class="fc" id="L562">        return this.data.getRowIndex(key);</span>
     }
 
     /**
@@ -573,7 +573,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Comparable getRowKey(int row) {
-<span class="nc" id="L576">        return this.data.getRowKey(row);</span>
+<span class="fc" id="L576">        return this.data.getRowKey(row);</span>
     }
 
     /**
@@ -597,7 +597,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public int getRowCount() {
-<span class="nc" id="L600">        return this.data.getRowCount();</span>
+<span class="fc" id="L600">        return this.data.getRowCount();</span>
     }
 
     /**
@@ -609,7 +609,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public int getColumnCount() {
-<span class="nc" id="L612">        return this.data.getColumnCount();</span>
+<span class="fc" id="L612">        return this.data.getColumnCount();</span>
     }
 
     /**
@@ -624,7 +624,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public double getRangeLowerBound(boolean includeInterval) {
-<span class="nc" id="L627">        return this.minimumRangeValue;</span>
+<span class="fc" id="L627">        return this.minimumRangeValue;</span>
     }
 
     /**
@@ -639,7 +639,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public double getRangeUpperBound(boolean includeInterval) {
-<span class="nc" id="L642">        return this.maximumRangeValue;</span>
+<span class="fc" id="L642">        return this.maximumRangeValue;</span>
     }
 
     /**
@@ -652,7 +652,7 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Range getRangeBounds(boolean includeInterval) {
-<span class="nc" id="L655">        return new Range(this.minimumRangeValue, this.maximumRangeValue);</span>
+<span class="fc" id="L655">        return new Range(this.minimumRangeValue, this.maximumRangeValue);</span>
     }
 
     /**
@@ -667,13 +667,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMinRegularValue(int row, int column) {
-<span class="nc" id="L670">        Number result = null;</span>
-<span class="nc" id="L671">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L670">        Number result = null;</span>
+<span class="fc" id="L671">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 row, column);
-<span class="nc bnc" id="L673" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L674">            result = item.getMinRegularValue();</span>
+<span class="pc bpc" id="L673" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L674">            result = item.getMinRegularValue();</span>
         }
-<span class="nc" id="L676">        return result;</span>
+<span class="fc" id="L676">        return result;</span>
     }
 
     /**
@@ -688,13 +688,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMinRegularValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L691">        Number result = null;</span>
-<span class="nc" id="L692">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L691">        Number result = null;</span>
+<span class="fc" id="L692">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L694" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L695">            result = item.getMinRegularValue();</span>
+<span class="pc bpc" id="L694" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L695">            result = item.getMinRegularValue();</span>
         }
-<span class="nc" id="L697">        return result;</span>
+<span class="fc" id="L697">        return result;</span>
     }
 
     /**
@@ -709,13 +709,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMaxRegularValue(int row, int column) {
-<span class="nc" id="L712">        Number result = null;</span>
-<span class="nc" id="L713">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L712">        Number result = null;</span>
+<span class="fc" id="L713">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 row, column);
-<span class="nc bnc" id="L715" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L716">            result = item.getMaxRegularValue();</span>
+<span class="pc bpc" id="L715" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L716">            result = item.getMaxRegularValue();</span>
         }
-<span class="nc" id="L718">        return result;</span>
+<span class="fc" id="L718">        return result;</span>
     }
 
     /**
@@ -730,13 +730,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L733">        Number result = null;</span>
-<span class="nc" id="L734">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L733">        Number result = null;</span>
+<span class="fc" id="L734">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L736" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L737">            result = item.getMaxRegularValue();</span>
+<span class="pc bpc" id="L736" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L737">            result = item.getMaxRegularValue();</span>
         }
-<span class="nc" id="L739">        return result;</span>
+<span class="fc" id="L739">        return result;</span>
     }
 
     /**
@@ -772,13 +772,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMinOutlier(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L775">        Number result = null;</span>
-<span class="nc" id="L776">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L775">        Number result = null;</span>
+<span class="fc" id="L776">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L778" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L779">            result = item.getMinOutlier();</span>
+<span class="pc bpc" id="L778" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L779">            result = item.getMinOutlier();</span>
         }
-<span class="nc" id="L781">        return result;</span>
+<span class="fc" id="L781">        return result;</span>
     }
 
     /**
@@ -814,13 +814,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getMaxOutlier(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L817">        Number result = null;</span>
-<span class="nc" id="L818">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L817">        Number result = null;</span>
+<span class="fc" id="L818">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 rowKey, columnKey);
-<span class="nc bnc" id="L820" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L821">            result = item.getMaxOutlier();</span>
+<span class="pc bpc" id="L820" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L821">            result = item.getMaxOutlier();</span>
         }
-<span class="nc" id="L823">        return result;</span>
+<span class="fc" id="L823">        return result;</span>
     }
 
     /**
@@ -835,13 +835,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public List getOutliers(int row, int column) {
-<span class="nc" id="L838">        List result = null;</span>
-<span class="nc" id="L839">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
+<span class="fc" id="L838">        List result = null;</span>
+<span class="fc" id="L839">        BoxAndWhiskerItem item = (BoxAndWhiskerItem) this.data.getObject(</span>
                 row, column);
-<span class="nc bnc" id="L841" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L842">            result = item.getOutliers();</span>
+<span class="pc bpc" id="L841" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L842">            result = item.getOutliers();</span>
         }
-<span class="nc" id="L844">        return result;</span>
+<span class="fc" id="L844">        return result;</span>
     }
 
     /**
@@ -870,46 +870,46 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      * the current bounds.
      */
     private void updateBounds() {
-<span class="nc" id="L873">        this.minimumRangeValue = Double.NaN;</span>
-<span class="nc" id="L874">        this.minimumRangeValueRow = -1;</span>
-<span class="nc" id="L875">        this.minimumRangeValueColumn = -1;</span>
-<span class="nc" id="L876">        this.maximumRangeValue = Double.NaN;</span>
-<span class="nc" id="L877">        this.maximumRangeValueRow = -1;</span>
-<span class="nc" id="L878">        this.maximumRangeValueColumn = -1;</span>
-<span class="nc" id="L879">        int rowCount = getRowCount();</span>
-<span class="nc" id="L880">        int columnCount = getColumnCount();</span>
-<span class="nc bnc" id="L881" title="All 2 branches missed.">        for (int r = 0; r &lt; rowCount; r++) {</span>
-<span class="nc bnc" id="L882" title="All 2 branches missed.">            for (int c = 0; c &lt; columnCount; c++) {</span>
-<span class="nc" id="L883">                BoxAndWhiskerItem item = getItem(r, c);</span>
-<span class="nc bnc" id="L884" title="All 2 branches missed.">                if (item != null) {</span>
-<span class="nc" id="L885">                    Number min = item.getMinOutlier();</span>
-<span class="nc bnc" id="L886" title="All 2 branches missed.">                    if (min != null) {</span>
-<span class="nc" id="L887">                        double minv = min.doubleValue();</span>
-<span class="nc bnc" id="L888" title="All 2 branches missed.">                        if (!Double.isNaN(minv)) {</span>
-<span class="nc bnc" id="L889" title="All 4 branches missed.">                            if (minv &lt; this.minimumRangeValue || Double.isNaN(</span>
+<span class="fc" id="L873">        this.minimumRangeValue = Double.NaN;</span>
+<span class="fc" id="L874">        this.minimumRangeValueRow = -1;</span>
+<span class="fc" id="L875">        this.minimumRangeValueColumn = -1;</span>
+<span class="fc" id="L876">        this.maximumRangeValue = Double.NaN;</span>
+<span class="fc" id="L877">        this.maximumRangeValueRow = -1;</span>
+<span class="fc" id="L878">        this.maximumRangeValueColumn = -1;</span>
+<span class="fc" id="L879">        int rowCount = getRowCount();</span>
+<span class="fc" id="L880">        int columnCount = getColumnCount();</span>
+<span class="fc bfc" id="L881" title="All 2 branches covered.">        for (int r = 0; r &lt; rowCount; r++) {</span>
+<span class="fc bfc" id="L882" title="All 2 branches covered.">            for (int c = 0; c &lt; columnCount; c++) {</span>
+<span class="fc" id="L883">                BoxAndWhiskerItem item = getItem(r, c);</span>
+<span class="pc bpc" id="L884" title="1 of 2 branches missed.">                if (item != null) {</span>
+<span class="fc" id="L885">                    Number min = item.getMinOutlier();</span>
+<span class="pc bpc" id="L886" title="1 of 2 branches missed.">                    if (min != null) {</span>
+<span class="fc" id="L887">                        double minv = min.doubleValue();</span>
+<span class="pc bpc" id="L888" title="1 of 2 branches missed.">                        if (!Double.isNaN(minv)) {</span>
+<span class="pc bpc" id="L889" title="1 of 4 branches missed.">                            if (minv &lt; this.minimumRangeValue || Double.isNaN(</span>
                                     this.minimumRangeValue)) {
-<span class="nc" id="L891">                                this.minimumRangeValue = minv;</span>
-<span class="nc" id="L892">                                this.minimumRangeValueRow = r;</span>
-<span class="nc" id="L893">                                this.minimumRangeValueColumn = c;</span>
+<span class="fc" id="L891">                                this.minimumRangeValue = minv;</span>
+<span class="fc" id="L892">                                this.minimumRangeValueRow = r;</span>
+<span class="fc" id="L893">                                this.minimumRangeValueColumn = c;</span>
                             }
                         }
                     }
-<span class="nc" id="L897">                    Number max = item.getMaxOutlier();</span>
-<span class="nc bnc" id="L898" title="All 2 branches missed.">                    if (max != null) {</span>
-<span class="nc" id="L899">                        double maxv = max.doubleValue();</span>
-<span class="nc bnc" id="L900" title="All 2 branches missed.">                        if (!Double.isNaN(maxv)) {</span>
-<span class="nc bnc" id="L901" title="All 4 branches missed.">                            if (maxv &gt; this.maximumRangeValue || Double.isNaN(</span>
+<span class="fc" id="L897">                    Number max = item.getMaxOutlier();</span>
+<span class="pc bpc" id="L898" title="1 of 2 branches missed.">                    if (max != null) {</span>
+<span class="fc" id="L899">                        double maxv = max.doubleValue();</span>
+<span class="pc bpc" id="L900" title="1 of 2 branches missed.">                        if (!Double.isNaN(maxv)) {</span>
+<span class="pc bpc" id="L901" title="1 of 4 branches missed.">                            if (maxv &gt; this.maximumRangeValue || Double.isNaN(</span>
                                     this.maximumRangeValue)) {
-<span class="nc" id="L903">                                this.maximumRangeValue = maxv;</span>
-<span class="nc" id="L904">                                this.maximumRangeValueRow = r;</span>
-<span class="nc" id="L905">                                this.maximumRangeValueColumn = c;</span>
+<span class="fc" id="L903">                                this.maximumRangeValue = maxv;</span>
+<span class="fc" id="L904">                                this.maximumRangeValueRow = r;</span>
+<span class="fc" id="L905">                                this.maximumRangeValueColumn = c;</span>
                             }
                         }
                     }
                 }
             }
         }
-<span class="nc" id="L912">    }</span>
+<span class="fc" id="L912">    }</span>
 
     /**
      * Tests this dataset for equality with an arbitrary object.
@@ -920,13 +920,13 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L923" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L923" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L924">            return true;</span>
         }
-<span class="nc bnc" id="L926" title="All 2 branches missed.">        if (obj instanceof DefaultBoxAndWhiskerCategoryDataset) {</span>
-<span class="nc" id="L927">            DefaultBoxAndWhiskerCategoryDataset dataset</span>
+<span class="pc bpc" id="L926" title="1 of 2 branches missed.">        if (obj instanceof DefaultBoxAndWhiskerCategoryDataset) {</span>
+<span class="fc" id="L927">            DefaultBoxAndWhiskerCategoryDataset dataset</span>
                     = (DefaultBoxAndWhiskerCategoryDataset) obj;
-<span class="nc" id="L929">            return ObjectUtils.equal(this.data, dataset.data);</span>
+<span class="fc" id="L929">            return ObjectUtils.equal(this.data, dataset.data);</span>
         }
 <span class="nc" id="L931">        return false;</span>
     }
@@ -940,11 +940,11 @@ public class DefaultBoxAndWhiskerCategoryDataset extends AbstractDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L943">        DefaultBoxAndWhiskerCategoryDataset clone</span>
-<span class="nc" id="L944">                = (DefaultBoxAndWhiskerCategoryDataset) super.clone();</span>
-<span class="nc" id="L945">        clone.data = (KeyedObjects2D) this.data.clone();</span>
-<span class="nc" id="L946">        return clone;</span>
+<span class="fc" id="L943">        DefaultBoxAndWhiskerCategoryDataset clone</span>
+<span class="fc" id="L944">                = (DefaultBoxAndWhiskerCategoryDataset) super.clone();</span>
+<span class="fc" id="L945">        clone.data = (KeyedObjects2D) this.data.clone();</span>
+<span class="fc" id="L946">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

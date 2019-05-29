@@ -104,8 +104,8 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      * Creates a new renderer.
      */
     public StackedXYBarRenderer() {
-<span class="nc" id="L107">        this(0.0);</span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this(0.0);</span>
+<span class="fc" id="L108">    }</span>
 
     /**
      * Creates a new renderer.
@@ -113,18 +113,18 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      * @param margin  the percentual amount of the bars that are cut away.
      */
     public StackedXYBarRenderer(double margin) {
-<span class="nc" id="L116">        super(margin);</span>
-<span class="nc" id="L117">        this.renderAsPercentages = false;</span>
+<span class="fc" id="L116">        super(margin);</span>
+<span class="fc" id="L117">        this.renderAsPercentages = false;</span>
 
         // set the default item label positions, which will only be used if
         // the user requests visible item labels...
-<span class="nc" id="L121">        ItemLabelPosition p = new ItemLabelPosition(ItemLabelAnchor.CENTER,</span>
+<span class="fc" id="L121">        ItemLabelPosition p = new ItemLabelPosition(ItemLabelAnchor.CENTER,</span>
                 TextAnchor.CENTER);
-<span class="nc" id="L123">        setDefaultPositiveItemLabelPosition(p);</span>
-<span class="nc" id="L124">        setDefaultNegativeItemLabelPosition(p);</span>
-<span class="nc" id="L125">        setPositiveItemLabelPositionFallback(null);</span>
-<span class="nc" id="L126">        setNegativeItemLabelPositionFallback(null);</span>
-<span class="nc" id="L127">    }</span>
+<span class="fc" id="L123">        setDefaultPositiveItemLabelPosition(p);</span>
+<span class="fc" id="L124">        setDefaultNegativeItemLabelPosition(p);</span>
+<span class="fc" id="L125">        setPositiveItemLabelPositionFallback(null);</span>
+<span class="fc" id="L126">        setNegativeItemLabelPositionFallback(null);</span>
+<span class="fc" id="L127">    }</span>
 
     /**
      * Returns {@code true} if the renderer displays each item value as
@@ -153,9 +153,9 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      * @since 1.0.5
      */
     public void setRenderAsPercentages(boolean asPercentages) {
-<span class="nc" id="L156">        this.renderAsPercentages = asPercentages;</span>
-<span class="nc" id="L157">        fireChangeEvent();</span>
-<span class="nc" id="L158">    }</span>
+<span class="fc" id="L156">        this.renderAsPercentages = asPercentages;</span>
+<span class="fc" id="L157">        fireChangeEvent();</span>
+<span class="fc" id="L158">    }</span>
 
     /**
      * Returns {@code 3} to indicate that this renderer requires three
@@ -201,12 +201,12 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      */
     @Override
     public Range findRangeBounds(XYDataset dataset) {
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (this.renderAsPercentages) {</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (dataset != null) {</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">            if (this.renderAsPercentages) {</span>
 <span class="nc" id="L206">                return new Range(0.0, 1.0);</span>
             }
             else {
-<span class="nc" id="L209">                return DatasetUtils.findStackedRangeBounds(</span>
+<span class="fc" id="L209">                return DatasetUtils.findStackedRangeBounds(</span>
                         (TableXYDataset) dataset);
             }
         }
@@ -414,17 +414,17 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L417" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L418">            return true;</span>
         }
-<span class="nc bnc" id="L420" title="All 2 branches missed.">        if (!(obj instanceof StackedXYBarRenderer)) {</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        if (!(obj instanceof StackedXYBarRenderer)) {</span>
 <span class="nc" id="L421">            return false;</span>
         }
-<span class="nc" id="L423">        StackedXYBarRenderer that = (StackedXYBarRenderer) obj;</span>
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
-<span class="nc" id="L425">            return false;</span>
+<span class="fc" id="L423">        StackedXYBarRenderer that = (StackedXYBarRenderer) obj;</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        if (this.renderAsPercentages != that.renderAsPercentages) {</span>
+<span class="fc" id="L425">            return false;</span>
         }
-<span class="nc" id="L427">        return super.equals(obj);</span>
+<span class="fc" id="L427">        return super.equals(obj);</span>
     }
 
     /**
@@ -434,10 +434,10 @@ public class StackedXYBarRenderer extends XYBarRenderer {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L437">        int result = super.hashCode();</span>
-<span class="nc bnc" id="L438" title="All 2 branches missed.">        result = result * 37 + (this.renderAsPercentages ? 1 : 0);</span>
-<span class="nc" id="L439">        return result;</span>
+<span class="fc" id="L437">        int result = super.hashCode();</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        result = result * 37 + (this.renderAsPercentages ? 1 : 0);</span>
+<span class="fc" id="L439">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

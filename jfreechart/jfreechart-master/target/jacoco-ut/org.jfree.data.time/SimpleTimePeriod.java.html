@@ -73,13 +73,13 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      * @param start  the start date/time in milliseconds.
      * @param end  the end date/time in milliseconds.
      */
-<span class="nc" id="L76">    public SimpleTimePeriod(long start, long end) {</span>
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (start &gt; end) {</span>
+<span class="fc" id="L76">    public SimpleTimePeriod(long start, long end) {</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (start &gt; end) {</span>
 <span class="nc" id="L78">            throw new IllegalArgumentException(&quot;Requires start &lt;= end.&quot;);</span>
         }
-<span class="nc" id="L80">        this.start = start;</span>
-<span class="nc" id="L81">        this.end = end;</span>
-<span class="nc" id="L82">    }</span>
+<span class="fc" id="L80">        this.start = start;</span>
+<span class="fc" id="L81">        this.end = end;</span>
+<span class="fc" id="L82">    }</span>
 
     /**
      * Creates a new time allocation.
@@ -88,8 +88,8 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      * @param end  the end date/time ({@code null} not permitted).
      */
     public SimpleTimePeriod(Date start, Date end) {
-<span class="nc" id="L91">        this(start.getTime(), end.getTime());</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L91">        this(start.getTime(), end.getTime());</span>
+<span class="fc" id="L92">    }</span>
 
     /**
      * Returns the start date/time.
@@ -98,7 +98,7 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      */
     @Override
     public Date getStart() {
-<span class="nc" id="L101">        return new Date(this.start);</span>
+<span class="fc" id="L101">        return new Date(this.start);</span>
     }
 
     /**
@@ -119,7 +119,7 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      */
     @Override
     public Date getEnd() {
-<span class="nc" id="L122">        return new Date(this.end);</span>
+<span class="fc" id="L122">        return new Date(this.end);</span>
     }
 
     /**
@@ -144,20 +144,20 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L148">            return true;</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L148">            return true;</span>
         }
-<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (!(obj instanceof TimePeriod)) {</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (!(obj instanceof TimePeriod)) {</span>
 <span class="nc" id="L151">            return false;</span>
         }
-<span class="nc" id="L153">        TimePeriod that = (TimePeriod) obj;</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (!this.getStart().equals(that.getStart())) {</span>
-<span class="nc" id="L155">            return false;</span>
+<span class="fc" id="L153">        TimePeriod that = (TimePeriod) obj;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (!this.getStart().equals(that.getStart())) {</span>
+<span class="fc" id="L155">            return false;</span>
         }
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (!this.getEnd().equals(that.getEnd())) {</span>
-<span class="nc" id="L158">            return false;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (!this.getEnd().equals(that.getEnd())) {</span>
+<span class="fc" id="L158">            return false;</span>
         }
-<span class="nc" id="L160">        return true;</span>
+<span class="fc" id="L160">        return true;</span>
     }
 
     /**
@@ -173,35 +173,35 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      */
     @Override
     public int compareTo(Object obj) {
-<span class="nc" id="L176">        TimePeriod that = (TimePeriod) obj;</span>
-<span class="nc" id="L177">        long t0 = getStart().getTime();</span>
-<span class="nc" id="L178">        long t1 = getEnd().getTime();</span>
-<span class="nc" id="L179">        long m0 = t0 + (t1 - t0) / 2L;</span>
-<span class="nc" id="L180">        long t2 = that.getStart().getTime();</span>
-<span class="nc" id="L181">        long t3 = that.getEnd().getTime();</span>
-<span class="nc" id="L182">        long m1 = t2 + (t3 - t2) / 2L;</span>
-<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (m0 &lt; m1) {</span>
-<span class="nc" id="L184">            return -1;</span>
+<span class="fc" id="L176">        TimePeriod that = (TimePeriod) obj;</span>
+<span class="fc" id="L177">        long t0 = getStart().getTime();</span>
+<span class="fc" id="L178">        long t1 = getEnd().getTime();</span>
+<span class="fc" id="L179">        long m0 = t0 + (t1 - t0) / 2L;</span>
+<span class="fc" id="L180">        long t2 = that.getStart().getTime();</span>
+<span class="fc" id="L181">        long t3 = that.getEnd().getTime();</span>
+<span class="fc" id="L182">        long m1 = t2 + (t3 - t2) / 2L;</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (m0 &lt; m1) {</span>
+<span class="fc" id="L184">            return -1;</span>
         }
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        else if (m0 &gt; m1) {</span>
-<span class="nc" id="L187">            return 1;</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        else if (m0 &gt; m1) {</span>
+<span class="fc" id="L187">            return 1;</span>
         }
         else {
-<span class="nc bnc" id="L190" title="All 2 branches missed.">            if (t0 &lt; t2) {</span>
-<span class="nc" id="L191">                return -1;</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (t0 &lt; t2) {</span>
+<span class="fc" id="L191">                return -1;</span>
             }
-<span class="nc bnc" id="L193" title="All 2 branches missed.">            else if (t0 &gt; t2) {</span>
-<span class="nc" id="L194">                return 1;</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            else if (t0 &gt; t2) {</span>
+<span class="fc" id="L194">                return 1;</span>
             }
             else {
-<span class="nc bnc" id="L197" title="All 2 branches missed.">                if (t1 &lt; t3) {</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                if (t1 &lt; t3) {</span>
 <span class="nc" id="L198">                    return -1;</span>
                 }
-<span class="nc bnc" id="L200" title="All 2 branches missed.">                else if (t1 &gt; t3) {</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">                else if (t1 &gt; t3) {</span>
 <span class="nc" id="L201">                    return 1;</span>
                 }
                 else {
-<span class="nc" id="L204">                    return 0;</span>
+<span class="fc" id="L204">                    return 0;</span>
                 }
             }
         }
@@ -218,11 +218,11 @@ public class SimpleTimePeriod implements TimePeriod, Comparable, Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L221">        int result = 17;</span>
-<span class="nc" id="L222">        result = 37 * result + (int) this.start;</span>
-<span class="nc" id="L223">        result = 37 * result + (int) this.end;</span>
-<span class="nc" id="L224">        return result;</span>
+<span class="fc" id="L221">        int result = 17;</span>
+<span class="fc" id="L222">        result = 37 * result + (int) this.start;</span>
+<span class="fc" id="L223">        result = 37 * result + (int) this.end;</span>
+<span class="fc" id="L224">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -134,17 +134,17 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      */
     public XYPolygonAnnotation(double[] polygon, Stroke stroke, 
             Paint outlinePaint, Paint fillPaint) {
-<span class="nc" id="L137">        super();</span>
-<span class="nc" id="L138">        Args.nullNotPermitted(polygon, &quot;polygon&quot;);</span>
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (polygon.length % 2 != 0) {</span>
+<span class="fc" id="L137">        super();</span>
+<span class="fc" id="L138">        Args.nullNotPermitted(polygon, &quot;polygon&quot;);</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (polygon.length % 2 != 0) {</span>
 <span class="nc" id="L140">            throw new IllegalArgumentException(&quot;The 'polygon' array must &quot;</span>
                     + &quot;contain an even number of items.&quot;);
         }
-<span class="nc" id="L143">        this.polygon = (double[]) polygon.clone();</span>
-<span class="nc" id="L144">        this.stroke = stroke;</span>
-<span class="nc" id="L145">        this.outlinePaint = outlinePaint;</span>
-<span class="nc" id="L146">        this.fillPaint = fillPaint;</span>
-<span class="nc" id="L147">    }</span>
+<span class="fc" id="L143">        this.polygon = (double[]) polygon.clone();</span>
+<span class="fc" id="L144">        this.stroke = stroke;</span>
+<span class="fc" id="L145">        this.outlinePaint = outlinePaint;</span>
+<span class="fc" id="L146">        this.fillPaint = fillPaint;</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Returns the coordinates of the polygon's vertices.  The returned array
@@ -271,31 +271,31 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L275">            return true;</span>
         }
         // now try to reject equality
-<span class="nc bnc" id="L278" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L279">            return false;</span>
         }
-<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (!(obj instanceof XYPolygonAnnotation)) {</span>
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">        if (!(obj instanceof XYPolygonAnnotation)) {</span>
 <span class="nc" id="L282">            return false;</span>
         }
-<span class="nc" id="L284">        XYPolygonAnnotation that = (XYPolygonAnnotation) obj;</span>
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (!Arrays.equals(this.polygon, that.polygon)) {</span>
-<span class="nc" id="L286">            return false;</span>
+<span class="fc" id="L284">        XYPolygonAnnotation that = (XYPolygonAnnotation) obj;</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (!Arrays.equals(this.polygon, that.polygon)) {</span>
+<span class="fc" id="L286">            return false;</span>
         }
-<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
-<span class="nc" id="L289">            return false;</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
+<span class="fc" id="L289">            return false;</span>
         }
-<span class="nc bnc" id="L291" title="All 2 branches missed.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
-<span class="nc" id="L292">            return false;</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
+<span class="fc" id="L292">            return false;</span>
         }
-<span class="nc bnc" id="L294" title="All 2 branches missed.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
-<span class="nc" id="L295">            return false;</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (!PaintUtils.equal(this.fillPaint, that.fillPaint)) {</span>
+<span class="fc" id="L295">            return false;</span>
         }
         // seem to be the same
-<span class="nc" id="L298">        return true;</span>
+<span class="fc" id="L298">        return true;</span>
     }
 
     /**
@@ -305,16 +305,16 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L308">        int result = 193;</span>
-<span class="nc" id="L309">        result = 37 * result + HashUtils.hashCodeForDoubleArray(</span>
+<span class="fc" id="L308">        int result = 193;</span>
+<span class="fc" id="L309">        result = 37 * result + HashUtils.hashCodeForDoubleArray(</span>
                 this.polygon);
-<span class="nc" id="L311">        result = 37 * result + HashUtils.hashCodeForPaint(this.fillPaint);</span>
-<span class="nc" id="L312">        result = 37 * result + HashUtils.hashCodeForPaint(</span>
+<span class="fc" id="L311">        result = 37 * result + HashUtils.hashCodeForPaint(this.fillPaint);</span>
+<span class="fc" id="L312">        result = 37 * result + HashUtils.hashCodeForPaint(</span>
                 this.outlinePaint);
-<span class="nc bnc" id="L314" title="All 2 branches missed.">        if (this.stroke != null) {</span>
-<span class="nc" id="L315">            result = 37 * result + this.stroke.hashCode();</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if (this.stroke != null) {</span>
+<span class="fc" id="L315">            result = 37 * result + this.stroke.hashCode();</span>
         }
-<span class="nc" id="L317">        return result;</span>
+<span class="fc" id="L317">        return result;</span>
     }
 
     /**
@@ -327,7 +327,7 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L330">        return super.clone();</span>
+<span class="fc" id="L330">        return super.clone();</span>
     }
 
     /**
@@ -338,11 +338,11 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      * @throws IOException if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L341">        stream.defaultWriteObject();</span>
-<span class="nc" id="L342">        SerialUtils.writeStroke(this.stroke, stream);</span>
-<span class="nc" id="L343">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
-<span class="nc" id="L344">        SerialUtils.writePaint(this.fillPaint, stream);</span>
-<span class="nc" id="L345">    }</span>
+<span class="fc" id="L341">        stream.defaultWriteObject();</span>
+<span class="fc" id="L342">        SerialUtils.writeStroke(this.stroke, stream);</span>
+<span class="fc" id="L343">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
+<span class="fc" id="L344">        SerialUtils.writePaint(this.fillPaint, stream);</span>
+<span class="fc" id="L345">    }</span>
 
     /**
      * Provides serialization support.
@@ -354,11 +354,11 @@ public class XYPolygonAnnotation extends AbstractXYAnnotation
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L357">        stream.defaultReadObject();</span>
-<span class="nc" id="L358">        this.stroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L359">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L360">        this.fillPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L361">    }</span>
+<span class="fc" id="L357">        stream.defaultReadObject();</span>
+<span class="fc" id="L358">        this.stroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L359">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L360">        this.fillPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L361">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

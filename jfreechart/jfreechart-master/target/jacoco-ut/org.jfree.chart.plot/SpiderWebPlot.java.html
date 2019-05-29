@@ -145,25 +145,25 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
     public static final double DEFAULT_START_ANGLE = 90.0;
 
     /** The default series label font. */
-<span class="nc" id="L148">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
+<span class="fc" id="L148">    public static final Font DEFAULT_LABEL_FONT = new Font(&quot;SansSerif&quot;,</span>
             Font.PLAIN, 10);
 
     /** The default series label paint. */
-<span class="nc" id="L152">    public static final Paint  DEFAULT_LABEL_PAINT = Color.BLACK;</span>
+<span class="fc" id="L152">    public static final Paint  DEFAULT_LABEL_PAINT = Color.BLACK;</span>
 
     /** The default series label background paint. */
-<span class="nc" id="L155">    public static final Paint  DEFAULT_LABEL_BACKGROUND_PAINT</span>
+<span class="fc" id="L155">    public static final Paint  DEFAULT_LABEL_BACKGROUND_PAINT</span>
             = new Color(255, 255, 192);
 
     /** The default series label outline paint. */
-<span class="nc" id="L159">    public static final Paint  DEFAULT_LABEL_OUTLINE_PAINT = Color.BLACK;</span>
+<span class="fc" id="L159">    public static final Paint  DEFAULT_LABEL_OUTLINE_PAINT = Color.BLACK;</span>
 
     /** The default series label outline stroke. */
-<span class="nc" id="L162">    public static final Stroke DEFAULT_LABEL_OUTLINE_STROKE</span>
+<span class="fc" id="L162">    public static final Stroke DEFAULT_LABEL_OUTLINE_STROKE</span>
             = new BasicStroke(0.5f);
 
     /** The default series label shadow paint. */
-<span class="nc" id="L166">    public static final Paint  DEFAULT_LABEL_SHADOW_PAINT = Color.LIGHT_GRAY;</span>
+<span class="fc" id="L166">    public static final Paint  DEFAULT_LABEL_SHADOW_PAINT = Color.LIGHT_GRAY;</span>
 
     /**
      * The default maximum value plotted - forces the plot to evaluate
@@ -254,7 +254,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
     private CategoryItemLabelGenerator labelGenerator;
 
     /** controls if the web polygons are filled or not */
-<span class="nc" id="L257">    private boolean webFilled = true;</span>
+<span class="fc" id="L257">    private boolean webFilled = true;</span>
 
     /** A tooltip generator for the plot ({@code null} permitted). */
     private CategoryToolTipGenerator toolTipGenerator;
@@ -276,8 +276,8 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param dataset  the dataset ({@code null} permitted).
      */
     public SpiderWebPlot(CategoryDataset dataset) {
-<span class="nc" id="L279">        this(dataset, TableOrder.BY_ROW);</span>
-<span class="nc" id="L280">    }</span>
+<span class="fc" id="L279">        this(dataset, TableOrder.BY_ROW);</span>
+<span class="fc" id="L280">    }</span>
 
     /**
      * Creates a new spider web plot with the given dataset.
@@ -287,42 +287,42 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      *                 or {@link TableOrder#BY_COLUMN}).
      */
     public SpiderWebPlot(CategoryDataset dataset, TableOrder extract) {
-<span class="nc" id="L290">        super();</span>
-<span class="nc" id="L291">        Args.nullNotPermitted(extract, &quot;extract&quot;);</span>
-<span class="nc" id="L292">        this.dataset = dataset;</span>
-<span class="nc bnc" id="L293" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L294">            dataset.addChangeListener(this);</span>
+<span class="fc" id="L290">        super();</span>
+<span class="fc" id="L291">        Args.nullNotPermitted(extract, &quot;extract&quot;);</span>
+<span class="fc" id="L292">        this.dataset = dataset;</span>
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">        if (dataset != null) {</span>
+<span class="fc" id="L294">            dataset.addChangeListener(this);</span>
         }
 
-<span class="nc" id="L297">        this.dataExtractOrder = extract;</span>
-<span class="nc" id="L298">        this.headPercent = DEFAULT_HEAD;</span>
-<span class="nc" id="L299">        this.axisLabelGap = DEFAULT_AXIS_LABEL_GAP;</span>
-<span class="nc" id="L300">        this.axisLinePaint = Color.BLACK;</span>
-<span class="nc" id="L301">        this.axisLineStroke = new BasicStroke(1.0f);</span>
+<span class="fc" id="L297">        this.dataExtractOrder = extract;</span>
+<span class="fc" id="L298">        this.headPercent = DEFAULT_HEAD;</span>
+<span class="fc" id="L299">        this.axisLabelGap = DEFAULT_AXIS_LABEL_GAP;</span>
+<span class="fc" id="L300">        this.axisLinePaint = Color.BLACK;</span>
+<span class="fc" id="L301">        this.axisLineStroke = new BasicStroke(1.0f);</span>
 
-<span class="nc" id="L303">        this.interiorGap = DEFAULT_INTERIOR_GAP;</span>
-<span class="nc" id="L304">        this.startAngle = DEFAULT_START_ANGLE;</span>
-<span class="nc" id="L305">        this.direction = Rotation.CLOCKWISE;</span>
-<span class="nc" id="L306">        this.maxValue = DEFAULT_MAX_VALUE;</span>
+<span class="fc" id="L303">        this.interiorGap = DEFAULT_INTERIOR_GAP;</span>
+<span class="fc" id="L304">        this.startAngle = DEFAULT_START_ANGLE;</span>
+<span class="fc" id="L305">        this.direction = Rotation.CLOCKWISE;</span>
+<span class="fc" id="L306">        this.maxValue = DEFAULT_MAX_VALUE;</span>
 
-<span class="nc" id="L308">        this.seriesPaint = null;</span>
-<span class="nc" id="L309">        this.seriesPaintList = new PaintList();</span>
-<span class="nc" id="L310">        this.baseSeriesPaint = null;</span>
+<span class="fc" id="L308">        this.seriesPaint = null;</span>
+<span class="fc" id="L309">        this.seriesPaintList = new PaintList();</span>
+<span class="fc" id="L310">        this.baseSeriesPaint = null;</span>
 
-<span class="nc" id="L312">        this.seriesOutlinePaint = null;</span>
-<span class="nc" id="L313">        this.seriesOutlinePaintList = new PaintList();</span>
-<span class="nc" id="L314">        this.baseSeriesOutlinePaint = DEFAULT_OUTLINE_PAINT;</span>
+<span class="fc" id="L312">        this.seriesOutlinePaint = null;</span>
+<span class="fc" id="L313">        this.seriesOutlinePaintList = new PaintList();</span>
+<span class="fc" id="L314">        this.baseSeriesOutlinePaint = DEFAULT_OUTLINE_PAINT;</span>
 
-<span class="nc" id="L316">        this.seriesOutlineStroke = null;</span>
-<span class="nc" id="L317">        this.seriesOutlineStrokeList = new StrokeList();</span>
-<span class="nc" id="L318">        this.baseSeriesOutlineStroke = DEFAULT_OUTLINE_STROKE;</span>
+<span class="fc" id="L316">        this.seriesOutlineStroke = null;</span>
+<span class="fc" id="L317">        this.seriesOutlineStrokeList = new StrokeList();</span>
+<span class="fc" id="L318">        this.baseSeriesOutlineStroke = DEFAULT_OUTLINE_STROKE;</span>
 
-<span class="nc" id="L320">        this.labelFont = DEFAULT_LABEL_FONT;</span>
-<span class="nc" id="L321">        this.labelPaint = DEFAULT_LABEL_PAINT;</span>
-<span class="nc" id="L322">        this.labelGenerator = new StandardCategoryItemLabelGenerator();</span>
+<span class="fc" id="L320">        this.labelFont = DEFAULT_LABEL_FONT;</span>
+<span class="fc" id="L321">        this.labelPaint = DEFAULT_LABEL_PAINT;</span>
+<span class="fc" id="L322">        this.labelGenerator = new StandardCategoryItemLabelGenerator();</span>
 
-<span class="nc" id="L324">        this.legendItemShape = DEFAULT_LEGEND_ITEM_CIRCLE;</span>
-<span class="nc" id="L325">    }</span>
+<span class="fc" id="L324">        this.legendItemShape = DEFAULT_LEGEND_ITEM_CIRCLE;</span>
+<span class="fc" id="L325">    }</span>
 
     /**
      * Returns a short string describing the type of plot.
@@ -343,7 +343,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setDataset(CategoryDataset)
      */
     public CategoryDataset getDataset() {
-<span class="nc" id="L346">        return this.dataset;</span>
+<span class="fc" id="L346">        return this.dataset;</span>
     }
 
     /**
@@ -392,9 +392,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #isWebFilled()
      */
     public void setWebFilled(boolean flag) {
-<span class="nc" id="L395">        this.webFilled = flag;</span>
-<span class="nc" id="L396">        fireChangeEvent();</span>
-<span class="nc" id="L397">    }</span>
+<span class="fc" id="L395">        this.webFilled = flag;</span>
+<span class="fc" id="L396">        fireChangeEvent();</span>
+<span class="fc" id="L397">    }</span>
 
     /**
      * Returns the data extract order (by row or by column).
@@ -419,10 +419,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getDataExtractOrder()
      */
     public void setDataExtractOrder(TableOrder order) {
-<span class="nc" id="L422">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
-<span class="nc" id="L423">        this.dataExtractOrder = order;</span>
-<span class="nc" id="L424">        fireChangeEvent();</span>
-<span class="nc" id="L425">    }</span>
+<span class="fc" id="L422">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
+<span class="fc" id="L423">        this.dataExtractOrder = order;</span>
+<span class="fc" id="L424">        fireChangeEvent();</span>
+<span class="fc" id="L425">    }</span>
 
     /**
      * Returns the head percent.
@@ -444,9 +444,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getHeadPercent()
      */
     public void setHeadPercent(double percent) {
-<span class="nc" id="L447">        this.headPercent = percent;</span>
-<span class="nc" id="L448">        fireChangeEvent();</span>
-<span class="nc" id="L449">    }</span>
+<span class="fc" id="L447">        this.headPercent = percent;</span>
+<span class="fc" id="L448">        fireChangeEvent();</span>
+<span class="fc" id="L449">    }</span>
 
     /**
      * Returns the start angle for the first radar axis.
@@ -459,7 +459,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setStartAngle(double)
      */
     public double getStartAngle() {
-<span class="nc" id="L462">        return this.startAngle;</span>
+<span class="fc" id="L462">        return this.startAngle;</span>
     }
 
     /**
@@ -475,9 +475,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getStartAngle()
      */
     public void setStartAngle(double angle) {
-<span class="nc" id="L478">        this.startAngle = angle;</span>
-<span class="nc" id="L479">        fireChangeEvent();</span>
-<span class="nc" id="L480">    }</span>
+<span class="fc" id="L478">        this.startAngle = angle;</span>
+<span class="fc" id="L479">        fireChangeEvent();</span>
+<span class="fc" id="L480">    }</span>
 
     /**
      * Returns the maximum value any category axis can take.
@@ -499,9 +499,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getMaxValue()
      */
     public void setMaxValue(double value) {
-<span class="nc" id="L502">        this.maxValue = value;</span>
-<span class="nc" id="L503">        fireChangeEvent();</span>
-<span class="nc" id="L504">    }</span>
+<span class="fc" id="L502">        this.maxValue = value;</span>
+<span class="fc" id="L503">        fireChangeEvent();</span>
+<span class="fc" id="L504">    }</span>
 
     /**
      * Returns the direction in which the radar axes are drawn
@@ -512,7 +512,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setDirection(Rotation)
      */
     public Rotation getDirection() {
-<span class="nc" id="L515">        return this.direction;</span>
+<span class="fc" id="L515">        return this.direction;</span>
     }
 
     /**
@@ -524,10 +524,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getDirection()
      */
     public void setDirection(Rotation direction) {
-<span class="nc" id="L527">        Args.nullNotPermitted(direction, &quot;direction&quot;);</span>
-<span class="nc" id="L528">        this.direction = direction;</span>
-<span class="nc" id="L529">        fireChangeEvent();</span>
-<span class="nc" id="L530">    }</span>
+<span class="fc" id="L527">        Args.nullNotPermitted(direction, &quot;direction&quot;);</span>
+<span class="fc" id="L528">        this.direction = direction;</span>
+<span class="fc" id="L529">        fireChangeEvent();</span>
+<span class="fc" id="L530">    }</span>
 
     /**
      * Returns the interior gap, measured as a percentage of the available
@@ -538,7 +538,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setInteriorGap(double)
      */
     public double getInteriorGap() {
-<span class="nc" id="L541">        return this.interiorGap;</span>
+<span class="fc" id="L541">        return this.interiorGap;</span>
     }
 
     /**
@@ -551,15 +551,15 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getInteriorGap()
      */
     public void setInteriorGap(double percent) {
-<span class="nc bnc" id="L554" title="All 4 branches missed.">        if ((percent &lt; 0.0) || (percent &gt; MAX_INTERIOR_GAP)) {</span>
+<span class="pc bpc" id="L554" title="2 of 4 branches missed.">        if ((percent &lt; 0.0) || (percent &gt; MAX_INTERIOR_GAP)) {</span>
 <span class="nc" id="L555">            throw new IllegalArgumentException(</span>
                     &quot;Percentage outside valid range.&quot;);
         }
-<span class="nc bnc" id="L558" title="All 2 branches missed.">        if (this.interiorGap != percent) {</span>
-<span class="nc" id="L559">            this.interiorGap = percent;</span>
-<span class="nc" id="L560">            fireChangeEvent();</span>
+<span class="pc bpc" id="L558" title="1 of 2 branches missed.">        if (this.interiorGap != percent) {</span>
+<span class="fc" id="L559">            this.interiorGap = percent;</span>
+<span class="fc" id="L560">            fireChangeEvent();</span>
         }
-<span class="nc" id="L562">    }</span>
+<span class="fc" id="L562">    }</span>
 
     /**
      * Returns the axis label gap.
@@ -581,9 +581,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getAxisLabelGap()
      */
     public void setAxisLabelGap(double gap) {
-<span class="nc" id="L584">        this.axisLabelGap = gap;</span>
-<span class="nc" id="L585">        fireChangeEvent();</span>
-<span class="nc" id="L586">    }</span>
+<span class="fc" id="L584">        this.axisLabelGap = gap;</span>
+<span class="fc" id="L585">        fireChangeEvent();</span>
+<span class="fc" id="L586">    }</span>
 
     /**
      * Returns the paint used to draw the axis lines.
@@ -608,10 +608,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @since 1.0.4
      */
     public void setAxisLinePaint(Paint paint) {
-<span class="nc" id="L611">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L612">        this.axisLinePaint = paint;</span>
-<span class="nc" id="L613">        fireChangeEvent();</span>
-<span class="nc" id="L614">    }</span>
+<span class="fc" id="L611">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L612">        this.axisLinePaint = paint;</span>
+<span class="fc" id="L613">        fireChangeEvent();</span>
+<span class="fc" id="L614">    }</span>
 
     /**
      * Returns the stroke used to draw the axis lines.
@@ -636,10 +636,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @since 1.0.4
      */
     public void setAxisLineStroke(Stroke stroke) {
-<span class="nc" id="L639">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L640">        this.axisLineStroke = stroke;</span>
-<span class="nc" id="L641">        fireChangeEvent();</span>
-<span class="nc" id="L642">    }</span>
+<span class="fc" id="L639">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L640">        this.axisLineStroke = stroke;</span>
+<span class="fc" id="L641">        fireChangeEvent();</span>
+<span class="fc" id="L642">    }</span>
 
     //// SERIES PAINT /////////////////////////
 
@@ -664,9 +664,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getSeriesPaint()
      */
     public void setSeriesPaint(Paint paint) {
-<span class="nc" id="L667">        this.seriesPaint = paint;</span>
-<span class="nc" id="L668">        fireChangeEvent();</span>
-<span class="nc" id="L669">    }</span>
+<span class="fc" id="L667">        this.seriesPaint = paint;</span>
+<span class="fc" id="L668">        fireChangeEvent();</span>
+<span class="fc" id="L669">    }</span>
 
     /**
      * Returns the paint for the specified series.
@@ -680,24 +680,24 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
     public Paint getSeriesPaint(int series) {
 
         // return the override, if there is one...
-<span class="nc bnc" id="L683" title="All 2 branches missed.">        if (this.seriesPaint != null) {</span>
+<span class="pc bpc" id="L683" title="1 of 2 branches missed.">        if (this.seriesPaint != null) {</span>
 <span class="nc" id="L684">            return this.seriesPaint;</span>
         }
 
         // otherwise look up the paint list
-<span class="nc" id="L688">        Paint result = this.seriesPaintList.getPaint(series);</span>
-<span class="nc bnc" id="L689" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L690">            DrawingSupplier supplier = getDrawingSupplier();</span>
-<span class="nc bnc" id="L691" title="All 2 branches missed.">            if (supplier != null) {</span>
-<span class="nc" id="L692">                Paint p = supplier.getNextPaint();</span>
-<span class="nc" id="L693">                this.seriesPaintList.setPaint(series, p);</span>
-<span class="nc" id="L694">                result = p;</span>
-<span class="nc" id="L695">            }</span>
+<span class="fc" id="L688">        Paint result = this.seriesPaintList.getPaint(series);</span>
+<span class="fc bfc" id="L689" title="All 2 branches covered.">        if (result == null) {</span>
+<span class="fc" id="L690">            DrawingSupplier supplier = getDrawingSupplier();</span>
+<span class="pc bpc" id="L691" title="1 of 2 branches missed.">            if (supplier != null) {</span>
+<span class="fc" id="L692">                Paint p = supplier.getNextPaint();</span>
+<span class="fc" id="L693">                this.seriesPaintList.setPaint(series, p);</span>
+<span class="fc" id="L694">                result = p;</span>
+<span class="fc" id="L695">            }</span>
             else {
 <span class="nc" id="L697">                result = this.baseSeriesPaint;</span>
             }
         }
-<span class="nc" id="L700">        return result;</span>
+<span class="fc" id="L700">        return result;</span>
 
     }
 
@@ -711,9 +711,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getSeriesPaint(int)
      */
     public void setSeriesPaint(int series, Paint paint) {
-<span class="nc" id="L714">        this.seriesPaintList.setPaint(series, paint);</span>
-<span class="nc" id="L715">        fireChangeEvent();</span>
-<span class="nc" id="L716">    }</span>
+<span class="fc" id="L714">        this.seriesPaintList.setPaint(series, paint);</span>
+<span class="fc" id="L715">        fireChangeEvent();</span>
+<span class="fc" id="L716">    }</span>
 
     /**
      * Returns the base series paint. This is used when no other paint is
@@ -735,10 +735,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getBaseSeriesPaint()
      */
     public void setBaseSeriesPaint(Paint paint) {
-<span class="nc" id="L738">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L739">        this.baseSeriesPaint = paint;</span>
-<span class="nc" id="L740">        fireChangeEvent();</span>
-<span class="nc" id="L741">    }</span>
+<span class="fc" id="L738">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L739">        this.baseSeriesPaint = paint;</span>
+<span class="fc" id="L740">        fireChangeEvent();</span>
+<span class="fc" id="L741">    }</span>
 
     //// SERIES OUTLINE PAINT ////////////////////////////
 
@@ -759,9 +759,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param paint  the paint ({@code null} permitted).
      */
     public void setSeriesOutlinePaint(Paint paint) {
-<span class="nc" id="L762">        this.seriesOutlinePaint = paint;</span>
-<span class="nc" id="L763">        fireChangeEvent();</span>
-<span class="nc" id="L764">    }</span>
+<span class="fc" id="L762">        this.seriesOutlinePaint = paint;</span>
+<span class="fc" id="L763">        fireChangeEvent();</span>
+<span class="fc" id="L764">    }</span>
 
     /**
      * Returns the paint for the specified series.
@@ -772,15 +772,15 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     public Paint getSeriesOutlinePaint(int series) {
         // return the override, if there is one...
-<span class="nc bnc" id="L775" title="All 2 branches missed.">        if (this.seriesOutlinePaint != null) {</span>
+<span class="pc bpc" id="L775" title="1 of 2 branches missed.">        if (this.seriesOutlinePaint != null) {</span>
 <span class="nc" id="L776">            return this.seriesOutlinePaint;</span>
         }
         // otherwise look up the paint list
-<span class="nc" id="L779">        Paint result = this.seriesOutlinePaintList.getPaint(series);</span>
-<span class="nc bnc" id="L780" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L781">            result = this.baseSeriesOutlinePaint;</span>
+<span class="fc" id="L779">        Paint result = this.seriesOutlinePaintList.getPaint(series);</span>
+<span class="pc bpc" id="L780" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L781">            result = this.baseSeriesOutlinePaint;</span>
         }
-<span class="nc" id="L783">        return result;</span>
+<span class="fc" id="L783">        return result;</span>
     }
 
     /**
@@ -791,9 +791,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param paint  the paint ({@code null} permitted).
      */
     public void setSeriesOutlinePaint(int series, Paint paint) {
-<span class="nc" id="L794">        this.seriesOutlinePaintList.setPaint(series, paint);</span>
-<span class="nc" id="L795">        fireChangeEvent();</span>
-<span class="nc" id="L796">    }</span>
+<span class="fc" id="L794">        this.seriesOutlinePaintList.setPaint(series, paint);</span>
+<span class="fc" id="L795">        fireChangeEvent();</span>
+<span class="fc" id="L796">    }</span>
 
     /**
      * Returns the base series paint. This is used when no other paint is
@@ -811,10 +811,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param paint  the paint ({@code null} not permitted).
      */
     public void setBaseSeriesOutlinePaint(Paint paint) {
-<span class="nc" id="L814">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L815">        this.baseSeriesOutlinePaint = paint;</span>
-<span class="nc" id="L816">        fireChangeEvent();</span>
-<span class="nc" id="L817">    }</span>
+<span class="fc" id="L814">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L815">        this.baseSeriesOutlinePaint = paint;</span>
+<span class="fc" id="L816">        fireChangeEvent();</span>
+<span class="fc" id="L817">    }</span>
 
     //// SERIES OUTLINE STROKE /////////////////////
 
@@ -835,9 +835,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param stroke  the stroke ({@code null} permitted).
      */
     public void setSeriesOutlineStroke(Stroke stroke) {
-<span class="nc" id="L838">        this.seriesOutlineStroke = stroke;</span>
-<span class="nc" id="L839">        fireChangeEvent();</span>
-<span class="nc" id="L840">    }</span>
+<span class="fc" id="L838">        this.seriesOutlineStroke = stroke;</span>
+<span class="fc" id="L839">        fireChangeEvent();</span>
+<span class="fc" id="L840">    }</span>
 
     /**
      * Returns the stroke for the specified series.
@@ -849,16 +849,16 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
     public Stroke getSeriesOutlineStroke(int series) {
 
         // return the override, if there is one...
-<span class="nc bnc" id="L852" title="All 2 branches missed.">        if (this.seriesOutlineStroke != null) {</span>
+<span class="pc bpc" id="L852" title="1 of 2 branches missed.">        if (this.seriesOutlineStroke != null) {</span>
 <span class="nc" id="L853">            return this.seriesOutlineStroke;</span>
         }
 
         // otherwise look up the paint list
-<span class="nc" id="L857">        Stroke result = this.seriesOutlineStrokeList.getStroke(series);</span>
-<span class="nc bnc" id="L858" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L859">            result = this.baseSeriesOutlineStroke;</span>
+<span class="fc" id="L857">        Stroke result = this.seriesOutlineStrokeList.getStroke(series);</span>
+<span class="pc bpc" id="L858" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L859">            result = this.baseSeriesOutlineStroke;</span>
         }
-<span class="nc" id="L861">        return result;</span>
+<span class="fc" id="L861">        return result;</span>
 
     }
 
@@ -870,9 +870,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param stroke  the stroke ({@code null} permitted).
      */
     public void setSeriesOutlineStroke(int series, Stroke stroke) {
-<span class="nc" id="L873">        this.seriesOutlineStrokeList.setStroke(series, stroke);</span>
-<span class="nc" id="L874">        fireChangeEvent();</span>
-<span class="nc" id="L875">    }</span>
+<span class="fc" id="L873">        this.seriesOutlineStrokeList.setStroke(series, stroke);</span>
+<span class="fc" id="L874">        fireChangeEvent();</span>
+<span class="fc" id="L875">    }</span>
 
     /**
      * Returns the base series stroke. This is used when no other stroke is
@@ -890,10 +890,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @param stroke  the stroke ({@code null} not permitted).
      */
     public void setBaseSeriesOutlineStroke(Stroke stroke) {
-<span class="nc" id="L893">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L894">        this.baseSeriesOutlineStroke = stroke;</span>
-<span class="nc" id="L895">        fireChangeEvent();</span>
-<span class="nc" id="L896">    }</span>
+<span class="fc" id="L893">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L894">        this.baseSeriesOutlineStroke = stroke;</span>
+<span class="fc" id="L895">        fireChangeEvent();</span>
+<span class="fc" id="L896">    }</span>
 
     /**
      * Returns the shape used for legend items.
@@ -903,7 +903,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setLegendItemShape(Shape)
      */
     public Shape getLegendItemShape() {
-<span class="nc" id="L906">        return this.legendItemShape;</span>
+<span class="fc" id="L906">        return this.legendItemShape;</span>
     }
 
     /**
@@ -915,10 +915,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getLegendItemShape()
      */
     public void setLegendItemShape(Shape shape) {
-<span class="nc" id="L918">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
-<span class="nc" id="L919">        this.legendItemShape = shape;</span>
-<span class="nc" id="L920">        fireChangeEvent();</span>
-<span class="nc" id="L921">    }</span>
+<span class="fc" id="L918">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
+<span class="fc" id="L919">        this.legendItemShape = shape;</span>
+<span class="fc" id="L920">        fireChangeEvent();</span>
+<span class="fc" id="L921">    }</span>
 
     /**
      * Returns the series label font.
@@ -928,7 +928,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setLabelFont(Font)
      */
     public Font getLabelFont() {
-<span class="nc" id="L931">        return this.labelFont;</span>
+<span class="fc" id="L931">        return this.labelFont;</span>
     }
 
     /**
@@ -940,10 +940,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getLabelFont()
      */
     public void setLabelFont(Font font) {
-<span class="nc" id="L943">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc" id="L944">        this.labelFont = font;</span>
-<span class="nc" id="L945">        fireChangeEvent();</span>
-<span class="nc" id="L946">    }</span>
+<span class="fc" id="L943">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="fc" id="L944">        this.labelFont = font;</span>
+<span class="fc" id="L945">        fireChangeEvent();</span>
+<span class="fc" id="L946">    }</span>
 
     /**
      * Returns the series label paint.
@@ -953,7 +953,7 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #setLabelPaint(Paint)
      */
     public Paint getLabelPaint() {
-<span class="nc" id="L956">        return this.labelPaint;</span>
+<span class="fc" id="L956">        return this.labelPaint;</span>
     }
 
     /**
@@ -965,10 +965,10 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getLabelPaint()
      */
     public void setLabelPaint(Paint paint) {
-<span class="nc" id="L968">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L969">        this.labelPaint = paint;</span>
-<span class="nc" id="L970">        fireChangeEvent();</span>
-<span class="nc" id="L971">    }</span>
+<span class="fc" id="L968">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L969">        this.labelPaint = paint;</span>
+<span class="fc" id="L970">        fireChangeEvent();</span>
+<span class="fc" id="L971">    }</span>
 
     /**
      * Returns the label generator.
@@ -990,9 +990,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getLabelGenerator()
      */
     public void setLabelGenerator(CategoryItemLabelGenerator generator) {
-<span class="nc" id="L993">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
-<span class="nc" id="L994">        this.labelGenerator = generator;</span>
-<span class="nc" id="L995">    }</span>
+<span class="fc" id="L993">        Args.nullNotPermitted(generator, &quot;generator&quot;);</span>
+<span class="fc" id="L994">        this.labelGenerator = generator;</span>
+<span class="fc" id="L995">    }</span>
 
     /**
      * Returns the tool tip generator for the plot.
@@ -1018,9 +1018,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @since 1.0.2
      */
     public void setToolTipGenerator(CategoryToolTipGenerator generator) {
-<span class="nc" id="L1021">        this.toolTipGenerator = generator;</span>
-<span class="nc" id="L1022">        fireChangeEvent();</span>
-<span class="nc" id="L1023">    }</span>
+<span class="fc" id="L1021">        this.toolTipGenerator = generator;</span>
+<span class="fc" id="L1022">        fireChangeEvent();</span>
+<span class="fc" id="L1023">    }</span>
 
     /**
      * Returns the URL generator for the plot.
@@ -1046,9 +1046,9 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @since 1.0.2
      */
     public void setURLGenerator(CategoryURLGenerator generator) {
-<span class="nc" id="L1049">        this.urlGenerator = generator;</span>
-<span class="nc" id="L1050">        fireChangeEvent();</span>
-<span class="nc" id="L1051">    }</span>
+<span class="fc" id="L1049">        this.urlGenerator = generator;</span>
+<span class="fc" id="L1050">        fireChangeEvent();</span>
+<span class="fc" id="L1051">    }</span>
 
     /**
      * Returns a collection of legend items for the spider web chart.
@@ -1057,40 +1057,40 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     @Override
     public LegendItemCollection getLegendItems() {
-<span class="nc" id="L1060">        LegendItemCollection result = new LegendItemCollection();</span>
-<span class="nc bnc" id="L1061" title="All 2 branches missed.">        if (getDataset() == null) {</span>
+<span class="fc" id="L1060">        LegendItemCollection result = new LegendItemCollection();</span>
+<span class="pc bpc" id="L1061" title="1 of 2 branches missed.">        if (getDataset() == null) {</span>
 <span class="nc" id="L1062">            return result;</span>
         }
-<span class="nc" id="L1064">        List keys = null;</span>
-<span class="nc bnc" id="L1065" title="All 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
-<span class="nc" id="L1066">            keys = this.dataset.getRowKeys();</span>
+<span class="fc" id="L1064">        List keys = null;</span>
+<span class="pc bpc" id="L1065" title="1 of 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="fc" id="L1066">            keys = this.dataset.getRowKeys();</span>
         }
 <span class="nc bnc" id="L1068" title="All 2 branches missed.">        else if (this.dataExtractOrder == TableOrder.BY_COLUMN) {</span>
 <span class="nc" id="L1069">            keys = this.dataset.getColumnKeys();</span>
         }
-<span class="nc bnc" id="L1071" title="All 2 branches missed.">        if (keys == null) {</span>
+<span class="pc bpc" id="L1071" title="1 of 2 branches missed.">        if (keys == null) {</span>
 <span class="nc" id="L1072">            return result;</span>
         }
 
-<span class="nc" id="L1075">        int series = 0;</span>
-<span class="nc" id="L1076">        Iterator iterator = keys.iterator();</span>
-<span class="nc" id="L1077">        Shape shape = getLegendItemShape();</span>
-<span class="nc bnc" id="L1078" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L1079">            Comparable key = (Comparable) iterator.next();</span>
-<span class="nc" id="L1080">            String label = key.toString();</span>
-<span class="nc" id="L1081">            String description = label;</span>
-<span class="nc" id="L1082">            Paint paint = getSeriesPaint(series);</span>
-<span class="nc" id="L1083">            Paint outlinePaint = getSeriesOutlinePaint(series);</span>
-<span class="nc" id="L1084">            Stroke stroke = getSeriesOutlineStroke(series);</span>
-<span class="nc" id="L1085">            LegendItem item = new LegendItem(label, description,</span>
+<span class="fc" id="L1075">        int series = 0;</span>
+<span class="fc" id="L1076">        Iterator iterator = keys.iterator();</span>
+<span class="fc" id="L1077">        Shape shape = getLegendItemShape();</span>
+<span class="fc bfc" id="L1078" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L1079">            Comparable key = (Comparable) iterator.next();</span>
+<span class="fc" id="L1080">            String label = key.toString();</span>
+<span class="fc" id="L1081">            String description = label;</span>
+<span class="fc" id="L1082">            Paint paint = getSeriesPaint(series);</span>
+<span class="fc" id="L1083">            Paint outlinePaint = getSeriesOutlinePaint(series);</span>
+<span class="fc" id="L1084">            Stroke stroke = getSeriesOutlineStroke(series);</span>
+<span class="fc" id="L1085">            LegendItem item = new LegendItem(label, description,</span>
                     null, null, shape, paint, stroke, outlinePaint);
-<span class="nc" id="L1087">            item.setDataset(getDataset());</span>
-<span class="nc" id="L1088">            item.setSeriesKey(key);</span>
-<span class="nc" id="L1089">            item.setSeriesIndex(series);</span>
-<span class="nc" id="L1090">            result.add(item);</span>
-<span class="nc" id="L1091">            series++;</span>
-<span class="nc" id="L1092">        }</span>
-<span class="nc" id="L1093">        return result;</span>
+<span class="fc" id="L1087">            item.setDataset(getDataset());</span>
+<span class="fc" id="L1088">            item.setSeriesKey(key);</span>
+<span class="fc" id="L1089">            item.setSeriesIndex(series);</span>
+<span class="fc" id="L1090">            result.add(item);</span>
+<span class="fc" id="L1091">            series++;</span>
+<span class="fc" id="L1092">        }</span>
+<span class="fc" id="L1093">        return result;</span>
     }
 
     /**
@@ -1105,12 +1105,12 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
     protected Point2D getWebPoint(Rectangle2D bounds,
                                   double angle, double length) {
 
-<span class="nc" id="L1108">        double angrad = Math.toRadians(angle);</span>
-<span class="nc" id="L1109">        double x = Math.cos(angrad) * length * bounds.getWidth() / 2;</span>
-<span class="nc" id="L1110">        double y = -Math.sin(angrad) * length * bounds.getHeight() / 2;</span>
+<span class="fc" id="L1108">        double angrad = Math.toRadians(angle);</span>
+<span class="fc" id="L1109">        double x = Math.cos(angrad) * length * bounds.getWidth() / 2;</span>
+<span class="fc" id="L1110">        double y = -Math.sin(angrad) * length * bounds.getHeight() / 2;</span>
 
-<span class="nc" id="L1112">        return new Point2D.Double(bounds.getX() + x + bounds.getWidth() / 2,</span>
-<span class="nc" id="L1113">                bounds.getY() + y + bounds.getHeight() / 2);</span>
+<span class="fc" id="L1112">        return new Point2D.Double(bounds.getX() + x + bounds.getWidth() / 2,</span>
+<span class="fc" id="L1113">                bounds.getY() + y + bounds.getHeight() / 2);</span>
     }
 
     /**
@@ -1128,30 +1128,30 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
             PlotState parentState, PlotRenderingInfo info) {
 
         // adjust for insets...
-<span class="nc" id="L1131">        RectangleInsets insets = getInsets();</span>
-<span class="nc" id="L1132">        insets.trim(area);</span>
+<span class="fc" id="L1131">        RectangleInsets insets = getInsets();</span>
+<span class="fc" id="L1132">        insets.trim(area);</span>
 
-<span class="nc bnc" id="L1134" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="pc bpc" id="L1134" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L1135">            info.setPlotArea(area);</span>
 <span class="nc" id="L1136">            info.setDataArea(area);</span>
         }
 
-<span class="nc" id="L1139">        drawBackground(g2, area);</span>
-<span class="nc" id="L1140">        drawOutline(g2, area);</span>
+<span class="fc" id="L1139">        drawBackground(g2, area);</span>
+<span class="fc" id="L1140">        drawOutline(g2, area);</span>
 
-<span class="nc" id="L1142">        Shape savedClip = g2.getClip();</span>
+<span class="fc" id="L1142">        Shape savedClip = g2.getClip();</span>
 
-<span class="nc" id="L1144">        g2.clip(area);</span>
-<span class="nc" id="L1145">        Composite originalComposite = g2.getComposite();</span>
-<span class="nc" id="L1146">        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
-<span class="nc" id="L1147">                getForegroundAlpha()));</span>
+<span class="fc" id="L1144">        g2.clip(area);</span>
+<span class="fc" id="L1145">        Composite originalComposite = g2.getComposite();</span>
+<span class="fc" id="L1146">        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
+<span class="fc" id="L1147">                getForegroundAlpha()));</span>
 
-<span class="nc bnc" id="L1149" title="All 2 branches missed.">        if (!DatasetUtils.isEmptyOrNull(this.dataset)) {</span>
+<span class="pc bpc" id="L1149" title="1 of 2 branches missed.">        if (!DatasetUtils.isEmptyOrNull(this.dataset)) {</span>
             int seriesCount, catCount;
 
-<span class="nc bnc" id="L1152" title="All 2 branches missed.">            if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
-<span class="nc" id="L1153">                seriesCount = this.dataset.getRowCount();</span>
-<span class="nc" id="L1154">                catCount = this.dataset.getColumnCount();</span>
+<span class="pc bpc" id="L1152" title="1 of 2 branches missed.">            if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="fc" id="L1153">                seriesCount = this.dataset.getRowCount();</span>
+<span class="fc" id="L1154">                catCount = this.dataset.getColumnCount();</span>
             }
             else {
 <span class="nc" id="L1157">                seriesCount = this.dataset.getColumnCount();</span>
@@ -1159,62 +1159,62 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
             }
 
             // ensure we have a maximum value to use on the axes
-<span class="nc bnc" id="L1162" title="All 2 branches missed.">            if (this.maxValue == DEFAULT_MAX_VALUE) {</span>
-<span class="nc" id="L1163">                calculateMaxValue(seriesCount, catCount);</span>
+<span class="pc bpc" id="L1162" title="1 of 2 branches missed.">            if (this.maxValue == DEFAULT_MAX_VALUE) {</span>
+<span class="fc" id="L1163">                calculateMaxValue(seriesCount, catCount);</span>
             }
 
             // Next, setup the plot area
 
             // adjust the plot area by the interior spacing value
 
-<span class="nc" id="L1170">            double gapHorizontal = area.getWidth() * getInteriorGap();</span>
-<span class="nc" id="L1171">            double gapVertical = area.getHeight() * getInteriorGap();</span>
+<span class="fc" id="L1170">            double gapHorizontal = area.getWidth() * getInteriorGap();</span>
+<span class="fc" id="L1171">            double gapVertical = area.getHeight() * getInteriorGap();</span>
 
-<span class="nc" id="L1173">            double X = area.getX() + gapHorizontal / 2;</span>
-<span class="nc" id="L1174">            double Y = area.getY() + gapVertical / 2;</span>
-<span class="nc" id="L1175">            double W = area.getWidth() - gapHorizontal;</span>
-<span class="nc" id="L1176">            double H = area.getHeight() - gapVertical;</span>
+<span class="fc" id="L1173">            double X = area.getX() + gapHorizontal / 2;</span>
+<span class="fc" id="L1174">            double Y = area.getY() + gapVertical / 2;</span>
+<span class="fc" id="L1175">            double W = area.getWidth() - gapHorizontal;</span>
+<span class="fc" id="L1176">            double H = area.getHeight() - gapVertical;</span>
 
-<span class="nc" id="L1178">            double headW = area.getWidth() * this.headPercent;</span>
-<span class="nc" id="L1179">            double headH = area.getHeight() * this.headPercent;</span>
+<span class="fc" id="L1178">            double headW = area.getWidth() * this.headPercent;</span>
+<span class="fc" id="L1179">            double headH = area.getHeight() * this.headPercent;</span>
 
             // make the chart area a square
-<span class="nc" id="L1182">            double min = Math.min(W, H) / 2;</span>
-<span class="nc" id="L1183">            X = (X + X + W) / 2 - min;</span>
-<span class="nc" id="L1184">            Y = (Y + Y + H) / 2 - min;</span>
-<span class="nc" id="L1185">            W = 2 * min;</span>
-<span class="nc" id="L1186">            H = 2 * min;</span>
+<span class="fc" id="L1182">            double min = Math.min(W, H) / 2;</span>
+<span class="fc" id="L1183">            X = (X + X + W) / 2 - min;</span>
+<span class="fc" id="L1184">            Y = (Y + Y + H) / 2 - min;</span>
+<span class="fc" id="L1185">            W = 2 * min;</span>
+<span class="fc" id="L1186">            H = 2 * min;</span>
 
-<span class="nc" id="L1188">            Point2D  centre = new Point2D.Double(X + W / 2, Y + H / 2);</span>
-<span class="nc" id="L1189">            Rectangle2D radarArea = new Rectangle2D.Double(X, Y, W, H);</span>
+<span class="fc" id="L1188">            Point2D  centre = new Point2D.Double(X + W / 2, Y + H / 2);</span>
+<span class="fc" id="L1189">            Rectangle2D radarArea = new Rectangle2D.Double(X, Y, W, H);</span>
 
             // draw the axis and category label
-<span class="nc bnc" id="L1192" title="All 2 branches missed.">            for (int cat = 0; cat &lt; catCount; cat++) {</span>
-<span class="nc" id="L1193">                double angle = getStartAngle()</span>
-<span class="nc" id="L1194">                        + (getDirection().getFactor() * cat * 360 / catCount);</span>
+<span class="fc bfc" id="L1192" title="All 2 branches covered.">            for (int cat = 0; cat &lt; catCount; cat++) {</span>
+<span class="fc" id="L1193">                double angle = getStartAngle()</span>
+<span class="fc" id="L1194">                        + (getDirection().getFactor() * cat * 360 / catCount);</span>
 
-<span class="nc" id="L1196">                Point2D endPoint = getWebPoint(radarArea, angle, 1);</span>
+<span class="fc" id="L1196">                Point2D endPoint = getWebPoint(radarArea, angle, 1);</span>
                                                      // 1 = end of axis
-<span class="nc" id="L1198">                Line2D  line = new Line2D.Double(centre, endPoint);</span>
-<span class="nc" id="L1199">                g2.setPaint(this.axisLinePaint);</span>
-<span class="nc" id="L1200">                g2.setStroke(this.axisLineStroke);</span>
-<span class="nc" id="L1201">                g2.draw(line);</span>
-<span class="nc" id="L1202">                drawLabel(g2, radarArea, 0.0, cat, angle, 360.0 / catCount);</span>
+<span class="fc" id="L1198">                Line2D  line = new Line2D.Double(centre, endPoint);</span>
+<span class="fc" id="L1199">                g2.setPaint(this.axisLinePaint);</span>
+<span class="fc" id="L1200">                g2.setStroke(this.axisLineStroke);</span>
+<span class="fc" id="L1201">                g2.draw(line);</span>
+<span class="fc" id="L1202">                drawLabel(g2, radarArea, 0.0, cat, angle, 360.0 / catCount);</span>
             }
 
             // Now actually plot each of the series polygons..
-<span class="nc bnc" id="L1206" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1207">                drawRadarPoly(g2, radarArea, centre, info, series, catCount,</span>
+<span class="fc bfc" id="L1206" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1207">                drawRadarPoly(g2, radarArea, centre, info, series, catCount,</span>
                         headH, headW);
             }
-<span class="nc" id="L1210">        }</span>
+<span class="fc" id="L1210">        }</span>
         else {
 <span class="nc" id="L1212">            drawNoDataMessage(g2, area);</span>
         }
-<span class="nc" id="L1214">        g2.setClip(savedClip);</span>
-<span class="nc" id="L1215">        g2.setComposite(originalComposite);</span>
-<span class="nc" id="L1216">        drawOutline(g2, area);</span>
-<span class="nc" id="L1217">    }</span>
+<span class="fc" id="L1214">        g2.setClip(savedClip);</span>
+<span class="fc" id="L1215">        g2.setComposite(originalComposite);</span>
+<span class="fc" id="L1216">        drawOutline(g2, area);</span>
+<span class="fc" id="L1217">    }</span>
 
     /**
      * loop through each of the series to get the maximum value
@@ -1227,18 +1227,18 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
         double v;
         Number nV;
 
-<span class="nc bnc" id="L1230" title="All 2 branches missed.">        for (int seriesIndex = 0; seriesIndex &lt; seriesCount; seriesIndex++) {</span>
-<span class="nc bnc" id="L1231" title="All 2 branches missed.">            for (int catIndex = 0; catIndex &lt; catCount; catIndex++) {</span>
-<span class="nc" id="L1232">                nV = getPlotValue(seriesIndex, catIndex);</span>
-<span class="nc bnc" id="L1233" title="All 2 branches missed.">                if (nV != null) {</span>
-<span class="nc" id="L1234">                    v = nV.doubleValue();</span>
-<span class="nc bnc" id="L1235" title="All 2 branches missed.">                    if (v &gt; this.maxValue) {</span>
-<span class="nc" id="L1236">                        this.maxValue = v;</span>
+<span class="fc bfc" id="L1230" title="All 2 branches covered.">        for (int seriesIndex = 0; seriesIndex &lt; seriesCount; seriesIndex++) {</span>
+<span class="fc bfc" id="L1231" title="All 2 branches covered.">            for (int catIndex = 0; catIndex &lt; catCount; catIndex++) {</span>
+<span class="fc" id="L1232">                nV = getPlotValue(seriesIndex, catIndex);</span>
+<span class="pc bpc" id="L1233" title="1 of 2 branches missed.">                if (nV != null) {</span>
+<span class="fc" id="L1234">                    v = nV.doubleValue();</span>
+<span class="fc bfc" id="L1235" title="All 2 branches covered.">                    if (v &gt; this.maxValue) {</span>
+<span class="fc" id="L1236">                        this.maxValue = v;</span>
                     }
                 }
             }
         }
-<span class="nc" id="L1241">    }</span>
+<span class="fc" id="L1241">    }</span>
 
     /**
      * Draws a radar plot polygon.
@@ -1259,27 +1259,27 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
                                  int series, int catCount,
                                  double headH, double headW) {
 
-<span class="nc" id="L1262">        Polygon polygon = new Polygon();</span>
+<span class="fc" id="L1262">        Polygon polygon = new Polygon();</span>
 
-<span class="nc" id="L1264">        EntityCollection entities = null;</span>
-<span class="nc bnc" id="L1265" title="All 2 branches missed.">        if (info != null) {</span>
+<span class="fc" id="L1264">        EntityCollection entities = null;</span>
+<span class="pc bpc" id="L1265" title="1 of 2 branches missed.">        if (info != null) {</span>
 <span class="nc" id="L1266">            entities = info.getOwner().getEntityCollection();</span>
         }
 
         // plot the data...
-<span class="nc bnc" id="L1270" title="All 2 branches missed.">        for (int cat = 0; cat &lt; catCount; cat++) {</span>
+<span class="fc bfc" id="L1270" title="All 2 branches covered.">        for (int cat = 0; cat &lt; catCount; cat++) {</span>
 
-<span class="nc" id="L1272">            Number dataValue = getPlotValue(series, cat);</span>
+<span class="fc" id="L1272">            Number dataValue = getPlotValue(series, cat);</span>
 
-<span class="nc bnc" id="L1274" title="All 2 branches missed.">            if (dataValue != null) {</span>
-<span class="nc" id="L1275">                double value = dataValue.doubleValue();</span>
+<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">            if (dataValue != null) {</span>
+<span class="fc" id="L1275">                double value = dataValue.doubleValue();</span>
 
-<span class="nc bnc" id="L1277" title="All 2 branches missed.">                if (value &gt;= 0) { // draw the polygon series...</span>
+<span class="pc bpc" id="L1277" title="1 of 2 branches missed.">                if (value &gt;= 0) { // draw the polygon series...</span>
 
                     // Finds our starting angle from the centre for this axis
 
-<span class="nc" id="L1281">                    double angle = getStartAngle()</span>
-<span class="nc" id="L1282">                        + (getDirection().getFactor() * cat * 360 / catCount);</span>
+<span class="fc" id="L1281">                    double angle = getStartAngle()</span>
+<span class="fc" id="L1282">                        + (getDirection().getFactor() * cat * 360 / catCount);</span>
 
                     // The following angle calc will ensure there isn't a top
                     // vertical axis - this may be useful if you don't want any
@@ -1292,26 +1292,26 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
                     // along the axis/angle identified above and add it to the
                     // polygon
 
-<span class="nc" id="L1295">                    Point2D point = getWebPoint(plotArea, angle,</span>
+<span class="fc" id="L1295">                    Point2D point = getWebPoint(plotArea, angle,</span>
                             value / this.maxValue);
-<span class="nc" id="L1297">                    polygon.addPoint((int) point.getX(), (int) point.getY());</span>
+<span class="fc" id="L1297">                    polygon.addPoint((int) point.getX(), (int) point.getY());</span>
 
                     // put an elipse at the point being plotted..
 
-<span class="nc" id="L1301">                    Paint paint = getSeriesPaint(series);</span>
-<span class="nc" id="L1302">                    Paint outlinePaint = getSeriesOutlinePaint(series);</span>
-<span class="nc" id="L1303">                    Stroke outlineStroke = getSeriesOutlineStroke(series);</span>
+<span class="fc" id="L1301">                    Paint paint = getSeriesPaint(series);</span>
+<span class="fc" id="L1302">                    Paint outlinePaint = getSeriesOutlinePaint(series);</span>
+<span class="fc" id="L1303">                    Stroke outlineStroke = getSeriesOutlineStroke(series);</span>
 
-<span class="nc" id="L1305">                    Ellipse2D head = new Ellipse2D.Double(point.getX()</span>
-<span class="nc" id="L1306">                            - headW / 2, point.getY() - headH / 2, headW,</span>
+<span class="fc" id="L1305">                    Ellipse2D head = new Ellipse2D.Double(point.getX()</span>
+<span class="fc" id="L1306">                            - headW / 2, point.getY() - headH / 2, headW,</span>
                             headH);
-<span class="nc" id="L1308">                    g2.setPaint(paint);</span>
-<span class="nc" id="L1309">                    g2.fill(head);</span>
-<span class="nc" id="L1310">                    g2.setStroke(outlineStroke);</span>
-<span class="nc" id="L1311">                    g2.setPaint(outlinePaint);</span>
-<span class="nc" id="L1312">                    g2.draw(head);</span>
+<span class="fc" id="L1308">                    g2.setPaint(paint);</span>
+<span class="fc" id="L1309">                    g2.fill(head);</span>
+<span class="fc" id="L1310">                    g2.setStroke(outlineStroke);</span>
+<span class="fc" id="L1311">                    g2.setPaint(outlinePaint);</span>
+<span class="fc" id="L1312">                    g2.draw(head);</span>
 
-<span class="nc bnc" id="L1314" title="All 2 branches missed.">                    if (entities != null) {</span>
+<span class="pc bpc" id="L1314" title="1 of 2 branches missed.">                    if (entities != null) {</span>
                         int row, col;
 <span class="nc bnc" id="L1316" title="All 2 branches missed.">                        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
 <span class="nc" id="L1317">                            row = series;</span>
@@ -1349,21 +1349,21 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
         }
         // Plot the polygon
 
-<span class="nc" id="L1352">        Paint paint = getSeriesPaint(series);</span>
-<span class="nc" id="L1353">        g2.setPaint(paint);</span>
-<span class="nc" id="L1354">        g2.setStroke(getSeriesOutlineStroke(series));</span>
-<span class="nc" id="L1355">        g2.draw(polygon);</span>
+<span class="fc" id="L1352">        Paint paint = getSeriesPaint(series);</span>
+<span class="fc" id="L1353">        g2.setPaint(paint);</span>
+<span class="fc" id="L1354">        g2.setStroke(getSeriesOutlineStroke(series));</span>
+<span class="fc" id="L1355">        g2.draw(polygon);</span>
 
         // Lastly, fill the web polygon if this is required
 
-<span class="nc bnc" id="L1359" title="All 2 branches missed.">        if (this.webFilled) {</span>
-<span class="nc" id="L1360">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
+<span class="pc bpc" id="L1359" title="1 of 2 branches missed.">        if (this.webFilled) {</span>
+<span class="fc" id="L1360">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
                     0.1f));
-<span class="nc" id="L1362">            g2.fill(polygon);</span>
-<span class="nc" id="L1363">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
-<span class="nc" id="L1364">                    getForegroundAlpha()));</span>
+<span class="fc" id="L1362">            g2.fill(polygon);</span>
+<span class="fc" id="L1363">            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
+<span class="fc" id="L1364">                    getForegroundAlpha()));</span>
         }
-<span class="nc" id="L1366">    }</span>
+<span class="fc" id="L1366">    }</span>
 
     /**
      * Returns the value to be plotted at the intersection of the
@@ -1380,14 +1380,14 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @see #getDataExtractOrder()
      */
     protected Number getPlotValue(int series, int cat) {
-<span class="nc" id="L1383">        Number value = null;</span>
-<span class="nc bnc" id="L1384" title="All 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
-<span class="nc" id="L1385">            value = this.dataset.getValue(series, cat);</span>
+<span class="fc" id="L1383">        Number value = null;</span>
+<span class="pc bpc" id="L1384" title="1 of 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="fc" id="L1385">            value = this.dataset.getValue(series, cat);</span>
         }
 <span class="nc bnc" id="L1387" title="All 2 branches missed.">        else if (this.dataExtractOrder == TableOrder.BY_COLUMN) {</span>
 <span class="nc" id="L1388">            value = this.dataset.getValue(cat, series);</span>
         }
-<span class="nc" id="L1390">        return value;</span>
+<span class="fc" id="L1390">        return value;</span>
     }
 
     /**
@@ -1402,35 +1402,35 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     protected void drawLabel(Graphics2D g2, Rectangle2D plotArea, double value,
                              int cat, double startAngle, double extent) {
-<span class="nc" id="L1405">        FontRenderContext frc = g2.getFontRenderContext();</span>
+<span class="fc" id="L1405">        FontRenderContext frc = g2.getFontRenderContext();</span>
 
         String label;
-<span class="nc bnc" id="L1408" title="All 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="pc bpc" id="L1408" title="1 of 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
             // if series are in rows, then the categories are the column keys
-<span class="nc" id="L1410">            label = this.labelGenerator.generateColumnLabel(this.dataset, cat);</span>
+<span class="fc" id="L1410">            label = this.labelGenerator.generateColumnLabel(this.dataset, cat);</span>
         }
         else {
             // if series are in columns, then the categories are the row keys
 <span class="nc" id="L1414">            label = this.labelGenerator.generateRowLabel(this.dataset, cat);</span>
         }
 
-<span class="nc" id="L1417">        Rectangle2D labelBounds = getLabelFont().getStringBounds(label, frc);</span>
-<span class="nc" id="L1418">        LineMetrics lm = getLabelFont().getLineMetrics(label, frc);</span>
-<span class="nc" id="L1419">        double ascent = lm.getAscent();</span>
+<span class="fc" id="L1417">        Rectangle2D labelBounds = getLabelFont().getStringBounds(label, frc);</span>
+<span class="fc" id="L1418">        LineMetrics lm = getLabelFont().getLineMetrics(label, frc);</span>
+<span class="fc" id="L1419">        double ascent = lm.getAscent();</span>
 
-<span class="nc" id="L1421">        Point2D labelLocation = calculateLabelLocation(labelBounds, ascent,</span>
+<span class="fc" id="L1421">        Point2D labelLocation = calculateLabelLocation(labelBounds, ascent,</span>
                 plotArea, startAngle);
 
-<span class="nc" id="L1424">        Composite saveComposite = g2.getComposite();</span>
+<span class="fc" id="L1424">        Composite saveComposite = g2.getComposite();</span>
 
-<span class="nc" id="L1426">        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
+<span class="fc" id="L1426">        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,</span>
                 1.0f));
-<span class="nc" id="L1428">        g2.setPaint(getLabelPaint());</span>
-<span class="nc" id="L1429">        g2.setFont(getLabelFont());</span>
-<span class="nc" id="L1430">        g2.drawString(label, (float) labelLocation.getX(),</span>
-<span class="nc" id="L1431">                (float) labelLocation.getY());</span>
-<span class="nc" id="L1432">        g2.setComposite(saveComposite);</span>
-<span class="nc" id="L1433">    }</span>
+<span class="fc" id="L1428">        g2.setPaint(getLabelPaint());</span>
+<span class="fc" id="L1429">        g2.setFont(getLabelFont());</span>
+<span class="fc" id="L1430">        g2.drawString(label, (float) labelLocation.getX(),</span>
+<span class="fc" id="L1431">                (float) labelLocation.getY());</span>
+<span class="fc" id="L1432">        g2.setComposite(saveComposite);</span>
+<span class="fc" id="L1433">    }</span>
 
     /**
      * Returns the location for a label
@@ -1447,30 +1447,30 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
                                              Rectangle2D plotArea,
                                              double startAngle)
     {
-<span class="nc" id="L1450">        Arc2D arc1 = new Arc2D.Double(plotArea, startAngle, 0, Arc2D.OPEN);</span>
-<span class="nc" id="L1451">        Point2D point1 = arc1.getEndPoint();</span>
+<span class="fc" id="L1450">        Arc2D arc1 = new Arc2D.Double(plotArea, startAngle, 0, Arc2D.OPEN);</span>
+<span class="fc" id="L1451">        Point2D point1 = arc1.getEndPoint();</span>
 
-<span class="nc" id="L1453">        double deltaX = -(point1.getX() - plotArea.getCenterX())</span>
+<span class="fc" id="L1453">        double deltaX = -(point1.getX() - plotArea.getCenterX())</span>
                         * this.axisLabelGap;
-<span class="nc" id="L1455">        double deltaY = -(point1.getY() - plotArea.getCenterY())</span>
+<span class="fc" id="L1455">        double deltaY = -(point1.getY() - plotArea.getCenterY())</span>
                         * this.axisLabelGap;
 
-<span class="nc" id="L1458">        double labelX = point1.getX() - deltaX;</span>
-<span class="nc" id="L1459">        double labelY = point1.getY() - deltaY;</span>
+<span class="fc" id="L1458">        double labelX = point1.getX() - deltaX;</span>
+<span class="fc" id="L1459">        double labelY = point1.getY() - deltaY;</span>
 
-<span class="nc bnc" id="L1461" title="All 2 branches missed.">        if (labelX &lt; plotArea.getCenterX()) {</span>
-<span class="nc" id="L1462">            labelX -= labelBounds.getWidth();</span>
+<span class="fc bfc" id="L1461" title="All 2 branches covered.">        if (labelX &lt; plotArea.getCenterX()) {</span>
+<span class="fc" id="L1462">            labelX -= labelBounds.getWidth();</span>
         }
 
-<span class="nc bnc" id="L1465" title="All 2 branches missed.">        if (labelX == plotArea.getCenterX()) {</span>
-<span class="nc" id="L1466">            labelX -= labelBounds.getWidth() / 2;</span>
+<span class="fc bfc" id="L1465" title="All 2 branches covered.">        if (labelX == plotArea.getCenterX()) {</span>
+<span class="fc" id="L1466">            labelX -= labelBounds.getWidth() / 2;</span>
         }
 
-<span class="nc bnc" id="L1469" title="All 2 branches missed.">        if (labelY &gt; plotArea.getCenterY()) {</span>
-<span class="nc" id="L1470">            labelY += ascent;</span>
+<span class="fc bfc" id="L1469" title="All 2 branches covered.">        if (labelY &gt; plotArea.getCenterY()) {</span>
+<span class="fc" id="L1470">            labelY += ascent;</span>
         }
 
-<span class="nc" id="L1473">        return new Point2D.Double(labelX, labelY);</span>
+<span class="fc" id="L1473">        return new Point2D.Double(labelX, labelY);</span>
     }
 
     /**
@@ -1482,99 +1482,99 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1485" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1485" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1486">            return true;</span>
         }
-<span class="nc bnc" id="L1488" title="All 2 branches missed.">        if (!(obj instanceof SpiderWebPlot)) {</span>
+<span class="pc bpc" id="L1488" title="1 of 2 branches missed.">        if (!(obj instanceof SpiderWebPlot)) {</span>
 <span class="nc" id="L1489">            return false;</span>
         }
-<span class="nc bnc" id="L1491" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L1491" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L1492">            return false;</span>
         }
-<span class="nc" id="L1494">        SpiderWebPlot that = (SpiderWebPlot) obj;</span>
-<span class="nc bnc" id="L1495" title="All 2 branches missed.">        if (!this.dataExtractOrder.equals(that.dataExtractOrder)) {</span>
-<span class="nc" id="L1496">            return false;</span>
+<span class="fc" id="L1494">        SpiderWebPlot that = (SpiderWebPlot) obj;</span>
+<span class="fc bfc" id="L1495" title="All 2 branches covered.">        if (!this.dataExtractOrder.equals(that.dataExtractOrder)) {</span>
+<span class="fc" id="L1496">            return false;</span>
         }
-<span class="nc bnc" id="L1498" title="All 2 branches missed.">        if (this.headPercent != that.headPercent) {</span>
-<span class="nc" id="L1499">            return false;</span>
+<span class="fc bfc" id="L1498" title="All 2 branches covered.">        if (this.headPercent != that.headPercent) {</span>
+<span class="fc" id="L1499">            return false;</span>
         }
-<span class="nc bnc" id="L1501" title="All 2 branches missed.">        if (this.interiorGap != that.interiorGap) {</span>
-<span class="nc" id="L1502">            return false;</span>
+<span class="fc bfc" id="L1501" title="All 2 branches covered.">        if (this.interiorGap != that.interiorGap) {</span>
+<span class="fc" id="L1502">            return false;</span>
         }
-<span class="nc bnc" id="L1504" title="All 2 branches missed.">        if (this.startAngle != that.startAngle) {</span>
-<span class="nc" id="L1505">            return false;</span>
+<span class="fc bfc" id="L1504" title="All 2 branches covered.">        if (this.startAngle != that.startAngle) {</span>
+<span class="fc" id="L1505">            return false;</span>
         }
-<span class="nc bnc" id="L1507" title="All 2 branches missed.">        if (!this.direction.equals(that.direction)) {</span>
-<span class="nc" id="L1508">            return false;</span>
+<span class="fc bfc" id="L1507" title="All 2 branches covered.">        if (!this.direction.equals(that.direction)) {</span>
+<span class="fc" id="L1508">            return false;</span>
         }
-<span class="nc bnc" id="L1510" title="All 2 branches missed.">        if (this.maxValue != that.maxValue) {</span>
-<span class="nc" id="L1511">            return false;</span>
+<span class="fc bfc" id="L1510" title="All 2 branches covered.">        if (this.maxValue != that.maxValue) {</span>
+<span class="fc" id="L1511">            return false;</span>
         }
-<span class="nc bnc" id="L1513" title="All 2 branches missed.">        if (this.webFilled != that.webFilled) {</span>
-<span class="nc" id="L1514">            return false;</span>
+<span class="fc bfc" id="L1513" title="All 2 branches covered.">        if (this.webFilled != that.webFilled) {</span>
+<span class="fc" id="L1514">            return false;</span>
         }
-<span class="nc bnc" id="L1516" title="All 2 branches missed.">        if (this.axisLabelGap != that.axisLabelGap) {</span>
-<span class="nc" id="L1517">            return false;</span>
+<span class="fc bfc" id="L1516" title="All 2 branches covered.">        if (this.axisLabelGap != that.axisLabelGap) {</span>
+<span class="fc" id="L1517">            return false;</span>
         }
-<span class="nc bnc" id="L1519" title="All 2 branches missed.">        if (!PaintUtils.equal(this.axisLinePaint, that.axisLinePaint)) {</span>
-<span class="nc" id="L1520">            return false;</span>
+<span class="fc bfc" id="L1519" title="All 2 branches covered.">        if (!PaintUtils.equal(this.axisLinePaint, that.axisLinePaint)) {</span>
+<span class="fc" id="L1520">            return false;</span>
         }
-<span class="nc bnc" id="L1522" title="All 2 branches missed.">        if (!this.axisLineStroke.equals(that.axisLineStroke)) {</span>
-<span class="nc" id="L1523">            return false;</span>
+<span class="fc bfc" id="L1522" title="All 2 branches covered.">        if (!this.axisLineStroke.equals(that.axisLineStroke)) {</span>
+<span class="fc" id="L1523">            return false;</span>
         }
-<span class="nc bnc" id="L1525" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendItemShape, that.legendItemShape)) {</span>
-<span class="nc" id="L1526">            return false;</span>
+<span class="fc bfc" id="L1525" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendItemShape, that.legendItemShape)) {</span>
+<span class="fc" id="L1526">            return false;</span>
         }
-<span class="nc bnc" id="L1528" title="All 2 branches missed.">        if (!PaintUtils.equal(this.seriesPaint, that.seriesPaint)) {</span>
-<span class="nc" id="L1529">            return false;</span>
+<span class="fc bfc" id="L1528" title="All 2 branches covered.">        if (!PaintUtils.equal(this.seriesPaint, that.seriesPaint)) {</span>
+<span class="fc" id="L1529">            return false;</span>
         }
-<span class="nc bnc" id="L1531" title="All 2 branches missed.">        if (!this.seriesPaintList.equals(that.seriesPaintList)) {</span>
-<span class="nc" id="L1532">            return false;</span>
+<span class="fc bfc" id="L1531" title="All 2 branches covered.">        if (!this.seriesPaintList.equals(that.seriesPaintList)) {</span>
+<span class="fc" id="L1532">            return false;</span>
         }
-<span class="nc bnc" id="L1534" title="All 2 branches missed.">        if (!PaintUtils.equal(this.baseSeriesPaint, that.baseSeriesPaint)) {</span>
-<span class="nc" id="L1535">            return false;</span>
+<span class="fc bfc" id="L1534" title="All 2 branches covered.">        if (!PaintUtils.equal(this.baseSeriesPaint, that.baseSeriesPaint)) {</span>
+<span class="fc" id="L1535">            return false;</span>
         }
-<span class="nc bnc" id="L1537" title="All 2 branches missed.">        if (!PaintUtils.equal(this.seriesOutlinePaint,</span>
+<span class="fc bfc" id="L1537" title="All 2 branches covered.">        if (!PaintUtils.equal(this.seriesOutlinePaint,</span>
                 that.seriesOutlinePaint)) {
-<span class="nc" id="L1539">            return false;</span>
+<span class="fc" id="L1539">            return false;</span>
         }
-<span class="nc bnc" id="L1541" title="All 2 branches missed.">        if (!this.seriesOutlinePaintList.equals(that.seriesOutlinePaintList)) {</span>
-<span class="nc" id="L1542">            return false;</span>
+<span class="fc bfc" id="L1541" title="All 2 branches covered.">        if (!this.seriesOutlinePaintList.equals(that.seriesOutlinePaintList)) {</span>
+<span class="fc" id="L1542">            return false;</span>
         }
-<span class="nc bnc" id="L1544" title="All 2 branches missed.">        if (!PaintUtils.equal(this.baseSeriesOutlinePaint,</span>
+<span class="fc bfc" id="L1544" title="All 2 branches covered.">        if (!PaintUtils.equal(this.baseSeriesOutlinePaint,</span>
                 that.baseSeriesOutlinePaint)) {
-<span class="nc" id="L1546">            return false;</span>
+<span class="fc" id="L1546">            return false;</span>
         }
-<span class="nc bnc" id="L1548" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.seriesOutlineStroke,</span>
+<span class="fc bfc" id="L1548" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.seriesOutlineStroke,</span>
                 that.seriesOutlineStroke)) {
-<span class="nc" id="L1550">            return false;</span>
+<span class="fc" id="L1550">            return false;</span>
         }
-<span class="nc bnc" id="L1552" title="All 2 branches missed.">        if (!this.seriesOutlineStrokeList.equals(</span>
+<span class="fc bfc" id="L1552" title="All 2 branches covered.">        if (!this.seriesOutlineStrokeList.equals(</span>
                 that.seriesOutlineStrokeList)) {
-<span class="nc" id="L1554">            return false;</span>
+<span class="fc" id="L1554">            return false;</span>
         }
-<span class="nc bnc" id="L1556" title="All 2 branches missed.">        if (!this.baseSeriesOutlineStroke.equals(</span>
+<span class="fc bfc" id="L1556" title="All 2 branches covered.">        if (!this.baseSeriesOutlineStroke.equals(</span>
                 that.baseSeriesOutlineStroke)) {
-<span class="nc" id="L1558">            return false;</span>
+<span class="fc" id="L1558">            return false;</span>
         }
-<span class="nc bnc" id="L1560" title="All 2 branches missed.">        if (!this.labelFont.equals(that.labelFont)) {</span>
-<span class="nc" id="L1561">            return false;</span>
+<span class="fc bfc" id="L1560" title="All 2 branches covered.">        if (!this.labelFont.equals(that.labelFont)) {</span>
+<span class="fc" id="L1561">            return false;</span>
         }
-<span class="nc bnc" id="L1563" title="All 2 branches missed.">        if (!PaintUtils.equal(this.labelPaint, that.labelPaint)) {</span>
-<span class="nc" id="L1564">            return false;</span>
+<span class="fc bfc" id="L1563" title="All 2 branches covered.">        if (!PaintUtils.equal(this.labelPaint, that.labelPaint)) {</span>
+<span class="fc" id="L1564">            return false;</span>
         }
-<span class="nc bnc" id="L1566" title="All 2 branches missed.">        if (!this.labelGenerator.equals(that.labelGenerator)) {</span>
-<span class="nc" id="L1567">            return false;</span>
+<span class="fc bfc" id="L1566" title="All 2 branches covered.">        if (!this.labelGenerator.equals(that.labelGenerator)) {</span>
+<span class="fc" id="L1567">            return false;</span>
         }
-<span class="nc bnc" id="L1569" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.toolTipGenerator,</span>
+<span class="fc bfc" id="L1569" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.toolTipGenerator,</span>
                 that.toolTipGenerator)) {
-<span class="nc" id="L1571">            return false;</span>
+<span class="fc" id="L1571">            return false;</span>
         }
-<span class="nc bnc" id="L1573" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.urlGenerator,</span>
+<span class="fc bfc" id="L1573" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.urlGenerator,</span>
                 that.urlGenerator)) {
-<span class="nc" id="L1575">            return false;</span>
+<span class="fc" id="L1575">            return false;</span>
         }
-<span class="nc" id="L1577">        return true;</span>
+<span class="fc" id="L1577">        return true;</span>
     }
 
     /**
@@ -1587,14 +1587,14 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1590">        SpiderWebPlot clone = (SpiderWebPlot) super.clone();</span>
-<span class="nc" id="L1591">        clone.legendItemShape = ShapeUtils.clone(this.legendItemShape);</span>
-<span class="nc" id="L1592">        clone.seriesPaintList = (PaintList) this.seriesPaintList.clone();</span>
-<span class="nc" id="L1593">        clone.seriesOutlinePaintList</span>
-<span class="nc" id="L1594">                = (PaintList) this.seriesOutlinePaintList.clone();</span>
-<span class="nc" id="L1595">        clone.seriesOutlineStrokeList</span>
-<span class="nc" id="L1596">                = (StrokeList) this.seriesOutlineStrokeList.clone();</span>
-<span class="nc" id="L1597">        return clone;</span>
+<span class="fc" id="L1590">        SpiderWebPlot clone = (SpiderWebPlot) super.clone();</span>
+<span class="fc" id="L1591">        clone.legendItemShape = ShapeUtils.clone(this.legendItemShape);</span>
+<span class="fc" id="L1592">        clone.seriesPaintList = (PaintList) this.seriesPaintList.clone();</span>
+<span class="fc" id="L1593">        clone.seriesOutlinePaintList</span>
+<span class="fc" id="L1594">                = (PaintList) this.seriesOutlinePaintList.clone();</span>
+<span class="fc" id="L1595">        clone.seriesOutlineStrokeList</span>
+<span class="fc" id="L1596">                = (StrokeList) this.seriesOutlineStrokeList.clone();</span>
+<span class="fc" id="L1597">        return clone;</span>
     }
 
     /**
@@ -1605,19 +1605,19 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1608">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1608">        stream.defaultWriteObject();</span>
 
-<span class="nc" id="L1610">        SerialUtils.writeShape(this.legendItemShape, stream);</span>
-<span class="nc" id="L1611">        SerialUtils.writePaint(this.seriesPaint, stream);</span>
-<span class="nc" id="L1612">        SerialUtils.writePaint(this.baseSeriesPaint, stream);</span>
-<span class="nc" id="L1613">        SerialUtils.writePaint(this.seriesOutlinePaint, stream);</span>
-<span class="nc" id="L1614">        SerialUtils.writePaint(this.baseSeriesOutlinePaint, stream);</span>
-<span class="nc" id="L1615">        SerialUtils.writeStroke(this.seriesOutlineStroke, stream);</span>
-<span class="nc" id="L1616">        SerialUtils.writeStroke(this.baseSeriesOutlineStroke, stream);</span>
-<span class="nc" id="L1617">        SerialUtils.writePaint(this.labelPaint, stream);</span>
-<span class="nc" id="L1618">        SerialUtils.writePaint(this.axisLinePaint, stream);</span>
-<span class="nc" id="L1619">        SerialUtils.writeStroke(this.axisLineStroke, stream);</span>
-<span class="nc" id="L1620">    }</span>
+<span class="fc" id="L1610">        SerialUtils.writeShape(this.legendItemShape, stream);</span>
+<span class="fc" id="L1611">        SerialUtils.writePaint(this.seriesPaint, stream);</span>
+<span class="fc" id="L1612">        SerialUtils.writePaint(this.baseSeriesPaint, stream);</span>
+<span class="fc" id="L1613">        SerialUtils.writePaint(this.seriesOutlinePaint, stream);</span>
+<span class="fc" id="L1614">        SerialUtils.writePaint(this.baseSeriesOutlinePaint, stream);</span>
+<span class="fc" id="L1615">        SerialUtils.writeStroke(this.seriesOutlineStroke, stream);</span>
+<span class="fc" id="L1616">        SerialUtils.writeStroke(this.baseSeriesOutlineStroke, stream);</span>
+<span class="fc" id="L1617">        SerialUtils.writePaint(this.labelPaint, stream);</span>
+<span class="fc" id="L1618">        SerialUtils.writePaint(this.axisLinePaint, stream);</span>
+<span class="fc" id="L1619">        SerialUtils.writeStroke(this.axisLineStroke, stream);</span>
+<span class="fc" id="L1620">    }</span>
 
     /**
      * Provides serialization support.
@@ -1629,22 +1629,22 @@ public class SpiderWebPlot extends Plot implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream) throws IOException,
             ClassNotFoundException {
-<span class="nc" id="L1632">        stream.defaultReadObject();</span>
+<span class="fc" id="L1632">        stream.defaultReadObject();</span>
 
-<span class="nc" id="L1634">        this.legendItemShape = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L1635">        this.seriesPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1636">        this.baseSeriesPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1637">        this.seriesOutlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1638">        this.baseSeriesOutlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1639">        this.seriesOutlineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1640">        this.baseSeriesOutlineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L1641">        this.labelPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1642">        this.axisLinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1643">        this.axisLineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc bnc" id="L1644" title="All 2 branches missed.">        if (this.dataset != null) {</span>
-<span class="nc" id="L1645">            this.dataset.addChangeListener(this);</span>
+<span class="fc" id="L1634">        this.legendItemShape = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L1635">        this.seriesPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1636">        this.baseSeriesPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1637">        this.seriesOutlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1638">        this.baseSeriesOutlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1639">        this.seriesOutlineStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1640">        this.baseSeriesOutlineStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L1641">        this.labelPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1642">        this.axisLinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1643">        this.axisLineStroke = SerialUtils.readStroke(stream);</span>
+<span class="pc bpc" id="L1644" title="1 of 2 branches missed.">        if (this.dataset != null) {</span>
+<span class="fc" id="L1645">            this.dataset.addChangeListener(this);</span>
         }
-<span class="nc" id="L1647">    }</span>
+<span class="fc" id="L1647">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

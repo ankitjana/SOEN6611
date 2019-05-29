@@ -78,10 +78,10 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      * Creates a new {@code DefaultXYZDataset} instance, initially
      * containing no data.
      */
-<span class="nc" id="L81">    public DefaultXYZDataset() {</span>
-<span class="nc" id="L82">        this.seriesKeys = new java.util.ArrayList();</span>
-<span class="nc" id="L83">        this.seriesList = new java.util.ArrayList();</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L81">    public DefaultXYZDataset() {</span>
+<span class="fc" id="L82">        this.seriesKeys = new java.util.ArrayList();</span>
+<span class="fc" id="L83">        this.seriesList = new java.util.ArrayList();</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Returns the number of series in the dataset.
@@ -90,7 +90,7 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L93">        return this.seriesList.size();</span>
+<span class="fc" id="L93">        return this.seriesList.size();</span>
     }
 
     /**
@@ -106,10 +106,10 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public Comparable getSeriesKey(int series) {
-<span class="nc bnc" id="L109" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L110">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
+<span class="fc bfc" id="L109" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L110">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
-<span class="nc" id="L112">        return (Comparable) this.seriesKeys.get(series);</span>
+<span class="fc" id="L112">        return (Comparable) this.seriesKeys.get(series);</span>
     }
 
     /**
@@ -122,7 +122,7 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public int indexOf(Comparable seriesKey) {
-<span class="nc" id="L125">        return this.seriesKeys.indexOf(seriesKey);</span>
+<span class="fc" id="L125">        return this.seriesKeys.indexOf(seriesKey);</span>
     }
 
     /**
@@ -150,11 +150,11 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public int getItemCount(int series) {
-<span class="nc bnc" id="L153" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="pc bpc" id="L153" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
 <span class="nc" id="L154">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
-<span class="nc" id="L156">        double[][] seriesArray = (double[][]) this.seriesList.get(series);</span>
-<span class="nc" id="L157">        return seriesArray[0].length;</span>
+<span class="fc" id="L156">        double[][] seriesArray = (double[][]) this.seriesList.get(series);</span>
+<span class="fc" id="L157">        return seriesArray[0].length;</span>
     }
 
     /**
@@ -176,8 +176,8 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public double getXValue(int series, int item) {
-<span class="nc" id="L179">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
-<span class="nc" id="L180">        return seriesData[0][item];</span>
+<span class="fc" id="L179">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
+<span class="fc" id="L180">        return seriesData[0][item];</span>
     }
 
     /**
@@ -221,8 +221,8 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public double getYValue(int series, int item) {
-<span class="nc" id="L224">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
-<span class="nc" id="L225">        return seriesData[1][item];</span>
+<span class="fc" id="L224">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
+<span class="fc" id="L225">        return seriesData[1][item];</span>
     }
 
     /**
@@ -266,8 +266,8 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public double getZValue(int series, int item) {
-<span class="nc" id="L269">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
-<span class="nc" id="L270">        return seriesData[2][item];</span>
+<span class="fc" id="L269">        double[][] seriesData = (double[][]) this.seriesList.get(series);</span>
+<span class="fc" id="L270">        return seriesData[2][item];</span>
     }
 
     /**
@@ -304,33 +304,33 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      *     z-values).
      */
     public void addSeries(Comparable seriesKey, double[][] data) {
-<span class="nc bnc" id="L307" title="All 2 branches missed.">        if (seriesKey == null) {</span>
-<span class="nc" id="L308">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (seriesKey == null) {</span>
+<span class="fc" id="L308">            throw new IllegalArgumentException(</span>
                     &quot;The 'seriesKey' cannot be null.&quot;);
         }
-<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (data == null) {</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (data == null) {</span>
 <span class="nc" id="L312">            throw new IllegalArgumentException(&quot;The 'data' is null.&quot;);</span>
         }
-<span class="nc bnc" id="L314" title="All 2 branches missed.">        if (data.length != 3) {</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if (data.length != 3) {</span>
 <span class="nc" id="L315">            throw new IllegalArgumentException(</span>
                     &quot;The 'data' array must have length == 3.&quot;);
         }
-<span class="nc bnc" id="L318" title="All 4 branches missed.">        if (data[0].length != data[1].length</span>
+<span class="pc bpc" id="L318" title="2 of 4 branches missed.">        if (data[0].length != data[1].length</span>
                 || data[0].length != data[2].length) {
 <span class="nc" id="L320">            throw new IllegalArgumentException(&quot;The 'data' array must contain &quot;</span>
                     + &quot;three arrays all having the same length.&quot;);
         }
-<span class="nc" id="L323">        int seriesIndex = indexOf(seriesKey);</span>
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (seriesIndex == -1) {  // add a new series</span>
-<span class="nc" id="L325">            this.seriesKeys.add(seriesKey);</span>
-<span class="nc" id="L326">            this.seriesList.add(data);</span>
+<span class="fc" id="L323">        int seriesIndex = indexOf(seriesKey);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (seriesIndex == -1) {  // add a new series</span>
+<span class="fc" id="L325">            this.seriesKeys.add(seriesKey);</span>
+<span class="fc" id="L326">            this.seriesList.add(data);</span>
         }
         else {  // replace an existing series
-<span class="nc" id="L329">            this.seriesList.remove(seriesIndex);</span>
-<span class="nc" id="L330">            this.seriesList.add(seriesIndex, data);</span>
+<span class="fc" id="L329">            this.seriesList.remove(seriesIndex);</span>
+<span class="fc" id="L330">            this.seriesList.add(seriesIndex, data);</span>
         }
-<span class="nc" id="L332">        notifyListeners(new DatasetChangeEvent(this, this));</span>
-<span class="nc" id="L333">    }</span>
+<span class="fc" id="L332">        notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L333">    }</span>
 
     /**
      * Removes a series from the dataset, then sends a
@@ -340,13 +340,13 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      *
      */
     public void removeSeries(Comparable seriesKey) {
-<span class="nc" id="L343">        int seriesIndex = indexOf(seriesKey);</span>
-<span class="nc bnc" id="L344" title="All 2 branches missed.">        if (seriesIndex &gt;= 0) {</span>
-<span class="nc" id="L345">            this.seriesKeys.remove(seriesIndex);</span>
-<span class="nc" id="L346">            this.seriesList.remove(seriesIndex);</span>
-<span class="nc" id="L347">            notifyListeners(new DatasetChangeEvent(this, this));</span>
+<span class="fc" id="L343">        int seriesIndex = indexOf(seriesKey);</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (seriesIndex &gt;= 0) {</span>
+<span class="fc" id="L345">            this.seriesKeys.remove(seriesIndex);</span>
+<span class="fc" id="L346">            this.seriesList.remove(seriesIndex);</span>
+<span class="fc" id="L347">            notifyListeners(new DatasetChangeEvent(this, this));</span>
         }
-<span class="nc" id="L349">    }</span>
+<span class="fc" id="L349">    }</span>
 
     /**
      * Tests this {@code DefaultXYZDataset} instance for equality with an
@@ -364,36 +364,36 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L367" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L368">            return true;</span>
         }
-<span class="nc bnc" id="L370" title="All 2 branches missed.">        if (!(obj instanceof DefaultXYZDataset)) {</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultXYZDataset)) {</span>
 <span class="nc" id="L371">            return false;</span>
         }
-<span class="nc" id="L373">        DefaultXYZDataset that = (DefaultXYZDataset) obj;</span>
-<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (!this.seriesKeys.equals(that.seriesKeys)) {</span>
-<span class="nc" id="L375">            return false;</span>
+<span class="fc" id="L373">        DefaultXYZDataset that = (DefaultXYZDataset) obj;</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">        if (!this.seriesKeys.equals(that.seriesKeys)) {</span>
+<span class="fc" id="L375">            return false;</span>
         }
-<span class="nc bnc" id="L377" title="All 2 branches missed.">        for (int i = 0; i &lt; this.seriesList.size(); i++) {</span>
-<span class="nc" id="L378">            double[][] d1 = (double[][]) this.seriesList.get(i);</span>
-<span class="nc" id="L379">            double[][] d2 = (double[][]) that.seriesList.get(i);</span>
-<span class="nc" id="L380">            double[] d1x = d1[0];</span>
-<span class="nc" id="L381">            double[] d2x = d2[0];</span>
-<span class="nc bnc" id="L382" title="All 2 branches missed.">            if (!Arrays.equals(d1x, d2x)) {</span>
-<span class="nc" id="L383">                return false;</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">        for (int i = 0; i &lt; this.seriesList.size(); i++) {</span>
+<span class="fc" id="L378">            double[][] d1 = (double[][]) this.seriesList.get(i);</span>
+<span class="fc" id="L379">            double[][] d2 = (double[][]) that.seriesList.get(i);</span>
+<span class="fc" id="L380">            double[] d1x = d1[0];</span>
+<span class="fc" id="L381">            double[] d2x = d2[0];</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">            if (!Arrays.equals(d1x, d2x)) {</span>
+<span class="fc" id="L383">                return false;</span>
             }
-<span class="nc" id="L385">            double[] d1y = d1[1];</span>
-<span class="nc" id="L386">            double[] d2y = d2[1];</span>
-<span class="nc bnc" id="L387" title="All 2 branches missed.">            if (!Arrays.equals(d1y, d2y)) {</span>
+<span class="fc" id="L385">            double[] d1y = d1[1];</span>
+<span class="fc" id="L386">            double[] d2y = d2[1];</span>
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">            if (!Arrays.equals(d1y, d2y)) {</span>
 <span class="nc" id="L388">                return false;</span>
             }
-<span class="nc" id="L390">            double[] d1z = d1[2];</span>
-<span class="nc" id="L391">            double[] d2z = d2[2];</span>
-<span class="nc bnc" id="L392" title="All 2 branches missed.">            if (!Arrays.equals(d1z, d2z)) {</span>
+<span class="fc" id="L390">            double[] d1z = d1[2];</span>
+<span class="fc" id="L391">            double[] d2z = d2[2];</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">            if (!Arrays.equals(d1z, d2z)) {</span>
 <span class="nc" id="L393">                return false;</span>
             }
         }
-<span class="nc" id="L396">        return true;</span>
+<span class="fc" id="L396">        return true;</span>
     }
 
     /**
@@ -420,24 +420,24 @@ public class DefaultXYZDataset extends AbstractXYZDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L423">        DefaultXYZDataset clone = (DefaultXYZDataset) super.clone();</span>
-<span class="nc" id="L424">        clone.seriesKeys = new java.util.ArrayList(this.seriesKeys);</span>
-<span class="nc" id="L425">        clone.seriesList = new ArrayList(this.seriesList.size());</span>
-<span class="nc bnc" id="L426" title="All 2 branches missed.">        for (int i = 0; i &lt; this.seriesList.size(); i++) {</span>
-<span class="nc" id="L427">            double[][] data = (double[][]) this.seriesList.get(i);</span>
-<span class="nc" id="L428">            double[] x = data[0];</span>
-<span class="nc" id="L429">            double[] y = data[1];</span>
-<span class="nc" id="L430">            double[] z = data[2];</span>
-<span class="nc" id="L431">            double[] xx = new double[x.length];</span>
-<span class="nc" id="L432">            double[] yy = new double[y.length];</span>
-<span class="nc" id="L433">            double[] zz = new double[z.length];</span>
-<span class="nc" id="L434">            System.arraycopy(x, 0, xx, 0, x.length);</span>
-<span class="nc" id="L435">            System.arraycopy(y, 0, yy, 0, y.length);</span>
-<span class="nc" id="L436">            System.arraycopy(z, 0, zz, 0, z.length);</span>
-<span class="nc" id="L437">            clone.seriesList.add(i, new double[][] {xx, yy, zz});</span>
+<span class="fc" id="L423">        DefaultXYZDataset clone = (DefaultXYZDataset) super.clone();</span>
+<span class="fc" id="L424">        clone.seriesKeys = new java.util.ArrayList(this.seriesKeys);</span>
+<span class="fc" id="L425">        clone.seriesList = new ArrayList(this.seriesList.size());</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        for (int i = 0; i &lt; this.seriesList.size(); i++) {</span>
+<span class="fc" id="L427">            double[][] data = (double[][]) this.seriesList.get(i);</span>
+<span class="fc" id="L428">            double[] x = data[0];</span>
+<span class="fc" id="L429">            double[] y = data[1];</span>
+<span class="fc" id="L430">            double[] z = data[2];</span>
+<span class="fc" id="L431">            double[] xx = new double[x.length];</span>
+<span class="fc" id="L432">            double[] yy = new double[y.length];</span>
+<span class="fc" id="L433">            double[] zz = new double[z.length];</span>
+<span class="fc" id="L434">            System.arraycopy(x, 0, xx, 0, x.length);</span>
+<span class="fc" id="L435">            System.arraycopy(y, 0, yy, 0, y.length);</span>
+<span class="fc" id="L436">            System.arraycopy(z, 0, zz, 0, z.length);</span>
+<span class="fc" id="L437">            clone.seriesList.add(i, new double[][] {xx, yy, zz});</span>
         }
-<span class="nc" id="L439">        return clone;</span>
+<span class="fc" id="L439">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -103,8 +103,8 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * Creates a new {@code StandardDialRange} instance.
      */
     public StandardDialRange() {
-<span class="nc" id="L106">        this(0.0, 100.0, Color.WHITE);</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L106">        this(0.0, 100.0, Color.WHITE);</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Creates a new {@code StandardDialRange} instance.
@@ -113,15 +113,15 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * @param upper  the upper bound.
      * @param paint  the paint ({@code null} not permitted).
      */
-<span class="nc" id="L116">    public StandardDialRange(double lower, double upper, Paint paint) {</span>
-<span class="nc" id="L117">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L118">        this.scaleIndex = 0;</span>
-<span class="nc" id="L119">        this.lowerBound = lower;</span>
-<span class="nc" id="L120">        this.upperBound = upper;</span>
-<span class="nc" id="L121">        this.innerRadius = 0.48;</span>
-<span class="nc" id="L122">        this.outerRadius = 0.52;</span>
-<span class="nc" id="L123">        this.paint = paint;</span>
-<span class="nc" id="L124">    }</span>
+<span class="fc" id="L116">    public StandardDialRange(double lower, double upper, Paint paint) {</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L118">        this.scaleIndex = 0;</span>
+<span class="fc" id="L119">        this.lowerBound = lower;</span>
+<span class="fc" id="L120">        this.upperBound = upper;</span>
+<span class="fc" id="L121">        this.innerRadius = 0.48;</span>
+<span class="fc" id="L122">        this.outerRadius = 0.52;</span>
+<span class="fc" id="L123">        this.paint = paint;</span>
+<span class="fc" id="L124">    }</span>
 
     /**
      * Returns the scale index.
@@ -167,13 +167,13 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * @see #getLowerBound()
      */
     public void setLowerBound(double bound) {
-<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (bound &gt;= this.upperBound) {</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (bound &gt;= this.upperBound) {</span>
 <span class="nc" id="L171">            throw new IllegalArgumentException(</span>
                     &quot;Lower bound must be less than upper bound.&quot;);
         }
-<span class="nc" id="L174">        this.lowerBound = bound;</span>
-<span class="nc" id="L175">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L176">    }</span>
+<span class="fc" id="L174">        this.lowerBound = bound;</span>
+<span class="fc" id="L175">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L176">    }</span>
 
     /**
      * Returns the upper bound of the dial range.
@@ -195,13 +195,13 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * @see #getUpperBound()
      */
     public void setUpperBound(double bound) {
-<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (bound &lt;= this.lowerBound) {</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (bound &lt;= this.lowerBound) {</span>
 <span class="nc" id="L199">            throw new IllegalArgumentException(</span>
                     &quot;Lower bound must be less than upper bound.&quot;);
         }
-<span class="nc" id="L202">        this.upperBound = bound;</span>
-<span class="nc" id="L203">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L204">    }</span>
+<span class="fc" id="L202">        this.upperBound = bound;</span>
+<span class="fc" id="L203">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Sets the bounds for the range and sends a {@link DialLayerChangeEvent}
@@ -240,10 +240,10 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * @see #getPaint()
      */
     public void setPaint(Paint paint) {
-<span class="nc" id="L243">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L244">        this.paint = paint;</span>
-<span class="nc" id="L245">        notifyListeners(new DialLayerChangeEvent(this));</span>
-<span class="nc" id="L246">    }</span>
+<span class="fc" id="L243">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L244">        this.paint = paint;</span>
+<span class="fc" id="L245">        notifyListeners(new DialLayerChangeEvent(this));</span>
+<span class="fc" id="L246">    }</span>
 
     /**
      * Returns the inner radius.
@@ -349,32 +349,32 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L353">            return true;</span>
         }
-<span class="nc bnc" id="L355" title="All 2 branches missed.">        if (!(obj instanceof StandardDialRange)) {</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        if (!(obj instanceof StandardDialRange)) {</span>
 <span class="nc" id="L356">            return false;</span>
         }
-<span class="nc" id="L358">        StandardDialRange that = (StandardDialRange) obj;</span>
-<span class="nc bnc" id="L359" title="All 2 branches missed.">        if (this.scaleIndex != that.scaleIndex) {</span>
+<span class="fc" id="L358">        StandardDialRange that = (StandardDialRange) obj;</span>
+<span class="pc bpc" id="L359" title="1 of 2 branches missed.">        if (this.scaleIndex != that.scaleIndex) {</span>
 <span class="nc" id="L360">            return false;</span>
         }
-<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (this.lowerBound != that.lowerBound) {</span>
-<span class="nc" id="L363">            return false;</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">        if (this.lowerBound != that.lowerBound) {</span>
+<span class="fc" id="L363">            return false;</span>
         }
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (this.upperBound != that.upperBound) {</span>
-<span class="nc" id="L366">            return false;</span>
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        if (this.upperBound != that.upperBound) {</span>
+<span class="fc" id="L366">            return false;</span>
         }
-<span class="nc bnc" id="L368" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L369">            return false;</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L369">            return false;</span>
         }
-<span class="nc bnc" id="L371" title="All 2 branches missed.">        if (this.innerRadius != that.innerRadius) {</span>
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">        if (this.innerRadius != that.innerRadius) {</span>
 <span class="nc" id="L372">            return false;</span>
         }
-<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (this.outerRadius != that.outerRadius) {</span>
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (this.outerRadius != that.outerRadius) {</span>
 <span class="nc" id="L375">            return false;</span>
         }
-<span class="nc" id="L377">        return super.equals(obj);</span>
+<span class="fc" id="L377">        return super.equals(obj);</span>
     }
 
     /**
@@ -384,17 +384,17 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L387">        int result = 193;</span>
-<span class="nc" id="L388">        long temp = Double.doubleToLongBits(this.lowerBound);</span>
-<span class="nc" id="L389">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L390">        temp = Double.doubleToLongBits(this.upperBound);</span>
-<span class="nc" id="L391">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L392">        temp = Double.doubleToLongBits(this.innerRadius);</span>
-<span class="nc" id="L393">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L394">        temp = Double.doubleToLongBits(this.outerRadius);</span>
-<span class="nc" id="L395">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L396">        result = 37 * result + HashUtils.hashCodeForPaint(this.paint);</span>
-<span class="nc" id="L397">        return result;</span>
+<span class="fc" id="L387">        int result = 193;</span>
+<span class="fc" id="L388">        long temp = Double.doubleToLongBits(this.lowerBound);</span>
+<span class="fc" id="L389">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L390">        temp = Double.doubleToLongBits(this.upperBound);</span>
+<span class="fc" id="L391">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L392">        temp = Double.doubleToLongBits(this.innerRadius);</span>
+<span class="fc" id="L393">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L394">        temp = Double.doubleToLongBits(this.outerRadius);</span>
+<span class="fc" id="L395">        result = 37 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L396">        result = 37 * result + HashUtils.hashCodeForPaint(this.paint);</span>
+<span class="fc" id="L397">        return result;</span>
     }
 
     /**
@@ -407,7 +407,7 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L410">        return super.clone();</span>
+<span class="fc" id="L410">        return super.clone();</span>
     }
 
     /**
@@ -418,9 +418,9 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L421">        stream.defaultWriteObject();</span>
-<span class="nc" id="L422">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L423">    }</span>
+<span class="fc" id="L421">        stream.defaultWriteObject();</span>
+<span class="fc" id="L422">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L423">    }</span>
 
     /**
      * Provides serialization support.
@@ -432,9 +432,9 @@ public class StandardDialRange extends AbstractDialLayer implements DialLayer,
      */
     private void readObject(ObjectInputStream stream)
             throws IOException, ClassNotFoundException {
-<span class="nc" id="L435">        stream.defaultReadObject();</span>
-<span class="nc" id="L436">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L437">    }</span>
+<span class="fc" id="L435">        stream.defaultReadObject();</span>
+<span class="fc" id="L436">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L437">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

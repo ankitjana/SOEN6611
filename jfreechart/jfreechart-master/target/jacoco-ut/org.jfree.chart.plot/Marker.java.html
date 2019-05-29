@@ -113,7 +113,7 @@ public abstract class Marker implements Cloneable, Serializable {
     private float alpha;
 
     /** The label. */
-<span class="nc" id="L116">    private String label = null;</span>
+<span class="fc" id="L116">    private String label = null;</span>
 
     /** The label font. */
     private Font labelFont;
@@ -145,8 +145,8 @@ public abstract class Marker implements Cloneable, Serializable {
      * Creates a new marker with default attributes.
      */
     protected Marker() {
-<span class="nc" id="L148">        this(Color.GRAY);</span>
-<span class="nc" id="L149">    }</span>
+<span class="fc" id="L148">        this(Color.GRAY);</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Constructs a new marker.
@@ -154,9 +154,9 @@ public abstract class Marker implements Cloneable, Serializable {
      * @param paint  the paint ({@code null} not permitted).
      */
     protected Marker(Paint paint) {
-<span class="nc" id="L157">        this(paint, new BasicStroke(0.5f), Color.GRAY, new BasicStroke(0.5f),</span>
+<span class="fc" id="L157">        this(paint, new BasicStroke(0.5f), Color.GRAY, new BasicStroke(0.5f),</span>
                 0.80f);
-<span class="nc" id="L159">    }</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Constructs a new marker.
@@ -173,31 +173,31 @@ public abstract class Marker implements Cloneable, Serializable {
      *     not in the specified range.
      */
     protected Marker(Paint paint, Stroke stroke, Paint outlinePaint, 
-<span class="nc" id="L176">            Stroke outlineStroke, float alpha) {</span>
+<span class="fc" id="L176">            Stroke outlineStroke, float alpha) {</span>
 
-<span class="nc" id="L178">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L179">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc bnc" id="L180" title="All 4 branches missed.">        if (alpha &lt; 0.0f || alpha &gt; 1.0f) {</span>
+<span class="fc" id="L178">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L179">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="pc bpc" id="L180" title="2 of 4 branches missed.">        if (alpha &lt; 0.0f || alpha &gt; 1.0f) {</span>
 <span class="nc" id="L181">            throw new IllegalArgumentException(</span>
                     &quot;The 'alpha' value must be in the range 0.0f to 1.0f&quot;);
         }
 
-<span class="nc" id="L185">        this.paint = paint;</span>
-<span class="nc" id="L186">        this.stroke = stroke;</span>
-<span class="nc" id="L187">        this.outlinePaint = outlinePaint;</span>
-<span class="nc" id="L188">        this.outlineStroke = outlineStroke;</span>
-<span class="nc" id="L189">        this.alpha = alpha;</span>
+<span class="fc" id="L185">        this.paint = paint;</span>
+<span class="fc" id="L186">        this.stroke = stroke;</span>
+<span class="fc" id="L187">        this.outlinePaint = outlinePaint;</span>
+<span class="fc" id="L188">        this.outlineStroke = outlineStroke;</span>
+<span class="fc" id="L189">        this.alpha = alpha;</span>
 
-<span class="nc" id="L191">        this.labelFont = new Font(&quot;SansSerif&quot;, Font.PLAIN, 9);</span>
-<span class="nc" id="L192">        this.labelPaint = Color.BLACK;</span>
-<span class="nc" id="L193">        this.labelBackgroundColor = new Color(100, 100, 100, 100);</span>
-<span class="nc" id="L194">        this.labelAnchor = RectangleAnchor.TOP_LEFT;</span>
-<span class="nc" id="L195">        this.labelOffset = new RectangleInsets(3.0, 3.0, 3.0, 3.0);</span>
-<span class="nc" id="L196">        this.labelOffsetType = LengthAdjustmentType.CONTRACT;</span>
-<span class="nc" id="L197">        this.labelTextAnchor = TextAnchor.CENTER;</span>
+<span class="fc" id="L191">        this.labelFont = new Font(&quot;SansSerif&quot;, Font.PLAIN, 9);</span>
+<span class="fc" id="L192">        this.labelPaint = Color.BLACK;</span>
+<span class="fc" id="L193">        this.labelBackgroundColor = new Color(100, 100, 100, 100);</span>
+<span class="fc" id="L194">        this.labelAnchor = RectangleAnchor.TOP_LEFT;</span>
+<span class="fc" id="L195">        this.labelOffset = new RectangleInsets(3.0, 3.0, 3.0, 3.0);</span>
+<span class="fc" id="L196">        this.labelOffsetType = LengthAdjustmentType.CONTRACT;</span>
+<span class="fc" id="L197">        this.labelTextAnchor = TextAnchor.CENTER;</span>
 
-<span class="nc" id="L199">        this.listenerList = new EventListenerList();</span>
-<span class="nc" id="L200">    }</span>
+<span class="fc" id="L199">        this.listenerList = new EventListenerList();</span>
+<span class="fc" id="L200">    }</span>
 
     /**
      * Returns the paint.
@@ -207,7 +207,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setPaint(Paint)
      */
     public Paint getPaint() {
-<span class="nc" id="L210">        return this.paint;</span>
+<span class="fc" id="L210">        return this.paint;</span>
     }
 
     /**
@@ -219,10 +219,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getPaint()
      */
     public void setPaint(Paint paint) {
-<span class="nc" id="L222">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L223">        this.paint = paint;</span>
-<span class="nc" id="L224">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L225">    }</span>
+<span class="fc" id="L222">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L223">        this.paint = paint;</span>
+<span class="fc" id="L224">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L225">    }</span>
 
     /**
      * Returns the stroke.
@@ -232,7 +232,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setStroke(Stroke)
      */
     public Stroke getStroke() {
-<span class="nc" id="L235">        return this.stroke;</span>
+<span class="fc" id="L235">        return this.stroke;</span>
     }
 
     /**
@@ -244,10 +244,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getStroke()
      */
     public void setStroke(Stroke stroke) {
-<span class="nc" id="L247">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
-<span class="nc" id="L248">        this.stroke = stroke;</span>
-<span class="nc" id="L249">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L250">    }</span>
+<span class="fc" id="L247">        Args.nullNotPermitted(stroke, &quot;stroke&quot;);</span>
+<span class="fc" id="L248">        this.stroke = stroke;</span>
+<span class="fc" id="L249">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L250">    }</span>
 
     /**
      * Returns the outline paint.
@@ -257,7 +257,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setOutlinePaint(Paint)
      */
     public Paint getOutlinePaint() {
-<span class="nc" id="L260">        return this.outlinePaint;</span>
+<span class="fc" id="L260">        return this.outlinePaint;</span>
     }
 
     /**
@@ -269,9 +269,9 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getOutlinePaint()
      */
     public void setOutlinePaint(Paint paint) {
-<span class="nc" id="L272">        this.outlinePaint = paint;</span>
-<span class="nc" id="L273">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L274">    }</span>
+<span class="fc" id="L272">        this.outlinePaint = paint;</span>
+<span class="fc" id="L273">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L274">    }</span>
 
     /**
      * Returns the outline stroke.
@@ -281,7 +281,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setOutlineStroke(Stroke)
      */
     public Stroke getOutlineStroke() {
-<span class="nc" id="L284">        return this.outlineStroke;</span>
+<span class="fc" id="L284">        return this.outlineStroke;</span>
     }
 
     /**
@@ -293,9 +293,9 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getOutlineStroke()
      */
     public void setOutlineStroke(Stroke stroke) {
-<span class="nc" id="L296">        this.outlineStroke = stroke;</span>
-<span class="nc" id="L297">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L298">    }</span>
+<span class="fc" id="L296">        this.outlineStroke = stroke;</span>
+<span class="fc" id="L297">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L298">    }</span>
 
     /**
      * Returns the alpha transparency.
@@ -305,7 +305,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setAlpha(float)
      */
     public float getAlpha() {
-<span class="nc" id="L308">        return this.alpha;</span>
+<span class="fc" id="L308">        return this.alpha;</span>
     }
 
     /**
@@ -323,13 +323,13 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getAlpha()
      */
     public void setAlpha(float alpha) {
-<span class="nc bnc" id="L326" title="All 4 branches missed.">        if (alpha &lt; 0.0f || alpha &gt; 1.0f) {</span>
+<span class="pc bpc" id="L326" title="2 of 4 branches missed.">        if (alpha &lt; 0.0f || alpha &gt; 1.0f) {</span>
 <span class="nc" id="L327">            throw new IllegalArgumentException(</span>
                     &quot;The 'alpha' value must be in the range 0.0f to 1.0f&quot;);
         }
-<span class="nc" id="L330">        this.alpha = alpha;</span>
-<span class="nc" id="L331">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L332">    }</span>
+<span class="fc" id="L330">        this.alpha = alpha;</span>
+<span class="fc" id="L331">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L332">    }</span>
 
     /**
      * Returns the label (if {@code null} no label is displayed).
@@ -339,7 +339,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabel(String)
      */
     public String getLabel() {
-<span class="nc" id="L342">        return this.label;</span>
+<span class="fc" id="L342">        return this.label;</span>
     }
 
     /**
@@ -351,9 +351,9 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabel()
      */
     public void setLabel(String label) {
-<span class="nc" id="L354">        this.label = label;</span>
-<span class="nc" id="L355">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L356">    }</span>
+<span class="fc" id="L354">        this.label = label;</span>
+<span class="fc" id="L355">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L356">    }</span>
 
     /**
      * Returns the label font.
@@ -363,7 +363,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelFont(Font)
      */
     public Font getLabelFont() {
-<span class="nc" id="L366">        return this.labelFont;</span>
+<span class="fc" id="L366">        return this.labelFont;</span>
     }
 
     /**
@@ -375,10 +375,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelFont()
      */
     public void setLabelFont(Font font) {
-<span class="nc" id="L378">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
-<span class="nc" id="L379">        this.labelFont = font;</span>
-<span class="nc" id="L380">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L381">    }</span>
+<span class="fc" id="L378">        Args.nullNotPermitted(font, &quot;font&quot;);</span>
+<span class="fc" id="L379">        this.labelFont = font;</span>
+<span class="fc" id="L380">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L381">    }</span>
 
     /**
      * Returns the label paint.
@@ -388,7 +388,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelPaint(Paint)
      */
     public Paint getLabelPaint() {
-<span class="nc" id="L391">        return this.labelPaint;</span>
+<span class="fc" id="L391">        return this.labelPaint;</span>
     }
 
     /**
@@ -400,10 +400,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelPaint()
      */
     public void setLabelPaint(Paint paint) {
-<span class="nc" id="L403">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L404">        this.labelPaint = paint;</span>
-<span class="nc" id="L405">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L406">    }</span>
+<span class="fc" id="L403">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L404">        this.labelPaint = paint;</span>
+<span class="fc" id="L405">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L406">    }</span>
     
     /**
      * Returns the label background color.  The default value is 
@@ -438,7 +438,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelAnchor(RectangleAnchor)
      */
     public RectangleAnchor getLabelAnchor() {
-<span class="nc" id="L441">        return this.labelAnchor;</span>
+<span class="fc" id="L441">        return this.labelAnchor;</span>
     }
 
     /**
@@ -451,10 +451,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelAnchor()
      */
     public void setLabelAnchor(RectangleAnchor anchor) {
-<span class="nc" id="L454">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
-<span class="nc" id="L455">        this.labelAnchor = anchor;</span>
-<span class="nc" id="L456">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L457">    }</span>
+<span class="fc" id="L454">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
+<span class="fc" id="L455">        this.labelAnchor = anchor;</span>
+<span class="fc" id="L456">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L457">    }</span>
 
     /**
      * Returns the label offset.
@@ -464,7 +464,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelOffset(RectangleInsets)
      */
     public RectangleInsets getLabelOffset() {
-<span class="nc" id="L467">        return this.labelOffset;</span>
+<span class="fc" id="L467">        return this.labelOffset;</span>
     }
 
     /**
@@ -476,10 +476,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelOffset()
      */
     public void setLabelOffset(RectangleInsets offset) {
-<span class="nc" id="L479">        Args.nullNotPermitted(offset, &quot;offset&quot;);</span>
-<span class="nc" id="L480">        this.labelOffset = offset;</span>
-<span class="nc" id="L481">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L482">    }</span>
+<span class="fc" id="L479">        Args.nullNotPermitted(offset, &quot;offset&quot;);</span>
+<span class="fc" id="L480">        this.labelOffset = offset;</span>
+<span class="fc" id="L481">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L482">    }</span>
 
     /**
      * Returns the label offset type.
@@ -489,7 +489,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelOffsetType(LengthAdjustmentType)
      */
     public LengthAdjustmentType getLabelOffsetType() {
-<span class="nc" id="L492">        return this.labelOffsetType;</span>
+<span class="fc" id="L492">        return this.labelOffsetType;</span>
     }
 
     /**
@@ -501,10 +501,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelOffsetType()
      */
     public void setLabelOffsetType(LengthAdjustmentType adj) {
-<span class="nc" id="L504">        Args.nullNotPermitted(adj, &quot;adj&quot;);</span>
-<span class="nc" id="L505">        this.labelOffsetType = adj;</span>
-<span class="nc" id="L506">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L507">    }</span>
+<span class="fc" id="L504">        Args.nullNotPermitted(adj, &quot;adj&quot;);</span>
+<span class="fc" id="L505">        this.labelOffsetType = adj;</span>
+<span class="fc" id="L506">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L507">    }</span>
 
     /**
      * Returns the label text anchor.
@@ -514,7 +514,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #setLabelTextAnchor(TextAnchor)
      */
     public TextAnchor getLabelTextAnchor() {
-<span class="nc" id="L517">        return this.labelTextAnchor;</span>
+<span class="fc" id="L517">        return this.labelTextAnchor;</span>
     }
 
     /**
@@ -526,10 +526,10 @@ public abstract class Marker implements Cloneable, Serializable {
      * @see #getLabelTextAnchor()
      */
     public void setLabelTextAnchor(TextAnchor anchor) {
-<span class="nc" id="L529">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
-<span class="nc" id="L530">        this.labelTextAnchor = anchor;</span>
-<span class="nc" id="L531">        notifyListeners(new MarkerChangeEvent(this));</span>
-<span class="nc" id="L532">    }</span>
+<span class="fc" id="L529">        Args.nullNotPermitted(anchor, &quot;anchor&quot;);</span>
+<span class="fc" id="L530">        this.labelTextAnchor = anchor;</span>
+<span class="fc" id="L531">        notifyListeners(new MarkerChangeEvent(this));</span>
+<span class="fc" id="L532">    }</span>
 
     /**
      * Registers an object for notification of changes to the marker.
@@ -541,8 +541,8 @@ public abstract class Marker implements Cloneable, Serializable {
      * @since 1.0.3
      */
     public void addChangeListener(MarkerChangeListener listener) {
-<span class="nc" id="L544">        this.listenerList.add(MarkerChangeListener.class, listener);</span>
-<span class="nc" id="L545">    }</span>
+<span class="fc" id="L544">        this.listenerList.add(MarkerChangeListener.class, listener);</span>
+<span class="fc" id="L545">    }</span>
 
     /**
      * Unregisters an object for notification of changes to the marker.
@@ -554,8 +554,8 @@ public abstract class Marker implements Cloneable, Serializable {
      * @since 1.0.3
      */
     public void removeChangeListener(MarkerChangeListener listener) {
-<span class="nc" id="L557">        this.listenerList.remove(MarkerChangeListener.class, listener);</span>
-<span class="nc" id="L558">    }</span>
+<span class="fc" id="L557">        this.listenerList.remove(MarkerChangeListener.class, listener);</span>
+<span class="fc" id="L558">    }</span>
 
     /**
      * Notifies all registered listeners that the marker has been modified.
@@ -566,14 +566,14 @@ public abstract class Marker implements Cloneable, Serializable {
      */
     public void notifyListeners(MarkerChangeEvent event) {
 
-<span class="nc" id="L569">        Object[] listeners = this.listenerList.getListenerList();</span>
-<span class="nc bnc" id="L570" title="All 2 branches missed.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
-<span class="nc bnc" id="L571" title="All 2 branches missed.">            if (listeners[i] == MarkerChangeListener.class) {</span>
-<span class="nc" id="L572">                ((MarkerChangeListener) listeners[i + 1]).markerChanged(event);</span>
+<span class="fc" id="L569">        Object[] listeners = this.listenerList.getListenerList();</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
+<span class="pc bpc" id="L571" title="1 of 2 branches missed.">            if (listeners[i] == MarkerChangeListener.class) {</span>
+<span class="fc" id="L572">                ((MarkerChangeListener) listeners[i + 1]).markerChanged(event);</span>
             }
         }
 
-<span class="nc" id="L576">    }</span>
+<span class="fc" id="L576">    }</span>
 
     /**
      * Returns an array containing all the listeners of the specified type.
@@ -585,7 +585,7 @@ public abstract class Marker implements Cloneable, Serializable {
      * @since 1.0.3
      */
     public EventListener[] getListeners(Class listenerType) {
-<span class="nc" id="L588">        return this.listenerList.getListeners(listenerType);</span>
+<span class="fc" id="L588">        return this.listenerList.getListeners(listenerType);</span>
     }
 
     /**
@@ -597,53 +597,53 @@ public abstract class Marker implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L600" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L601">            return true;</span>
+<span class="fc bfc" id="L600" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L601">            return true;</span>
         }
-<span class="nc bnc" id="L603" title="All 2 branches missed.">        if (!(obj instanceof Marker)) {</span>
+<span class="pc bpc" id="L603" title="1 of 2 branches missed.">        if (!(obj instanceof Marker)) {</span>
 <span class="nc" id="L604">            return false;</span>
         }
-<span class="nc" id="L606">        Marker that = (Marker) obj;</span>
-<span class="nc bnc" id="L607" title="All 2 branches missed.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
-<span class="nc" id="L608">            return false;</span>
+<span class="fc" id="L606">        Marker that = (Marker) obj;</span>
+<span class="fc bfc" id="L607" title="All 2 branches covered.">        if (!PaintUtils.equal(this.paint, that.paint)) {</span>
+<span class="fc" id="L608">            return false;</span>
         }
-<span class="nc bnc" id="L610" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
-<span class="nc" id="L611">            return false;</span>
+<span class="fc bfc" id="L610" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.stroke, that.stroke)) {</span>
+<span class="fc" id="L611">            return false;</span>
         }
-<span class="nc bnc" id="L613" title="All 2 branches missed.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
-<span class="nc" id="L614">            return false;</span>
+<span class="fc bfc" id="L613" title="All 2 branches covered.">        if (!PaintUtils.equal(this.outlinePaint, that.outlinePaint)) {</span>
+<span class="fc" id="L614">            return false;</span>
         }
-<span class="nc bnc" id="L616" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
-<span class="nc" id="L617">            return false;</span>
+<span class="fc bfc" id="L616" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.outlineStroke, that.outlineStroke)) {</span>
+<span class="fc" id="L617">            return false;</span>
         }
-<span class="nc bnc" id="L619" title="All 2 branches missed.">        if (this.alpha != that.alpha) {</span>
-<span class="nc" id="L620">            return false;</span>
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        if (this.alpha != that.alpha) {</span>
+<span class="fc" id="L620">            return false;</span>
         }
-<span class="nc bnc" id="L622" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.label, that.label)) {</span>
-<span class="nc" id="L623">            return false;</span>
+<span class="fc bfc" id="L622" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.label, that.label)) {</span>
+<span class="fc" id="L623">            return false;</span>
         }
-<span class="nc bnc" id="L625" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.labelFont, that.labelFont)) {</span>
-<span class="nc" id="L626">            return false;</span>
+<span class="fc bfc" id="L625" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.labelFont, that.labelFont)) {</span>
+<span class="fc" id="L626">            return false;</span>
         }
-<span class="nc bnc" id="L628" title="All 2 branches missed.">        if (!PaintUtils.equal(this.labelPaint, that.labelPaint)) {</span>
-<span class="nc" id="L629">            return false;</span>
+<span class="fc bfc" id="L628" title="All 2 branches covered.">        if (!PaintUtils.equal(this.labelPaint, that.labelPaint)) {</span>
+<span class="fc" id="L629">            return false;</span>
         }
-<span class="nc bnc" id="L631" title="All 2 branches missed.">        if (!this.labelBackgroundColor.equals(that.labelBackgroundColor)) {</span>
+<span class="pc bpc" id="L631" title="1 of 2 branches missed.">        if (!this.labelBackgroundColor.equals(that.labelBackgroundColor)) {</span>
 <span class="nc" id="L632">            return false;</span>
         }
-<span class="nc bnc" id="L634" title="All 2 branches missed.">        if (this.labelAnchor != that.labelAnchor) {</span>
-<span class="nc" id="L635">            return false;</span>
+<span class="fc bfc" id="L634" title="All 2 branches covered.">        if (this.labelAnchor != that.labelAnchor) {</span>
+<span class="fc" id="L635">            return false;</span>
         }
-<span class="nc bnc" id="L637" title="All 2 branches missed.">        if (this.labelTextAnchor != that.labelTextAnchor) {</span>
-<span class="nc" id="L638">            return false;</span>
+<span class="fc bfc" id="L637" title="All 2 branches covered.">        if (this.labelTextAnchor != that.labelTextAnchor) {</span>
+<span class="fc" id="L638">            return false;</span>
         }
-<span class="nc bnc" id="L640" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.labelOffset, that.labelOffset)) {</span>
-<span class="nc" id="L641">            return false;</span>
+<span class="fc bfc" id="L640" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.labelOffset, that.labelOffset)) {</span>
+<span class="fc" id="L641">            return false;</span>
         }
-<span class="nc bnc" id="L643" title="All 2 branches missed.">        if (!this.labelOffsetType.equals(that.labelOffsetType)) {</span>
-<span class="nc" id="L644">            return false;</span>
+<span class="fc bfc" id="L643" title="All 2 branches covered.">        if (!this.labelOffsetType.equals(that.labelOffsetType)) {</span>
+<span class="fc" id="L644">            return false;</span>
         }
-<span class="nc" id="L646">        return true;</span>
+<span class="fc" id="L646">        return true;</span>
     }
 
     /**
@@ -655,7 +655,7 @@ public abstract class Marker implements Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L658">        return super.clone();</span>
+<span class="fc" id="L658">        return super.clone();</span>
     }
 
     /**
@@ -666,13 +666,13 @@ public abstract class Marker implements Cloneable, Serializable {
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L669">        stream.defaultWriteObject();</span>
-<span class="nc" id="L670">        SerialUtils.writePaint(this.paint, stream);</span>
-<span class="nc" id="L671">        SerialUtils.writeStroke(this.stroke, stream);</span>
-<span class="nc" id="L672">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
-<span class="nc" id="L673">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
-<span class="nc" id="L674">        SerialUtils.writePaint(this.labelPaint, stream);</span>
-<span class="nc" id="L675">    }</span>
+<span class="fc" id="L669">        stream.defaultWriteObject();</span>
+<span class="fc" id="L670">        SerialUtils.writePaint(this.paint, stream);</span>
+<span class="fc" id="L671">        SerialUtils.writeStroke(this.stroke, stream);</span>
+<span class="fc" id="L672">        SerialUtils.writePaint(this.outlinePaint, stream);</span>
+<span class="fc" id="L673">        SerialUtils.writeStroke(this.outlineStroke, stream);</span>
+<span class="fc" id="L674">        SerialUtils.writePaint(this.labelPaint, stream);</span>
+<span class="fc" id="L675">    }</span>
 
     /**
      * Provides serialization support.
@@ -684,14 +684,14 @@ public abstract class Marker implements Cloneable, Serializable {
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L687">        stream.defaultReadObject();</span>
-<span class="nc" id="L688">        this.paint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L689">        this.stroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L690">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L691">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
-<span class="nc" id="L692">        this.labelPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L693">        this.listenerList = new EventListenerList();</span>
-<span class="nc" id="L694">    }</span>
+<span class="fc" id="L687">        stream.defaultReadObject();</span>
+<span class="fc" id="L688">        this.paint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L689">        this.stroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L690">        this.outlinePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L691">        this.outlineStroke = SerialUtils.readStroke(stream);</span>
+<span class="fc" id="L692">        this.labelPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L693">        this.listenerList = new EventListenerList();</span>
+<span class="fc" id="L694">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

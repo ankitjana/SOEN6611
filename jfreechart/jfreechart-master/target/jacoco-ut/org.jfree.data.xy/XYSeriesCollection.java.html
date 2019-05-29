@@ -106,24 +106,24 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * Constructs an empty dataset.
      */
     public XYSeriesCollection() {
-<span class="nc" id="L109">        this(null);</span>
-<span class="nc" id="L110">    }</span>
+<span class="fc" id="L109">        this(null);</span>
+<span class="fc" id="L110">    }</span>
 
     /**
      * Constructs a dataset and populates it with a single series.
      *
      * @param series  the series ({@code null} ignored).
      */
-<span class="nc" id="L117">    public XYSeriesCollection(XYSeries series) {</span>
-<span class="nc" id="L118">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L119">        this.intervalDelegate = new IntervalXYDelegate(this, false);</span>
-<span class="nc" id="L120">        addChangeListener(this.intervalDelegate);</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (series != null) {</span>
-<span class="nc" id="L122">            this.data.add(series);</span>
-<span class="nc" id="L123">            series.addChangeListener(this);</span>
-<span class="nc" id="L124">            series.addVetoableChangeListener(this);</span>
+<span class="fc" id="L117">    public XYSeriesCollection(XYSeries series) {</span>
+<span class="fc" id="L118">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L119">        this.intervalDelegate = new IntervalXYDelegate(this, false);</span>
+<span class="fc" id="L120">        addChangeListener(this.intervalDelegate);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (series != null) {</span>
+<span class="fc" id="L122">            this.data.add(series);</span>
+<span class="fc" id="L123">            series.addChangeListener(this);</span>
+<span class="fc" id="L124">            series.addVetoableChangeListener(this);</span>
         }
-<span class="nc" id="L126">    }</span>
+<span class="fc" id="L126">    }</span>
 
     /**
      * Returns the order of the domain (X) values, if this is known.
@@ -132,14 +132,14 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public DomainOrder getDomainOrder() {
-<span class="nc" id="L135">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L136" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L137">            XYSeries s = getSeries(i);</span>
-<span class="nc bnc" id="L138" title="All 2 branches missed.">            if (!s.getAutoSort()) {</span>
-<span class="nc" id="L139">                return DomainOrder.NONE;  // we can't be sure of the order</span>
+<span class="fc" id="L135">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L137">            XYSeries s = getSeries(i);</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (!s.getAutoSort()) {</span>
+<span class="fc" id="L139">                return DomainOrder.NONE;  // we can't be sure of the order</span>
             }
         }
-<span class="nc" id="L142">        return DomainOrder.ASCENDING;</span>
+<span class="fc" id="L142">        return DomainOrder.ASCENDING;</span>
     }
 
     /**
@@ -152,17 +152,17 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      *     not unique within the dataset.
      */
     public void addSeries(XYSeries series) {
-<span class="nc" id="L155">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (getSeriesIndex(series.getKey()) &gt;= 0) {</span>
-<span class="nc" id="L157">            throw new IllegalArgumentException(</span>
+<span class="fc" id="L155">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (getSeriesIndex(series.getKey()) &gt;= 0) {</span>
+<span class="fc" id="L157">            throw new IllegalArgumentException(</span>
                 &quot;This dataset already contains a series with the key &quot; 
-<span class="nc" id="L159">                + series.getKey());</span>
+<span class="fc" id="L159">                + series.getKey());</span>
         }
-<span class="nc" id="L161">        this.data.add(series);</span>
-<span class="nc" id="L162">        series.addChangeListener(this);</span>
-<span class="nc" id="L163">        series.addVetoableChangeListener(this);</span>
-<span class="nc" id="L164">        fireDatasetChanged();</span>
-<span class="nc" id="L165">    }</span>
+<span class="fc" id="L161">        this.data.add(series);</span>
+<span class="fc" id="L162">        series.addChangeListener(this);</span>
+<span class="fc" id="L163">        series.addVetoableChangeListener(this);</span>
+<span class="fc" id="L164">        fireDatasetChanged();</span>
+<span class="fc" id="L165">    }</span>
 
     /**
      * Removes a series from the collection and sends a
@@ -171,14 +171,14 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @param series  the series index (zero-based).
      */
     public void removeSeries(int series) {
-<span class="nc bnc" id="L174" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L175">            throw new IllegalArgumentException(&quot;Series index out of bounds.&quot;);</span>
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L175">            throw new IllegalArgumentException(&quot;Series index out of bounds.&quot;);</span>
         }
-<span class="nc" id="L177">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (s != null) {</span>
-<span class="nc" id="L179">            removeSeries(s);</span>
+<span class="fc" id="L177">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (s != null) {</span>
+<span class="fc" id="L179">            removeSeries(s);</span>
         }
-<span class="nc" id="L181">    }</span>
+<span class="fc" id="L181">    }</span>
 
     /**
      * Removes a series from the collection and sends a
@@ -187,14 +187,14 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void removeSeries(XYSeries series) {
-<span class="nc" id="L190">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (this.data.contains(series)) {</span>
-<span class="nc" id="L192">            series.removeChangeListener(this);</span>
-<span class="nc" id="L193">            series.removeVetoableChangeListener(this);</span>
-<span class="nc" id="L194">            this.data.remove(series);</span>
-<span class="nc" id="L195">            fireDatasetChanged();</span>
+<span class="fc" id="L190">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (this.data.contains(series)) {</span>
+<span class="fc" id="L192">            series.removeChangeListener(this);</span>
+<span class="fc" id="L193">            series.removeVetoableChangeListener(this);</span>
+<span class="fc" id="L194">            this.data.remove(series);</span>
+<span class="fc" id="L195">            fireDatasetChanged();</span>
         }
-<span class="nc" id="L197">    }</span>
+<span class="fc" id="L197">    }</span>
 
     /**
      * Removes all the series from the collection and sends a
@@ -203,16 +203,16 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
     public void removeAllSeries() {
         // Unregister the collection as a change listener to each series in
         // the collection.
-<span class="nc bnc" id="L206" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L207">          XYSeries series = (XYSeries) this.data.get(i);</span>
-<span class="nc" id="L208">          series.removeChangeListener(this);</span>
-<span class="nc" id="L209">          series.removeVetoableChangeListener(this);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L207">          XYSeries series = (XYSeries) this.data.get(i);</span>
+<span class="fc" id="L208">          series.removeChangeListener(this);</span>
+<span class="fc" id="L209">          series.removeVetoableChangeListener(this);</span>
         }
 
         // Remove all the series from the collection and notify listeners.
-<span class="nc" id="L213">        this.data.clear();</span>
-<span class="nc" id="L214">        fireDatasetChanged();</span>
-<span class="nc" id="L215">    }</span>
+<span class="fc" id="L213">        this.data.clear();</span>
+<span class="fc" id="L214">        fireDatasetChanged();</span>
+<span class="fc" id="L215">    }</span>
 
     /**
      * Returns the number of series in the collection.
@@ -221,7 +221,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L224">        return this.data.size();</span>
+<span class="fc" id="L224">        return this.data.size();</span>
     }
 
     /**
@@ -244,8 +244,8 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.6
      */
     public int indexOf(XYSeries series) {
-<span class="nc" id="L247">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L248">        return this.data.indexOf(series);</span>
+<span class="fc" id="L247">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L248">        return this.data.indexOf(series);</span>
     }
 
     /**
@@ -259,10 +259,10 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      *     range {@code 0} to {@code getSeriesCount() - 1}.
      */
     public XYSeries getSeries(int series) {
-<span class="nc bnc" id="L262" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L263">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
+<span class="fc bfc" id="L262" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L263">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
-<span class="nc" id="L265">        return (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L265">        return (XYSeries) this.data.get(series);</span>
     }
 
     /**
@@ -278,15 +278,15 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.9
      */
     public XYSeries getSeries(Comparable key) {
-<span class="nc" id="L281">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L282">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L284">            XYSeries series = (XYSeries) iterator.next();</span>
-<span class="nc bnc" id="L285" title="All 2 branches missed.">            if (key.equals(series.getKey())) {</span>
-<span class="nc" id="L286">                return series;</span>
+<span class="fc" id="L281">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L282">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L284">            XYSeries series = (XYSeries) iterator.next();</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">            if (key.equals(series.getKey())) {</span>
+<span class="fc" id="L286">                return series;</span>
             }
-<span class="nc" id="L288">        }</span>
-<span class="nc" id="L289">        throw new UnknownKeyException(&quot;Key not found: &quot; + key);</span>
+<span class="fc" id="L288">        }</span>
+<span class="fc" id="L289">        throw new UnknownKeyException(&quot;Key not found: &quot; + key);</span>
     }
 
     /**
@@ -303,7 +303,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
     @Override
     public Comparable getSeriesKey(int series) {
         // defer argument checking
-<span class="nc" id="L306">        return getSeries(series).getKey();</span>
+<span class="fc" id="L306">        return getSeries(series).getKey();</span>
     }
 
     /**
@@ -317,15 +317,15 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @since 1.0.14
      */
     public int getSeriesIndex(Comparable key) {
-<span class="nc" id="L320">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L321">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
-<span class="nc" id="L323">            XYSeries series = (XYSeries) this.data.get(i);</span>
-<span class="nc bnc" id="L324" title="All 2 branches missed.">            if (key.equals(series.getKey())) {</span>
-<span class="nc" id="L325">                return i;</span>
+<span class="fc" id="L320">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L321">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        for (int i = 0; i &lt; seriesCount; i++) {</span>
+<span class="fc" id="L323">            XYSeries series = (XYSeries) this.data.get(i);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">            if (key.equals(series.getKey())) {</span>
+<span class="fc" id="L325">                return i;</span>
             }
         }
-<span class="nc" id="L328">        return -1;</span>
+<span class="fc" id="L328">        return -1;</span>
     }
 
     /**
@@ -341,7 +341,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
     @Override
     public int getItemCount(int series) {
         // defer argument checking
-<span class="nc" id="L344">        return getSeries(series).getItemCount();</span>
+<span class="fc" id="L344">        return getSeries(series).getItemCount();</span>
     }
 
     /**
@@ -354,8 +354,8 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getX(int series, int item) {
-<span class="nc" id="L357">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc" id="L358">        return s.getX(item);</span>
+<span class="fc" id="L357">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L358">        return s.getX(item);</span>
     }
 
     /**
@@ -368,7 +368,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getStartX(int series, int item) {
-<span class="nc" id="L371">        return this.intervalDelegate.getStartX(series, item);</span>
+<span class="fc" id="L371">        return this.intervalDelegate.getStartX(series, item);</span>
     }
 
     /**
@@ -381,7 +381,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getEndX(int series, int item) {
-<span class="nc" id="L384">        return this.intervalDelegate.getEndX(series, item);</span>
+<span class="fc" id="L384">        return this.intervalDelegate.getEndX(series, item);</span>
     }
 
     /**
@@ -394,8 +394,8 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getY(int series, int index) {
-<span class="nc" id="L397">        XYSeries s = (XYSeries) this.data.get(series);</span>
-<span class="nc" id="L398">        return s.getY(index);</span>
+<span class="fc" id="L397">        XYSeries s = (XYSeries) this.data.get(series);</span>
+<span class="fc" id="L398">        return s.getY(index);</span>
     }
 
     /**
@@ -408,7 +408,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getStartY(int series, int item) {
-<span class="nc" id="L411">        return getY(series, item);</span>
+<span class="fc" id="L411">        return getY(series, item);</span>
     }
 
     /**
@@ -421,7 +421,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Number getEndY(int series, int item) {
-<span class="nc" id="L424">        return getY(series, item);</span>
+<span class="fc" id="L424">        return getY(series, item);</span>
     }
 
     /**
@@ -433,17 +433,17 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L437">            return true;</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L437">            return true;</span>
         }
-<span class="nc bnc" id="L439" title="All 2 branches missed.">        if (!(obj instanceof XYSeriesCollection)) {</span>
+<span class="pc bpc" id="L439" title="1 of 2 branches missed.">        if (!(obj instanceof XYSeriesCollection)) {</span>
 <span class="nc" id="L440">            return false;</span>
         }
-<span class="nc" id="L442">        XYSeriesCollection that = (XYSeriesCollection) obj;</span>
-<span class="nc bnc" id="L443" title="All 2 branches missed.">        if (!this.intervalDelegate.equals(that.intervalDelegate)) {</span>
-<span class="nc" id="L444">            return false;</span>
+<span class="fc" id="L442">        XYSeriesCollection that = (XYSeriesCollection) obj;</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">        if (!this.intervalDelegate.equals(that.intervalDelegate)) {</span>
+<span class="fc" id="L444">            return false;</span>
         }
-<span class="nc" id="L446">        return ObjectUtils.equal(this.data, that.data);</span>
+<span class="fc" id="L446">        return ObjectUtils.equal(this.data, that.data);</span>
     }
 
     /**
@@ -455,11 +455,11 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L458">        XYSeriesCollection clone = (XYSeriesCollection) super.clone();</span>
-<span class="nc" id="L459">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
-<span class="nc" id="L460">        clone.intervalDelegate</span>
-<span class="nc" id="L461">                = (IntervalXYDelegate) this.intervalDelegate.clone();</span>
-<span class="nc" id="L462">        return clone;</span>
+<span class="fc" id="L458">        XYSeriesCollection clone = (XYSeriesCollection) super.clone();</span>
+<span class="fc" id="L459">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
+<span class="fc" id="L460">        clone.intervalDelegate</span>
+<span class="fc" id="L461">                = (IntervalXYDelegate) this.intervalDelegate.clone();</span>
+<span class="fc" id="L462">        return clone;</span>
     }
 
     /**
@@ -485,8 +485,8 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public double getDomainLowerBound(boolean includeInterval) {
-<span class="nc bnc" id="L488" title="All 2 branches missed.">        if (includeInterval) {</span>
-<span class="nc" id="L489">            return this.intervalDelegate.getDomainLowerBound(includeInterval);</span>
+<span class="pc bpc" id="L488" title="1 of 2 branches missed.">        if (includeInterval) {</span>
+<span class="fc" id="L489">            return this.intervalDelegate.getDomainLowerBound(includeInterval);</span>
         }
 <span class="nc" id="L491">        double result = Double.NaN;</span>
 <span class="nc" id="L492">        int seriesCount = getSeriesCount();</span>
@@ -515,8 +515,8 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public double getDomainUpperBound(boolean includeInterval) {
-<span class="nc bnc" id="L518" title="All 2 branches missed.">        if (includeInterval) {</span>
-<span class="nc" id="L519">            return this.intervalDelegate.getDomainUpperBound(includeInterval);</span>
+<span class="pc bpc" id="L518" title="1 of 2 branches missed.">        if (includeInterval) {</span>
+<span class="fc" id="L519">            return this.intervalDelegate.getDomainUpperBound(includeInterval);</span>
         }
         else {
 <span class="nc" id="L522">            double result = Double.NaN;</span>
@@ -548,29 +548,29 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Range getDomainBounds(boolean includeInterval) {
-<span class="nc bnc" id="L551" title="All 2 branches missed.">        if (includeInterval) {</span>
-<span class="nc" id="L552">            return this.intervalDelegate.getDomainBounds(includeInterval);</span>
+<span class="fc bfc" id="L551" title="All 2 branches covered.">        if (includeInterval) {</span>
+<span class="fc" id="L552">            return this.intervalDelegate.getDomainBounds(includeInterval);</span>
         }
         else {
-<span class="nc" id="L555">            double lower = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L556">            double upper = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L557">            int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L558" title="All 2 branches missed.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc" id="L559">                XYSeries series = getSeries(s);</span>
-<span class="nc" id="L560">                double minX = series.getMinX();</span>
-<span class="nc bnc" id="L561" title="All 2 branches missed.">                if (!Double.isNaN(minX)) {</span>
-<span class="nc" id="L562">                    lower = Math.min(lower, minX);</span>
+<span class="fc" id="L555">            double lower = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L556">            double upper = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L557">            int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">            for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc" id="L559">                XYSeries series = getSeries(s);</span>
+<span class="fc" id="L560">                double minX = series.getMinX();</span>
+<span class="fc bfc" id="L561" title="All 2 branches covered.">                if (!Double.isNaN(minX)) {</span>
+<span class="fc" id="L562">                    lower = Math.min(lower, minX);</span>
                 }
-<span class="nc" id="L564">                double maxX = series.getMaxX();</span>
-<span class="nc bnc" id="L565" title="All 2 branches missed.">                if (!Double.isNaN(maxX)) {</span>
-<span class="nc" id="L566">                    upper = Math.max(upper, maxX);</span>
+<span class="fc" id="L564">                double maxX = series.getMaxX();</span>
+<span class="fc bfc" id="L565" title="All 2 branches covered.">                if (!Double.isNaN(maxX)) {</span>
+<span class="fc" id="L566">                    upper = Math.max(upper, maxX);</span>
                 }
             }
-<span class="nc bnc" id="L569" title="All 2 branches missed.">            if (lower &gt; upper) {</span>
-<span class="nc" id="L570">                return null;</span>
+<span class="fc bfc" id="L569" title="All 2 branches covered.">            if (lower &gt; upper) {</span>
+<span class="fc" id="L570">                return null;</span>
             }
             else {
-<span class="nc" id="L573">                return new Range(lower, upper);</span>
+<span class="fc" id="L573">                return new Range(lower, upper);</span>
             }
         }
     }
@@ -582,7 +582,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @return The interval width.
      */
     public double getIntervalWidth() {
-<span class="nc" id="L585">        return this.intervalDelegate.getIntervalWidth();</span>
+<span class="fc" id="L585">        return this.intervalDelegate.getIntervalWidth();</span>
     }
 
     /**
@@ -592,12 +592,12 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @param width  the width (negative values not permitted).
      */
     public void setIntervalWidth(double width) {
-<span class="nc bnc" id="L595" title="All 2 branches missed.">        if (width &lt; 0.0) {</span>
+<span class="pc bpc" id="L595" title="1 of 2 branches missed.">        if (width &lt; 0.0) {</span>
 <span class="nc" id="L596">            throw new IllegalArgumentException(&quot;Negative 'width' argument.&quot;);</span>
         }
-<span class="nc" id="L598">        this.intervalDelegate.setFixedIntervalWidth(width);</span>
-<span class="nc" id="L599">        fireDatasetChanged();</span>
-<span class="nc" id="L600">    }</span>
+<span class="fc" id="L598">        this.intervalDelegate.setFixedIntervalWidth(width);</span>
+<span class="fc" id="L599">        fireDatasetChanged();</span>
+<span class="fc" id="L600">    }</span>
 
     /**
      * Returns the interval position factor.
@@ -605,7 +605,7 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @return The interval position factor.
      */
     public double getIntervalPositionFactor() {
-<span class="nc" id="L608">        return this.intervalDelegate.getIntervalPositionFactor();</span>
+<span class="fc" id="L608">        return this.intervalDelegate.getIntervalPositionFactor();</span>
     }
 
     /**
@@ -616,9 +616,9 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @param factor  the factor.
      */
     public void setIntervalPositionFactor(double factor) {
-<span class="nc" id="L619">        this.intervalDelegate.setIntervalPositionFactor(factor);</span>
-<span class="nc" id="L620">        fireDatasetChanged();</span>
-<span class="nc" id="L621">    }</span>
+<span class="fc" id="L619">        this.intervalDelegate.setIntervalPositionFactor(factor);</span>
+<span class="fc" id="L620">        fireDatasetChanged();</span>
+<span class="fc" id="L621">    }</span>
 
     /**
      * Returns whether the interval width is automatically calculated or not.
@@ -636,9 +636,9 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      * @param b  a boolean.
      */
     public void setAutoWidth(boolean b) {
-<span class="nc" id="L639">        this.intervalDelegate.setAutoWidth(b);</span>
-<span class="nc" id="L640">        fireDatasetChanged();</span>
-<span class="nc" id="L641">    }</span>
+<span class="fc" id="L639">        this.intervalDelegate.setAutoWidth(b);</span>
+<span class="fc" id="L640">        fireDatasetChanged();</span>
+<span class="fc" id="L641">    }</span>
 
     /**
      * Returns the range of the values in this dataset's range.
@@ -650,25 +650,25 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public Range getRangeBounds(boolean includeInterval) {
-<span class="nc" id="L653">        double lower = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L654">        double upper = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L655">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L656" title="All 2 branches missed.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc" id="L657">            XYSeries series = getSeries(s);</span>
-<span class="nc" id="L658">            double minY = series.getMinY();</span>
-<span class="nc bnc" id="L659" title="All 2 branches missed.">            if (!Double.isNaN(minY)) {</span>
-<span class="nc" id="L660">                lower = Math.min(lower, minY);</span>
+<span class="fc" id="L653">        double lower = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L654">        double upper = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L655">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L656" title="All 2 branches covered.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc" id="L657">            XYSeries series = getSeries(s);</span>
+<span class="fc" id="L658">            double minY = series.getMinY();</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">            if (!Double.isNaN(minY)) {</span>
+<span class="fc" id="L660">                lower = Math.min(lower, minY);</span>
             }
-<span class="nc" id="L662">            double maxY = series.getMaxY();</span>
-<span class="nc bnc" id="L663" title="All 2 branches missed.">            if (!Double.isNaN(maxY)) {</span>
-<span class="nc" id="L664">                upper = Math.max(upper, maxY);</span>
+<span class="fc" id="L662">            double maxY = series.getMaxY();</span>
+<span class="fc bfc" id="L663" title="All 2 branches covered.">            if (!Double.isNaN(maxY)) {</span>
+<span class="fc" id="L664">                upper = Math.max(upper, maxY);</span>
             }
         }
-<span class="nc bnc" id="L667" title="All 2 branches missed.">        if (lower &gt; upper) {</span>
-<span class="nc" id="L668">            return null;</span>
+<span class="fc bfc" id="L667" title="All 2 branches covered.">        if (lower &gt; upper) {</span>
+<span class="fc" id="L668">            return null;</span>
         }
         else {
-<span class="nc" id="L671">            return new Range(lower, upper);</span>
+<span class="fc" id="L671">            return new Range(lower, upper);</span>
         }
     }
 
@@ -682,21 +682,21 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public double getRangeLowerBound(boolean includeInterval) {
-<span class="nc" id="L685">        double result = Double.NaN;</span>
-<span class="nc" id="L686">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L687" title="All 2 branches missed.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc" id="L688">            XYSeries series = getSeries(s);</span>
-<span class="nc" id="L689">            double lowY = series.getMinY();</span>
-<span class="nc bnc" id="L690" title="All 2 branches missed.">            if (Double.isNaN(result)) {</span>
-<span class="nc" id="L691">                result = lowY;</span>
+<span class="fc" id="L685">        double result = Double.NaN;</span>
+<span class="fc" id="L686">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L687" title="All 2 branches covered.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc" id="L688">            XYSeries series = getSeries(s);</span>
+<span class="fc" id="L689">            double lowY = series.getMinY();</span>
+<span class="fc bfc" id="L690" title="All 2 branches covered.">            if (Double.isNaN(result)) {</span>
+<span class="fc" id="L691">                result = lowY;</span>
             }
             else {
-<span class="nc bnc" id="L694" title="All 2 branches missed.">                if (!Double.isNaN(lowY)) {</span>
-<span class="nc" id="L695">                    result = Math.min(result, lowY);</span>
+<span class="fc bfc" id="L694" title="All 2 branches covered.">                if (!Double.isNaN(lowY)) {</span>
+<span class="fc" id="L695">                    result = Math.min(result, lowY);</span>
                 }
             }
         }
-<span class="nc" id="L699">        return result;</span>
+<span class="fc" id="L699">        return result;</span>
     }
 
     /**
@@ -709,21 +709,21 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
      */
     @Override
     public double getRangeUpperBound(boolean includeInterval) {
-<span class="nc" id="L712">        double result = Double.NaN;</span>
-<span class="nc" id="L713">        int seriesCount = getSeriesCount();</span>
-<span class="nc bnc" id="L714" title="All 2 branches missed.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
-<span class="nc" id="L715">            XYSeries series = getSeries(s);</span>
-<span class="nc" id="L716">            double hiY = series.getMaxY();</span>
-<span class="nc bnc" id="L717" title="All 2 branches missed.">            if (Double.isNaN(result)) {</span>
-<span class="nc" id="L718">                result = hiY;</span>
+<span class="fc" id="L712">        double result = Double.NaN;</span>
+<span class="fc" id="L713">        int seriesCount = getSeriesCount();</span>
+<span class="fc bfc" id="L714" title="All 2 branches covered.">        for (int s = 0; s &lt; seriesCount; s++) {</span>
+<span class="fc" id="L715">            XYSeries series = getSeries(s);</span>
+<span class="fc" id="L716">            double hiY = series.getMaxY();</span>
+<span class="fc bfc" id="L717" title="All 2 branches covered.">            if (Double.isNaN(result)) {</span>
+<span class="fc" id="L718">                result = hiY;</span>
             }
             else {
-<span class="nc bnc" id="L721" title="All 2 branches missed.">                if (!Double.isNaN(hiY)) {</span>
-<span class="nc" id="L722">                    result = Math.max(result, hiY);</span>
+<span class="fc bfc" id="L721" title="All 2 branches covered.">                if (!Double.isNaN(hiY)) {</span>
+<span class="fc" id="L722">                    result = Math.max(result, hiY);</span>
                 }
             }
         }
-<span class="nc" id="L726">        return result;</span>
+<span class="fc" id="L726">        return result;</span>
     }
 
     /**
@@ -739,23 +739,23 @@ public class XYSeriesCollection extends AbstractIntervalXYDataset
     public void vetoableChange(PropertyChangeEvent e)
             throws PropertyVetoException {
         // if it is not the series name, then we have no interest
-<span class="nc bnc" id="L742" title="All 2 branches missed.">        if (!&quot;Key&quot;.equals(e.getPropertyName())) {</span>
+<span class="pc bpc" id="L742" title="1 of 2 branches missed.">        if (!&quot;Key&quot;.equals(e.getPropertyName())) {</span>
 <span class="nc" id="L743">            return;</span>
         }
         
         // to be defensive, let's check that the source series does in fact
         // belong to this collection
-<span class="nc" id="L748">        Series s = (Series) e.getSource();</span>
-<span class="nc bnc" id="L749" title="All 2 branches missed.">        if (getSeriesIndex(s.getKey()) == -1) {</span>
+<span class="fc" id="L748">        Series s = (Series) e.getSource();</span>
+<span class="pc bpc" id="L749" title="1 of 2 branches missed.">        if (getSeriesIndex(s.getKey()) == -1) {</span>
 <span class="nc" id="L750">            throw new IllegalStateException(&quot;Receiving events from a series &quot; +</span>
                     &quot;that does not belong to this collection.&quot;);
         }
         // check if the new series name already exists for another series
-<span class="nc" id="L754">        Comparable key = (Comparable) e.getNewValue();</span>
-<span class="nc bnc" id="L755" title="All 2 branches missed.">        if (getSeriesIndex(key) &gt;= 0) {</span>
-<span class="nc" id="L756">            throw new PropertyVetoException(&quot;Duplicate key2&quot;, e);</span>
+<span class="fc" id="L754">        Comparable key = (Comparable) e.getNewValue();</span>
+<span class="fc bfc" id="L755" title="All 2 branches covered.">        if (getSeriesIndex(key) &gt;= 0) {</span>
+<span class="fc" id="L756">            throw new PropertyVetoException(&quot;Duplicate key2&quot;, e);</span>
         }
-<span class="nc" id="L758">    }</span>
+<span class="fc" id="L758">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

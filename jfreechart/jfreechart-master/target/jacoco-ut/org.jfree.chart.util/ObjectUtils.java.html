@@ -40,8 +40,8 @@ public final class ObjectUtils {
     /**
      * Default constructor - private.
      */
-<span class="nc" id="L43">    private ObjectUtils() {</span>
-<span class="nc" id="L44">    }</span>
+    private ObjectUtils() {
+    }
 
     /**
      * Returns {@code true} if the two objects are equal OR both
@@ -52,14 +52,14 @@ public final class ObjectUtils {
      * @return {@code true} or {@code false}.
      */
     public static boolean equal(Object o1, Object o2) {
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (o1 == o2) {</span>
-<span class="nc" id="L56">            return true;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (o1 == o2) {</span>
+<span class="fc" id="L56">            return true;</span>
         }
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (o1 != null) {</span>
-<span class="nc" id="L59">            return o1.equals(o2);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (o1 != null) {</span>
+<span class="fc" id="L59">            return o1.equals(o2);</span>
         }
         else {
-<span class="nc" id="L62">            return false;</span>
+<span class="fc" id="L62">            return false;</span>
         }
     }
 
@@ -72,11 +72,11 @@ public final class ObjectUtils {
      *         {@code null}).
      */
     public static int hashCode(Object object) {
-<span class="nc" id="L75">        int result = 0;</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (object != null) {</span>
-<span class="nc" id="L77">            result = object.hashCode();</span>
+<span class="fc" id="L75">        int result = 0;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (object != null) {</span>
+<span class="fc" id="L77">            result = object.hashCode();</span>
         }
-<span class="nc" id="L79">        return result;</span>
+<span class="fc" id="L79">        return result;</span>
     }
 
     /**
@@ -91,10 +91,10 @@ public final class ObjectUtils {
      */
     public static Object clone(Object object)
         throws CloneNotSupportedException {
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (object == null) {</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (object == null) {</span>
 <span class="nc" id="L95">            throw new IllegalArgumentException(&quot;Null 'object' argument.&quot;);</span>
         }
-<span class="nc" id="L97">        return CloneUtils.clone(object);</span>
+<span class="fc" id="L97">        return CloneUtils.clone(object);</span>
     }
 
     /**
@@ -110,21 +110,21 @@ public final class ObjectUtils {
     public static Collection deepClone(Collection collection)
             throws CloneNotSupportedException {
 
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (collection == null) {</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (collection == null) {</span>
 <span class="nc" id="L114">            throw new IllegalArgumentException(&quot;Null 'collection' argument.&quot;);</span>
         }
         // all JDK-Collections are cloneable ...
         // and if the collection is not clonable, then we should throw
         // a CloneNotSupportedException anyway ...
-<span class="nc" id="L119">        Collection result = (Collection) ObjectUtils.clone(collection);</span>
-<span class="nc" id="L120">        result.clear();</span>
-<span class="nc" id="L121">        Iterator iterator = collection.iterator();</span>
-<span class="nc bnc" id="L122" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L123">            Object item = iterator.next();</span>
-<span class="nc" id="L124">            result.add(CloneUtils.clone(item));</span>
-<span class="nc" id="L125">        }</span>
-<span class="nc" id="L126">        return result;</span>
+<span class="fc" id="L119">        Collection result = (Collection) ObjectUtils.clone(collection);</span>
+<span class="fc" id="L120">        result.clear();</span>
+<span class="fc" id="L121">        Iterator iterator = collection.iterator();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L123">            Object item = iterator.next();</span>
+<span class="fc" id="L124">            result.add(CloneUtils.clone(item));</span>
+<span class="fc" id="L125">        }</span>
+<span class="fc" id="L126">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

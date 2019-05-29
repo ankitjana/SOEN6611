@@ -87,22 +87,22 @@ public class TimePeriodValues extends Series implements Serializable {
     private List data;
 
     /** Index of the time period with the minimum start milliseconds. */
-<span class="nc" id="L90">    private int minStartIndex = -1;</span>
+<span class="fc" id="L90">    private int minStartIndex = -1;</span>
     
     /** Index of the time period with the maximum start milliseconds. */
-<span class="nc" id="L93">    private int maxStartIndex = -1;</span>
+<span class="fc" id="L93">    private int maxStartIndex = -1;</span>
     
     /** Index of the time period with the minimum middle milliseconds. */
-<span class="nc" id="L96">    private int minMiddleIndex = -1;</span>
+<span class="fc" id="L96">    private int minMiddleIndex = -1;</span>
     
     /** Index of the time period with the maximum middle milliseconds. */
-<span class="nc" id="L99">    private int maxMiddleIndex = -1;</span>
+<span class="fc" id="L99">    private int maxMiddleIndex = -1;</span>
     
     /** Index of the time period with the minimum end milliseconds. */
-<span class="nc" id="L102">    private int minEndIndex = -1;</span>
+<span class="fc" id="L102">    private int minEndIndex = -1;</span>
     
     /** Index of the time period with the maximum end milliseconds. */
-<span class="nc" id="L105">    private int maxEndIndex = -1;</span>
+<span class="fc" id="L105">    private int maxEndIndex = -1;</span>
 
     /**
      * Creates a new (empty) collection of time period values.
@@ -110,8 +110,8 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param name  the name of the series ({@code null} not permitted).
      */
     public TimePeriodValues(String name) {
-<span class="nc" id="L113">        this(name, DEFAULT_DOMAIN_DESCRIPTION, DEFAULT_RANGE_DESCRIPTION);</span>
-<span class="nc" id="L114">    }</span>
+<span class="fc" id="L113">        this(name, DEFAULT_DOMAIN_DESCRIPTION, DEFAULT_RANGE_DESCRIPTION);</span>
+<span class="fc" id="L114">    }</span>
 
     /**
      * Creates a new time series that contains no data.
@@ -125,11 +125,11 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param range  the range description.
      */
     public TimePeriodValues(String name, String domain, String range) {
-<span class="nc" id="L128">        super(name);</span>
-<span class="nc" id="L129">        this.domain = domain;</span>
-<span class="nc" id="L130">        this.range = range;</span>
-<span class="nc" id="L131">        this.data = new ArrayList();</span>
-<span class="nc" id="L132">    }</span>
+<span class="fc" id="L128">        super(name);</span>
+<span class="fc" id="L129">        this.domain = domain;</span>
+<span class="fc" id="L130">        this.range = range;</span>
+<span class="fc" id="L131">        this.data = new ArrayList();</span>
+<span class="fc" id="L132">    }</span>
 
     /**
      * Returns the domain description.
@@ -140,7 +140,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #setDomainDescription(String)
      */
     public String getDomainDescription() {
-<span class="nc" id="L143">        return this.domain;</span>
+<span class="fc" id="L143">        return this.domain;</span>
     }
 
     /**
@@ -152,10 +152,10 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #getDomainDescription()
      */
     public void setDomainDescription(String description) {
-<span class="nc" id="L155">        String old = this.domain;</span>
-<span class="nc" id="L156">        this.domain = description;</span>
-<span class="nc" id="L157">        firePropertyChange(&quot;Domain&quot;, old, description);</span>
-<span class="nc" id="L158">    }</span>
+<span class="fc" id="L155">        String old = this.domain;</span>
+<span class="fc" id="L156">        this.domain = description;</span>
+<span class="fc" id="L157">        firePropertyChange(&quot;Domain&quot;, old, description);</span>
+<span class="fc" id="L158">    }</span>
 
     /**
      * Returns the range description.
@@ -166,7 +166,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #setRangeDescription(String)
      */
     public String getRangeDescription() {
-<span class="nc" id="L169">        return this.range;</span>
+<span class="fc" id="L169">        return this.range;</span>
     }
 
     /**
@@ -178,10 +178,10 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #getRangeDescription()
      */
     public void setRangeDescription(String description) {
-<span class="nc" id="L181">        String old = this.range;</span>
-<span class="nc" id="L182">        this.range = description;</span>
-<span class="nc" id="L183">        firePropertyChange(&quot;Range&quot;, old, description);</span>
-<span class="nc" id="L184">    }</span>
+<span class="fc" id="L181">        String old = this.range;</span>
+<span class="fc" id="L182">        this.range = description;</span>
+<span class="fc" id="L183">        firePropertyChange(&quot;Range&quot;, old, description);</span>
+<span class="fc" id="L184">    }</span>
 
     /**
      * Returns the number of items in the series.
@@ -190,7 +190,7 @@ public class TimePeriodValues extends Series implements Serializable {
      */
     @Override
     public int getItemCount() {
-<span class="nc" id="L193">        return this.data.size();</span>
+<span class="fc" id="L193">        return this.data.size();</span>
     }
 
     /**
@@ -202,7 +202,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return One data item for the series.
      */
     public TimePeriodValue getDataItem(int index) {
-<span class="nc" id="L205">        return (TimePeriodValue) this.data.get(index);</span>
+<span class="fc" id="L205">        return (TimePeriodValue) this.data.get(index);</span>
     }
 
     /**
@@ -216,7 +216,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #getDataItem(int)
      */
     public TimePeriod getTimePeriod(int index) {
-<span class="nc" id="L219">        return getDataItem(index).getPeriod();</span>
+<span class="fc" id="L219">        return getDataItem(index).getPeriod();</span>
     }
 
     /**
@@ -230,7 +230,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #getDataItem(int)
      */
     public Number getValue(int index) {
-<span class="nc" id="L233">        return getDataItem(index).getValue();</span>
+<span class="fc" id="L233">        return getDataItem(index).getValue();</span>
     }
 
     /**
@@ -240,11 +240,11 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param item  the item ({@code null} not permitted).
      */
     public void add(TimePeriodValue item) {
-<span class="nc" id="L243">        Args.nullNotPermitted(item, &quot;item&quot;);</span>
-<span class="nc" id="L244">        this.data.add(item);</span>
-<span class="nc" id="L245">        updateBounds(item.getPeriod(), this.data.size() - 1);</span>
-<span class="nc" id="L246">        fireSeriesChanged();</span>
-<span class="nc" id="L247">    }</span>
+<span class="fc" id="L243">        Args.nullNotPermitted(item, &quot;item&quot;);</span>
+<span class="fc" id="L244">        this.data.add(item);</span>
+<span class="fc" id="L245">        updateBounds(item.getPeriod(), this.data.size() - 1);</span>
+<span class="fc" id="L246">        fireSeriesChanged();</span>
+<span class="fc" id="L247">    }</span>
     
     /**
      * Update the index values for the maximum and minimum bounds.
@@ -254,99 +254,99 @@ public class TimePeriodValues extends Series implements Serializable {
      */
     private void updateBounds(TimePeriod period, int index) {
         
-<span class="nc" id="L257">        long start = period.getStart().getTime();</span>
-<span class="nc" id="L258">        long end = period.getEnd().getTime();</span>
-<span class="nc" id="L259">        long middle = start + ((end - start) / 2);</span>
+<span class="fc" id="L257">        long start = period.getStart().getTime();</span>
+<span class="fc" id="L258">        long end = period.getEnd().getTime();</span>
+<span class="fc" id="L259">        long middle = start + ((end - start) / 2);</span>
 
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (this.minStartIndex &gt;= 0) {</span>
-<span class="nc" id="L262">            long minStart = getDataItem(this.minStartIndex).getPeriod()</span>
-<span class="nc" id="L263">                .getStart().getTime();</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">            if (start &lt; minStart) {</span>
-<span class="nc" id="L265">                this.minStartIndex = index;           </span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (this.minStartIndex &gt;= 0) {</span>
+<span class="fc" id="L262">            long minStart = getDataItem(this.minStartIndex).getPeriod()</span>
+<span class="fc" id="L263">                .getStart().getTime();</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">            if (start &lt; minStart) {</span>
+<span class="fc" id="L265">                this.minStartIndex = index;           </span>
             }
-<span class="nc" id="L267">        }</span>
+<span class="fc" id="L267">        }</span>
         else {
-<span class="nc" id="L269">            this.minStartIndex = index;</span>
+<span class="fc" id="L269">            this.minStartIndex = index;</span>
         }
         
-<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (this.maxStartIndex &gt;= 0) {</span>
-<span class="nc" id="L273">            long maxStart = getDataItem(this.maxStartIndex).getPeriod()</span>
-<span class="nc" id="L274">                .getStart().getTime();</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">            if (start &gt; maxStart) {</span>
-<span class="nc" id="L276">                this.maxStartIndex = index;           </span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (this.maxStartIndex &gt;= 0) {</span>
+<span class="fc" id="L273">            long maxStart = getDataItem(this.maxStartIndex).getPeriod()</span>
+<span class="fc" id="L274">                .getStart().getTime();</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">            if (start &gt; maxStart) {</span>
+<span class="fc" id="L276">                this.maxStartIndex = index;           </span>
             }
-<span class="nc" id="L278">        }</span>
+<span class="fc" id="L278">        }</span>
         else {
-<span class="nc" id="L280">            this.maxStartIndex = index;</span>
+<span class="fc" id="L280">            this.maxStartIndex = index;</span>
         }
         
-<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (this.minMiddleIndex &gt;= 0) {</span>
-<span class="nc" id="L284">            long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()</span>
-<span class="nc" id="L285">                .getTime();</span>
-<span class="nc" id="L286">            long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()</span>
-<span class="nc" id="L287">                .getTime();</span>
-<span class="nc" id="L288">            long minMiddle = s + (e - s) / 2;</span>
-<span class="nc bnc" id="L289" title="All 2 branches missed.">            if (middle &lt; minMiddle) {</span>
-<span class="nc" id="L290">                this.minMiddleIndex = index;           </span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (this.minMiddleIndex &gt;= 0) {</span>
+<span class="fc" id="L284">            long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()</span>
+<span class="fc" id="L285">                .getTime();</span>
+<span class="fc" id="L286">            long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()</span>
+<span class="fc" id="L287">                .getTime();</span>
+<span class="fc" id="L288">            long minMiddle = s + (e - s) / 2;</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            if (middle &lt; minMiddle) {</span>
+<span class="fc" id="L290">                this.minMiddleIndex = index;           </span>
             }
-<span class="nc" id="L292">        }</span>
+<span class="fc" id="L292">        }</span>
         else {
-<span class="nc" id="L294">            this.minMiddleIndex = index;</span>
+<span class="fc" id="L294">            this.minMiddleIndex = index;</span>
         }
         
-<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (this.maxMiddleIndex &gt;= 0) {</span>
-<span class="nc" id="L298">            long s = getDataItem(this.maxMiddleIndex).getPeriod().getStart()</span>
-<span class="nc" id="L299">                .getTime();</span>
-<span class="nc" id="L300">            long e = getDataItem(this.maxMiddleIndex).getPeriod().getEnd()</span>
-<span class="nc" id="L301">                .getTime();</span>
-<span class="nc" id="L302">            long maxMiddle = s + (e - s) / 2;</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (middle &gt; maxMiddle) {</span>
-<span class="nc" id="L304">                this.maxMiddleIndex = index;           </span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        if (this.maxMiddleIndex &gt;= 0) {</span>
+<span class="fc" id="L298">            long s = getDataItem(this.maxMiddleIndex).getPeriod().getStart()</span>
+<span class="fc" id="L299">                .getTime();</span>
+<span class="fc" id="L300">            long e = getDataItem(this.maxMiddleIndex).getPeriod().getEnd()</span>
+<span class="fc" id="L301">                .getTime();</span>
+<span class="fc" id="L302">            long maxMiddle = s + (e - s) / 2;</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            if (middle &gt; maxMiddle) {</span>
+<span class="fc" id="L304">                this.maxMiddleIndex = index;           </span>
             }
-<span class="nc" id="L306">        }</span>
+<span class="fc" id="L306">        }</span>
         else {
-<span class="nc" id="L308">            this.maxMiddleIndex = index;</span>
+<span class="fc" id="L308">            this.maxMiddleIndex = index;</span>
         }
         
-<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (this.minEndIndex &gt;= 0) {</span>
-<span class="nc" id="L312">            long minEnd = getDataItem(this.minEndIndex).getPeriod().getEnd()</span>
-<span class="nc" id="L313">                .getTime();</span>
-<span class="nc bnc" id="L314" title="All 2 branches missed.">            if (end &lt; minEnd) {</span>
-<span class="nc" id="L315">                this.minEndIndex = index;           </span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">        if (this.minEndIndex &gt;= 0) {</span>
+<span class="fc" id="L312">            long minEnd = getDataItem(this.minEndIndex).getPeriod().getEnd()</span>
+<span class="fc" id="L313">                .getTime();</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">            if (end &lt; minEnd) {</span>
+<span class="fc" id="L315">                this.minEndIndex = index;           </span>
             }
-<span class="nc" id="L317">        }</span>
+<span class="fc" id="L317">        }</span>
         else {
-<span class="nc" id="L319">            this.minEndIndex = index;</span>
+<span class="fc" id="L319">            this.minEndIndex = index;</span>
         }
        
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (this.maxEndIndex &gt;= 0) {</span>
-<span class="nc" id="L323">            long maxEnd = getDataItem(this.maxEndIndex).getPeriod().getEnd()</span>
-<span class="nc" id="L324">                .getTime();</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">            if (end &gt; maxEnd) {</span>
-<span class="nc" id="L326">                this.maxEndIndex = index;           </span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        if (this.maxEndIndex &gt;= 0) {</span>
+<span class="fc" id="L323">            long maxEnd = getDataItem(this.maxEndIndex).getPeriod().getEnd()</span>
+<span class="fc" id="L324">                .getTime();</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">            if (end &gt; maxEnd) {</span>
+<span class="fc" id="L326">                this.maxEndIndex = index;           </span>
             }
-<span class="nc" id="L328">        }</span>
+<span class="fc" id="L328">        }</span>
         else {
-<span class="nc" id="L330">            this.maxEndIndex = index;</span>
+<span class="fc" id="L330">            this.maxEndIndex = index;</span>
         }
         
-<span class="nc" id="L333">    }</span>
+<span class="fc" id="L333">    }</span>
     
     /**
      * Recalculates the bounds for the collection of items.
      */
     private void recalculateBounds() {
-<span class="nc" id="L339">        this.minStartIndex = -1;</span>
-<span class="nc" id="L340">        this.minMiddleIndex = -1;</span>
-<span class="nc" id="L341">        this.minEndIndex = -1;</span>
-<span class="nc" id="L342">        this.maxStartIndex = -1;</span>
-<span class="nc" id="L343">        this.maxMiddleIndex = -1;</span>
-<span class="nc" id="L344">        this.maxEndIndex = -1;</span>
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L339">        this.minStartIndex = -1;</span>
+<span class="fc" id="L340">        this.minMiddleIndex = -1;</span>
+<span class="fc" id="L341">        this.minEndIndex = -1;</span>
+<span class="fc" id="L342">        this.maxStartIndex = -1;</span>
+<span class="fc" id="L343">        this.maxMiddleIndex = -1;</span>
+<span class="fc" id="L344">        this.maxEndIndex = -1;</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        for (int i = 0; i &lt; this.data.size(); i++) {</span>
 <span class="nc" id="L346">            TimePeriodValue tpv = (TimePeriodValue) this.data.get(i);</span>
 <span class="nc" id="L347">            updateBounds(tpv.getPeriod(), i);</span>
         }
-<span class="nc" id="L349">    }</span>
+<span class="fc" id="L349">    }</span>
 
     /**
      * Adds a new data item to the series and sends a {@link SeriesChangeEvent}
@@ -358,9 +358,9 @@ public class TimePeriodValues extends Series implements Serializable {
      * @see #add(TimePeriod, Number)
      */
     public void add(TimePeriod period, double value) {
-<span class="nc" id="L361">        TimePeriodValue item = new TimePeriodValue(period, value);</span>
-<span class="nc" id="L362">        add(item);</span>
-<span class="nc" id="L363">    }</span>
+<span class="fc" id="L361">        TimePeriodValue item = new TimePeriodValue(period, value);</span>
+<span class="fc" id="L362">        add(item);</span>
+<span class="fc" id="L363">    }</span>
 
     /**
      * Adds a new data item to the series and sends a {@link SeriesChangeEvent}
@@ -370,9 +370,9 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param value  the value ({@code null} permitted).
      */
     public void add(TimePeriod period, Number value) {
-<span class="nc" id="L373">        TimePeriodValue item = new TimePeriodValue(period, value);</span>
-<span class="nc" id="L374">        add(item);</span>
-<span class="nc" id="L375">    }</span>
+<span class="fc" id="L373">        TimePeriodValue item = new TimePeriodValue(period, value);</span>
+<span class="fc" id="L374">        add(item);</span>
+<span class="fc" id="L375">    }</span>
 
     /**
      * Updates (changes) the value of a data item and sends a 
@@ -382,10 +382,10 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param value  the new value ({@code null} not permitted).
      */
     public void update(int index, Number value) {
-<span class="nc" id="L385">        TimePeriodValue item = getDataItem(index);</span>
-<span class="nc" id="L386">        item.setValue(value);</span>
-<span class="nc" id="L387">        fireSeriesChanged();</span>
-<span class="nc" id="L388">    }</span>
+<span class="fc" id="L385">        TimePeriodValue item = getDataItem(index);</span>
+<span class="fc" id="L386">        item.setValue(value);</span>
+<span class="fc" id="L387">        fireSeriesChanged();</span>
+<span class="fc" id="L388">    }</span>
 
     /**
      * Deletes data from start until end index (end inclusive) and sends a
@@ -395,12 +395,12 @@ public class TimePeriodValues extends Series implements Serializable {
      * @param end  the index of the last period to delete.
      */
     public void delete(int start, int end) {
-<span class="nc bnc" id="L398" title="All 2 branches missed.">        for (int i = 0; i &lt;= (end - start); i++) {</span>
-<span class="nc" id="L399">            this.data.remove(start);</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">        for (int i = 0; i &lt;= (end - start); i++) {</span>
+<span class="fc" id="L399">            this.data.remove(start);</span>
         }
-<span class="nc" id="L401">        recalculateBounds();</span>
-<span class="nc" id="L402">        fireSeriesChanged();</span>
-<span class="nc" id="L403">    }</span>
+<span class="fc" id="L401">        recalculateBounds();</span>
+<span class="fc" id="L402">        fireSeriesChanged();</span>
+<span class="fc" id="L403">    }</span>
     
     /**
      * Tests the series for equality with another object.
@@ -411,34 +411,34 @@ public class TimePeriodValues extends Series implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L415">            return true;</span>
+<span class="fc bfc" id="L414" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L415">            return true;</span>
         }
-<span class="nc bnc" id="L417" title="All 2 branches missed.">        if (!(obj instanceof TimePeriodValues)) {</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (!(obj instanceof TimePeriodValues)) {</span>
 <span class="nc" id="L418">            return false;</span>
         }
-<span class="nc bnc" id="L420" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L421">            return false;</span>
+<span class="fc bfc" id="L420" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L421">            return false;</span>
         }
-<span class="nc" id="L423">        TimePeriodValues that = (TimePeriodValues) obj;</span>
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.getDomainDescription(), </span>
-<span class="nc" id="L425">                that.getDomainDescription())) {</span>
-<span class="nc" id="L426">            return false;</span>
+<span class="fc" id="L423">        TimePeriodValues that = (TimePeriodValues) obj;</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.getDomainDescription(), </span>
+<span class="fc" id="L425">                that.getDomainDescription())) {</span>
+<span class="fc" id="L426">            return false;</span>
         }
-<span class="nc bnc" id="L428" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.getRangeDescription(), </span>
-<span class="nc" id="L429">                that.getRangeDescription())) {</span>
-<span class="nc" id="L430">            return false;</span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.getRangeDescription(), </span>
+<span class="fc" id="L429">                that.getRangeDescription())) {</span>
+<span class="fc" id="L430">            return false;</span>
         }
-<span class="nc" id="L432">        int count = getItemCount();</span>
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (count != that.getItemCount()) {</span>
-<span class="nc" id="L434">            return false;</span>
+<span class="fc" id="L432">        int count = getItemCount();</span>
+<span class="fc bfc" id="L433" title="All 2 branches covered.">        if (count != that.getItemCount()) {</span>
+<span class="fc" id="L434">            return false;</span>
         }
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc bnc" id="L437" title="All 2 branches missed.">            if (!getDataItem(i).equals(that.getDataItem(i))) {</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">            if (!getDataItem(i).equals(that.getDataItem(i))) {</span>
 <span class="nc" id="L438">                return false;</span>
             }
         }
-<span class="nc" id="L441">        return true;</span>
+<span class="fc" id="L441">        return true;</span>
     }
 
     /**
@@ -478,8 +478,8 @@ public class TimePeriodValues extends Series implements Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L481">        Object clone = createCopy(0, getItemCount() - 1);</span>
-<span class="nc" id="L482">        return clone;</span>
+<span class="fc" id="L481">        Object clone = createCopy(0, getItemCount() - 1);</span>
+<span class="fc" id="L482">        return clone;</span>
     }
 
     /**
@@ -496,22 +496,22 @@ public class TimePeriodValues extends Series implements Serializable {
     public TimePeriodValues createCopy(int start, int end) 
         throws CloneNotSupportedException {
 
-<span class="nc" id="L499">        TimePeriodValues copy = (TimePeriodValues) super.clone();</span>
+<span class="fc" id="L499">        TimePeriodValues copy = (TimePeriodValues) super.clone();</span>
 
-<span class="nc" id="L501">        copy.data = new ArrayList();</span>
-<span class="nc bnc" id="L502" title="All 2 branches missed.">        if (this.data.size() &gt; 0) {</span>
-<span class="nc bnc" id="L503" title="All 2 branches missed.">            for (int index = start; index &lt;= end; index++) {</span>
-<span class="nc" id="L504">                TimePeriodValue item = (TimePeriodValue) this.data.get(index);</span>
-<span class="nc" id="L505">                TimePeriodValue clone = (TimePeriodValue) item.clone();</span>
+<span class="fc" id="L501">        copy.data = new ArrayList();</span>
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">        if (this.data.size() &gt; 0) {</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">            for (int index = start; index &lt;= end; index++) {</span>
+<span class="fc" id="L504">                TimePeriodValue item = (TimePeriodValue) this.data.get(index);</span>
+<span class="fc" id="L505">                TimePeriodValue clone = (TimePeriodValue) item.clone();</span>
                 try {
-<span class="nc" id="L507">                    copy.add(clone);</span>
+<span class="fc" id="L507">                    copy.add(clone);</span>
                 }
 <span class="nc" id="L509">                catch (SeriesException e) {</span>
 <span class="nc" id="L510">                    System.err.println(&quot;Failed to add cloned item.&quot;);</span>
-<span class="nc" id="L511">                }</span>
+<span class="fc" id="L511">                }</span>
             }
         }
-<span class="nc" id="L514">        return copy;</span>
+<span class="fc" id="L514">        return copy;</span>
 
     }
     
@@ -521,7 +521,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMinStartIndex() {
-<span class="nc" id="L524">        return this.minStartIndex;</span>
+<span class="fc" id="L524">        return this.minStartIndex;</span>
     }
     
     /**
@@ -530,7 +530,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMaxStartIndex() {
-<span class="nc" id="L533">        return this.maxStartIndex;</span>
+<span class="fc" id="L533">        return this.maxStartIndex;</span>
     }
 
     /**
@@ -540,7 +540,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMinMiddleIndex() {
-<span class="nc" id="L543">        return this.minMiddleIndex;</span>
+<span class="fc" id="L543">        return this.minMiddleIndex;</span>
     }
     
     /**
@@ -550,7 +550,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMaxMiddleIndex() {
-<span class="nc" id="L553">        return this.maxMiddleIndex;</span>
+<span class="fc" id="L553">        return this.maxMiddleIndex;</span>
     }
 
     /**
@@ -559,7 +559,7 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMinEndIndex() {
-<span class="nc" id="L562">        return this.minEndIndex;</span>
+<span class="fc" id="L562">        return this.minEndIndex;</span>
     }
     
     /**
@@ -568,8 +568,8 @@ public class TimePeriodValues extends Series implements Serializable {
      * @return The index.
      */
     public int getMaxEndIndex() {
-<span class="nc" id="L571">        return this.maxEndIndex;</span>
+<span class="fc" id="L571">        return this.maxEndIndex;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

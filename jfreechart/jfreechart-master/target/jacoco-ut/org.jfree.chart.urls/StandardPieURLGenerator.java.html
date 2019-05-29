@@ -68,20 +68,20 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
     private static final long serialVersionUID = 1626966402065883419L;
 
     /** The prefix. */
-<span class="nc" id="L71">    private String prefix = &quot;index.html&quot;;</span>
+<span class="fc" id="L71">    private String prefix = &quot;index.html&quot;;</span>
 
     /** The category parameter name. */
-<span class="nc" id="L74">    private String categoryParamName = &quot;category&quot;;</span>
+<span class="fc" id="L74">    private String categoryParamName = &quot;category&quot;;</span>
 
     /** The pie index parameter name. */
-<span class="nc" id="L77">    private String indexParamName = &quot;pieIndex&quot;;</span>
+<span class="fc" id="L77">    private String indexParamName = &quot;pieIndex&quot;;</span>
 
     /**
      * Default constructor.
      */
     public StandardPieURLGenerator() {
-<span class="nc" id="L83">        this(&quot;index.html&quot;);</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L83">        this(&quot;index.html&quot;);</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Creates a new generator.
@@ -89,8 +89,8 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
      * @param prefix  the prefix ({@code null} not permitted).
      */
     public StandardPieURLGenerator(String prefix) {
-<span class="nc" id="L92">        this(prefix, &quot;category&quot;);</span>
-<span class="nc" id="L93">    }</span>
+<span class="fc" id="L92">        this(prefix, &quot;category&quot;);</span>
+<span class="fc" id="L93">    }</span>
 
     /**
      * Creates a new generator.
@@ -100,8 +100,8 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
      *         permitted).
      */
     public StandardPieURLGenerator(String prefix, String categoryParamName) {
-<span class="nc" id="L103">        this(prefix, categoryParamName, &quot;pieIndex&quot;);</span>
-<span class="nc" id="L104">    }</span>
+<span class="fc" id="L103">        this(prefix, categoryParamName, &quot;pieIndex&quot;);</span>
+<span class="fc" id="L104">    }</span>
 
     /**
      * Creates a new generator.
@@ -112,13 +112,13 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
      * @param indexParamName  the index parameter name ({@code null} permitted).
      */
     public StandardPieURLGenerator(String prefix, String categoryParamName,
-<span class="nc" id="L115">            String indexParamName) {</span>
-<span class="nc" id="L116">        Args.nullNotPermitted(prefix, &quot;prefix&quot;);</span>
-<span class="nc" id="L117">        Args.nullNotPermitted(categoryParamName, &quot;categoryParamName&quot;);</span>
-<span class="nc" id="L118">        this.prefix = prefix;</span>
-<span class="nc" id="L119">        this.categoryParamName = categoryParamName;</span>
-<span class="nc" id="L120">        this.indexParamName = indexParamName;</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L115">            String indexParamName) {</span>
+<span class="fc" id="L116">        Args.nullNotPermitted(prefix, &quot;prefix&quot;);</span>
+<span class="fc" id="L117">        Args.nullNotPermitted(categoryParamName, &quot;categoryParamName&quot;);</span>
+<span class="fc" id="L118">        this.prefix = prefix;</span>
+<span class="fc" id="L119">        this.categoryParamName = categoryParamName;</span>
+<span class="fc" id="L120">        this.indexParamName = indexParamName;</span>
+<span class="fc" id="L121">    }</span>
 
     /**
      * Generates a URL.
@@ -132,22 +132,22 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
     @Override
     public String generateURL(PieDataset dataset, Comparable key,
             int pieIndex) {
-<span class="nc" id="L135">        String url = this.prefix;</span>
+<span class="fc" id="L135">        String url = this.prefix;</span>
         try {
-<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (url.contains(&quot;?&quot;)) {</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">            if (url.contains(&quot;?&quot;)) {</span>
 <span class="nc" id="L138">                url += &quot;&amp;amp;&quot; + this.categoryParamName + &quot;=&quot;</span>
 <span class="nc" id="L139">                        + URLEncoder.encode(key.toString(), &quot;UTF-8&quot;);</span>
             } else {
-<span class="nc" id="L141">                url += &quot;?&quot; + this.categoryParamName + &quot;=&quot;</span>
-<span class="nc" id="L142">                        + URLEncoder.encode(key.toString(), &quot;UTF-8&quot;);</span>
+<span class="fc" id="L141">                url += &quot;?&quot; + this.categoryParamName + &quot;=&quot;</span>
+<span class="fc" id="L142">                        + URLEncoder.encode(key.toString(), &quot;UTF-8&quot;);</span>
             }
-<span class="nc bnc" id="L144" title="All 2 branches missed.">            if (this.indexParamName != null) {</span>
-<span class="nc" id="L145">                url += &quot;&amp;amp;&quot; + this.indexParamName + &quot;=&quot; + pieIndex;</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">            if (this.indexParamName != null) {</span>
+<span class="fc" id="L145">                url += &quot;&amp;amp;&quot; + this.indexParamName + &quot;=&quot; + pieIndex;</span>
             }
 <span class="nc" id="L147">        } catch (UnsupportedEncodingException e) {  // this won't happen :)</span>
 <span class="nc" id="L148">            throw new RuntimeException(e);</span>
-<span class="nc" id="L149">        }</span>
-<span class="nc" id="L150">        return url;</span>
+<span class="fc" id="L149">        }</span>
+<span class="fc" id="L150">        return url;</span>
     }
 
     /**
@@ -159,23 +159,23 @@ public class StandardPieURLGenerator implements PieURLGenerator, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L163">            return true;</span>
         }
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (!(obj instanceof StandardPieURLGenerator)) {</span>
-<span class="nc" id="L166">            return false;</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (!(obj instanceof StandardPieURLGenerator)) {</span>
+<span class="fc" id="L166">            return false;</span>
         }
-<span class="nc" id="L168">        StandardPieURLGenerator that = (StandardPieURLGenerator) obj;</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (!this.prefix.equals(that.prefix)) {</span>
-<span class="nc" id="L170">            return false;</span>
+<span class="fc" id="L168">        StandardPieURLGenerator that = (StandardPieURLGenerator) obj;</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (!this.prefix.equals(that.prefix)) {</span>
+<span class="fc" id="L170">            return false;</span>
         }
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (!this.categoryParamName.equals(that.categoryParamName)) {</span>
-<span class="nc" id="L173">            return false;</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (!this.categoryParamName.equals(that.categoryParamName)) {</span>
+<span class="fc" id="L173">            return false;</span>
         }
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.indexParamName, that.indexParamName)) {</span>
-<span class="nc" id="L176">            return false;</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.indexParamName, that.indexParamName)) {</span>
+<span class="fc" id="L176">            return false;</span>
         }
-<span class="nc" id="L178">        return true;</span>
+<span class="fc" id="L178">        return true;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

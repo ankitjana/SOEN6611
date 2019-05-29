@@ -76,9 +76,9 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
     /**
      * Constructs a new collection of tick units.
      */
-<span class="nc" id="L79">    public TickUnits() {</span>
-<span class="nc" id="L80">        this.tickUnits = new ArrayList();</span>
-<span class="nc" id="L81">    }</span>
+<span class="fc" id="L79">    public TickUnits() {</span>
+<span class="fc" id="L80">        this.tickUnits = new ArrayList();</span>
+<span class="fc" id="L81">    }</span>
 
     /**
      * Adds a tick unit to the collection.  The tick units are maintained in
@@ -87,12 +87,12 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
      * @param unit  the tick unit to add ({@code null} not permitted).
      */
     public void add(TickUnit unit) {
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (unit == null) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (unit == null) {</span>
 <span class="nc" id="L91">            throw new NullPointerException(&quot;Null 'unit' argument.&quot;);</span>
         }
-<span class="nc" id="L93">        this.tickUnits.add(unit);</span>
-<span class="nc" id="L94">        Collections.sort(this.tickUnits);</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L93">        this.tickUnits.add(unit);</span>
+<span class="fc" id="L94">        Collections.sort(this.tickUnits);</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Returns the number of tick units in this collection.
@@ -149,14 +149,14 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
      */
     @Override
     public TickUnit getCeilingTickUnit(TickUnit unit) {
-<span class="nc" id="L152">        int index = Collections.binarySearch(this.tickUnits, unit);</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (index &gt;= 0) {</span>
-<span class="nc" id="L154">            return (TickUnit) this.tickUnits.get(index);</span>
+<span class="fc" id="L152">        int index = Collections.binarySearch(this.tickUnits, unit);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (index &gt;= 0) {</span>
+<span class="fc" id="L154">            return (TickUnit) this.tickUnits.get(index);</span>
         }
         else {
-<span class="nc" id="L157">            index = -(index + 1);</span>
-<span class="nc" id="L158">            return (TickUnit) this.tickUnits.get(Math.min(index,</span>
-<span class="nc" id="L159">                    this.tickUnits.size() - 1));</span>
+<span class="fc" id="L157">            index = -(index + 1);</span>
+<span class="fc" id="L158">            return (TickUnit) this.tickUnits.get(Math.min(index,</span>
+<span class="fc" id="L159">                    this.tickUnits.size() - 1));</span>
         }
     }
 
@@ -170,8 +170,8 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
      */
     @Override
     public TickUnit getCeilingTickUnit(double size) {
-<span class="nc" id="L173">        return getCeilingTickUnit(new NumberTickUnit(size,</span>
-<span class="nc" id="L174">                NumberFormat.getInstance()));</span>
+<span class="fc" id="L173">        return getCeilingTickUnit(new NumberTickUnit(size,</span>
+<span class="fc" id="L174">                NumberFormat.getInstance()));</span>
     }
 
     /**
@@ -184,9 +184,9 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L187">        TickUnits clone = (TickUnits) super.clone();</span>
-<span class="nc" id="L188">        clone.tickUnits = new java.util.ArrayList(this.tickUnits);</span>
-<span class="nc" id="L189">        return clone;</span>
+<span class="fc" id="L187">        TickUnits clone = (TickUnits) super.clone();</span>
+<span class="fc" id="L188">        clone.tickUnits = new java.util.ArrayList(this.tickUnits);</span>
+<span class="fc" id="L189">        return clone;</span>
     }
 
     /**
@@ -198,15 +198,15 @@ public class TickUnits implements TickUnitSource, Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L202">            return true;</span>
         }
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (!(obj instanceof TickUnits)) {</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (!(obj instanceof TickUnits)) {</span>
 <span class="nc" id="L205">            return false;</span>
         }
-<span class="nc" id="L207">        TickUnits that = (TickUnits) obj;</span>
-<span class="nc" id="L208">        return that.tickUnits.equals(this.tickUnits);</span>
+<span class="fc" id="L207">        TickUnits that = (TickUnits) obj;</span>
+<span class="fc" id="L208">        return that.tickUnits.equals(this.tickUnits);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

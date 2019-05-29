@@ -44,8 +44,8 @@ public class PaintList extends AbstractObjectList {
      * Creates a new list.
      */
     public PaintList() {
-<span class="nc" id="L47">        super();</span>
-<span class="nc" id="L48">    }</span>
+<span class="fc" id="L47">        super();</span>
+<span class="fc" id="L48">    }</span>
 
     /**
      * Returns a {@link Paint} object from the list.
@@ -55,7 +55,7 @@ public class PaintList extends AbstractObjectList {
      * @return The object.
      */
     public Paint getPaint(int index) {
-<span class="nc" id="L58">        return (Paint) get(index);</span>
+<span class="fc" id="L58">        return (Paint) get(index);</span>
     }
 
     /**
@@ -65,8 +65,8 @@ public class PaintList extends AbstractObjectList {
      * @param paint  the {@link Paint}.
      */
     public void setPaint(int index, Paint paint) {
-<span class="nc" id="L68">        set(index, paint);</span>
-<span class="nc" id="L69">    }</span>
+<span class="fc" id="L68">        set(index, paint);</span>
+<span class="fc" id="L69">    }</span>
 
     /**
      * Tests the list for equality with another object (typically also a list).
@@ -77,23 +77,23 @@ public class PaintList extends AbstractObjectList {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (obj == null) {</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (obj == null) {</span>
 <span class="nc" id="L81">            return false;</span>
         }
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L84">            return true;</span>
         }
-<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!(obj instanceof PaintList)) {</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (!(obj instanceof PaintList)) {</span>
 <span class="nc" id="L87">            return false;</span>
         }
-<span class="nc" id="L89">        PaintList that = (PaintList) obj;</span>
-<span class="nc" id="L90">        int listSize = size();</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (int i = 0; i &lt; listSize; i++) {</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">           if (!PaintUtils.equal(getPaint(i), that.getPaint(i))) {</span>
-<span class="nc" id="L93">               return false;</span>
+<span class="fc" id="L89">        PaintList that = (PaintList) obj;</span>
+<span class="fc" id="L90">        int listSize = size();</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (int i = 0; i &lt; listSize; i++) {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">           if (!PaintUtils.equal(getPaint(i), that.getPaint(i))) {</span>
+<span class="fc" id="L93">               return false;</span>
            }
         }
-<span class="nc" id="L96">        return true;</span>
+<span class="fc" id="L96">        return true;</span>
     }
 
     /**
@@ -115,21 +115,21 @@ public class PaintList extends AbstractObjectList {
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
 
-<span class="nc" id="L118">        stream.defaultWriteObject();</span>
-<span class="nc" id="L119">        int count = size();</span>
-<span class="nc" id="L120">        stream.writeInt(count);</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L122">            Paint paint = getPaint(i);</span>
-<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (paint != null) {</span>
-<span class="nc" id="L124">                stream.writeInt(i);</span>
-<span class="nc" id="L125">                SerialUtils.writePaint(paint, stream);</span>
+<span class="fc" id="L118">        stream.defaultWriteObject();</span>
+<span class="fc" id="L119">        int count = size();</span>
+<span class="fc" id="L120">        stream.writeInt(count);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L122">            Paint paint = getPaint(i);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            if (paint != null) {</span>
+<span class="fc" id="L124">                stream.writeInt(i);</span>
+<span class="fc" id="L125">                SerialUtils.writePaint(paint, stream);</span>
             }
             else {
 <span class="nc" id="L128">                stream.writeInt(-1);</span>
             }
         }
 
-<span class="nc" id="L132">    }</span>
+<span class="fc" id="L132">    }</span>
     
     /**
      * Provides serialization support.
@@ -141,17 +141,17 @@ public class PaintList extends AbstractObjectList {
      */
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 
-<span class="nc" id="L144">        stream.defaultReadObject();</span>
-<span class="nc" id="L145">        int count = stream.readInt();</span>
-<span class="nc bnc" id="L146" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L147">            int index = stream.readInt();</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (index != -1) {</span>
-<span class="nc" id="L149">                setPaint(index, SerialUtils.readPaint(stream));</span>
+<span class="fc" id="L144">        stream.defaultReadObject();</span>
+<span class="fc" id="L145">        int count = stream.readInt();</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L147">            int index = stream.readInt();</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (index != -1) {</span>
+<span class="fc" id="L149">                setPaint(index, SerialUtils.readPaint(stream));</span>
             }
         }
         
-<span class="nc" id="L153">    }</span>
+<span class="fc" id="L153">    }</span>
 
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

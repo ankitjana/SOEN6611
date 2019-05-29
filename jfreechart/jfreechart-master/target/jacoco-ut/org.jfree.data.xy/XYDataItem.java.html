@@ -72,11 +72,11 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @param x  the x-value ({@code null} NOT permitted).
      * @param y  the y-value ({@code null} permitted).
      */
-<span class="nc" id="L75">    public XYDataItem(Number x, Number y) {</span>
-<span class="nc" id="L76">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
-<span class="nc" id="L77">        this.x = x;</span>
-<span class="nc" id="L78">        this.y = y;</span>
-<span class="nc" id="L79">    }</span>
+<span class="fc" id="L75">    public XYDataItem(Number x, Number y) {</span>
+<span class="fc" id="L76">        Args.nullNotPermitted(x, &quot;x&quot;);</span>
+<span class="fc" id="L77">        this.x = x;</span>
+<span class="fc" id="L78">        this.y = y;</span>
+<span class="fc" id="L79">    }</span>
 
     /**
      * Constructs a new data item.
@@ -85,8 +85,8 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @param y  the y-value.
      */
     public XYDataItem(double x, double y) {
-<span class="nc" id="L88">        this(new Double(x), new Double(y));</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        this(new Double(x), new Double(y));</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * Returns the x-value.
@@ -94,7 +94,7 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @return The x-value (never {@code null}).
      */
     public Number getX() {
-<span class="nc" id="L97">        return this.x;</span>
+<span class="fc" id="L97">        return this.x;</span>
     }
 
     /**
@@ -109,7 +109,7 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      */
     public double getXValue() {
         // this.x is not allowed to be null...
-<span class="nc" id="L112">        return this.x.doubleValue();</span>
+<span class="fc" id="L112">        return this.x.doubleValue();</span>
     }
 
     /**
@@ -118,7 +118,7 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @return The y-value (possibly {@code null}).
      */
     public Number getY() {
-<span class="nc" id="L121">        return this.y;</span>
+<span class="fc" id="L121">        return this.y;</span>
     }
 
     /**
@@ -132,11 +132,11 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @since 1.0.9
      */
     public double getYValue() {
-<span class="nc" id="L135">        double result = Double.NaN;</span>
-<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (this.y != null) {</span>
-<span class="nc" id="L137">            result = this.y.doubleValue();</span>
+<span class="fc" id="L135">        double result = Double.NaN;</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (this.y != null) {</span>
+<span class="fc" id="L137">            result = this.y.doubleValue();</span>
         }
-<span class="nc" id="L139">        return result;</span>
+<span class="fc" id="L139">        return result;</span>
     }
 
     /**
@@ -156,8 +156,8 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      * @param y  the new y-value ({@code null} permitted).
      */
     public void setY(Number y) {
-<span class="nc" id="L159">        this.y = y;</span>
-<span class="nc" id="L160">    }</span>
+<span class="fc" id="L159">        this.y = y;</span>
+<span class="fc" id="L160">    }</span>
 
     /**
      * Returns an integer indicating the order of this object relative to
@@ -178,22 +178,22 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
 
         // CASE 1 : Comparing to another TimeSeriesDataPair object
         // -------------------------------------------------------
-<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (o1 instanceof XYDataItem) {</span>
-<span class="nc" id="L182">            XYDataItem dataItem = (XYDataItem) o1;</span>
-<span class="nc" id="L183">            double compare = this.x.doubleValue()</span>
-<span class="nc" id="L184">                             - dataItem.getX().doubleValue();</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (compare &gt; 0.0) {</span>
-<span class="nc" id="L186">                result = 1;</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if (o1 instanceof XYDataItem) {</span>
+<span class="fc" id="L182">            XYDataItem dataItem = (XYDataItem) o1;</span>
+<span class="fc" id="L183">            double compare = this.x.doubleValue()</span>
+<span class="fc" id="L184">                             - dataItem.getX().doubleValue();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (compare &gt; 0.0) {</span>
+<span class="fc" id="L186">                result = 1;</span>
             }
             else {
-<span class="nc bnc" id="L189" title="All 2 branches missed.">                if (compare &lt; 0.0) {</span>
-<span class="nc" id="L190">                    result = -1;</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">                if (compare &lt; 0.0) {</span>
+<span class="fc" id="L190">                    result = -1;</span>
                 }
                 else {
-<span class="nc" id="L193">                    result = 0;</span>
+<span class="fc" id="L193">                    result = 0;</span>
                 }
             }
-<span class="nc" id="L196">        }</span>
+<span class="fc" id="L196">        }</span>
 
         // CASE 2 : Comparing to a general object
         // ---------------------------------------------
@@ -202,7 +202,7 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
 <span class="nc" id="L202">            result = 1;</span>
         }
 
-<span class="nc" id="L205">        return result;</span>
+<span class="fc" id="L205">        return result;</span>
 
     }
 
@@ -213,14 +213,14 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      */
     @Override
     public Object clone() {
-<span class="nc" id="L216">        Object clone = null;</span>
+<span class="fc" id="L216">        Object clone = null;</span>
         try {
-<span class="nc" id="L218">            clone = super.clone();</span>
+<span class="fc" id="L218">            clone = super.clone();</span>
         }
 <span class="nc" id="L220">        catch (CloneNotSupportedException e) { // won't get here...</span>
 <span class="nc" id="L221">            e.printStackTrace();</span>
-<span class="nc" id="L222">        }</span>
-<span class="nc" id="L223">        return clone;</span>
+<span class="fc" id="L222">        }</span>
+<span class="fc" id="L223">        return clone;</span>
     }
 
     /**
@@ -233,20 +233,20 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L237">            return true;</span>
         }
-<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (!(obj instanceof XYDataItem)) {</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (!(obj instanceof XYDataItem)) {</span>
 <span class="nc" id="L240">            return false;</span>
         }
-<span class="nc" id="L242">        XYDataItem that = (XYDataItem) obj;</span>
-<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (!this.x.equals(that.x)) {</span>
+<span class="fc" id="L242">        XYDataItem that = (XYDataItem) obj;</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (!this.x.equals(that.x)) {</span>
 <span class="nc" id="L244">            return false;</span>
         }
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.y, that.y)) {</span>
-<span class="nc" id="L247">            return false;</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.y, that.y)) {</span>
+<span class="fc" id="L247">            return false;</span>
         }
-<span class="nc" id="L249">        return true;</span>
+<span class="fc" id="L249">        return true;</span>
     }
 
     /**
@@ -257,9 +257,9 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
     @Override
     public int hashCode() {
         int result;
-<span class="nc" id="L260">        result = this.x.hashCode();</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        result = 29 * result + (this.y != null ? this.y.hashCode() : 0);</span>
-<span class="nc" id="L262">        return result;</span>
+<span class="fc" id="L260">        result = this.x.hashCode();</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        result = 29 * result + (this.y != null ? this.y.hashCode() : 0);</span>
+<span class="fc" id="L262">        return result;</span>
     }
 
     /**
@@ -274,4 +274,4 @@ public class XYDataItem implements Cloneable, Comparable, Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

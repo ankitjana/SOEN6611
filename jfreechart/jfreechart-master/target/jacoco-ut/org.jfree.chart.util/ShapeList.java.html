@@ -42,8 +42,8 @@ public class ShapeList extends AbstractObjectList {
      * Creates a new list.
      */
     public ShapeList() {
-<span class="nc" id="L45">        super();</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L45">        super();</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * Returns a {@link Shape} object from the list.
@@ -53,7 +53,7 @@ public class ShapeList extends AbstractObjectList {
      * @return The object.
      */
     public Shape getShape(int index) {
-<span class="nc" id="L56">        return (Shape) get(index);</span>
+<span class="fc" id="L56">        return (Shape) get(index);</span>
     }
 
     /**
@@ -64,8 +64,8 @@ public class ShapeList extends AbstractObjectList {
      * @param shape  the {@link Shape}.
      */
     public void setShape(int index, Shape shape) {
-<span class="nc" id="L67">        set(index, shape);</span>
-<span class="nc" id="L68">    }</span>
+<span class="fc" id="L67">        set(index, shape);</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Returns an independent copy of the list.
@@ -76,7 +76,7 @@ public class ShapeList extends AbstractObjectList {
      *         support cloning.
      */
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L79">        return super.clone();</span>
+<span class="fc" id="L79">        return super.clone();</span>
     }
 
     /**
@@ -88,20 +88,20 @@ public class ShapeList extends AbstractObjectList {
      */
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L92">            return true;</span>
         }
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!(obj instanceof ShapeList)) {</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (!(obj instanceof ShapeList)) {</span>
 <span class="nc" id="L95">            return false;</span>
         }
-<span class="nc" id="L97">        ShapeList that = (ShapeList) obj;</span>
-<span class="nc" id="L98">        int listSize = size();</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        for (int i = 0; i &lt; listSize; i++) {</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">           if (!ShapeUtils.equal((Shape) get(i), (Shape) that.get(i))) {</span>
-<span class="nc" id="L101">               return false;</span>
+<span class="fc" id="L97">        ShapeList that = (ShapeList) obj;</span>
+<span class="fc" id="L98">        int listSize = size();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        for (int i = 0; i &lt; listSize; i++) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">           if (!ShapeUtils.equal((Shape) get(i), (Shape) that.get(i))) {</span>
+<span class="fc" id="L101">               return false;</span>
            }
         }
-<span class="nc" id="L104">        return true;</span>
+<span class="fc" id="L104">        return true;</span>
 
     }
 
@@ -124,10 +124,10 @@ public class ShapeList extends AbstractObjectList {
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
 
-<span class="nc" id="L127">        stream.defaultWriteObject();</span>
-<span class="nc" id="L128">        final int count = size();</span>
-<span class="nc" id="L129">        stream.writeInt(count);</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L127">        stream.defaultWriteObject();</span>
+<span class="fc" id="L128">        final int count = size();</span>
+<span class="fc" id="L129">        stream.writeInt(count);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
 <span class="nc" id="L131">            final Shape shape = getShape(i);</span>
 <span class="nc bnc" id="L132" title="All 2 branches missed.">            if (shape != null) {</span>
 <span class="nc" id="L133">                stream.writeInt(i);</span>
@@ -138,7 +138,7 @@ public class ShapeList extends AbstractObjectList {
             }
         }
 
-<span class="nc" id="L141">    }</span>
+<span class="fc" id="L141">    }</span>
 
     /**
      * Provides serialization support.
@@ -150,18 +150,18 @@ public class ShapeList extends AbstractObjectList {
      */
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 
-<span class="nc" id="L153">        stream.defaultReadObject();</span>
-<span class="nc" id="L154">        final int count = stream.readInt();</span>
-<span class="nc bnc" id="L155" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L153">        stream.defaultReadObject();</span>
+<span class="fc" id="L154">        final int count = stream.readInt();</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
 <span class="nc" id="L156">            final int index = stream.readInt();</span>
 <span class="nc bnc" id="L157" title="All 2 branches missed.">            if (index != -1) {</span>
 <span class="nc" id="L158">                setShape(index, SerialUtils.readShape(stream));</span>
             }
         }
 
-<span class="nc" id="L162">    }</span>
+<span class="fc" id="L162">    }</span>
 
 }
 
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

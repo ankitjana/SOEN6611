@@ -64,7 +64,7 @@ public class ComparableObjectSeries extends Series
     protected List data;
 
     /** The maximum number of items for the series. */
-<span class="nc" id="L67">    private int maximumItemCount = Integer.MAX_VALUE;</span>
+<span class="fc" id="L67">    private int maximumItemCount = Integer.MAX_VALUE;</span>
 
     /** A flag that controls whether the items are automatically sorted. */
     private boolean autoSort;
@@ -80,8 +80,8 @@ public class ComparableObjectSeries extends Series
      * @param key  the series key ({@code null} not permitted).
      */
     public ComparableObjectSeries(Comparable key) {
-<span class="nc" id="L83">        this(key, true, true);</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L83">        this(key, true, true);</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Constructs a new series that contains no data.  You can specify
@@ -95,11 +95,11 @@ public class ComparableObjectSeries extends Series
      */
     public ComparableObjectSeries(Comparable key, boolean autoSort,
             boolean allowDuplicateXValues) {
-<span class="nc" id="L98">        super(key);</span>
-<span class="nc" id="L99">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L100">        this.autoSort = autoSort;</span>
-<span class="nc" id="L101">        this.allowDuplicateXValues = allowDuplicateXValues;</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L98">        super(key);</span>
+<span class="fc" id="L99">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L100">        this.autoSort = autoSort;</span>
+<span class="fc" id="L101">        this.allowDuplicateXValues = allowDuplicateXValues;</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Returns the flag that controls whether the items in the series are
@@ -109,7 +109,7 @@ public class ComparableObjectSeries extends Series
      * @return A boolean.
      */
     public boolean getAutoSort() {
-<span class="nc" id="L112">        return this.autoSort;</span>
+<span class="fc" id="L112">        return this.autoSort;</span>
     }
 
     /**
@@ -119,7 +119,7 @@ public class ComparableObjectSeries extends Series
      * @return A boolean.
      */
     public boolean getAllowDuplicateXValues() {
-<span class="nc" id="L122">        return this.allowDuplicateXValues;</span>
+<span class="fc" id="L122">        return this.allowDuplicateXValues;</span>
     }
 
     /**
@@ -129,7 +129,7 @@ public class ComparableObjectSeries extends Series
      */
     @Override
     public int getItemCount() {
-<span class="nc" id="L132">        return this.data.size();</span>
+<span class="fc" id="L132">        return this.data.size();</span>
     }
 
     /**
@@ -140,7 +140,7 @@ public class ComparableObjectSeries extends Series
      * @see #setMaximumItemCount(int)
      */
     public int getMaximumItemCount() {
-<span class="nc" id="L143">        return this.maximumItemCount;</span>
+<span class="fc" id="L143">        return this.maximumItemCount;</span>
     }
 
     /**
@@ -158,16 +158,16 @@ public class ComparableObjectSeries extends Series
      * @param maximum  the maximum number of items for the series.
      */
     public void setMaximumItemCount(int maximum) {
-<span class="nc" id="L161">        this.maximumItemCount = maximum;</span>
-<span class="nc" id="L162">        boolean dataRemoved = false;</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">        while (this.data.size() &gt; maximum) {</span>
-<span class="nc" id="L164">            this.data.remove(0);</span>
-<span class="nc" id="L165">            dataRemoved = true;</span>
+<span class="fc" id="L161">        this.maximumItemCount = maximum;</span>
+<span class="fc" id="L162">        boolean dataRemoved = false;</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        while (this.data.size() &gt; maximum) {</span>
+<span class="fc" id="L164">            this.data.remove(0);</span>
+<span class="fc" id="L165">            dataRemoved = true;</span>
         }
-<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (dataRemoved) {</span>
-<span class="nc" id="L168">            fireSeriesChanged();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (dataRemoved) {</span>
+<span class="fc" id="L168">            fireSeriesChanged();</span>
         }
-<span class="nc" id="L170">    }</span>
+<span class="fc" id="L170">    }</span>
 
     /**
      * Adds new data to the series and sends a {@link SeriesChangeEvent} to
@@ -181,8 +181,8 @@ public class ComparableObjectSeries extends Series
      */
     protected void add(Comparable x, Object y) {
         // argument checking delegated...
-<span class="nc" id="L184">        add(x, y, true);</span>
-<span class="nc" id="L185">    }</span>
+<span class="fc" id="L184">        add(x, y, true);</span>
+<span class="fc" id="L185">    }</span>
 
     /**
      * Adds new data to the series and, if requested, sends a
@@ -199,9 +199,9 @@ public class ComparableObjectSeries extends Series
      */
     protected void add(Comparable x, Object y, boolean notify) {
         // delegate argument checking to XYDataItem...
-<span class="nc" id="L202">        ComparableObjectItem item = new ComparableObjectItem(x, y);</span>
-<span class="nc" id="L203">        add(item, notify);</span>
-<span class="nc" id="L204">    }</span>
+<span class="fc" id="L202">        ComparableObjectItem item = new ComparableObjectItem(x, y);</span>
+<span class="fc" id="L203">        add(item, notify);</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Adds a data item to the series and, if requested, sends a
@@ -214,50 +214,50 @@ public class ComparableObjectSeries extends Series
      */
     protected void add(ComparableObjectItem item, boolean notify) {
 
-<span class="nc" id="L217">        Args.nullNotPermitted(item, &quot;item&quot;);</span>
-<span class="nc bnc" id="L218" title="All 2 branches missed.">        if (this.autoSort) {</span>
-<span class="nc" id="L219">            int index = Collections.binarySearch(this.data, item);</span>
-<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (index &lt; 0) {</span>
-<span class="nc" id="L221">                this.data.add(-index - 1, item);</span>
+<span class="fc" id="L217">        Args.nullNotPermitted(item, &quot;item&quot;);</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        if (this.autoSort) {</span>
+<span class="fc" id="L219">            int index = Collections.binarySearch(this.data, item);</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            if (index &lt; 0) {</span>
+<span class="fc" id="L221">                this.data.add(-index - 1, item);</span>
             }
             else {
-<span class="nc bnc" id="L224" title="All 2 branches missed.">                if (this.allowDuplicateXValues) {</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">                if (this.allowDuplicateXValues) {</span>
                     // need to make sure we are adding *after* any duplicates
-<span class="nc" id="L226">                    int size = this.data.size();</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">                    while (index &lt; size</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">                           &amp;&amp; item.compareTo(this.data.get(index)) == 0) {</span>
-<span class="nc" id="L229">                        index++;</span>
+<span class="fc" id="L226">                    int size = this.data.size();</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">                    while (index &lt; size</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                           &amp;&amp; item.compareTo(this.data.get(index)) == 0) {</span>
+<span class="fc" id="L229">                        index++;</span>
                     }
-<span class="nc bnc" id="L231" title="All 2 branches missed.">                    if (index &lt; this.data.size()) {</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                    if (index &lt; this.data.size()) {</span>
 <span class="nc" id="L232">                        this.data.add(index, item);</span>
                     }
                     else {
-<span class="nc" id="L235">                        this.data.add(item);</span>
+<span class="fc" id="L235">                        this.data.add(item);</span>
                     }
-<span class="nc" id="L237">                }</span>
+<span class="fc" id="L237">                }</span>
                 else {
-<span class="nc" id="L239">                    throw new SeriesException(&quot;X-value already exists.&quot;);</span>
+<span class="fc" id="L239">                    throw new SeriesException(&quot;X-value already exists.&quot;);</span>
                 }
             }
-<span class="nc" id="L242">        }</span>
+<span class="fc" id="L242">        }</span>
         else {
-<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (!this.allowDuplicateXValues) {</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">            if (!this.allowDuplicateXValues) {</span>
                 // can't allow duplicate values, so we need to check whether
                 // there is an item with the given x-value already
-<span class="nc" id="L247">                int index = indexOf(item.getComparable());</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">                if (index &gt;= 0) {</span>
+<span class="fc" id="L247">                int index = indexOf(item.getComparable());</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                if (index &gt;= 0) {</span>
 <span class="nc" id="L249">                    throw new SeriesException(&quot;X-value already exists.&quot;);</span>
                 }
             }
-<span class="nc" id="L252">            this.data.add(item);</span>
+<span class="fc" id="L252">            this.data.add(item);</span>
         }
-<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (getItemCount() &gt; this.maximumItemCount) {</span>
-<span class="nc" id="L255">            this.data.remove(0);</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (getItemCount() &gt; this.maximumItemCount) {</span>
+<span class="fc" id="L255">            this.data.remove(0);</span>
         }
-<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (notify) {</span>
-<span class="nc" id="L258">            fireSeriesChanged();</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        if (notify) {</span>
+<span class="fc" id="L258">            fireSeriesChanged();</span>
         }
-<span class="nc" id="L260">    }</span>
+<span class="fc" id="L260">    }</span>
 
     /**
      * Returns the index of the item with the specified x-value, or a negative
@@ -270,19 +270,19 @@ public class ComparableObjectSeries extends Series
      * @return The index.
      */
     public int indexOf(Comparable x) {
-<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (this.autoSort) {</span>
-<span class="nc" id="L274">            return Collections.binarySearch(this.data, new ComparableObjectItem(</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (this.autoSort) {</span>
+<span class="fc" id="L274">            return Collections.binarySearch(this.data, new ComparableObjectItem(</span>
                     x, null));
         }
         else {
-<span class="nc bnc" id="L278" title="All 2 branches missed.">            for (int i = 0; i &lt; this.data.size(); i++) {</span>
-<span class="nc" id="L279">                ComparableObjectItem item = (ComparableObjectItem)</span>
-<span class="nc" id="L280">                        this.data.get(i);</span>
-<span class="nc bnc" id="L281" title="All 2 branches missed.">                if (item.getComparable().equals(x)) {</span>
-<span class="nc" id="L282">                    return i;</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">            for (int i = 0; i &lt; this.data.size(); i++) {</span>
+<span class="fc" id="L279">                ComparableObjectItem item = (ComparableObjectItem)</span>
+<span class="fc" id="L280">                        this.data.get(i);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">                if (item.getComparable().equals(x)) {</span>
+<span class="fc" id="L282">                    return i;</span>
                 }
             }
-<span class="nc" id="L285">            return -1;</span>
+<span class="fc" id="L285">            return -1;</span>
         }
     }
 
@@ -328,7 +328,7 @@ public class ComparableObjectSeries extends Series
      * @return The data item with the specified index.
      */
     protected ComparableObjectItem getDataItem(int index) {
-<span class="nc" id="L331">        return (ComparableObjectItem) this.data.get(index);</span>
+<span class="fc" id="L331">        return (ComparableObjectItem) this.data.get(index);</span>
     }
 
     /**
@@ -351,11 +351,11 @@ public class ComparableObjectSeries extends Series
      * listeners.
      */
     public void clear() {
-<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (this.data.size() &gt; 0) {</span>
-<span class="nc" id="L355">            this.data.clear();</span>
-<span class="nc" id="L356">            fireSeriesChanged();</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        if (this.data.size() &gt; 0) {</span>
+<span class="fc" id="L355">            this.data.clear();</span>
+<span class="fc" id="L356">            fireSeriesChanged();</span>
         }
-<span class="nc" id="L358">    }</span>
+<span class="fc" id="L358">    }</span>
 
     /**
      * Removes the item at the specified index and sends a
@@ -366,10 +366,10 @@ public class ComparableObjectSeries extends Series
      * @return The item removed.
      */
     protected ComparableObjectItem remove(int index) {
-<span class="nc" id="L369">        ComparableObjectItem result = (ComparableObjectItem) this.data.remove(</span>
+<span class="fc" id="L369">        ComparableObjectItem result = (ComparableObjectItem) this.data.remove(</span>
                 index);
-<span class="nc" id="L371">        fireSeriesChanged();</span>
-<span class="nc" id="L372">        return result;</span>
+<span class="fc" id="L371">        fireSeriesChanged();</span>
+<span class="fc" id="L372">        return result;</span>
     }
 
     /**
@@ -381,7 +381,7 @@ public class ComparableObjectSeries extends Series
      * @return The item removed.
      */
     public ComparableObjectItem remove(Comparable x) {
-<span class="nc" id="L384">        return remove(indexOf(x));</span>
+<span class="fc" id="L384">        return remove(indexOf(x));</span>
     }
 
     /**
@@ -394,29 +394,29 @@ public class ComparableObjectSeries extends Series
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L397" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L398">            return true;</span>
+<span class="fc bfc" id="L397" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L398">            return true;</span>
         }
-<span class="nc bnc" id="L400" title="All 2 branches missed.">        if (!(obj instanceof ComparableObjectSeries)) {</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">        if (!(obj instanceof ComparableObjectSeries)) {</span>
 <span class="nc" id="L401">            return false;</span>
         }
-<span class="nc bnc" id="L403" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L404">            return false;</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L404">            return false;</span>
         }
-<span class="nc" id="L406">        ComparableObjectSeries that = (ComparableObjectSeries) obj;</span>
-<span class="nc bnc" id="L407" title="All 2 branches missed.">        if (this.maximumItemCount != that.maximumItemCount) {</span>
+<span class="fc" id="L406">        ComparableObjectSeries that = (ComparableObjectSeries) obj;</span>
+<span class="pc bpc" id="L407" title="1 of 2 branches missed.">        if (this.maximumItemCount != that.maximumItemCount) {</span>
 <span class="nc" id="L408">            return false;</span>
         }
-<span class="nc bnc" id="L410" title="All 2 branches missed.">        if (this.autoSort != that.autoSort) {</span>
-<span class="nc" id="L411">            return false;</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        if (this.autoSort != that.autoSort) {</span>
+<span class="fc" id="L411">            return false;</span>
         }
-<span class="nc bnc" id="L413" title="All 2 branches missed.">        if (this.allowDuplicateXValues != that.allowDuplicateXValues) {</span>
-<span class="nc" id="L414">            return false;</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">        if (this.allowDuplicateXValues != that.allowDuplicateXValues) {</span>
+<span class="fc" id="L414">            return false;</span>
         }
-<span class="nc bnc" id="L416" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
-<span class="nc" id="L417">            return false;</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
+<span class="fc" id="L417">            return false;</span>
         }
-<span class="nc" id="L419">        return true;</span>
+<span class="fc" id="L419">        return true;</span>
     }
 
     /**
@@ -426,27 +426,27 @@ public class ComparableObjectSeries extends Series
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L429">        int result = super.hashCode();</span>
+<span class="fc" id="L429">        int result = super.hashCode();</span>
         // it is too slow to look at every data item, so let's just look at
         // the first, middle and last items...
-<span class="nc" id="L432">        int count = getItemCount();</span>
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (count &gt; 0) {</span>
-<span class="nc" id="L434">            ComparableObjectItem item = getDataItem(0);</span>
-<span class="nc" id="L435">            result = 29 * result + item.hashCode();</span>
+<span class="fc" id="L432">        int count = getItemCount();</span>
+<span class="fc bfc" id="L433" title="All 2 branches covered.">        if (count &gt; 0) {</span>
+<span class="fc" id="L434">            ComparableObjectItem item = getDataItem(0);</span>
+<span class="fc" id="L435">            result = 29 * result + item.hashCode();</span>
         }
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        if (count &gt; 1) {</span>
-<span class="nc" id="L438">            ComparableObjectItem item = getDataItem(count - 1);</span>
-<span class="nc" id="L439">            result = 29 * result + item.hashCode();</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">        if (count &gt; 1) {</span>
+<span class="fc" id="L438">            ComparableObjectItem item = getDataItem(count - 1);</span>
+<span class="fc" id="L439">            result = 29 * result + item.hashCode();</span>
         }
-<span class="nc bnc" id="L441" title="All 2 branches missed.">        if (count &gt; 2) {</span>
-<span class="nc" id="L442">            ComparableObjectItem item = getDataItem(count / 2);</span>
-<span class="nc" id="L443">            result = 29 * result + item.hashCode();</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">        if (count &gt; 2) {</span>
+<span class="fc" id="L442">            ComparableObjectItem item = getDataItem(count / 2);</span>
+<span class="fc" id="L443">            result = 29 * result + item.hashCode();</span>
         }
-<span class="nc" id="L445">        result = 29 * result + this.maximumItemCount;</span>
-<span class="nc bnc" id="L446" title="All 2 branches missed.">        result = 29 * result + (this.autoSort ? 1 : 0);</span>
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        result = 29 * result + (this.allowDuplicateXValues ? 1 : 0);</span>
-<span class="nc" id="L448">        return result;</span>
+<span class="fc" id="L445">        result = 29 * result + this.maximumItemCount;</span>
+<span class="pc bpc" id="L446" title="1 of 2 branches missed.">        result = 29 * result + (this.autoSort ? 1 : 0);</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        result = 29 * result + (this.allowDuplicateXValues ? 1 : 0);</span>
+<span class="fc" id="L448">        return result;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

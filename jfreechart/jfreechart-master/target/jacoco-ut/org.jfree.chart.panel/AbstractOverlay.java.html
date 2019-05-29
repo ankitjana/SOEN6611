@@ -56,9 +56,9 @@ public class AbstractOverlay {
     /**
      * Default constructor.
      */
-<span class="nc" id="L59">    public AbstractOverlay() {</span>
-<span class="nc" id="L60">        this.changeListeners = new EventListenerList();</span>
-<span class="nc" id="L61">    }</span>
+<span class="fc" id="L59">    public AbstractOverlay() {</span>
+<span class="fc" id="L60">        this.changeListeners = new EventListenerList();</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * Registers an object for notification of changes to the overlay.
@@ -90,9 +90,9 @@ public class AbstractOverlay {
      * This method is for convenience only.
      */
     public void fireOverlayChanged() {
-<span class="nc" id="L93">        OverlayChangeEvent event = new OverlayChangeEvent(this);</span>
-<span class="nc" id="L94">        notifyListeners(event);</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L93">        OverlayChangeEvent event = new OverlayChangeEvent(this);</span>
+<span class="fc" id="L94">        notifyListeners(event);</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Sends a {@link ChartChangeEvent} to all registered listeners.
@@ -101,15 +101,15 @@ public class AbstractOverlay {
      *               notification.
      */
     protected void notifyListeners(OverlayChangeEvent event) {
-<span class="nc" id="L104">       Object[] listeners = this.changeListeners.getListenerList();</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
+<span class="fc" id="L104">       Object[] listeners = this.changeListeners.getListenerList();</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        for (int i = listeners.length - 2; i &gt;= 0; i -= 2) {</span>
 <span class="nc bnc" id="L106" title="All 2 branches missed.">            if (listeners[i] == OverlayChangeListener.class) {</span>
 <span class="nc" id="L107">                ((OverlayChangeListener) listeners[i + 1]).overlayChanged(</span>
                         event);
             }
         }
-<span class="nc" id="L111">    }</span>
+<span class="fc" id="L111">    }</span>
 
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -85,10 +85,10 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
     /**
      * Default constructor.
      */
-<span class="nc" id="L88">    public TaskSeriesCollection() {</span>
-<span class="nc" id="L89">        this.keys = new java.util.ArrayList();</span>
-<span class="nc" id="L90">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L91">    }</span>
+<span class="fc" id="L88">    public TaskSeriesCollection() {</span>
+<span class="fc" id="L89">        this.keys = new java.util.ArrayList();</span>
+<span class="fc" id="L90">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L91">    }</span>
 
     /**
      * Returns a series from the collection.
@@ -100,15 +100,15 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      * @since 1.0.1
      */
     public TaskSeries getSeries(Comparable key) {
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (key == null) {</span>
-<span class="nc" id="L104">            throw new NullPointerException(&quot;Null 'key' argument.&quot;);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (key == null) {</span>
+<span class="fc" id="L104">            throw new NullPointerException(&quot;Null 'key' argument.&quot;);</span>
         }
-<span class="nc" id="L106">        TaskSeries result = null;</span>
-<span class="nc" id="L107">        int index = getRowIndex(key);</span>
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (index &gt;= 0) {</span>
-<span class="nc" id="L109">            result = getSeries(index);</span>
+<span class="fc" id="L106">        TaskSeries result = null;</span>
+<span class="fc" id="L107">        int index = getRowIndex(key);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (index &gt;= 0) {</span>
+<span class="fc" id="L109">            result = getSeries(index);</span>
         }
-<span class="nc" id="L111">        return result;</span>
+<span class="fc" id="L111">        return result;</span>
     }
 
     /**
@@ -121,10 +121,10 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      * @since 1.0.1
      */
     public TaskSeries getSeries(int series) {
-<span class="nc bnc" id="L124" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="pc bpc" id="L124" title="2 of 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
 <span class="nc" id="L125">            throw new IllegalArgumentException(&quot;Series index out of bounds&quot;);</span>
         }
-<span class="nc" id="L127">        return (TaskSeries) this.data.get(series);</span>
+<span class="fc" id="L127">        return (TaskSeries) this.data.get(series);</span>
     }
 
     /**
@@ -134,7 +134,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getSeriesCount() {
-<span class="nc" id="L137">        return getRowCount();</span>
+<span class="fc" id="L137">        return getRowCount();</span>
     }
 
     /**
@@ -146,8 +146,8 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Comparable getSeriesKey(int series) {
-<span class="nc" id="L149">        TaskSeries ts = (TaskSeries) this.data.get(series);</span>
-<span class="nc" id="L150">        return ts.getKey();</span>
+<span class="fc" id="L149">        TaskSeries ts = (TaskSeries) this.data.get(series);</span>
+<span class="fc" id="L150">        return ts.getKey();</span>
     }
 
     /**
@@ -157,7 +157,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getRowCount() {
-<span class="nc" id="L160">        return this.data.size();</span>
+<span class="fc" id="L160">        return this.data.size();</span>
     }
 
     /**
@@ -177,7 +177,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getColumnCount() {
-<span class="nc" id="L180">        return this.keys.size();</span>
+<span class="fc" id="L180">        return this.keys.size();</span>
     }
 
     /**
@@ -199,7 +199,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Comparable getColumnKey(int index) {
-<span class="nc" id="L202">        return (Comparable) this.keys.get(index);</span>
+<span class="fc" id="L202">        return (Comparable) this.keys.get(index);</span>
     }
 
     /**
@@ -211,8 +211,8 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getColumnIndex(Comparable columnKey) {
-<span class="nc" id="L214">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
-<span class="nc" id="L215">        return this.keys.indexOf(columnKey);</span>
+<span class="fc" id="L214">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
+<span class="fc" id="L215">        return this.keys.indexOf(columnKey);</span>
     }
 
     /**
@@ -224,16 +224,16 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getRowIndex(Comparable rowKey) {
-<span class="nc" id="L227">        int result = -1;</span>
-<span class="nc" id="L228">        int count = this.data.size();</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L230">            TaskSeries s = (TaskSeries) this.data.get(i);</span>
-<span class="nc bnc" id="L231" title="All 2 branches missed.">            if (s.getKey().equals(rowKey)) {</span>
-<span class="nc" id="L232">                result = i;</span>
-<span class="nc" id="L233">                break;</span>
+<span class="fc" id="L227">        int result = -1;</span>
+<span class="fc" id="L228">        int count = this.data.size();</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L230">            TaskSeries s = (TaskSeries) this.data.get(i);</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            if (s.getKey().equals(rowKey)) {</span>
+<span class="fc" id="L232">                result = i;</span>
+<span class="fc" id="L233">                break;</span>
             }
         }
-<span class="nc" id="L236">        return result;</span>
+<span class="fc" id="L236">        return result;</span>
     }
 
     /**
@@ -245,8 +245,8 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Comparable getRowKey(int index) {
-<span class="nc" id="L248">        TaskSeries series = (TaskSeries) this.data.get(index);</span>
-<span class="nc" id="L249">        return series.getKey();</span>
+<span class="fc" id="L248">        TaskSeries series = (TaskSeries) this.data.get(index);</span>
+<span class="fc" id="L249">        return series.getKey();</span>
     }
 
     /**
@@ -257,22 +257,22 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      * @param series  the series ({@code null} not permitted).
      */
     public void add(TaskSeries series) {
-<span class="nc" id="L260">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
-<span class="nc" id="L261">        this.data.add(series);</span>
-<span class="nc" id="L262">        series.addChangeListener(this);</span>
+<span class="fc" id="L260">        Args.nullNotPermitted(series, &quot;series&quot;);</span>
+<span class="fc" id="L261">        this.data.add(series);</span>
+<span class="fc" id="L262">        series.addChangeListener(this);</span>
 
         // look for any keys that we don't already know about...
-<span class="nc" id="L265">        Iterator iterator = series.getTasks().iterator();</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L267">            Task task = (Task) iterator.next();</span>
-<span class="nc" id="L268">            String key = task.getDescription();</span>
-<span class="nc" id="L269">            int index = this.keys.indexOf(key);</span>
-<span class="nc bnc" id="L270" title="All 2 branches missed.">            if (index &lt; 0) {</span>
-<span class="nc" id="L271">                this.keys.add(key);</span>
+<span class="fc" id="L265">        Iterator iterator = series.getTasks().iterator();</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L267">            Task task = (Task) iterator.next();</span>
+<span class="fc" id="L268">            String key = task.getDescription();</span>
+<span class="fc" id="L269">            int index = this.keys.indexOf(key);</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">            if (index &lt; 0) {</span>
+<span class="fc" id="L271">                this.keys.add(key);</span>
             }
-<span class="nc" id="L273">        }</span>
-<span class="nc" id="L274">        fireDatasetChanged();</span>
-<span class="nc" id="L275">    }</span>
+<span class="fc" id="L273">        }</span>
+<span class="fc" id="L274">        fireDatasetChanged();</span>
+<span class="fc" id="L275">    }</span>
 
     /**
      * Removes a series from the collection and sends
@@ -298,18 +298,18 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      * @param series  the series (zero based index).
      */
     public void remove(int series) {
-<span class="nc bnc" id="L301" title="All 4 branches missed.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
-<span class="nc" id="L302">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L301" title="All 4 branches covered.">        if ((series &lt; 0) || (series &gt;= getSeriesCount())) {</span>
+<span class="fc" id="L302">            throw new IllegalArgumentException(</span>
                 &quot;TaskSeriesCollection.remove(): index outside valid range.&quot;);
         }
 
         // fetch the series, remove the change listener, then remove the series.
-<span class="nc" id="L307">        TaskSeries ts = (TaskSeries) this.data.get(series);</span>
-<span class="nc" id="L308">        ts.removeChangeListener(this);</span>
-<span class="nc" id="L309">        this.data.remove(series);</span>
-<span class="nc" id="L310">        fireDatasetChanged();</span>
+<span class="fc" id="L307">        TaskSeries ts = (TaskSeries) this.data.get(series);</span>
+<span class="fc" id="L308">        ts.removeChangeListener(this);</span>
+<span class="fc" id="L309">        this.data.remove(series);</span>
+<span class="fc" id="L310">        fireDatasetChanged();</span>
 
-<span class="nc" id="L312">    }</span>
+<span class="fc" id="L312">    }</span>
 
     /**
      * Removes all the series from the collection and sends
@@ -342,7 +342,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L345">        return getStartValue(rowKey, columnKey);</span>
+<span class="fc" id="L345">        return getStartValue(rowKey, columnKey);</span>
     }
 
     /**
@@ -355,7 +355,7 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getValue(int row, int column) {
-<span class="nc" id="L358">        return getStartValue(row, column);</span>
+<span class="fc" id="L358">        return getStartValue(row, column);</span>
     }
 
     /**
@@ -369,17 +369,17 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getStartValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L372">        Number result = null;</span>
-<span class="nc" id="L373">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L374">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L375">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L377">            TimePeriod duration = task.getDuration();</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">            if (duration != null) {</span>
-<span class="nc" id="L379">                result = new Long(duration.getStart().getTime());</span>
+<span class="fc" id="L372">        Number result = null;</span>
+<span class="fc" id="L373">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L374">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L375">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L377">            TimePeriod duration = task.getDuration();</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">            if (duration != null) {</span>
+<span class="fc" id="L379">                result = new Long(duration.getStart().getTime());</span>
             }
         }
-<span class="nc" id="L382">        return result;</span>
+<span class="fc" id="L382">        return result;</span>
     }
 
     /**
@@ -392,9 +392,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getStartValue(int row, int column) {
-<span class="nc" id="L395">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L396">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L397">        return getStartValue(rowKey, columnKey);</span>
+<span class="fc" id="L395">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L396">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L397">        return getStartValue(rowKey, columnKey);</span>
     }
 
     /**
@@ -408,17 +408,17 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getEndValue(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L411">        Number result = null;</span>
-<span class="nc" id="L412">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L413">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L414">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L415" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L416">            TimePeriod duration = task.getDuration();</span>
-<span class="nc bnc" id="L417" title="All 2 branches missed.">            if (duration != null) {</span>
-<span class="nc" id="L418">                result = new Long(duration.getEnd().getTime());</span>
+<span class="fc" id="L411">        Number result = null;</span>
+<span class="fc" id="L412">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L413">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L414">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L416">            TimePeriod duration = task.getDuration();</span>
+<span class="fc bfc" id="L417" title="All 2 branches covered.">            if (duration != null) {</span>
+<span class="fc" id="L418">                result = new Long(duration.getEnd().getTime());</span>
             }
         }
-<span class="nc" id="L421">        return result;</span>
+<span class="fc" id="L421">        return result;</span>
     }
 
     /**
@@ -431,9 +431,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getEndValue(int row, int column) {
-<span class="nc" id="L434">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L435">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L436">        return getEndValue(rowKey, columnKey);</span>
+<span class="fc" id="L434">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L435">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L436">        return getEndValue(rowKey, columnKey);</span>
     }
 
     /**
@@ -446,9 +446,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getPercentComplete(int row, int column) {
-<span class="nc" id="L449">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L450">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L451">        return getPercentComplete(rowKey, columnKey);</span>
+<span class="fc" id="L449">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L450">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L451">        return getPercentComplete(rowKey, columnKey);</span>
     }
 
     /**
@@ -461,14 +461,14 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getPercentComplete(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L464">        Number result = null;</span>
-<span class="nc" id="L465">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L466">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L467">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L468" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L469">            result = task.getPercentComplete();</span>
+<span class="fc" id="L464">        Number result = null;</span>
+<span class="fc" id="L465">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L466">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L467">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L469">            result = task.getPercentComplete();</span>
         }
-<span class="nc" id="L471">        return result;</span>
+<span class="fc" id="L471">        return result;</span>
     }
 
     /**
@@ -481,9 +481,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getSubIntervalCount(int row, int column) {
-<span class="nc" id="L484">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L485">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L486">        return getSubIntervalCount(rowKey, columnKey);</span>
+<span class="fc" id="L484">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L485">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L486">        return getSubIntervalCount(rowKey, columnKey);</span>
     }
 
     /**
@@ -496,14 +496,14 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public int getSubIntervalCount(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L499">        int result = 0;</span>
-<span class="nc" id="L500">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L501">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L502">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L503" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L504">            result = task.getSubtaskCount();</span>
+<span class="fc" id="L499">        int result = 0;</span>
+<span class="fc" id="L500">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L501">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L502">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L504">            result = task.getSubtaskCount();</span>
         }
-<span class="nc" id="L506">        return result;</span>
+<span class="fc" id="L506">        return result;</span>
     }
 
     /**
@@ -517,9 +517,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getStartValue(int row, int column, int subinterval) {
-<span class="nc" id="L520">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L521">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L522">        return getStartValue(rowKey, columnKey, subinterval);</span>
+<span class="fc" id="L520">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L521">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L522">        return getStartValue(rowKey, columnKey, subinterval);</span>
     }
 
     /**
@@ -534,18 +534,18 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
     @Override
     public Number getStartValue(Comparable rowKey, Comparable columnKey,
                                 int subinterval) {
-<span class="nc" id="L537">        Number result = null;</span>
-<span class="nc" id="L538">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L539">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L540">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L541" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L542">            Task sub = task.getSubtask(subinterval);</span>
-<span class="nc bnc" id="L543" title="All 2 branches missed.">            if (sub != null) {</span>
-<span class="nc" id="L544">                TimePeriod duration = sub.getDuration();</span>
-<span class="nc" id="L545">                result = new Long(duration.getStart().getTime());</span>
+<span class="fc" id="L537">        Number result = null;</span>
+<span class="fc" id="L538">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L539">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L540">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L542">            Task sub = task.getSubtask(subinterval);</span>
+<span class="pc bpc" id="L543" title="1 of 2 branches missed.">            if (sub != null) {</span>
+<span class="fc" id="L544">                TimePeriod duration = sub.getDuration();</span>
+<span class="fc" id="L545">                result = new Long(duration.getStart().getTime());</span>
             }
         }
-<span class="nc" id="L548">        return result;</span>
+<span class="fc" id="L548">        return result;</span>
     }
 
     /**
@@ -559,9 +559,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getEndValue(int row, int column, int subinterval) {
-<span class="nc" id="L562">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L563">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L564">        return getEndValue(rowKey, columnKey, subinterval);</span>
+<span class="fc" id="L562">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L563">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L564">        return getEndValue(rowKey, columnKey, subinterval);</span>
     }
 
     /**
@@ -576,18 +576,18 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
     @Override
     public Number getEndValue(Comparable rowKey, Comparable columnKey,
                               int subinterval) {
-<span class="nc" id="L579">        Number result = null;</span>
-<span class="nc" id="L580">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L581">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L582">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L583" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L584">            Task sub = task.getSubtask(subinterval);</span>
-<span class="nc bnc" id="L585" title="All 2 branches missed.">            if (sub != null) {</span>
-<span class="nc" id="L586">                TimePeriod duration = sub.getDuration();</span>
-<span class="nc" id="L587">                result = new Long(duration.getEnd().getTime());</span>
+<span class="fc" id="L579">        Number result = null;</span>
+<span class="fc" id="L580">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L581">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L582">        Task task = series.get(columnKey.toString());</span>
+<span class="fc bfc" id="L583" title="All 2 branches covered.">        if (task != null) {</span>
+<span class="fc" id="L584">            Task sub = task.getSubtask(subinterval);</span>
+<span class="pc bpc" id="L585" title="1 of 2 branches missed.">            if (sub != null) {</span>
+<span class="fc" id="L586">                TimePeriod duration = sub.getDuration();</span>
+<span class="fc" id="L587">                result = new Long(duration.getEnd().getTime());</span>
             }
         }
-<span class="nc" id="L590">        return result;</span>
+<span class="fc" id="L590">        return result;</span>
     }
 
     /**
@@ -601,9 +601,9 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Number getPercentComplete(int row, int column, int subinterval) {
-<span class="nc" id="L604">        Comparable rowKey = getRowKey(row);</span>
-<span class="nc" id="L605">        Comparable columnKey = getColumnKey(column);</span>
-<span class="nc" id="L606">        return getPercentComplete(rowKey, columnKey, subinterval);</span>
+<span class="fc" id="L604">        Comparable rowKey = getRowKey(row);</span>
+<span class="fc" id="L605">        Comparable columnKey = getColumnKey(column);</span>
+<span class="fc" id="L606">        return getPercentComplete(rowKey, columnKey, subinterval);</span>
     }
 
     /**
@@ -618,17 +618,17 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
     @Override
     public Number getPercentComplete(Comparable rowKey, Comparable columnKey,
                                      int subinterval) {
-<span class="nc" id="L621">        Number result = null;</span>
-<span class="nc" id="L622">        int row = getRowIndex(rowKey);</span>
-<span class="nc" id="L623">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
-<span class="nc" id="L624">        Task task = series.get(columnKey.toString());</span>
-<span class="nc bnc" id="L625" title="All 2 branches missed.">        if (task != null) {</span>
-<span class="nc" id="L626">            Task sub = task.getSubtask(subinterval);</span>
-<span class="nc bnc" id="L627" title="All 2 branches missed.">            if (sub != null) {</span>
-<span class="nc" id="L628">                result = sub.getPercentComplete();</span>
+<span class="fc" id="L621">        Number result = null;</span>
+<span class="fc" id="L622">        int row = getRowIndex(rowKey);</span>
+<span class="fc" id="L623">        TaskSeries series = (TaskSeries) this.data.get(row);</span>
+<span class="fc" id="L624">        Task task = series.get(columnKey.toString());</span>
+<span class="pc bpc" id="L625" title="1 of 2 branches missed.">        if (task != null) {</span>
+<span class="fc" id="L626">            Task sub = task.getSubtask(subinterval);</span>
+<span class="pc bpc" id="L627" title="1 of 2 branches missed.">            if (sub != null) {</span>
+<span class="fc" id="L628">                result = sub.getPercentComplete();</span>
             }
         }
-<span class="nc" id="L631">        return result;</span>
+<span class="fc" id="L631">        return result;</span>
     }
 
     /**
@@ -638,31 +638,31 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public void seriesChanged(SeriesChangeEvent event) {
-<span class="nc" id="L641">        refreshKeys();</span>
-<span class="nc" id="L642">        fireDatasetChanged();</span>
-<span class="nc" id="L643">    }</span>
+<span class="fc" id="L641">        refreshKeys();</span>
+<span class="fc" id="L642">        fireDatasetChanged();</span>
+<span class="fc" id="L643">    }</span>
 
     /**
      * Refreshes the keys.
      */
     private void refreshKeys() {
 
-<span class="nc" id="L650">        this.keys.clear();</span>
-<span class="nc bnc" id="L651" title="All 2 branches missed.">        for (int i = 0; i &lt; getSeriesCount(); i++) {</span>
-<span class="nc" id="L652">            TaskSeries series = (TaskSeries) this.data.get(i);</span>
+<span class="fc" id="L650">        this.keys.clear();</span>
+<span class="fc bfc" id="L651" title="All 2 branches covered.">        for (int i = 0; i &lt; getSeriesCount(); i++) {</span>
+<span class="fc" id="L652">            TaskSeries series = (TaskSeries) this.data.get(i);</span>
             // look for any keys that we don't already know about...
-<span class="nc" id="L654">            Iterator iterator = series.getTasks().iterator();</span>
-<span class="nc bnc" id="L655" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L656">                Task task = (Task) iterator.next();</span>
-<span class="nc" id="L657">                String key = task.getDescription();</span>
-<span class="nc" id="L658">                int index = this.keys.indexOf(key);</span>
-<span class="nc bnc" id="L659" title="All 2 branches missed.">                if (index &lt; 0) {</span>
-<span class="nc" id="L660">                    this.keys.add(key);</span>
+<span class="fc" id="L654">            Iterator iterator = series.getTasks().iterator();</span>
+<span class="fc bfc" id="L655" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L656">                Task task = (Task) iterator.next();</span>
+<span class="fc" id="L657">                String key = task.getDescription();</span>
+<span class="fc" id="L658">                int index = this.keys.indexOf(key);</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">                if (index &lt; 0) {</span>
+<span class="fc" id="L660">                    this.keys.add(key);</span>
                 }
-<span class="nc" id="L662">            }</span>
+<span class="fc" id="L662">            }</span>
         }
 
-<span class="nc" id="L665">    }</span>
+<span class="fc" id="L665">    }</span>
 
     /**
      * Tests this instance for equality with an arbitrary object.
@@ -673,17 +673,17 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L676" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L677">            return true;</span>
+<span class="fc bfc" id="L676" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L677">            return true;</span>
         }
-<span class="nc bnc" id="L679" title="All 2 branches missed.">        if (!(obj instanceof TaskSeriesCollection)) {</span>
+<span class="pc bpc" id="L679" title="1 of 2 branches missed.">        if (!(obj instanceof TaskSeriesCollection)) {</span>
 <span class="nc" id="L680">            return false;</span>
         }
-<span class="nc" id="L682">        TaskSeriesCollection that = (TaskSeriesCollection) obj;</span>
-<span class="nc bnc" id="L683" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
-<span class="nc" id="L684">            return false;</span>
+<span class="fc" id="L682">        TaskSeriesCollection that = (TaskSeriesCollection) obj;</span>
+<span class="fc bfc" id="L683" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.data, that.data)) {</span>
+<span class="fc" id="L684">            return false;</span>
         }
-<span class="nc" id="L686">        return true;</span>
+<span class="fc" id="L686">        return true;</span>
     }
 
     /**
@@ -696,11 +696,11 @@ public class TaskSeriesCollection extends AbstractSeriesDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L699">        TaskSeriesCollection clone = (TaskSeriesCollection) super.clone();</span>
-<span class="nc" id="L700">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
-<span class="nc" id="L701">        clone.keys = new java.util.ArrayList(this.keys);</span>
-<span class="nc" id="L702">        return clone;</span>
+<span class="fc" id="L699">        TaskSeriesCollection clone = (TaskSeriesCollection) super.clone();</span>
+<span class="fc" id="L700">        clone.data = (List) ObjectUtils.deepClone(this.data);</span>
+<span class="fc" id="L701">        clone.keys = new java.util.ArrayList(this.keys);</span>
+<span class="fc" id="L702">        return clone;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

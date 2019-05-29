@@ -104,22 +104,22 @@ public class Year extends RegularTimePeriod implements Serializable {
      * Creates a new {@code Year}, based on the current system date/time.
      */
     public Year() {
-<span class="nc" id="L107">        this(new Date());</span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this(new Date());</span>
+<span class="fc" id="L108">    }</span>
 
     /**
      * Creates a time period representing a single year.
      *
      * @param year  the year.
      */
-<span class="nc" id="L115">    public Year(int year) {</span>
-<span class="nc bnc" id="L116" title="All 4 branches missed.">        if ((year &lt; Year.MINIMUM_YEAR) || (year &gt; Year.MAXIMUM_YEAR)) {</span>
+<span class="fc" id="L115">    public Year(int year) {</span>
+<span class="pc bpc" id="L116" title="2 of 4 branches missed.">        if ((year &lt; Year.MINIMUM_YEAR) || (year &gt; Year.MAXIMUM_YEAR)) {</span>
 <span class="nc" id="L117">            throw new IllegalArgumentException(</span>
                 &quot;Year constructor: year (&quot; + year + &quot;) outside valid range.&quot;);
         }
-<span class="nc" id="L120">        this.year = (short) year;</span>
-<span class="nc" id="L121">        peg(Calendar.getInstance());</span>
-<span class="nc" id="L122">    }</span>
+<span class="fc" id="L120">        this.year = (short) year;</span>
+<span class="fc" id="L121">        peg(Calendar.getInstance());</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * Creates a new {@code Year}, based on a particular instant in time,
@@ -130,8 +130,8 @@ public class Year extends RegularTimePeriod implements Serializable {
      * @see #Year(Date, TimeZone, Locale)
      */
     public Year(Date time) {
-<span class="nc" id="L133">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
-<span class="nc" id="L134">    }</span>
+<span class="fc" id="L133">        this(time, TimeZone.getDefault(), Locale.getDefault());</span>
+<span class="fc" id="L134">    }</span>
 
     /**
      * Creates a new {@code Year} instance, for the specified time zone
@@ -143,12 +143,12 @@ public class Year extends RegularTimePeriod implements Serializable {
      *
      * @since 1.0.12
      */
-<span class="nc" id="L146">    public Year(Date time, TimeZone zone, Locale locale) {</span>
-<span class="nc" id="L147">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
-<span class="nc" id="L148">        calendar.setTime(time);</span>
-<span class="nc" id="L149">        this.year = (short) calendar.get(Calendar.YEAR);</span>
-<span class="nc" id="L150">        peg(calendar);</span>
-<span class="nc" id="L151">    }</span>
+<span class="fc" id="L146">    public Year(Date time, TimeZone zone, Locale locale) {</span>
+<span class="fc" id="L147">        Calendar calendar = Calendar.getInstance(zone, locale);</span>
+<span class="fc" id="L148">        calendar.setTime(time);</span>
+<span class="fc" id="L149">        this.year = (short) calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L150">        peg(calendar);</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Returns the year.
@@ -156,7 +156,7 @@ public class Year extends RegularTimePeriod implements Serializable {
      * @return The year.
      */
     public int getYear() {
-<span class="nc" id="L159">        return this.year;</span>
+<span class="fc" id="L159">        return this.year;</span>
     }
 
     /**
@@ -171,7 +171,7 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond() {
-<span class="nc" id="L174">        return this.firstMillisecond;</span>
+<span class="fc" id="L174">        return this.firstMillisecond;</span>
     }
 
     /**
@@ -186,7 +186,7 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond() {
-<span class="nc" id="L189">        return this.lastMillisecond;</span>
+<span class="fc" id="L189">        return this.lastMillisecond;</span>
     }
 
     /**
@@ -199,9 +199,9 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public void peg(Calendar calendar) {
-<span class="nc" id="L202">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
-<span class="nc" id="L203">        this.lastMillisecond = getLastMillisecond(calendar);</span>
-<span class="nc" id="L204">    }</span>
+<span class="fc" id="L202">        this.firstMillisecond = getFirstMillisecond(calendar);</span>
+<span class="fc" id="L203">        this.lastMillisecond = getLastMillisecond(calendar);</span>
+<span class="fc" id="L204">    }</span>
 
     /**
      * Returns the year preceding this one.
@@ -211,11 +211,11 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public RegularTimePeriod previous() {
-<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (this.year &gt; Year.MINIMUM_YEAR) {</span>
-<span class="nc" id="L215">            return new Year(this.year - 1);</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (this.year &gt; Year.MINIMUM_YEAR) {</span>
+<span class="fc" id="L215">            return new Year(this.year - 1);</span>
         }
         else {
-<span class="nc" id="L218">            return null;</span>
+<span class="fc" id="L218">            return null;</span>
         }
     }
 
@@ -227,11 +227,11 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public RegularTimePeriod next() {
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (this.year &lt; Year.MAXIMUM_YEAR) {</span>
-<span class="nc" id="L231">            return new Year(this.year + 1);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (this.year &lt; Year.MAXIMUM_YEAR) {</span>
+<span class="fc" id="L231">            return new Year(this.year + 1);</span>
         }
         else {
-<span class="nc" id="L234">            return null;</span>
+<span class="fc" id="L234">            return null;</span>
         }
     }
 
@@ -244,7 +244,7 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getSerialIndex() {
-<span class="nc" id="L247">        return this.year;</span>
+<span class="fc" id="L247">        return this.year;</span>
     }
 
     /**
@@ -260,9 +260,9 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getFirstMillisecond(Calendar calendar) {
-<span class="nc" id="L263">        calendar.set(this.year, Calendar.JANUARY, 1, 0, 0, 0);</span>
-<span class="nc" id="L264">        calendar.set(Calendar.MILLISECOND, 0);</span>
-<span class="nc" id="L265">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L263">        calendar.set(this.year, Calendar.JANUARY, 1, 0, 0, 0);</span>
+<span class="fc" id="L264">        calendar.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L265">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -278,9 +278,9 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public long getLastMillisecond(Calendar calendar) {
-<span class="nc" id="L281">        calendar.set(this.year, Calendar.DECEMBER, 31, 23, 59, 59);</span>
-<span class="nc" id="L282">        calendar.set(Calendar.MILLISECOND, 999);</span>
-<span class="nc" id="L283">        return calendar.getTimeInMillis();</span>
+<span class="fc" id="L281">        calendar.set(this.year, Calendar.DECEMBER, 31, 23, 59, 59);</span>
+<span class="fc" id="L282">        calendar.set(Calendar.MILLISECOND, 999);</span>
+<span class="fc" id="L283">        return calendar.getTimeInMillis();</span>
     }
 
     /**
@@ -296,14 +296,14 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L300">            return true;</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L300">            return true;</span>
         }
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (!(obj instanceof Year)) {</span>
-<span class="nc" id="L303">            return false;</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (!(obj instanceof Year)) {</span>
+<span class="fc" id="L303">            return false;</span>
         }
-<span class="nc" id="L305">        Year that = (Year) obj;</span>
-<span class="nc bnc" id="L306" title="All 2 branches missed.">        return (this.year == that.year);</span>
+<span class="fc" id="L305">        Year that = (Year) obj;</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        return (this.year == that.year);</span>
     }
 
     /**
@@ -317,10 +317,10 @@ public class Year extends RegularTimePeriod implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L320">        int result = 17;</span>
-<span class="nc" id="L321">        int c = this.year;</span>
-<span class="nc" id="L322">        result = 37 * result + c;</span>
-<span class="nc" id="L323">        return result;</span>
+<span class="fc" id="L320">        int result = 17;</span>
+<span class="fc" id="L321">        int c = this.year;</span>
+<span class="fc" id="L322">        result = 37 * result + c;</span>
+<span class="fc" id="L323">        return result;</span>
     }
 
     /**
@@ -340,10 +340,10 @@ public class Year extends RegularTimePeriod implements Serializable {
 
         // CASE 1 : Comparing to another Year object
         // -----------------------------------------
-<span class="nc bnc" id="L343" title="All 2 branches missed.">        if (o1 instanceof Year) {</span>
-<span class="nc" id="L344">            Year y = (Year) o1;</span>
-<span class="nc" id="L345">            result = this.year - y.getYear();</span>
-<span class="nc" id="L346">        }</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">        if (o1 instanceof Year) {</span>
+<span class="fc" id="L344">            Year y = (Year) o1;</span>
+<span class="fc" id="L345">            result = this.year - y.getYear();</span>
+<span class="fc" id="L346">        }</span>
 
         // CASE 2 : Comparing to another TimePeriod object
         // -----------------------------------------------
@@ -359,7 +359,7 @@ public class Year extends RegularTimePeriod implements Serializable {
 <span class="nc" id="L359">            result = 1;</span>
         }
 
-<span class="nc" id="L362">        return result;</span>
+<span class="fc" id="L362">        return result;</span>
 
     }
 
@@ -388,15 +388,15 @@ public class Year extends RegularTimePeriod implements Serializable {
         // parse the string...
         int y;
         try {
-<span class="nc" id="L391">            y = Integer.parseInt(s.trim());</span>
+<span class="fc" id="L391">            y = Integer.parseInt(s.trim());</span>
         }
-<span class="nc" id="L393">        catch (NumberFormatException e) {</span>
-<span class="nc" id="L394">            throw new TimePeriodFormatException(&quot;Cannot parse string.&quot;);</span>
-<span class="nc" id="L395">        }</span>
+<span class="fc" id="L393">        catch (NumberFormatException e) {</span>
+<span class="fc" id="L394">            throw new TimePeriodFormatException(&quot;Cannot parse string.&quot;);</span>
+<span class="fc" id="L395">        }</span>
 
         // create the year...
         try {
-<span class="nc" id="L399">            return new Year(y);</span>
+<span class="fc" id="L399">            return new Year(y);</span>
         }
 <span class="nc" id="L401">        catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L402">            throw new TimePeriodFormatException(&quot;Year outside valid range.&quot;);</span>
@@ -404,4 +404,4 @@ public class Year extends RegularTimePeriod implements Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

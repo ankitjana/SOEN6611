@@ -90,9 +90,9 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
      * Creates a new renderer.
      */
     public GroupedStackedBarRenderer() {
-<span class="nc" id="L93">        super();</span>
-<span class="nc" id="L94">        this.seriesToGroupMap = new KeyToGroupMap();</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L93">        super();</span>
+<span class="fc" id="L94">        this.seriesToGroupMap = new KeyToGroupMap();</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Updates the map used to assign each series to a group, and sends a
@@ -101,10 +101,10 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
      * @param map  the map ({@code null} not permitted).
      */
     public void setSeriesToGroupMap(KeyToGroupMap map) {
-<span class="nc" id="L104">        Args.nullNotPermitted(map, &quot;map&quot;);</span>
-<span class="nc" id="L105">        this.seriesToGroupMap = map;</span>
-<span class="nc" id="L106">        fireChangeEvent();</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L104">        Args.nullNotPermitted(map, &quot;map&quot;);</span>
+<span class="fc" id="L105">        this.seriesToGroupMap = map;</span>
+<span class="fc" id="L106">        fireChangeEvent();</span>
+<span class="fc" id="L107">    }</span>
 
     /**
      * Returns the range of values the renderer requires to display all the
@@ -117,12 +117,12 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
      */
     @Override
     public Range findRangeBounds(CategoryDataset dataset) {
-<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L121">            return null;</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L121">            return null;</span>
         }
-<span class="nc" id="L123">        Range r = DatasetUtils.findStackedRangeBounds(</span>
+<span class="fc" id="L123">        Range r = DatasetUtils.findStackedRangeBounds(</span>
                 dataset, this.seriesToGroupMap);
-<span class="nc" id="L125">        return r;</span>
+<span class="fc" id="L125">        return r;</span>
     }
 
     /**
@@ -140,42 +140,42 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
             int rendererIndex, CategoryItemRendererState state) {
 
         // calculate the bar width
-<span class="nc" id="L143">        CategoryAxis xAxis = plot.getDomainAxisForDataset(rendererIndex);</span>
-<span class="nc" id="L144">        CategoryDataset data = plot.getDataset(rendererIndex);</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (data != null) {</span>
-<span class="nc" id="L146">            PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L147">            double space = 0.0;</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L143">        CategoryAxis xAxis = plot.getDomainAxisForDataset(rendererIndex);</span>
+<span class="fc" id="L144">        CategoryDataset data = plot.getDataset(rendererIndex);</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (data != null) {</span>
+<span class="fc" id="L146">            PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L147">            double space = 0.0;</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L149">                space = dataArea.getHeight();</span>
             }
-<span class="nc bnc" id="L151" title="All 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
-<span class="nc" id="L152">                space = dataArea.getWidth();</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">            else if (orientation == PlotOrientation.VERTICAL) {</span>
+<span class="fc" id="L152">                space = dataArea.getWidth();</span>
             }
-<span class="nc" id="L154">            double maxWidth = space * getMaximumBarWidth();</span>
-<span class="nc" id="L155">            int groups = this.seriesToGroupMap.getGroupCount();</span>
-<span class="nc" id="L156">            int categories = data.getColumnCount();</span>
-<span class="nc" id="L157">            int columns = groups * categories;</span>
-<span class="nc" id="L158">            double categoryMargin = 0.0;</span>
-<span class="nc" id="L159">            double itemMargin = 0.0;</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (categories &gt; 1) {</span>
-<span class="nc" id="L161">                categoryMargin = xAxis.getCategoryMargin();</span>
+<span class="fc" id="L154">            double maxWidth = space * getMaximumBarWidth();</span>
+<span class="fc" id="L155">            int groups = this.seriesToGroupMap.getGroupCount();</span>
+<span class="fc" id="L156">            int categories = data.getColumnCount();</span>
+<span class="fc" id="L157">            int columns = groups * categories;</span>
+<span class="fc" id="L158">            double categoryMargin = 0.0;</span>
+<span class="fc" id="L159">            double itemMargin = 0.0;</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">            if (categories &gt; 1) {</span>
+<span class="fc" id="L161">                categoryMargin = xAxis.getCategoryMargin();</span>
             }
-<span class="nc bnc" id="L163" title="All 2 branches missed.">            if (groups &gt; 1) {</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">            if (groups &gt; 1) {</span>
 <span class="nc" id="L164">                itemMargin = getItemMargin();</span>
             }
 
-<span class="nc" id="L167">            double used = space * (1 - xAxis.getLowerMargin()</span>
-<span class="nc" id="L168">                                     - xAxis.getUpperMargin()</span>
+<span class="fc" id="L167">            double used = space * (1 - xAxis.getLowerMargin()</span>
+<span class="fc" id="L168">                                     - xAxis.getUpperMargin()</span>
                                      - categoryMargin - itemMargin);
-<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (columns &gt; 0) {</span>
-<span class="nc" id="L171">                state.setBarWidth(Math.min(used / columns, maxWidth));</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">            if (columns &gt; 0) {</span>
+<span class="fc" id="L171">                state.setBarWidth(Math.min(used / columns, maxWidth));</span>
             }
             else {
 <span class="nc" id="L174">                state.setBarWidth(Math.min(used, maxWidth));</span>
             }
         }
 
-<span class="nc" id="L178">    }</span>
+<span class="fc" id="L178">    }</span>
 
     /**
      * Calculates the coordinate of the first &quot;side&quot; of a bar.  This will be
@@ -199,20 +199,20 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
             int row, int column) {
         // calculate bar width...
         double space;
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L203">            space = dataArea.getHeight();</span>
         }
         else {
-<span class="nc" id="L206">            space = dataArea.getWidth();</span>
+<span class="fc" id="L206">            space = dataArea.getWidth();</span>
         }
-<span class="nc" id="L208">        double barW0 = domainAxis.getCategoryStart(column, getColumnCount(),</span>
-<span class="nc" id="L209">                dataArea, plot.getDomainAxisEdge());</span>
-<span class="nc" id="L210">        int groupCount = this.seriesToGroupMap.getGroupCount();</span>
-<span class="nc" id="L211">        int groupIndex = this.seriesToGroupMap.getGroupIndex(</span>
-<span class="nc" id="L212">                this.seriesToGroupMap.getGroup(plot.getDataset(</span>
-<span class="nc" id="L213">                        plot.getIndexOf(this)).getRowKey(row)));</span>
-<span class="nc" id="L214">        int categoryCount = getColumnCount();</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (groupCount &gt; 1) {</span>
+<span class="fc" id="L208">        double barW0 = domainAxis.getCategoryStart(column, getColumnCount(),</span>
+<span class="fc" id="L209">                dataArea, plot.getDomainAxisEdge());</span>
+<span class="fc" id="L210">        int groupCount = this.seriesToGroupMap.getGroupCount();</span>
+<span class="fc" id="L211">        int groupIndex = this.seriesToGroupMap.getGroupIndex(</span>
+<span class="fc" id="L212">                this.seriesToGroupMap.getGroup(plot.getDataset(</span>
+<span class="fc" id="L213">                        plot.getIndexOf(this)).getRowKey(row)));</span>
+<span class="fc" id="L214">        int categoryCount = getColumnCount();</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        if (groupCount &gt; 1) {</span>
 <span class="nc" id="L216">            double groupGap = space * getItemMargin()</span>
                               / (categoryCount * (groupCount - 1));
 <span class="nc" id="L218">            double groupW = calculateSeriesWidth(space, domainAxis,</span>
@@ -221,11 +221,11 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
 <span class="nc" id="L221">                          + (groupW / 2.0) - (state.getBarWidth() / 2.0);</span>
 <span class="nc" id="L222">        }</span>
         else {
-<span class="nc" id="L224">            barW0 = domainAxis.getCategoryMiddle(column, getColumnCount(),</span>
-<span class="nc" id="L225">                    dataArea, plot.getDomainAxisEdge())</span>
-<span class="nc" id="L226">                    - state.getBarWidth() / 2.0;</span>
+<span class="fc" id="L224">            barW0 = domainAxis.getCategoryMiddle(column, getColumnCount(),</span>
+<span class="fc" id="L225">                    dataArea, plot.getDomainAxisEdge())</span>
+<span class="fc" id="L226">                    - state.getBarWidth() / 2.0;</span>
         }
-<span class="nc" id="L228">        return barW0;</span>
+<span class="fc" id="L228">        return barW0;</span>
     }
 
     /**
@@ -249,29 +249,29 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
             int column, int pass) {
 
         // nothing is drawn for null values...
-<span class="nc" id="L252">        Number dataValue = dataset.getValue(row, column);</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (dataValue == null) {</span>
+<span class="fc" id="L252">        Number dataValue = dataset.getValue(row, column);</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        if (dataValue == null) {</span>
 <span class="nc" id="L254">            return;</span>
         }
 
-<span class="nc" id="L257">        double value = dataValue.doubleValue();</span>
-<span class="nc" id="L258">        Comparable group = this.seriesToGroupMap.getGroup(</span>
-<span class="nc" id="L259">                dataset.getRowKey(row));</span>
-<span class="nc" id="L260">        PlotOrientation orientation = plot.getOrientation();</span>
-<span class="nc" id="L261">        double barW0 = calculateBarW0(plot, orientation, dataArea, domainAxis,</span>
+<span class="fc" id="L257">        double value = dataValue.doubleValue();</span>
+<span class="fc" id="L258">        Comparable group = this.seriesToGroupMap.getGroup(</span>
+<span class="fc" id="L259">                dataset.getRowKey(row));</span>
+<span class="fc" id="L260">        PlotOrientation orientation = plot.getOrientation();</span>
+<span class="fc" id="L261">        double barW0 = calculateBarW0(plot, orientation, dataArea, domainAxis,</span>
                 state, row, column);
 
-<span class="nc" id="L264">        double positiveBase = 0.0;</span>
-<span class="nc" id="L265">        double negativeBase = 0.0;</span>
+<span class="fc" id="L264">        double positiveBase = 0.0;</span>
+<span class="fc" id="L265">        double negativeBase = 0.0;</span>
 
-<span class="nc bnc" id="L267" title="All 2 branches missed.">        for (int i = 0; i &lt; row; i++) {</span>
-<span class="nc bnc" id="L268" title="All 2 branches missed.">            if (group.equals(this.seriesToGroupMap.getGroup(</span>
-<span class="nc" id="L269">                    dataset.getRowKey(i)))) {</span>
-<span class="nc" id="L270">                Number v = dataset.getValue(i, column);</span>
-<span class="nc bnc" id="L271" title="All 2 branches missed.">                if (v != null) {</span>
-<span class="nc" id="L272">                    double d = v.doubleValue();</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">                    if (d &gt; 0) {</span>
-<span class="nc" id="L274">                        positiveBase = positiveBase + d;</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        for (int i = 0; i &lt; row; i++) {</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">            if (group.equals(this.seriesToGroupMap.getGroup(</span>
+<span class="fc" id="L269">                    dataset.getRowKey(i)))) {</span>
+<span class="fc" id="L270">                Number v = dataset.getValue(i, column);</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">                if (v != null) {</span>
+<span class="fc" id="L272">                    double d = v.doubleValue();</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">                    if (d &gt; 0) {</span>
+<span class="fc" id="L274">                        positiveBase = positiveBase + d;</span>
                     }
                     else {
 <span class="nc" id="L277">                        negativeBase = negativeBase + d;</span>
@@ -282,10 +282,10 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
 
         double translatedBase;
         double translatedValue;
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        boolean positive = (value &gt; 0.0);</span>
-<span class="nc" id="L286">        boolean inverted = rangeAxis.isInverted();</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">        boolean positive = (value &gt; 0.0);</span>
+<span class="fc" id="L286">        boolean inverted = rangeAxis.isInverted();</span>
         RectangleEdge barBase;
-<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc bnc" id="L289" title="All 8 branches missed.">            if (positive &amp;&amp; inverted || !positive &amp;&amp; !inverted) {</span>
 <span class="nc" id="L290">                barBase = RectangleEdge.RIGHT;</span>
             }
@@ -294,18 +294,18 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
             }
         }
         else {
-<span class="nc bnc" id="L297" title="All 8 branches missed.">            if (positive &amp;&amp; !inverted || !positive &amp;&amp; inverted) {</span>
-<span class="nc" id="L298">                barBase = RectangleEdge.BOTTOM;</span>
+<span class="pc bpc" id="L297" title="6 of 8 branches missed.">            if (positive &amp;&amp; !inverted || !positive &amp;&amp; inverted) {</span>
+<span class="fc" id="L298">                barBase = RectangleEdge.BOTTOM;</span>
             }
             else {
 <span class="nc" id="L301">                barBase = RectangleEdge.TOP;</span>
             }
         }
-<span class="nc" id="L304">        RectangleEdge location = plot.getRangeAxisEdge();</span>
-<span class="nc bnc" id="L305" title="All 2 branches missed.">        if (value &gt; 0.0) {</span>
-<span class="nc" id="L306">            translatedBase = rangeAxis.valueToJava2D(positiveBase, dataArea,</span>
+<span class="fc" id="L304">        RectangleEdge location = plot.getRangeAxisEdge();</span>
+<span class="pc bpc" id="L305" title="1 of 2 branches missed.">        if (value &gt; 0.0) {</span>
+<span class="fc" id="L306">            translatedBase = rangeAxis.valueToJava2D(positiveBase, dataArea,</span>
                     location);
-<span class="nc" id="L308">            translatedValue = rangeAxis.valueToJava2D(positiveBase + value,</span>
+<span class="fc" id="L308">            translatedValue = rangeAxis.valueToJava2D(positiveBase + value,</span>
                     dataArea, location);
         }
         else {
@@ -314,37 +314,37 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
 <span class="nc" id="L314">            translatedValue = rangeAxis.valueToJava2D(negativeBase + value,</span>
                     dataArea, location);
         }
-<span class="nc" id="L317">        double barL0 = Math.min(translatedBase, translatedValue);</span>
-<span class="nc" id="L318">        double barLength = Math.max(Math.abs(translatedValue - translatedBase),</span>
-<span class="nc" id="L319">                getMinimumBarLength());</span>
+<span class="fc" id="L317">        double barL0 = Math.min(translatedBase, translatedValue);</span>
+<span class="fc" id="L318">        double barLength = Math.max(Math.abs(translatedValue - translatedBase),</span>
+<span class="fc" id="L319">                getMinimumBarLength());</span>
 
         Rectangle2D bar;
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        if (orientation == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L323">            bar = new Rectangle2D.Double(barL0, barW0, barLength,</span>
 <span class="nc" id="L324">                    state.getBarWidth());</span>
         }
         else {
-<span class="nc" id="L327">            bar = new Rectangle2D.Double(barW0, barL0, state.getBarWidth(),</span>
+<span class="fc" id="L327">            bar = new Rectangle2D.Double(barW0, barL0, state.getBarWidth(),</span>
                     barLength);
         }
-<span class="nc" id="L330">        getBarPainter().paintBar(g2, this, row, column, bar, barBase);</span>
+<span class="fc" id="L330">        getBarPainter().paintBar(g2, this, row, column, bar, barBase);</span>
 
-<span class="nc" id="L332">        CategoryItemLabelGenerator generator = getItemLabelGenerator(row,</span>
+<span class="fc" id="L332">        CategoryItemLabelGenerator generator = getItemLabelGenerator(row,</span>
                 column);
-<span class="nc bnc" id="L334" title="All 4 branches missed.">        if (generator != null &amp;&amp; isItemLabelVisible(row, column)) {</span>
+<span class="pc bpc" id="L334" title="3 of 4 branches missed.">        if (generator != null &amp;&amp; isItemLabelVisible(row, column)) {</span>
 <span class="nc bnc" id="L335" title="All 2 branches missed.">            drawItemLabel(g2, dataset, row, column, plot, generator, bar,</span>
                     (value &lt; 0.0));
         }
 
         // collect entity and tool tip information...
-<span class="nc bnc" id="L340" title="All 2 branches missed.">        if (state.getInfo() != null) {</span>
-<span class="nc" id="L341">            EntityCollection entities = state.getEntityCollection();</span>
-<span class="nc bnc" id="L342" title="All 2 branches missed.">            if (entities != null) {</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">        if (state.getInfo() != null) {</span>
+<span class="fc" id="L341">            EntityCollection entities = state.getEntityCollection();</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            if (entities != null) {</span>
 <span class="nc" id="L343">                addItemEntity(entities, dataset, row, column, bar);</span>
             }
         }
 
-<span class="nc" id="L347">    }</span>
+<span class="fc" id="L347">    }</span>
 
     /**
      * Tests this renderer for equality with an arbitrary object.
@@ -355,18 +355,18 @@ public class GroupedStackedBarRenderer extends StackedBarRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L358" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L359">            return true;</span>
         }
-<span class="nc bnc" id="L361" title="All 2 branches missed.">        if (!(obj instanceof GroupedStackedBarRenderer)) {</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">        if (!(obj instanceof GroupedStackedBarRenderer)) {</span>
 <span class="nc" id="L362">            return false;</span>
         }
-<span class="nc" id="L364">        GroupedStackedBarRenderer that = (GroupedStackedBarRenderer) obj;</span>
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (!this.seriesToGroupMap.equals(that.seriesToGroupMap)) {</span>
-<span class="nc" id="L366">            return false;</span>
+<span class="fc" id="L364">        GroupedStackedBarRenderer that = (GroupedStackedBarRenderer) obj;</span>
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        if (!this.seriesToGroupMap.equals(that.seriesToGroupMap)) {</span>
+<span class="fc" id="L366">            return false;</span>
         }
-<span class="nc" id="L368">        return super.equals(obj);</span>
+<span class="fc" id="L368">        return super.equals(obj);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

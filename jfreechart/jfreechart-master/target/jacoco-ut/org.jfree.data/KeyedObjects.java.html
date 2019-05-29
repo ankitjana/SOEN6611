@@ -64,9 +64,9 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
     /**
      * Creates a new collection (initially empty).
      */
-<span class="nc" id="L67">    public KeyedObjects() {</span>
-<span class="nc" id="L68">        this.data = new java.util.ArrayList();</span>
-<span class="nc" id="L69">    }</span>
+<span class="fc" id="L67">    public KeyedObjects() {</span>
+<span class="fc" id="L68">        this.data = new java.util.ArrayList();</span>
+<span class="fc" id="L69">    }</span>
 
     /**
      * Returns the number of items (values) in the collection.
@@ -74,7 +74,7 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @return The item count.
      */
     public int getItemCount() {
-<span class="nc" id="L77">        return this.data.size();</span>
+<span class="fc" id="L77">        return this.data.size();</span>
     }
 
     /**
@@ -87,12 +87,12 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @throws IndexOutOfBoundsException if {@code item} is out of bounds.
      */
     public Object getObject(int item) {
-<span class="nc" id="L90">        Object result = null;</span>
-<span class="nc" id="L91">        KeyedObject kobj = (KeyedObject) this.data.get(item);</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (kobj != null) {</span>
-<span class="nc" id="L93">            result = kobj.getObject();</span>
+<span class="fc" id="L90">        Object result = null;</span>
+<span class="fc" id="L91">        KeyedObject kobj = (KeyedObject) this.data.get(item);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (kobj != null) {</span>
+<span class="fc" id="L93">            result = kobj.getObject();</span>
         }
-<span class="nc" id="L95">        return result;</span>
+<span class="fc" id="L95">        return result;</span>
     }
 
     /**
@@ -107,12 +107,12 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #getIndex(Comparable)
      */
     public Comparable getKey(int index) {
-<span class="nc" id="L110">        Comparable result = null;</span>
-<span class="nc" id="L111">        KeyedObject item = (KeyedObject) this.data.get(index);</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (item != null) {</span>
-<span class="nc" id="L113">            result = item.getKey();</span>
+<span class="fc" id="L110">        Comparable result = null;</span>
+<span class="fc" id="L111">        KeyedObject item = (KeyedObject) this.data.get(index);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (item != null) {</span>
+<span class="fc" id="L113">            result = item.getKey();</span>
         }
-<span class="nc" id="L115">        return result;</span>
+<span class="fc" id="L115">        return result;</span>
     }
 
     /**
@@ -125,17 +125,17 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #getKey(int)
      */
     public int getIndex(Comparable key) {
-<span class="nc" id="L128">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L129">        int i = 0;</span>
-<span class="nc" id="L130">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L132">            KeyedObject ko = (KeyedObject) iterator.next();</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (ko.getKey().equals(key)) {</span>
-<span class="nc" id="L134">                return i;</span>
+<span class="fc" id="L128">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L129">        int i = 0;</span>
+<span class="fc" id="L130">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L132">            KeyedObject ko = (KeyedObject) iterator.next();</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (ko.getKey().equals(key)) {</span>
+<span class="fc" id="L134">                return i;</span>
             }
-<span class="nc" id="L136">            i++;</span>
-<span class="nc" id="L137">        }</span>
-<span class="nc" id="L138">        return -1;</span>
+<span class="fc" id="L136">            i++;</span>
+<span class="fc" id="L137">        }</span>
+<span class="fc" id="L138">        return -1;</span>
     }
 
     /**
@@ -164,12 +164,12 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #addObject(Comparable, Object)
      */
     public Object getObject(Comparable key) {
-<span class="nc" id="L167">        int index = getIndex(key);</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L169">            throw new UnknownKeyException(&quot;The key (&quot; + key</span>
+<span class="fc" id="L167">        int index = getIndex(key);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L169">            throw new UnknownKeyException(&quot;The key (&quot; + key</span>
                     + &quot;) is not recognised.&quot;);
         }
-<span class="nc" id="L172">        return getObject(index);</span>
+<span class="fc" id="L172">        return getObject(index);</span>
     }
 
     /**
@@ -182,8 +182,8 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #getObject(Comparable)
      */
     public void addObject(Comparable key, Object object) {
-<span class="nc" id="L185">        setObject(key, object);</span>
-<span class="nc" id="L186">    }</span>
+<span class="fc" id="L185">        setObject(key, object);</span>
+<span class="fc" id="L186">    }</span>
 
     /**
      * Replaces an existing object, or adds a new object to the collection.
@@ -196,16 +196,16 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #getObject(Comparable)
      */
     public void setObject(Comparable key, Object object) {
-<span class="nc" id="L199">        int keyIndex = getIndex(key);</span>
-<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (keyIndex &gt;= 0) {</span>
-<span class="nc" id="L201">            KeyedObject ko = (KeyedObject) this.data.get(keyIndex);</span>
-<span class="nc" id="L202">            ko.setObject(object);</span>
-<span class="nc" id="L203">        }</span>
+<span class="fc" id="L199">        int keyIndex = getIndex(key);</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (keyIndex &gt;= 0) {</span>
+<span class="fc" id="L201">            KeyedObject ko = (KeyedObject) this.data.get(keyIndex);</span>
+<span class="fc" id="L202">            ko.setObject(object);</span>
+<span class="fc" id="L203">        }</span>
         else {
-<span class="nc" id="L205">            KeyedObject ko = new KeyedObject(key, object);</span>
-<span class="nc" id="L206">            this.data.add(ko);</span>
+<span class="fc" id="L205">            KeyedObject ko = new KeyedObject(key, object);</span>
+<span class="fc" id="L206">            this.data.add(ko);</span>
         }
-<span class="nc" id="L208">    }</span>
+<span class="fc" id="L208">    }</span>
 
     /**
      * Inserts a new value at the specified position in the dataset or, if
@@ -245,8 +245,8 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      * @see #removeValue(Comparable)
      */
     public void removeValue(int index) {
-<span class="nc" id="L248">        this.data.remove(index);</span>
-<span class="nc" id="L249">    }</span>
+<span class="fc" id="L248">        this.data.remove(index);</span>
+<span class="fc" id="L249">    }</span>
 
     /**
      * Removes a value from the collection.
@@ -259,13 +259,13 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      */
     public void removeValue(Comparable key) {
         // defer argument checking
-<span class="nc" id="L262">        int index = getIndex(key);</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (index &lt; 0) {</span>
-<span class="nc" id="L264">            throw new UnknownKeyException(&quot;The key (&quot; + key.toString()</span>
+<span class="fc" id="L262">        int index = getIndex(key);</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L264">            throw new UnknownKeyException(&quot;The key (&quot; + key.toString()</span>
                     + &quot;) is not recognised.&quot;);
         }
-<span class="nc" id="L267">        removeValue(index);</span>
-<span class="nc" id="L268">    }</span>
+<span class="fc" id="L267">        removeValue(index);</span>
+<span class="fc" id="L268">    }</span>
 
     /**
      * Clears all values from the collection.
@@ -287,14 +287,14 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L290">        KeyedObjects clone = (KeyedObjects) super.clone();</span>
-<span class="nc" id="L291">        clone.data = new java.util.ArrayList();</span>
-<span class="nc" id="L292">        Iterator iterator = this.data.iterator();</span>
-<span class="nc bnc" id="L293" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L294">            KeyedObject ko = (KeyedObject) iterator.next();</span>
-<span class="nc" id="L295">            clone.data.add(ko.clone());</span>
-<span class="nc" id="L296">        }</span>
-<span class="nc" id="L297">        return clone;</span>
+<span class="fc" id="L290">        KeyedObjects clone = (KeyedObjects) super.clone();</span>
+<span class="fc" id="L291">        clone.data = new java.util.ArrayList();</span>
+<span class="fc" id="L292">        Iterator iterator = this.data.iterator();</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L294">            KeyedObject ko = (KeyedObject) iterator.next();</span>
+<span class="fc" id="L295">            clone.data.add(ko.clone());</span>
+<span class="fc" id="L296">        }</span>
+<span class="fc" id="L297">        return clone;</span>
     }
 
     /**
@@ -307,38 +307,38 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
     @Override
     public boolean equals(Object obj) {
 
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L311">            return true;</span>
         }
-<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (!(obj instanceof KeyedObjects)) {</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (!(obj instanceof KeyedObjects)) {</span>
 <span class="nc" id="L314">            return false;</span>
         }
-<span class="nc" id="L316">        KeyedObjects that = (KeyedObjects) obj;</span>
-<span class="nc" id="L317">        int count = getItemCount();</span>
-<span class="nc bnc" id="L318" title="All 2 branches missed.">        if (count != that.getItemCount()) {</span>
+<span class="fc" id="L316">        KeyedObjects that = (KeyedObjects) obj;</span>
+<span class="fc" id="L317">        int count = getItemCount();</span>
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">        if (count != that.getItemCount()) {</span>
 <span class="nc" id="L319">            return false;</span>
         }
 
-<span class="nc bnc" id="L322" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
-<span class="nc" id="L323">            Comparable k1 = getKey(i);</span>
-<span class="nc" id="L324">            Comparable k2 = that.getKey(i);</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">            if (!k1.equals(k2)) {</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L323">            Comparable k1 = getKey(i);</span>
+<span class="fc" id="L324">            Comparable k2 = that.getKey(i);</span>
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">            if (!k1.equals(k2)) {</span>
 <span class="nc" id="L326">                return false;</span>
             }
-<span class="nc" id="L328">            Object o1 = getObject(i);</span>
-<span class="nc" id="L329">            Object o2 = that.getObject(i);</span>
-<span class="nc bnc" id="L330" title="All 2 branches missed.">            if (o1 == null) {</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">                if (o2 != null) {</span>
+<span class="fc" id="L328">            Object o1 = getObject(i);</span>
+<span class="fc" id="L329">            Object o2 = that.getObject(i);</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">            if (o1 == null) {</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">                if (o2 != null) {</span>
 <span class="nc" id="L332">                    return false;</span>
                 }
             }
             else {
-<span class="nc bnc" id="L336" title="All 2 branches missed.">                if (!o1.equals(o2)) {</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                if (!o1.equals(o2)) {</span>
 <span class="nc" id="L337">                    return false;</span>
                 }
             }
         }
-<span class="nc" id="L341">        return true;</span>
+<span class="fc" id="L341">        return true;</span>
 
     }
 
@@ -353,4 +353,4 @@ public class KeyedObjects implements Cloneable, PublicCloneable, Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -76,12 +76,12 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
     /**
      * Creates a new axis space record.
      */
-<span class="nc" id="L79">    public AxisSpace() {</span>
-<span class="nc" id="L80">        this.top = 0.0;</span>
-<span class="nc" id="L81">        this.bottom = 0.0;</span>
-<span class="nc" id="L82">        this.left = 0.0;</span>
-<span class="nc" id="L83">        this.right = 0.0;</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L79">    public AxisSpace() {</span>
+<span class="fc" id="L80">        this.top = 0.0;</span>
+<span class="fc" id="L81">        this.bottom = 0.0;</span>
+<span class="fc" id="L82">        this.left = 0.0;</span>
+<span class="fc" id="L83">        this.right = 0.0;</span>
+<span class="fc" id="L84">    }</span>
 
     /**
      * Returns the space reserved for axes at the top of the plot area.
@@ -89,7 +89,7 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @return The space (in Java2D units).
      */
     public double getTop() {
-<span class="nc" id="L92">        return this.top;</span>
+<span class="fc" id="L92">        return this.top;</span>
     }
 
     /**
@@ -98,8 +98,8 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param space  the space (in Java2D units).
      */
     public void setTop(double space) {
-<span class="nc" id="L101">        this.top = space;</span>
-<span class="nc" id="L102">    }</span>
+<span class="fc" id="L101">        this.top = space;</span>
+<span class="fc" id="L102">    }</span>
 
     /**
      * Returns the space reserved for axes at the bottom of the plot area.
@@ -107,7 +107,7 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @return The space (in Java2D units).
      */
     public double getBottom() {
-<span class="nc" id="L110">        return this.bottom;</span>
+<span class="fc" id="L110">        return this.bottom;</span>
     }
 
     /**
@@ -116,8 +116,8 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param space  the space (in Java2D units).
      */
     public void setBottom(double space) {
-<span class="nc" id="L119">        this.bottom = space;</span>
-<span class="nc" id="L120">    }</span>
+<span class="fc" id="L119">        this.bottom = space;</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Returns the space reserved for axes at the left of the plot area.
@@ -134,8 +134,8 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param space  the space (in Java2D units).
      */
     public void setLeft(double space) {
-<span class="nc" id="L137">        this.left = space;</span>
-<span class="nc" id="L138">    }</span>
+<span class="fc" id="L137">        this.left = space;</span>
+<span class="fc" id="L138">    }</span>
 
     /**
      * Returns the space reserved for axes at the right of the plot area.
@@ -152,8 +152,8 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param space  the space (in Java2D units).
      */
     public void setRight(double space) {
-<span class="nc" id="L155">        this.right = space;</span>
-<span class="nc" id="L156">    }</span>
+<span class="fc" id="L155">        this.right = space;</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Adds space to the top, bottom, left or right edge of the plot area.
@@ -162,15 +162,15 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param edge  the edge ({@code null} not permitted).
      */
     public void add(double space, RectangleEdge edge) {
-<span class="nc" id="L165">        Args.nullNotPermitted(edge, &quot;edge&quot;);</span>
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (edge == RectangleEdge.TOP) {</span>
-<span class="nc" id="L167">            this.top += space;</span>
+<span class="fc" id="L165">        Args.nullNotPermitted(edge, &quot;edge&quot;);</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (edge == RectangleEdge.TOP) {</span>
+<span class="fc" id="L167">            this.top += space;</span>
         }
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        else if (edge == RectangleEdge.BOTTOM) {</span>
-<span class="nc" id="L170">            this.bottom += space;</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        else if (edge == RectangleEdge.BOTTOM) {</span>
+<span class="fc" id="L170">            this.bottom += space;</span>
         }
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        else if (edge == RectangleEdge.LEFT) {</span>
-<span class="nc" id="L173">            this.left += space;</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        else if (edge == RectangleEdge.LEFT) {</span>
+<span class="fc" id="L173">            this.left += space;</span>
         }
 <span class="nc bnc" id="L175" title="All 2 branches missed.">        else if (edge == RectangleEdge.RIGHT) {</span>
 <span class="nc" id="L176">            this.right += space;</span>
@@ -178,7 +178,7 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
         else {
 <span class="nc" id="L179">            throw new IllegalStateException(&quot;Unrecognised 'edge' argument.&quot;);</span>
         }
-<span class="nc" id="L181">    }</span>
+<span class="fc" id="L181">    }</span>
 
     /**
      * Ensures that this object reserves at least as much space as another.
@@ -186,11 +186,11 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param space  the other space.
      */
     public void ensureAtLeast(AxisSpace space) {
-<span class="nc" id="L189">        this.top = Math.max(this.top, space.top);</span>
-<span class="nc" id="L190">        this.bottom = Math.max(this.bottom, space.bottom);</span>
-<span class="nc" id="L191">        this.left = Math.max(this.left, space.left);</span>
-<span class="nc" id="L192">        this.right = Math.max(this.right, space.right);</span>
-<span class="nc" id="L193">    }</span>
+<span class="fc" id="L189">        this.top = Math.max(this.top, space.top);</span>
+<span class="fc" id="L190">        this.bottom = Math.max(this.bottom, space.bottom);</span>
+<span class="fc" id="L191">        this.left = Math.max(this.left, space.left);</span>
+<span class="fc" id="L192">        this.right = Math.max(this.right, space.right);</span>
+<span class="fc" id="L193">    }</span>
 
     /**
      * Ensures there is a minimum amount of space at the edge corresponding to
@@ -200,14 +200,14 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @param edge  the location.
      */
     public void ensureAtLeast(double space, RectangleEdge edge) {
-<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (edge == RectangleEdge.TOP) {</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (this.top &lt; space) {</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (edge == RectangleEdge.TOP) {</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">            if (this.top &lt; space) {</span>
 <span class="nc" id="L205">                this.top = space;</span>
             }
         }
-<span class="nc bnc" id="L208" title="All 2 branches missed.">        else if (edge == RectangleEdge.BOTTOM) {</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (this.bottom &lt; space) {</span>
-<span class="nc" id="L210">                this.bottom = space;</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        else if (edge == RectangleEdge.BOTTOM) {</span>
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">            if (this.bottom &lt; space) {</span>
+<span class="fc" id="L210">                this.bottom = space;</span>
             }
         }
 <span class="nc bnc" id="L213" title="All 2 branches missed.">        else if (edge == RectangleEdge.LEFT) {</span>
@@ -225,7 +225,7 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
                 &quot;AxisSpace.ensureAtLeast(): unrecognised AxisLocation.&quot;
             );
         }
-<span class="nc" id="L228">    }</span>
+<span class="fc" id="L228">    }</span>
 
     /**
      * Shrinks an area by the space attributes.
@@ -236,16 +236,16 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      * @return The result.
      */
     public Rectangle2D shrink(Rectangle2D area, Rectangle2D result) {
-<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (result == null) {</span>
-<span class="nc" id="L240">            result = new Rectangle2D.Double();</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="fc" id="L240">            result = new Rectangle2D.Double();</span>
         }
-<span class="nc" id="L242">        result.setRect(</span>
-<span class="nc" id="L243">            area.getX() + this.left,</span>
-<span class="nc" id="L244">            area.getY() + this.top,</span>
-<span class="nc" id="L245">            area.getWidth() - this.left - this.right,</span>
-<span class="nc" id="L246">            area.getHeight() - this.top - this.bottom</span>
+<span class="fc" id="L242">        result.setRect(</span>
+<span class="fc" id="L243">            area.getX() + this.left,</span>
+<span class="fc" id="L244">            area.getY() + this.top,</span>
+<span class="fc" id="L245">            area.getWidth() - this.left - this.right,</span>
+<span class="fc" id="L246">            area.getHeight() - this.top - this.bottom</span>
         );
-<span class="nc" id="L248">        return result;</span>
+<span class="fc" id="L248">        return result;</span>
     }
 
     /**
@@ -314,7 +314,7 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L317">        return super.clone();</span>
+<span class="fc" id="L317">        return super.clone();</span>
     }
 
     /**
@@ -326,26 +326,26 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L330">            return true;</span>
         }
-<span class="nc bnc" id="L332" title="All 2 branches missed.">        if (!(obj instanceof AxisSpace)) {</span>
-<span class="nc" id="L333">            return false;</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        if (!(obj instanceof AxisSpace)) {</span>
+<span class="fc" id="L333">            return false;</span>
         }
-<span class="nc" id="L335">        AxisSpace that = (AxisSpace) obj;</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">        if (this.top != that.top) {</span>
-<span class="nc" id="L337">            return false;</span>
+<span class="fc" id="L335">        AxisSpace that = (AxisSpace) obj;</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        if (this.top != that.top) {</span>
+<span class="fc" id="L337">            return false;</span>
         }
-<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (this.bottom != that.bottom) {</span>
-<span class="nc" id="L340">            return false;</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        if (this.bottom != that.bottom) {</span>
+<span class="fc" id="L340">            return false;</span>
         }
-<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (this.left != that.left) {</span>
-<span class="nc" id="L343">            return false;</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (this.left != that.left) {</span>
+<span class="fc" id="L343">            return false;</span>
         }
-<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (this.right != that.right) {</span>
-<span class="nc" id="L346">            return false;</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (this.right != that.right) {</span>
+<span class="fc" id="L346">            return false;</span>
         }
-<span class="nc" id="L348">        return true;</span>
+<span class="fc" id="L348">        return true;</span>
     }
 
     /**
@@ -355,16 +355,16 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc" id="L358">        int result = 23;</span>
-<span class="nc" id="L359">        long l = Double.doubleToLongBits(this.top);</span>
-<span class="nc" id="L360">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L361">        l = Double.doubleToLongBits(this.bottom);</span>
-<span class="nc" id="L362">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L363">        l = Double.doubleToLongBits(this.left);</span>
-<span class="nc" id="L364">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L365">        l = Double.doubleToLongBits(this.right);</span>
-<span class="nc" id="L366">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
-<span class="nc" id="L367">        return result;</span>
+<span class="fc" id="L358">        int result = 23;</span>
+<span class="fc" id="L359">        long l = Double.doubleToLongBits(this.top);</span>
+<span class="fc" id="L360">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L361">        l = Double.doubleToLongBits(this.bottom);</span>
+<span class="fc" id="L362">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L363">        l = Double.doubleToLongBits(this.left);</span>
+<span class="fc" id="L364">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L365">        l = Double.doubleToLongBits(this.right);</span>
+<span class="fc" id="L366">        result = 37 * result + (int) (l ^ (l &gt;&gt;&gt; 32));</span>
+<span class="fc" id="L367">        return result;</span>
     }
 
     /**
@@ -379,4 +379,4 @@ public class AxisSpace implements Cloneable, PublicCloneable, Serializable {
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

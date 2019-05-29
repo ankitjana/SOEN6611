@@ -76,8 +76,8 @@ public class MonthDateFormat extends DateFormat {
      * Creates a new instance for the default time zone.
      */
     public MonthDateFormat() {
-<span class="nc" id="L79">        this(TimeZone.getDefault());</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L79">        this(TimeZone.getDefault());</span>
+<span class="fc" id="L80">    }</span>
 
     /**
      * Creates a new instance for the specified time zone.
@@ -85,8 +85,8 @@ public class MonthDateFormat extends DateFormat {
      * @param zone  the time zone ({@code null} not permitted).
      */
     public MonthDateFormat(TimeZone zone) {
-<span class="nc" id="L88">        this(zone, Locale.getDefault(), 1, true, false);</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        this(zone, Locale.getDefault(), 1, true, false);</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * Creates a new instance for the specified time zone.
@@ -143,10 +143,10 @@ public class MonthDateFormat extends DateFormat {
      */
     public MonthDateFormat(TimeZone zone, Locale locale, int chars,
                            boolean showYearForJan, boolean showYearForDec) {
-<span class="nc" id="L146">        this(zone, locale, chars, new boolean[] {showYearForJan, false, false,</span>
+<span class="fc" id="L146">        this(zone, locale, chars, new boolean[] {showYearForJan, false, false,</span>
             false, false, false, false, false, false, false, false, false,
             showYearForDec}, new SimpleDateFormat(&quot;yy&quot;));
-<span class="nc" id="L149">    }</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Creates a new formatter.
@@ -163,29 +163,29 @@ public class MonthDateFormat extends DateFormat {
      * @param yearFormatter  the year formatter.
      */
     public MonthDateFormat(TimeZone zone, Locale locale, int chars,
-<span class="nc" id="L166">                           boolean[] showYear, DateFormat yearFormatter) {</span>
-<span class="nc" id="L167">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
-<span class="nc" id="L168">        DateFormatSymbols dfs = new DateFormatSymbols(locale);</span>
-<span class="nc" id="L169">        String[] monthsFromLocale = dfs.getMonths();</span>
-<span class="nc" id="L170">        this.months = new String[12];</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (int i = 0; i &lt; 12; i++) {</span>
-<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (chars &gt; 0) {</span>
-<span class="nc" id="L173">                this.months[i] = monthsFromLocale[i].substring(0,</span>
-<span class="nc" id="L174">                        Math.min(chars, monthsFromLocale[i].length()));</span>
+<span class="fc" id="L166">                           boolean[] showYear, DateFormat yearFormatter) {</span>
+<span class="fc" id="L167">        Args.nullNotPermitted(locale, &quot;locale&quot;);</span>
+<span class="fc" id="L168">        DateFormatSymbols dfs = new DateFormatSymbols(locale);</span>
+<span class="fc" id="L169">        String[] monthsFromLocale = dfs.getMonths();</span>
+<span class="fc" id="L170">        this.months = new String[12];</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        for (int i = 0; i &lt; 12; i++) {</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">            if (chars &gt; 0) {</span>
+<span class="fc" id="L173">                this.months[i] = monthsFromLocale[i].substring(0,</span>
+<span class="fc" id="L174">                        Math.min(chars, monthsFromLocale[i].length()));</span>
             }
             else {
 <span class="nc" id="L177">                this.months[i] = monthsFromLocale[i];</span>
             }
         }
-<span class="nc" id="L180">        this.calendar = new GregorianCalendar(zone);</span>
-<span class="nc" id="L181">        this.showYear = showYear;</span>
-<span class="nc" id="L182">        this.yearFormatter = yearFormatter;</span>
+<span class="fc" id="L180">        this.calendar = new GregorianCalendar(zone);</span>
+<span class="fc" id="L181">        this.showYear = showYear;</span>
+<span class="fc" id="L182">        this.yearFormatter = yearFormatter;</span>
 
         // the following is never used, but it seems that DateFormat requires
         // it to be non-null.  It isn't well covered in the spec, refer to
         // bug parade 5061189 for more info.
-<span class="nc" id="L187">        this.numberFormat = NumberFormat.getNumberInstance();</span>
-<span class="nc" id="L188">    }</span>
+<span class="fc" id="L187">        this.numberFormat = NumberFormat.getNumberInstance();</span>
+<span class="fc" id="L188">    }</span>
 
     /**
      * Formats the given date.
@@ -230,26 +230,26 @@ public class MonthDateFormat extends DateFormat {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L234">            return true;</span>
         }
-<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (!(obj instanceof MonthDateFormat)) {</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (!(obj instanceof MonthDateFormat)) {</span>
 <span class="nc" id="L237">            return false;</span>
         }
-<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
-<span class="nc" id="L240">            return false;</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if (!super.equals(obj)) {</span>
+<span class="fc" id="L240">            return false;</span>
         }
-<span class="nc" id="L242">        MonthDateFormat that = (MonthDateFormat) obj;</span>
-<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (!Arrays.equals(this.months, that.months)) {</span>
-<span class="nc" id="L244">            return false;</span>
+<span class="fc" id="L242">        MonthDateFormat that = (MonthDateFormat) obj;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (!Arrays.equals(this.months, that.months)) {</span>
+<span class="fc" id="L244">            return false;</span>
         }
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (!Arrays.equals(this.showYear, that.showYear)) {</span>
-<span class="nc" id="L247">            return false;</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if (!Arrays.equals(this.showYear, that.showYear)) {</span>
+<span class="fc" id="L247">            return false;</span>
         }
-<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (!this.yearFormatter.equals(that.yearFormatter)) {</span>
-<span class="nc" id="L250">            return false;</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (!this.yearFormatter.equals(that.yearFormatter)) {</span>
+<span class="fc" id="L250">            return false;</span>
         }
-<span class="nc" id="L252">        return true;</span>
+<span class="fc" id="L252">        return true;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -158,8 +158,8 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * Creates a new renderer with default attributes.
      */
     public XYDifferenceRenderer() {
-<span class="nc" id="L161">        this(Color.green, Color.RED, false);</span>
-<span class="nc" id="L162">    }</span>
+<span class="fc" id="L161">        this(Color.green, Color.RED, false);</span>
+<span class="fc" id="L162">    }</span>
 
     /**
      * Creates a new renderer.
@@ -171,15 +171,15 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @param shapes  draw shapes?
      */
     public XYDifferenceRenderer(Paint positivePaint, Paint negativePaint,
-<span class="nc" id="L174">                                boolean shapes) {</span>
-<span class="nc" id="L175">        Args.nullNotPermitted(positivePaint, &quot;positivePaint&quot;);</span>
-<span class="nc" id="L176">        Args.nullNotPermitted(negativePaint, &quot;negativePaint&quot;);</span>
-<span class="nc" id="L177">        this.positivePaint = positivePaint;</span>
-<span class="nc" id="L178">        this.negativePaint = negativePaint;</span>
-<span class="nc" id="L179">        this.shapesVisible = shapes;</span>
-<span class="nc" id="L180">        this.legendLine = new Line2D.Double(-7.0, 0.0, 7.0, 0.0);</span>
-<span class="nc" id="L181">        this.roundXCoordinates = false;</span>
-<span class="nc" id="L182">    }</span>
+<span class="fc" id="L174">                                boolean shapes) {</span>
+<span class="fc" id="L175">        Args.nullNotPermitted(positivePaint, &quot;positivePaint&quot;);</span>
+<span class="fc" id="L176">        Args.nullNotPermitted(negativePaint, &quot;negativePaint&quot;);</span>
+<span class="fc" id="L177">        this.positivePaint = positivePaint;</span>
+<span class="fc" id="L178">        this.negativePaint = negativePaint;</span>
+<span class="fc" id="L179">        this.shapesVisible = shapes;</span>
+<span class="fc" id="L180">        this.legendLine = new Line2D.Double(-7.0, 0.0, 7.0, 0.0);</span>
+<span class="fc" id="L181">        this.roundXCoordinates = false;</span>
+<span class="fc" id="L182">    }</span>
 
     /**
      * Returns the paint used to highlight positive differences.
@@ -201,10 +201,10 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @see #getPositivePaint()
      */
     public void setPositivePaint(Paint paint) {
-<span class="nc" id="L204">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L205">        this.positivePaint = paint;</span>
-<span class="nc" id="L206">        fireChangeEvent();</span>
-<span class="nc" id="L207">    }</span>
+<span class="fc" id="L204">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L205">        this.positivePaint = paint;</span>
+<span class="fc" id="L206">        fireChangeEvent();</span>
+<span class="fc" id="L207">    }</span>
 
     /**
      * Returns the paint used to highlight negative differences.
@@ -225,10 +225,10 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @see #getNegativePaint()
      */
     public void setNegativePaint(Paint paint) {
-<span class="nc" id="L228">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L229">        this.negativePaint = paint;</span>
-<span class="nc" id="L230">        notifyListeners(new RendererChangeEvent(this));</span>
-<span class="nc" id="L231">    }</span>
+<span class="fc" id="L228">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L229">        this.negativePaint = paint;</span>
+<span class="fc" id="L230">        notifyListeners(new RendererChangeEvent(this));</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Returns a flag that controls whether or not shapes are drawn for each
@@ -264,7 +264,7 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @see #setLegendLine(Shape)
      */
     public Shape getLegendLine() {
-<span class="nc" id="L267">        return this.legendLine;</span>
+<span class="fc" id="L267">        return this.legendLine;</span>
     }
 
     /**
@@ -276,10 +276,10 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @see #getLegendLine()
      */
     public void setLegendLine(Shape line) {
-<span class="nc" id="L279">        Args.nullNotPermitted(line, &quot;line&quot;);</span>
-<span class="nc" id="L280">        this.legendLine = line;</span>
-<span class="nc" id="L281">        fireChangeEvent();</span>
-<span class="nc" id="L282">    }</span>
+<span class="fc" id="L279">        Args.nullNotPermitted(line, &quot;line&quot;);</span>
+<span class="fc" id="L280">        this.legendLine = line;</span>
+<span class="fc" id="L281">        fireChangeEvent();</span>
+<span class="fc" id="L282">    }</span>
 
     /**
      * Returns the flag that controls whether or not the x-coordinates (in
@@ -307,9 +307,9 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @see #getRoundXCoordinates()
      */
     public void setRoundXCoordinates(boolean round) {
-<span class="nc" id="L310">        this.roundXCoordinates = round;</span>
-<span class="nc" id="L311">        fireChangeEvent();</span>
-<span class="nc" id="L312">    }</span>
+<span class="fc" id="L310">        this.roundXCoordinates = round;</span>
+<span class="fc" id="L311">        fireChangeEvent();</span>
+<span class="fc" id="L312">    }</span>
 
     /**
      * Initialises the renderer and returns a state object that should be
@@ -1116,46 +1116,46 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      */
     @Override
     public LegendItem getLegendItem(int datasetIndex, int series) {
-<span class="nc" id="L1119">        LegendItem result = null;</span>
-<span class="nc" id="L1120">        XYPlot p = getPlot();</span>
-<span class="nc bnc" id="L1121" title="All 2 branches missed.">        if (p != null) {</span>
-<span class="nc" id="L1122">            XYDataset dataset = p.getDataset(datasetIndex);</span>
-<span class="nc bnc" id="L1123" title="All 2 branches missed.">            if (dataset != null) {</span>
-<span class="nc bnc" id="L1124" title="All 2 branches missed.">                if (getItemVisible(series, 0)) {</span>
-<span class="nc" id="L1125">                    String label = getLegendItemLabelGenerator().generateLabel(</span>
+<span class="fc" id="L1119">        LegendItem result = null;</span>
+<span class="fc" id="L1120">        XYPlot p = getPlot();</span>
+<span class="pc bpc" id="L1121" title="1 of 2 branches missed.">        if (p != null) {</span>
+<span class="fc" id="L1122">            XYDataset dataset = p.getDataset(datasetIndex);</span>
+<span class="pc bpc" id="L1123" title="1 of 2 branches missed.">            if (dataset != null) {</span>
+<span class="pc bpc" id="L1124" title="1 of 2 branches missed.">                if (getItemVisible(series, 0)) {</span>
+<span class="fc" id="L1125">                    String label = getLegendItemLabelGenerator().generateLabel(</span>
                             dataset, series);
-<span class="nc" id="L1127">                    String description = label;</span>
-<span class="nc" id="L1128">                    String toolTipText = null;</span>
-<span class="nc bnc" id="L1129" title="All 2 branches missed.">                    if (getLegendItemToolTipGenerator() != null) {</span>
+<span class="fc" id="L1127">                    String description = label;</span>
+<span class="fc" id="L1128">                    String toolTipText = null;</span>
+<span class="pc bpc" id="L1129" title="1 of 2 branches missed.">                    if (getLegendItemToolTipGenerator() != null) {</span>
 <span class="nc" id="L1130">                        toolTipText</span>
 <span class="nc" id="L1131">                            = getLegendItemToolTipGenerator().generateLabel(</span>
                                     dataset, series);
                     }
-<span class="nc" id="L1134">                    String urlText = null;</span>
-<span class="nc bnc" id="L1135" title="All 2 branches missed.">                    if (getLegendItemURLGenerator() != null) {</span>
+<span class="fc" id="L1134">                    String urlText = null;</span>
+<span class="pc bpc" id="L1135" title="1 of 2 branches missed.">                    if (getLegendItemURLGenerator() != null) {</span>
 <span class="nc" id="L1136">                        urlText = getLegendItemURLGenerator().generateLabel(</span>
                                 dataset, series);
                     }
-<span class="nc" id="L1139">                    Paint paint = lookupSeriesPaint(series);</span>
-<span class="nc" id="L1140">                    Stroke stroke = lookupSeriesStroke(series);</span>
-<span class="nc" id="L1141">                    Shape line = getLegendLine();</span>
-<span class="nc" id="L1142">                    result = new LegendItem(label, description,</span>
+<span class="fc" id="L1139">                    Paint paint = lookupSeriesPaint(series);</span>
+<span class="fc" id="L1140">                    Stroke stroke = lookupSeriesStroke(series);</span>
+<span class="fc" id="L1141">                    Shape line = getLegendLine();</span>
+<span class="fc" id="L1142">                    result = new LegendItem(label, description,</span>
                             toolTipText, urlText, line, stroke, paint);
-<span class="nc" id="L1144">                    result.setLabelFont(lookupLegendTextFont(series));</span>
-<span class="nc" id="L1145">                    Paint labelPaint = lookupLegendTextPaint(series);</span>
-<span class="nc bnc" id="L1146" title="All 2 branches missed.">                    if (labelPaint != null) {</span>
+<span class="fc" id="L1144">                    result.setLabelFont(lookupLegendTextFont(series));</span>
+<span class="fc" id="L1145">                    Paint labelPaint = lookupLegendTextPaint(series);</span>
+<span class="pc bpc" id="L1146" title="1 of 2 branches missed.">                    if (labelPaint != null) {</span>
 <span class="nc" id="L1147">                        result.setLabelPaint(labelPaint);</span>
                     }
-<span class="nc" id="L1149">                    result.setDataset(dataset);</span>
-<span class="nc" id="L1150">                    result.setDatasetIndex(datasetIndex);</span>
-<span class="nc" id="L1151">                    result.setSeriesKey(dataset.getSeriesKey(series));</span>
-<span class="nc" id="L1152">                    result.setSeriesIndex(series);</span>
+<span class="fc" id="L1149">                    result.setDataset(dataset);</span>
+<span class="fc" id="L1150">                    result.setDatasetIndex(datasetIndex);</span>
+<span class="fc" id="L1151">                    result.setSeriesKey(dataset.getSeriesKey(series));</span>
+<span class="fc" id="L1152">                    result.setSeriesIndex(series);</span>
                 }
             }
 
         }
 
-<span class="nc" id="L1158">        return result;</span>
+<span class="fc" id="L1158">        return result;</span>
 
     }
 
@@ -1168,32 +1168,32 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L1171" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L1171" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L1172">            return true;</span>
         }
-<span class="nc bnc" id="L1174" title="All 2 branches missed.">        if (!(obj instanceof XYDifferenceRenderer)) {</span>
-<span class="nc" id="L1175">            return false;</span>
+<span class="fc bfc" id="L1174" title="All 2 branches covered.">        if (!(obj instanceof XYDifferenceRenderer)) {</span>
+<span class="fc" id="L1175">            return false;</span>
         }
-<span class="nc bnc" id="L1177" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L1177" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L1178">            return false;</span>
         }
-<span class="nc" id="L1180">        XYDifferenceRenderer that = (XYDifferenceRenderer) obj;</span>
-<span class="nc bnc" id="L1181" title="All 2 branches missed.">        if (!PaintUtils.equal(this.positivePaint, that.positivePaint)) {</span>
-<span class="nc" id="L1182">            return false;</span>
+<span class="fc" id="L1180">        XYDifferenceRenderer that = (XYDifferenceRenderer) obj;</span>
+<span class="fc bfc" id="L1181" title="All 2 branches covered.">        if (!PaintUtils.equal(this.positivePaint, that.positivePaint)) {</span>
+<span class="fc" id="L1182">            return false;</span>
         }
-<span class="nc bnc" id="L1184" title="All 2 branches missed.">        if (!PaintUtils.equal(this.negativePaint, that.negativePaint)) {</span>
-<span class="nc" id="L1185">            return false;</span>
+<span class="fc bfc" id="L1184" title="All 2 branches covered.">        if (!PaintUtils.equal(this.negativePaint, that.negativePaint)) {</span>
+<span class="fc" id="L1185">            return false;</span>
         }
-<span class="nc bnc" id="L1187" title="All 2 branches missed.">        if (this.shapesVisible != that.shapesVisible) {</span>
+<span class="pc bpc" id="L1187" title="1 of 2 branches missed.">        if (this.shapesVisible != that.shapesVisible) {</span>
 <span class="nc" id="L1188">            return false;</span>
         }
-<span class="nc bnc" id="L1190" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendLine, that.legendLine)) {</span>
-<span class="nc" id="L1191">            return false;</span>
+<span class="fc bfc" id="L1190" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendLine, that.legendLine)) {</span>
+<span class="fc" id="L1191">            return false;</span>
         }
-<span class="nc bnc" id="L1193" title="All 2 branches missed.">        if (this.roundXCoordinates != that.roundXCoordinates) {</span>
-<span class="nc" id="L1194">            return false;</span>
+<span class="fc bfc" id="L1193" title="All 2 branches covered.">        if (this.roundXCoordinates != that.roundXCoordinates) {</span>
+<span class="fc" id="L1194">            return false;</span>
         }
-<span class="nc" id="L1196">        return true;</span>
+<span class="fc" id="L1196">        return true;</span>
     }
 
     /**
@@ -1205,9 +1205,9 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L1208">        XYDifferenceRenderer clone = (XYDifferenceRenderer) super.clone();</span>
-<span class="nc" id="L1209">        clone.legendLine = ShapeUtils.clone(this.legendLine);</span>
-<span class="nc" id="L1210">        return clone;</span>
+<span class="fc" id="L1208">        XYDifferenceRenderer clone = (XYDifferenceRenderer) super.clone();</span>
+<span class="fc" id="L1209">        clone.legendLine = ShapeUtils.clone(this.legendLine);</span>
+<span class="fc" id="L1210">        return clone;</span>
     }
 
     /**
@@ -1218,11 +1218,11 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L1221">        stream.defaultWriteObject();</span>
-<span class="nc" id="L1222">        SerialUtils.writePaint(this.positivePaint, stream);</span>
-<span class="nc" id="L1223">        SerialUtils.writePaint(this.negativePaint, stream);</span>
-<span class="nc" id="L1224">        SerialUtils.writeShape(this.legendLine, stream);</span>
-<span class="nc" id="L1225">    }</span>
+<span class="fc" id="L1221">        stream.defaultWriteObject();</span>
+<span class="fc" id="L1222">        SerialUtils.writePaint(this.positivePaint, stream);</span>
+<span class="fc" id="L1223">        SerialUtils.writePaint(this.negativePaint, stream);</span>
+<span class="fc" id="L1224">        SerialUtils.writeShape(this.legendLine, stream);</span>
+<span class="fc" id="L1225">    }</span>
 
     /**
      * Provides serialization support.
@@ -1234,11 +1234,11 @@ public class XYDifferenceRenderer extends AbstractXYItemRenderer
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L1237">        stream.defaultReadObject();</span>
-<span class="nc" id="L1238">        this.positivePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1239">        this.negativePaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L1240">        this.legendLine = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L1241">    }</span>
+<span class="fc" id="L1237">        stream.defaultReadObject();</span>
+<span class="fc" id="L1238">        this.positivePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1239">        this.negativePaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L1240">        this.legendLine = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L1241">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -86,12 +86,12 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
     /**
      * Creates a new dataset.
      */
-<span class="nc" id="L89">    public DefaultMultiValueCategoryDataset() {</span>
-<span class="nc" id="L90">        this.data = new KeyedObjects2D();</span>
-<span class="nc" id="L91">        this.minimumRangeValue = null;</span>
-<span class="nc" id="L92">        this.maximumRangeValue = null;</span>
-<span class="nc" id="L93">        this.rangeBounds = new Range(0.0, 0.0);</span>
-<span class="nc" id="L94">    }</span>
+<span class="fc" id="L89">    public DefaultMultiValueCategoryDataset() {</span>
+<span class="fc" id="L90">        this.data = new KeyedObjects2D();</span>
+<span class="fc" id="L91">        this.minimumRangeValue = null;</span>
+<span class="fc" id="L92">        this.maximumRangeValue = null;</span>
+<span class="fc" id="L93">        this.rangeBounds = new Range(0.0, 0.0);</span>
+<span class="fc" id="L94">    }</span>
 
     /**
      * Adds a list of values to the dataset ({@code null} and Double.NaN
@@ -104,54 +104,54 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     public void add(List values, Comparable rowKey, Comparable columnKey) {
 
-<span class="nc" id="L107">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
-<span class="nc" id="L108">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
-<span class="nc" id="L109">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
-<span class="nc" id="L110">        List vlist = new ArrayList(values.size());</span>
-<span class="nc" id="L111">        Iterator iterator = values.listIterator();</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L113">            Object obj = iterator.next();</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (obj instanceof Number) {</span>
-<span class="nc" id="L115">                Number n = (Number) obj;</span>
-<span class="nc" id="L116">                double v = n.doubleValue();</span>
-<span class="nc bnc" id="L117" title="All 2 branches missed.">                if (!Double.isNaN(v)) {</span>
-<span class="nc" id="L118">                    vlist.add(n);</span>
+<span class="fc" id="L107">        Args.nullNotPermitted(values, &quot;values&quot;);</span>
+<span class="fc" id="L108">        Args.nullNotPermitted(rowKey, &quot;rowKey&quot;);</span>
+<span class="fc" id="L109">        Args.nullNotPermitted(columnKey, &quot;columnKey&quot;);</span>
+<span class="fc" id="L110">        List vlist = new ArrayList(values.size());</span>
+<span class="fc" id="L111">        Iterator iterator = values.listIterator();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L113">            Object obj = iterator.next();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">            if (obj instanceof Number) {</span>
+<span class="fc" id="L115">                Number n = (Number) obj;</span>
+<span class="fc" id="L116">                double v = n.doubleValue();</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                if (!Double.isNaN(v)) {</span>
+<span class="fc" id="L118">                    vlist.add(n);</span>
                 }
             }
-<span class="nc" id="L121">        }</span>
-<span class="nc" id="L122">        Collections.sort(vlist);</span>
-<span class="nc" id="L123">        this.data.addObject(vlist, rowKey, columnKey);</span>
+<span class="fc" id="L121">        }</span>
+<span class="fc" id="L122">        Collections.sort(vlist);</span>
+<span class="fc" id="L123">        this.data.addObject(vlist, rowKey, columnKey);</span>
 
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (vlist.size() &gt; 0) {</span>
-<span class="nc" id="L126">            double maxval = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L127">            double minval = Double.POSITIVE_INFINITY;</span>
-<span class="nc bnc" id="L128" title="All 2 branches missed.">            for (int i = 0; i &lt; vlist.size(); i++) {</span>
-<span class="nc" id="L129">                Number n = (Number) vlist.get(i);</span>
-<span class="nc" id="L130">                double v = n.doubleValue();</span>
-<span class="nc" id="L131">                minval = Math.min(minval, v);</span>
-<span class="nc" id="L132">                maxval = Math.max(maxval, v);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (vlist.size() &gt; 0) {</span>
+<span class="fc" id="L126">            double maxval = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L127">            double minval = Double.POSITIVE_INFINITY;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            for (int i = 0; i &lt; vlist.size(); i++) {</span>
+<span class="fc" id="L129">                Number n = (Number) vlist.get(i);</span>
+<span class="fc" id="L130">                double v = n.doubleValue();</span>
+<span class="fc" id="L131">                minval = Math.min(minval, v);</span>
+<span class="fc" id="L132">                maxval = Math.max(maxval, v);</span>
             }
 
             // update the cached range values...
-<span class="nc bnc" id="L136" title="All 2 branches missed.">            if (this.maximumRangeValue == null) {</span>
-<span class="nc" id="L137">                this.maximumRangeValue = new Double(maxval);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            if (this.maximumRangeValue == null) {</span>
+<span class="fc" id="L137">                this.maximumRangeValue = new Double(maxval);</span>
             }
-<span class="nc bnc" id="L139" title="All 2 branches missed.">            else if (maxval &gt; this.maximumRangeValue.doubleValue()) {</span>
-<span class="nc" id="L140">                this.maximumRangeValue = new Double(maxval);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            else if (maxval &gt; this.maximumRangeValue.doubleValue()) {</span>
+<span class="fc" id="L140">                this.maximumRangeValue = new Double(maxval);</span>
             }
 
-<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (this.minimumRangeValue == null) {</span>
-<span class="nc" id="L144">                this.minimumRangeValue = new Double(minval);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            if (this.minimumRangeValue == null) {</span>
+<span class="fc" id="L144">                this.minimumRangeValue = new Double(minval);</span>
             }
-<span class="nc bnc" id="L146" title="All 2 branches missed.">            else if (minval &lt; this.minimumRangeValue.doubleValue()) {</span>
-<span class="nc" id="L147">                this.minimumRangeValue = new Double(minval);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            else if (minval &lt; this.minimumRangeValue.doubleValue()) {</span>
+<span class="fc" id="L147">                this.minimumRangeValue = new Double(minval);</span>
             }
-<span class="nc" id="L149">            this.rangeBounds = new Range(this.minimumRangeValue.doubleValue(),</span>
-<span class="nc" id="L150">                    this.maximumRangeValue.doubleValue());</span>
+<span class="fc" id="L149">            this.rangeBounds = new Range(this.minimumRangeValue.doubleValue(),</span>
+<span class="fc" id="L150">                    this.maximumRangeValue.doubleValue());</span>
         }
 
-<span class="nc" id="L153">        fireDatasetChanged();</span>
-<span class="nc" id="L154">    }</span>
+<span class="fc" id="L153">        fireDatasetChanged();</span>
+<span class="fc" id="L154">    }</span>
 
     /**
      * Returns a list (possibly empty) of the values for the specified item.
@@ -164,12 +164,12 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public List getValues(int row, int column) {
-<span class="nc" id="L167">        List values = (List) this.data.getObject(row, column);</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (values != null) {</span>
-<span class="nc" id="L169">            return Collections.unmodifiableList(values);</span>
+<span class="fc" id="L167">        List values = (List) this.data.getObject(row, column);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (values != null) {</span>
+<span class="fc" id="L169">            return Collections.unmodifiableList(values);</span>
         }
         else {
-<span class="nc" id="L172">            return Collections.EMPTY_LIST;</span>
+<span class="fc" id="L172">            return Collections.EMPTY_LIST;</span>
         }
     }
 
@@ -184,7 +184,7 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public List getValues(Comparable rowKey, Comparable columnKey) {
-<span class="nc" id="L187">        return Collections.unmodifiableList((List) this.data.getObject(rowKey,</span>
+<span class="fc" id="L187">        return Collections.unmodifiableList((List) this.data.getObject(rowKey,</span>
                 columnKey));
     }
 
@@ -198,23 +198,23 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public Number getValue(Comparable row, Comparable column) {
-<span class="nc" id="L201">        List l = (List) this.data.getObject(row, column);</span>
-<span class="nc" id="L202">        double average = 0.0d;</span>
-<span class="nc" id="L203">        int count = 0;</span>
-<span class="nc bnc" id="L204" title="All 4 branches missed.">        if (l != null &amp;&amp; l.size() &gt; 0) {</span>
-<span class="nc bnc" id="L205" title="All 2 branches missed.">            for (int i = 0; i &lt; l.size(); i++) {</span>
-<span class="nc" id="L206">                Number n = (Number) l.get(i);</span>
-<span class="nc" id="L207">                average += n.doubleValue();</span>
-<span class="nc" id="L208">                count += 1;</span>
+<span class="fc" id="L201">        List l = (List) this.data.getObject(row, column);</span>
+<span class="fc" id="L202">        double average = 0.0d;</span>
+<span class="fc" id="L203">        int count = 0;</span>
+<span class="pc bpc" id="L204" title="2 of 4 branches missed.">        if (l != null &amp;&amp; l.size() &gt; 0) {</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">            for (int i = 0; i &lt; l.size(); i++) {</span>
+<span class="fc" id="L206">                Number n = (Number) l.get(i);</span>
+<span class="fc" id="L207">                average += n.doubleValue();</span>
+<span class="fc" id="L208">                count += 1;</span>
             }
-<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (count &gt; 0) {</span>
-<span class="nc" id="L211">                average = average / count;</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (count &gt; 0) {</span>
+<span class="fc" id="L211">                average = average / count;</span>
             }
         }
-<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (count == 0) {</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (count == 0) {</span>
 <span class="nc" id="L215">            return null;</span>
         }
-<span class="nc" id="L217">        return new Double(average);</span>
+<span class="fc" id="L217">        return new Double(average);</span>
     }
 
     /**
@@ -289,7 +289,7 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public int getRowIndex(Comparable key) {
-<span class="nc" id="L292">        return this.data.getRowIndex(key);</span>
+<span class="fc" id="L292">        return this.data.getRowIndex(key);</span>
     }
 
     /**
@@ -301,7 +301,7 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public Comparable getRowKey(int row) {
-<span class="nc" id="L304">        return this.data.getRowKey(row);</span>
+<span class="fc" id="L304">        return this.data.getRowKey(row);</span>
     }
 
     /**
@@ -321,7 +321,7 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public int getRowCount() {
-<span class="nc" id="L324">        return this.data.getRowCount();</span>
+<span class="fc" id="L324">        return this.data.getRowCount();</span>
     }
 
     /**
@@ -331,7 +331,7 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public int getColumnCount() {
-<span class="nc" id="L334">        return this.data.getColumnCount();</span>
+<span class="fc" id="L334">        return this.data.getColumnCount();</span>
     }
 
     /**
@@ -389,15 +389,15 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L392" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L393">            return true;</span>
         }
-<span class="nc bnc" id="L395" title="All 2 branches missed.">        if (!(obj instanceof DefaultMultiValueCategoryDataset)) {</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">        if (!(obj instanceof DefaultMultiValueCategoryDataset)) {</span>
 <span class="nc" id="L396">            return false;</span>
         }
-<span class="nc" id="L398">        DefaultMultiValueCategoryDataset that</span>
+<span class="fc" id="L398">        DefaultMultiValueCategoryDataset that</span>
                 = (DefaultMultiValueCategoryDataset) obj;
-<span class="nc" id="L400">        return this.data.equals(that.data);</span>
+<span class="fc" id="L400">        return this.data.equals(that.data);</span>
     }
 
     /**
@@ -409,10 +409,10 @@ public class DefaultMultiValueCategoryDataset extends AbstractDataset
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L412">        DefaultMultiValueCategoryDataset clone</span>
-<span class="nc" id="L413">                = (DefaultMultiValueCategoryDataset) super.clone();</span>
-<span class="nc" id="L414">        clone.data = (KeyedObjects2D) this.data.clone();</span>
-<span class="nc" id="L415">        return clone;</span>
+<span class="fc" id="L412">        DefaultMultiValueCategoryDataset clone</span>
+<span class="fc" id="L413">                = (DefaultMultiValueCategoryDataset) super.clone();</span>
+<span class="fc" id="L414">        clone.data = (KeyedObjects2D) this.data.clone();</span>
+<span class="fc" id="L415">        return clone;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -100,7 +100,7 @@ import org.jfree.data.general.PieDataset;
  * A plot that displays multiple pie plots using data from a
  * {@link CategoryDataset}.
  */
-<span class="nc bnc" id="L103" title="All 2 branches missed.">public class MultiplePiePlot extends Plot implements Cloneable, Serializable {</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">public class MultiplePiePlot extends Plot implements Cloneable, Serializable {</span>
 
     /** For serialization. */
     private static final long serialVersionUID = -355377800470807389L;
@@ -115,7 +115,7 @@ import org.jfree.data.general.PieDataset;
     private TableOrder dataExtractOrder;
 
     /** The pie section limit percentage. */
-<span class="nc" id="L118">    private double limit = 0.0;</span>
+<span class="fc" id="L118">    private double limit = 0.0;</span>
 
     /**
      * The key for the aggregated items.
@@ -149,8 +149,8 @@ import org.jfree.data.general.PieDataset;
      * Creates a new plot with no data.
      */
     public MultiplePiePlot() {
-<span class="nc" id="L152">        this(null);</span>
-<span class="nc" id="L153">    }</span>
+<span class="fc" id="L152">        this(null);</span>
+<span class="fc" id="L153">    }</span>
 
     /**
      * Creates a new plot.
@@ -158,23 +158,23 @@ import org.jfree.data.general.PieDataset;
      * @param dataset  the dataset ({@code null} permitted).
      */
     public MultiplePiePlot(CategoryDataset dataset) {
-<span class="nc" id="L161">        super();</span>
-<span class="nc" id="L162">        setDataset(dataset);</span>
-<span class="nc" id="L163">        PiePlot piePlot = new PiePlot(null);</span>
-<span class="nc" id="L164">        piePlot.setIgnoreNullValues(true);</span>
-<span class="nc" id="L165">        this.pieChart = new JFreeChart(piePlot);</span>
-<span class="nc" id="L166">        this.pieChart.removeLegend();</span>
-<span class="nc" id="L167">        this.dataExtractOrder = TableOrder.BY_COLUMN;</span>
-<span class="nc" id="L168">        this.pieChart.setBackgroundPaint(null);</span>
-<span class="nc" id="L169">        TextTitle seriesTitle = new TextTitle(&quot;Series Title&quot;,</span>
+<span class="fc" id="L161">        super();</span>
+<span class="fc" id="L162">        setDataset(dataset);</span>
+<span class="fc" id="L163">        PiePlot piePlot = new PiePlot(null);</span>
+<span class="fc" id="L164">        piePlot.setIgnoreNullValues(true);</span>
+<span class="fc" id="L165">        this.pieChart = new JFreeChart(piePlot);</span>
+<span class="fc" id="L166">        this.pieChart.removeLegend();</span>
+<span class="fc" id="L167">        this.dataExtractOrder = TableOrder.BY_COLUMN;</span>
+<span class="fc" id="L168">        this.pieChart.setBackgroundPaint(null);</span>
+<span class="fc" id="L169">        TextTitle seriesTitle = new TextTitle(&quot;Series Title&quot;,</span>
                 new Font(&quot;SansSerif&quot;, Font.BOLD, 12));
-<span class="nc" id="L171">        seriesTitle.setPosition(RectangleEdge.BOTTOM);</span>
-<span class="nc" id="L172">        this.pieChart.setTitle(seriesTitle);</span>
-<span class="nc" id="L173">        this.aggregatedItemsKey = &quot;Other&quot;;</span>
-<span class="nc" id="L174">        this.aggregatedItemsPaint = Color.lightGray;</span>
-<span class="nc" id="L175">        this.sectionPaints = new HashMap();</span>
-<span class="nc" id="L176">        this.legendItemShape = new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0);</span>
-<span class="nc" id="L177">    }</span>
+<span class="fc" id="L171">        seriesTitle.setPosition(RectangleEdge.BOTTOM);</span>
+<span class="fc" id="L172">        this.pieChart.setTitle(seriesTitle);</span>
+<span class="fc" id="L173">        this.aggregatedItemsKey = &quot;Other&quot;;</span>
+<span class="fc" id="L174">        this.aggregatedItemsPaint = Color.lightGray;</span>
+<span class="fc" id="L175">        this.sectionPaints = new HashMap();</span>
+<span class="fc" id="L176">        this.legendItemShape = new Ellipse2D.Double(-4.0, -4.0, 8.0, 8.0);</span>
+<span class="fc" id="L177">    }</span>
 
     /**
      * Returns the dataset used by the plot.
@@ -182,7 +182,7 @@ import org.jfree.data.general.PieDataset;
      * @return The dataset (possibly {@code null}).
      */
     public CategoryDataset getDataset() {
-<span class="nc" id="L185">        return this.dataset;</span>
+<span class="fc" id="L185">        return this.dataset;</span>
     }
 
     /**
@@ -194,20 +194,20 @@ import org.jfree.data.general.PieDataset;
     public void setDataset(CategoryDataset dataset) {
         // if there is an existing dataset, remove the plot from the list of
         // change listeners...
-<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (this.dataset != null) {</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (this.dataset != null) {</span>
 <span class="nc" id="L198">            this.dataset.removeChangeListener(this);</span>
         }
 
         // set the new dataset, and register the chart as a change listener...
-<span class="nc" id="L202">        this.dataset = dataset;</span>
-<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc" id="L204">            setDatasetGroup(dataset.getGroup());</span>
-<span class="nc" id="L205">            dataset.addChangeListener(this);</span>
+<span class="fc" id="L202">        this.dataset = dataset;</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (dataset != null) {</span>
+<span class="fc" id="L204">            setDatasetGroup(dataset.getGroup());</span>
+<span class="fc" id="L205">            dataset.addChangeListener(this);</span>
         }
 
         // send a dataset change event to self to trigger plot change event
-<span class="nc" id="L209">        datasetChanged(new DatasetChangeEvent(this, dataset));</span>
-<span class="nc" id="L210">    }</span>
+<span class="fc" id="L209">        datasetChanged(new DatasetChangeEvent(this, dataset));</span>
+<span class="fc" id="L210">    }</span>
 
     /**
      * Returns the pie chart that is used to draw the individual pie plots.
@@ -219,7 +219,7 @@ import org.jfree.data.general.PieDataset;
      * @see #setPieChart(JFreeChart)
      */
     public JFreeChart getPieChart() {
-<span class="nc" id="L222">        return this.pieChart;</span>
+<span class="fc" id="L222">        return this.pieChart;</span>
     }
 
     /**
@@ -231,14 +231,14 @@ import org.jfree.data.general.PieDataset;
      * @see #getPieChart()
      */
     public void setPieChart(JFreeChart pieChart) {
-<span class="nc" id="L234">        Args.nullNotPermitted(pieChart, &quot;pieChart&quot;);</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (!(pieChart.getPlot() instanceof PiePlot)) {</span>
+<span class="fc" id="L234">        Args.nullNotPermitted(pieChart, &quot;pieChart&quot;);</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (!(pieChart.getPlot() instanceof PiePlot)) {</span>
 <span class="nc" id="L236">            throw new IllegalArgumentException(&quot;The 'pieChart' argument must &quot;</span>
                     + &quot;be a chart based on a PiePlot.&quot;);
         }
-<span class="nc" id="L239">        this.pieChart = pieChart;</span>
-<span class="nc" id="L240">        fireChangeEvent();</span>
-<span class="nc" id="L241">    }</span>
+<span class="fc" id="L239">        this.pieChart = pieChart;</span>
+<span class="fc" id="L240">        fireChangeEvent();</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Returns the data extract order (by row or by column).
@@ -256,10 +256,10 @@ import org.jfree.data.general.PieDataset;
      * @param order  the order ({@code null} not permitted).
      */
     public void setDataExtractOrder(TableOrder order) {
-<span class="nc" id="L259">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
-<span class="nc" id="L260">        this.dataExtractOrder = order;</span>
-<span class="nc" id="L261">        fireChangeEvent();</span>
-<span class="nc" id="L262">    }</span>
+<span class="fc" id="L259">        Args.nullNotPermitted(order, &quot;order&quot;);</span>
+<span class="fc" id="L260">        this.dataExtractOrder = order;</span>
+<span class="fc" id="L261">        fireChangeEvent();</span>
+<span class="fc" id="L262">    }</span>
 
     /**
      * Returns the limit (as a percentage) below which small pie sections are
@@ -278,9 +278,9 @@ import org.jfree.data.general.PieDataset;
      * @param limit  the limit percent.
      */
     public void setLimit(double limit) {
-<span class="nc" id="L281">        this.limit = limit;</span>
-<span class="nc" id="L282">        fireChangeEvent();</span>
-<span class="nc" id="L283">    }</span>
+<span class="fc" id="L281">        this.limit = limit;</span>
+<span class="fc" id="L282">        fireChangeEvent();</span>
+<span class="fc" id="L283">    }</span>
 
     /**
      * Returns the key for aggregated items in the pie plots, if there are any.
@@ -303,10 +303,10 @@ import org.jfree.data.general.PieDataset;
      * @since 1.0.2
      */
     public void setAggregatedItemsKey(Comparable key) {
-<span class="nc" id="L306">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
-<span class="nc" id="L307">        this.aggregatedItemsKey = key;</span>
-<span class="nc" id="L308">        fireChangeEvent();</span>
-<span class="nc" id="L309">    }</span>
+<span class="fc" id="L306">        Args.nullNotPermitted(key, &quot;key&quot;);</span>
+<span class="fc" id="L307">        this.aggregatedItemsKey = key;</span>
+<span class="fc" id="L308">        fireChangeEvent();</span>
+<span class="fc" id="L309">    }</span>
 
     /**
      * Returns the paint used to draw the pie section representing the
@@ -329,10 +329,10 @@ import org.jfree.data.general.PieDataset;
      * @since 1.0.2
      */
     public void setAggregatedItemsPaint(Paint paint) {
-<span class="nc" id="L332">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
-<span class="nc" id="L333">        this.aggregatedItemsPaint = paint;</span>
-<span class="nc" id="L334">        fireChangeEvent();</span>
-<span class="nc" id="L335">    }</span>
+<span class="fc" id="L332">        Args.nullNotPermitted(paint, &quot;paint&quot;);</span>
+<span class="fc" id="L333">        this.aggregatedItemsPaint = paint;</span>
+<span class="fc" id="L334">        fireChangeEvent();</span>
+<span class="fc" id="L335">    }</span>
 
     /**
      * Returns a short string describing the type of plot.
@@ -355,7 +355,7 @@ import org.jfree.data.general.PieDataset;
      * @since 1.0.12
      */
     public Shape getLegendItemShape() {
-<span class="nc" id="L358">        return this.legendItemShape;</span>
+<span class="fc" id="L358">        return this.legendItemShape;</span>
     }
 
     /**
@@ -369,10 +369,10 @@ import org.jfree.data.general.PieDataset;
      * @since 1.0.12
      */
     public void setLegendItemShape(Shape shape) {
-<span class="nc" id="L372">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
-<span class="nc" id="L373">        this.legendItemShape = shape;</span>
-<span class="nc" id="L374">        fireChangeEvent();</span>
-<span class="nc" id="L375">    }</span>
+<span class="fc" id="L372">        Args.nullNotPermitted(shape, &quot;shape&quot;);</span>
+<span class="fc" id="L373">        this.legendItemShape = shape;</span>
+<span class="fc" id="L374">        fireChangeEvent();</span>
+<span class="fc" id="L375">    }</span>
 
     /**
      * Draws the plot on a Java 2D graphics device (such as the screen or a
@@ -509,9 +509,9 @@ import org.jfree.data.general.PieDataset;
         // may not display every key, but we need the coloring to be
         // consistent...
 
-<span class="nc" id="L512">        PiePlot piePlot = (PiePlot) getPieChart().getPlot();</span>
+<span class="fc" id="L512">        PiePlot piePlot = (PiePlot) getPieChart().getPlot();</span>
 
-<span class="nc bnc" id="L514" title="All 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="pc bpc" id="L514" title="1 of 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
             // column keys provide potential keys for individual pies
 <span class="nc bnc" id="L516" title="All 2 branches missed.">            for (int c = 0; c &lt; this.dataset.getColumnCount(); c++) {</span>
 <span class="nc" id="L517">                Comparable key = this.dataset.getColumnKey(c);</span>
@@ -527,20 +527,20 @@ import org.jfree.data.general.PieDataset;
         }
         else {
             // row keys provide potential keys for individual pies
-<span class="nc bnc" id="L530" title="All 2 branches missed.">            for (int r = 0; r &lt; this.dataset.getRowCount(); r++) {</span>
-<span class="nc" id="L531">                Comparable key = this.dataset.getRowKey(r);</span>
-<span class="nc" id="L532">                Paint p = piePlot.getSectionPaint(key);</span>
-<span class="nc bnc" id="L533" title="All 2 branches missed.">                if (p == null) {</span>
-<span class="nc" id="L534">                    p = (Paint) this.sectionPaints.get(key);</span>
-<span class="nc bnc" id="L535" title="All 2 branches missed.">                    if (p == null) {</span>
-<span class="nc" id="L536">                        p = getDrawingSupplier().getNextPaint();</span>
+<span class="fc bfc" id="L530" title="All 2 branches covered.">            for (int r = 0; r &lt; this.dataset.getRowCount(); r++) {</span>
+<span class="fc" id="L531">                Comparable key = this.dataset.getRowKey(r);</span>
+<span class="fc" id="L532">                Paint p = piePlot.getSectionPaint(key);</span>
+<span class="pc bpc" id="L533" title="1 of 2 branches missed.">                if (p == null) {</span>
+<span class="fc" id="L534">                    p = (Paint) this.sectionPaints.get(key);</span>
+<span class="pc bpc" id="L535" title="1 of 2 branches missed.">                    if (p == null) {</span>
+<span class="fc" id="L536">                        p = getDrawingSupplier().getNextPaint();</span>
                     }
                 }
-<span class="nc" id="L539">                this.sectionPaints.put(key, p);</span>
+<span class="fc" id="L539">                this.sectionPaints.put(key, p);</span>
             }
         }
 
-<span class="nc" id="L543">    }</span>
+<span class="fc" id="L543">    }</span>
 
     /**
      * Returns a collection of legend items for the pie chart.
@@ -550,46 +550,46 @@ import org.jfree.data.general.PieDataset;
     @Override
     public LegendItemCollection getLegendItems() {
 
-<span class="nc" id="L553">        LegendItemCollection result = new LegendItemCollection();</span>
-<span class="nc bnc" id="L554" title="All 2 branches missed.">        if (this.dataset == null) {</span>
+<span class="fc" id="L553">        LegendItemCollection result = new LegendItemCollection();</span>
+<span class="pc bpc" id="L554" title="1 of 2 branches missed.">        if (this.dataset == null) {</span>
 <span class="nc" id="L555">            return result;</span>
         }
 
-<span class="nc" id="L558">        List keys = null;</span>
-<span class="nc" id="L559">        prefetchSectionPaints();</span>
-<span class="nc bnc" id="L560" title="All 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
+<span class="fc" id="L558">        List keys = null;</span>
+<span class="fc" id="L559">        prefetchSectionPaints();</span>
+<span class="pc bpc" id="L560" title="1 of 2 branches missed.">        if (this.dataExtractOrder == TableOrder.BY_ROW) {</span>
 <span class="nc" id="L561">            keys = this.dataset.getColumnKeys();</span>
         }
-<span class="nc bnc" id="L563" title="All 2 branches missed.">        else if (this.dataExtractOrder == TableOrder.BY_COLUMN) {</span>
-<span class="nc" id="L564">            keys = this.dataset.getRowKeys();</span>
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">        else if (this.dataExtractOrder == TableOrder.BY_COLUMN) {</span>
+<span class="fc" id="L564">            keys = this.dataset.getRowKeys();</span>
         }
-<span class="nc bnc" id="L566" title="All 2 branches missed.">        if (keys == null) {</span>
+<span class="pc bpc" id="L566" title="1 of 2 branches missed.">        if (keys == null) {</span>
 <span class="nc" id="L567">            return result;</span>
         }
-<span class="nc" id="L569">        int section = 0;</span>
-<span class="nc" id="L570">        Iterator iterator = keys.iterator();</span>
-<span class="nc bnc" id="L571" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L572">            Comparable key = (Comparable) iterator.next();</span>
-<span class="nc" id="L573">            String label = key.toString();  // TODO: use a generator here</span>
-<span class="nc" id="L574">            String description = label;</span>
-<span class="nc" id="L575">            Paint paint = (Paint) this.sectionPaints.get(key);</span>
-<span class="nc" id="L576">            LegendItem item = new LegendItem(label, description, null,</span>
-<span class="nc" id="L577">                    null, getLegendItemShape(), paint,</span>
+<span class="fc" id="L569">        int section = 0;</span>
+<span class="fc" id="L570">        Iterator iterator = keys.iterator();</span>
+<span class="fc bfc" id="L571" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L572">            Comparable key = (Comparable) iterator.next();</span>
+<span class="fc" id="L573">            String label = key.toString();  // TODO: use a generator here</span>
+<span class="fc" id="L574">            String description = label;</span>
+<span class="fc" id="L575">            Paint paint = (Paint) this.sectionPaints.get(key);</span>
+<span class="fc" id="L576">            LegendItem item = new LegendItem(label, description, null,</span>
+<span class="fc" id="L577">                    null, getLegendItemShape(), paint,</span>
                     Plot.DEFAULT_OUTLINE_STROKE, paint);
-<span class="nc" id="L579">            item.setSeriesKey(key);</span>
-<span class="nc" id="L580">            item.setSeriesIndex(section);</span>
-<span class="nc" id="L581">            item.setDataset(getDataset());</span>
-<span class="nc" id="L582">            result.add(item);</span>
-<span class="nc" id="L583">            section++;</span>
-<span class="nc" id="L584">        }</span>
-<span class="nc bnc" id="L585" title="All 2 branches missed.">        if (this.limit &gt; 0.0) {</span>
+<span class="fc" id="L579">            item.setSeriesKey(key);</span>
+<span class="fc" id="L580">            item.setSeriesIndex(section);</span>
+<span class="fc" id="L581">            item.setDataset(getDataset());</span>
+<span class="fc" id="L582">            result.add(item);</span>
+<span class="fc" id="L583">            section++;</span>
+<span class="fc" id="L584">        }</span>
+<span class="pc bpc" id="L585" title="1 of 2 branches missed.">        if (this.limit &gt; 0.0) {</span>
 <span class="nc" id="L586">            LegendItem a = new LegendItem(this.aggregatedItemsKey.toString(),</span>
 <span class="nc" id="L587">                    this.aggregatedItemsKey.toString(), null, null,</span>
 <span class="nc" id="L588">                    getLegendItemShape(), this.aggregatedItemsPaint,</span>
                     Plot.DEFAULT_OUTLINE_STROKE, this.aggregatedItemsPaint);
 <span class="nc" id="L590">            result.add(a);</span>
         }
-<span class="nc" id="L592">        return result;</span>
+<span class="fc" id="L592">        return result;</span>
     }
 
     /**
@@ -603,36 +603,36 @@ import org.jfree.data.general.PieDataset;
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L606" title="All 2 branches missed.">        if (obj == this) {</span>
-<span class="nc" id="L607">            return true;</span>
+<span class="fc bfc" id="L606" title="All 2 branches covered.">        if (obj == this) {</span>
+<span class="fc" id="L607">            return true;</span>
         }
-<span class="nc bnc" id="L609" title="All 2 branches missed.">        if (!(obj instanceof MultiplePiePlot)) {</span>
-<span class="nc" id="L610">            return false;</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">        if (!(obj instanceof MultiplePiePlot)) {</span>
+<span class="fc" id="L610">            return false;</span>
         }
-<span class="nc" id="L612">        MultiplePiePlot that = (MultiplePiePlot) obj;</span>
-<span class="nc bnc" id="L613" title="All 2 branches missed.">        if (this.dataExtractOrder != that.dataExtractOrder) {</span>
-<span class="nc" id="L614">            return false;</span>
+<span class="fc" id="L612">        MultiplePiePlot that = (MultiplePiePlot) obj;</span>
+<span class="fc bfc" id="L613" title="All 2 branches covered.">        if (this.dataExtractOrder != that.dataExtractOrder) {</span>
+<span class="fc" id="L614">            return false;</span>
         }
-<span class="nc bnc" id="L616" title="All 2 branches missed.">        if (this.limit != that.limit) {</span>
-<span class="nc" id="L617">            return false;</span>
+<span class="fc bfc" id="L616" title="All 2 branches covered.">        if (this.limit != that.limit) {</span>
+<span class="fc" id="L617">            return false;</span>
         }
-<span class="nc bnc" id="L619" title="All 2 branches missed.">        if (!this.aggregatedItemsKey.equals(that.aggregatedItemsKey)) {</span>
-<span class="nc" id="L620">            return false;</span>
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        if (!this.aggregatedItemsKey.equals(that.aggregatedItemsKey)) {</span>
+<span class="fc" id="L620">            return false;</span>
         }
-<span class="nc bnc" id="L622" title="All 2 branches missed.">        if (!PaintUtils.equal(this.aggregatedItemsPaint,</span>
+<span class="fc bfc" id="L622" title="All 2 branches covered.">        if (!PaintUtils.equal(this.aggregatedItemsPaint,</span>
                 that.aggregatedItemsPaint)) {
-<span class="nc" id="L624">            return false;</span>
+<span class="fc" id="L624">            return false;</span>
         }
-<span class="nc bnc" id="L626" title="All 2 branches missed.">        if (!ObjectUtils.equal(this.pieChart, that.pieChart)) {</span>
-<span class="nc" id="L627">            return false;</span>
+<span class="fc bfc" id="L626" title="All 2 branches covered.">        if (!ObjectUtils.equal(this.pieChart, that.pieChart)) {</span>
+<span class="fc" id="L627">            return false;</span>
         }
-<span class="nc bnc" id="L629" title="All 2 branches missed.">        if (!ShapeUtils.equal(this.legendItemShape, that.legendItemShape)) {</span>
-<span class="nc" id="L630">            return false;</span>
+<span class="fc bfc" id="L629" title="All 2 branches covered.">        if (!ShapeUtils.equal(this.legendItemShape, that.legendItemShape)) {</span>
+<span class="fc" id="L630">            return false;</span>
         }
-<span class="nc bnc" id="L632" title="All 2 branches missed.">        if (!super.equals(obj)) {</span>
+<span class="pc bpc" id="L632" title="1 of 2 branches missed.">        if (!super.equals(obj)) {</span>
 <span class="nc" id="L633">            return false;</span>
         }
-<span class="nc" id="L635">        return true;</span>
+<span class="fc" id="L635">        return true;</span>
     }
 
     /**
@@ -645,11 +645,11 @@ import org.jfree.data.general.PieDataset;
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-<span class="nc" id="L648">        MultiplePiePlot clone = (MultiplePiePlot) super.clone();</span>
-<span class="nc" id="L649">        clone.pieChart = (JFreeChart) this.pieChart.clone();</span>
-<span class="nc" id="L650">        clone.sectionPaints = new HashMap(this.sectionPaints);</span>
-<span class="nc" id="L651">        clone.legendItemShape = ShapeUtils.clone(this.legendItemShape);</span>
-<span class="nc" id="L652">        return clone;</span>
+<span class="fc" id="L648">        MultiplePiePlot clone = (MultiplePiePlot) super.clone();</span>
+<span class="fc" id="L649">        clone.pieChart = (JFreeChart) this.pieChart.clone();</span>
+<span class="fc" id="L650">        clone.sectionPaints = new HashMap(this.sectionPaints);</span>
+<span class="fc" id="L651">        clone.legendItemShape = ShapeUtils.clone(this.legendItemShape);</span>
+<span class="fc" id="L652">        return clone;</span>
     }
 
     /**
@@ -660,10 +660,10 @@ import org.jfree.data.general.PieDataset;
      * @throws IOException  if there is an I/O error.
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
-<span class="nc" id="L663">        stream.defaultWriteObject();</span>
-<span class="nc" id="L664">        SerialUtils.writePaint(this.aggregatedItemsPaint, stream);</span>
-<span class="nc" id="L665">        SerialUtils.writeShape(this.legendItemShape, stream);</span>
-<span class="nc" id="L666">    }</span>
+<span class="fc" id="L663">        stream.defaultWriteObject();</span>
+<span class="fc" id="L664">        SerialUtils.writePaint(this.aggregatedItemsPaint, stream);</span>
+<span class="fc" id="L665">        SerialUtils.writeShape(this.legendItemShape, stream);</span>
+<span class="fc" id="L666">    }</span>
 
     /**
      * Provides serialization support.
@@ -675,11 +675,11 @@ import org.jfree.data.general.PieDataset;
      */
     private void readObject(ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-<span class="nc" id="L678">        stream.defaultReadObject();</span>
-<span class="nc" id="L679">        this.aggregatedItemsPaint = SerialUtils.readPaint(stream);</span>
-<span class="nc" id="L680">        this.legendItemShape = SerialUtils.readShape(stream);</span>
-<span class="nc" id="L681">        this.sectionPaints = new HashMap();</span>
-<span class="nc" id="L682">    }</span>
+<span class="fc" id="L678">        stream.defaultReadObject();</span>
+<span class="fc" id="L679">        this.aggregatedItemsPaint = SerialUtils.readPaint(stream);</span>
+<span class="fc" id="L680">        this.legendItemShape = SerialUtils.readShape(stream);</span>
+<span class="fc" id="L681">        this.sectionPaints = new HashMap();</span>
+<span class="fc" id="L682">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

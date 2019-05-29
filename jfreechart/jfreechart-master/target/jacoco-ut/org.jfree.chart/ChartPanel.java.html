@@ -279,26 +279,26 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     private double scaleY;
 
     /** The plot orientation. */
-<span class="nc" id="L282">    private PlotOrientation orientation = PlotOrientation.VERTICAL;</span>
+<span class="fc" id="L282">    private PlotOrientation orientation = PlotOrientation.VERTICAL;</span>
 
     /** A flag that controls whether or not domain zooming is enabled. */
-<span class="nc" id="L285">    private boolean domainZoomable = false;</span>
+<span class="fc" id="L285">    private boolean domainZoomable = false;</span>
 
     /** A flag that controls whether or not range zooming is enabled. */
-<span class="nc" id="L288">    private boolean rangeZoomable = false;</span>
+<span class="fc" id="L288">    private boolean rangeZoomable = false;</span>
 
     /**
      * The zoom rectangle starting point (selected by the user with a mouse
      * click).  This is a point on the screen, not the chart (which may have
      * been scaled up or down to fit the panel).
      */
-<span class="nc" id="L295">    private Point2D zoomPoint = null;</span>
+<span class="fc" id="L295">    private Point2D zoomPoint = null;</span>
 
     /** The zoom rectangle (selected by the user with the mouse). */
-<span class="nc" id="L298">    private transient Rectangle2D zoomRectangle = null;</span>
+<span class="fc" id="L298">    private transient Rectangle2D zoomRectangle = null;</span>
 
     /** Controls if the zoom rectangle is drawn as an outline or filled. */
-<span class="nc" id="L301">    private boolean fillZoomRectangle = true;</span>
+<span class="fc" id="L301">    private boolean fillZoomRectangle = true;</span>
 
     /** The minimum distance required to drag the mouse to trigger a zoom. */
     private int zoomTriggerDistance;
@@ -362,10 +362,10 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     private int ownToolTipDismissDelay;
 
     /** The factor used to zoom in on an axis range. */
-<span class="nc" id="L365">    private double zoomInFactor = 0.5;</span>
+<span class="fc" id="L365">    private double zoomInFactor = 0.5;</span>
 
     /** The factor used to zoom out on an axis range. */
-<span class="nc" id="L368">    private double zoomOutFactor = 2.0;</span>
+<span class="fc" id="L368">    private double zoomOutFactor = 2.0;</span>
 
     /**
      * A flag that controls whether zoom operations are centred on the
@@ -390,8 +390,8 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     private transient Paint zoomFillPaint;
 
     /** The resourceBundle for the localization. */
-<span class="nc" id="L393">    protected static ResourceBundle localizationResources</span>
-<span class="nc" id="L394">            = ResourceBundleWrapper.getBundle(</span>
+<span class="fc" id="L393">    protected static ResourceBundle localizationResources</span>
+<span class="fc" id="L394">            = ResourceBundleWrapper.getBundle(</span>
                     &quot;org.jfree.chart.LocalizationBundle&quot;);
 
     /** 
@@ -408,7 +408,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      *
      * @since 1.0.13
      */
-<span class="nc" id="L411">    private int panMask = InputEvent.CTRL_MASK;</span>
+<span class="fc" id="L411">    private int panMask = InputEvent.CTRL_MASK;</span>
 
     /**
      * A list of overlays for the panel.
@@ -423,7 +423,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param chart  the chart.
      */
     public ChartPanel(JFreeChart chart) {
-<span class="nc" id="L426">        this(chart, DEFAULT_WIDTH, DEFAULT_HEIGHT,</span>
+<span class="fc" id="L426">        this(chart, DEFAULT_WIDTH, DEFAULT_HEIGHT,</span>
             DEFAULT_MINIMUM_DRAW_WIDTH, DEFAULT_MINIMUM_DRAW_HEIGHT,
             DEFAULT_MAXIMUM_DRAW_WIDTH, DEFAULT_MAXIMUM_DRAW_HEIGHT,
             DEFAULT_BUFFER_USED,
@@ -434,7 +434,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
             true   // tooltips
         );
 
-<span class="nc" id="L437">    }</span>
+<span class="fc" id="L437">    }</span>
 
     /**
      * Constructs a panel containing a chart.  The {@code useBuffer} flag
@@ -520,10 +520,10 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
             int maximumDrawHeight, boolean useBuffer, boolean properties,
             boolean save, boolean print, boolean zoom, boolean tooltips) {
 
-<span class="nc" id="L523">        this(chart, width, height, minimumDrawWidth, minimumDrawHeight,</span>
+<span class="fc" id="L523">        this(chart, width, height, minimumDrawWidth, minimumDrawHeight,</span>
                 maximumDrawWidth, maximumDrawHeight, useBuffer, properties,
                 true, save, print, zoom, tooltips);
-<span class="nc" id="L526">    }</span>
+<span class="fc" id="L526">    }</span>
 
     /**
      * Constructs a JFreeChart panel.
@@ -557,56 +557,56 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
            int minimumDrawWidth, int minimumDrawHeight, int maximumDrawWidth,
            int maximumDrawHeight, boolean useBuffer, boolean properties,
            boolean copy, boolean save, boolean print, boolean zoom,
-<span class="nc" id="L560">           boolean tooltips) {</span>
+<span class="fc" id="L560">           boolean tooltips) {</span>
 
-<span class="nc" id="L562">        setChart(chart);</span>
-<span class="nc" id="L563">        this.chartMouseListeners = new EventListenerList();</span>
-<span class="nc" id="L564">        this.info = new ChartRenderingInfo();</span>
-<span class="nc" id="L565">        setPreferredSize(new Dimension(width, height));</span>
-<span class="nc" id="L566">        this.useBuffer = useBuffer;</span>
-<span class="nc" id="L567">        this.refreshBuffer = false;</span>
-<span class="nc" id="L568">        this.minimumDrawWidth = minimumDrawWidth;</span>
-<span class="nc" id="L569">        this.minimumDrawHeight = minimumDrawHeight;</span>
-<span class="nc" id="L570">        this.maximumDrawWidth = maximumDrawWidth;</span>
-<span class="nc" id="L571">        this.maximumDrawHeight = maximumDrawHeight;</span>
-<span class="nc" id="L572">        this.zoomTriggerDistance = DEFAULT_ZOOM_TRIGGER_DISTANCE;</span>
+<span class="fc" id="L562">        setChart(chart);</span>
+<span class="fc" id="L563">        this.chartMouseListeners = new EventListenerList();</span>
+<span class="fc" id="L564">        this.info = new ChartRenderingInfo();</span>
+<span class="fc" id="L565">        setPreferredSize(new Dimension(width, height));</span>
+<span class="fc" id="L566">        this.useBuffer = useBuffer;</span>
+<span class="fc" id="L567">        this.refreshBuffer = false;</span>
+<span class="fc" id="L568">        this.minimumDrawWidth = minimumDrawWidth;</span>
+<span class="fc" id="L569">        this.minimumDrawHeight = minimumDrawHeight;</span>
+<span class="fc" id="L570">        this.maximumDrawWidth = maximumDrawWidth;</span>
+<span class="fc" id="L571">        this.maximumDrawHeight = maximumDrawHeight;</span>
+<span class="fc" id="L572">        this.zoomTriggerDistance = DEFAULT_ZOOM_TRIGGER_DISTANCE;</span>
 
         // set up popup menu...
-<span class="nc" id="L575">        this.popup = null;</span>
-<span class="nc bnc" id="L576" title="All 10 branches missed.">        if (properties || copy || save || print || zoom) {</span>
-<span class="nc" id="L577">            this.popup = createPopupMenu(properties, copy, save, print, zoom);</span>
+<span class="fc" id="L575">        this.popup = null;</span>
+<span class="pc bpc" id="L576" title="9 of 10 branches missed.">        if (properties || copy || save || print || zoom) {</span>
+<span class="fc" id="L577">            this.popup = createPopupMenu(properties, copy, save, print, zoom);</span>
         }
 
-<span class="nc" id="L580">        enableEvents(AWTEvent.MOUSE_EVENT_MASK);</span>
-<span class="nc" id="L581">        enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);</span>
-<span class="nc" id="L582">        setDisplayToolTips(tooltips);</span>
-<span class="nc" id="L583">        addMouseListener(this);</span>
-<span class="nc" id="L584">        addMouseMotionListener(this);</span>
+<span class="fc" id="L580">        enableEvents(AWTEvent.MOUSE_EVENT_MASK);</span>
+<span class="fc" id="L581">        enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);</span>
+<span class="fc" id="L582">        setDisplayToolTips(tooltips);</span>
+<span class="fc" id="L583">        addMouseListener(this);</span>
+<span class="fc" id="L584">        addMouseMotionListener(this);</span>
 
-<span class="nc" id="L586">        this.defaultDirectoryForSaveAs = null;</span>
-<span class="nc" id="L587">        this.enforceFileExtensions = true;</span>
+<span class="fc" id="L586">        this.defaultDirectoryForSaveAs = null;</span>
+<span class="fc" id="L587">        this.enforceFileExtensions = true;</span>
 
         // initialize ChartPanel-specific tool tip delays with
         // values the from ToolTipManager.sharedInstance()
-<span class="nc" id="L591">        ToolTipManager ttm = ToolTipManager.sharedInstance();</span>
-<span class="nc" id="L592">        this.ownToolTipInitialDelay = ttm.getInitialDelay();</span>
-<span class="nc" id="L593">        this.ownToolTipDismissDelay = ttm.getDismissDelay();</span>
-<span class="nc" id="L594">        this.ownToolTipReshowDelay = ttm.getReshowDelay();</span>
+<span class="fc" id="L591">        ToolTipManager ttm = ToolTipManager.sharedInstance();</span>
+<span class="fc" id="L592">        this.ownToolTipInitialDelay = ttm.getInitialDelay();</span>
+<span class="fc" id="L593">        this.ownToolTipDismissDelay = ttm.getDismissDelay();</span>
+<span class="fc" id="L594">        this.ownToolTipReshowDelay = ttm.getReshowDelay();</span>
 
-<span class="nc" id="L596">        this.zoomAroundAnchor = false;</span>
-<span class="nc" id="L597">        this.zoomOutlinePaint = Color.BLUE;</span>
-<span class="nc" id="L598">        this.zoomFillPaint = new Color(0, 0, 255, 63);</span>
+<span class="fc" id="L596">        this.zoomAroundAnchor = false;</span>
+<span class="fc" id="L597">        this.zoomOutlinePaint = Color.BLUE;</span>
+<span class="fc" id="L598">        this.zoomFillPaint = new Color(0, 0, 255, 63);</span>
 
-<span class="nc" id="L600">        this.panMask = InputEvent.CTRL_MASK;</span>
+<span class="fc" id="L600">        this.panMask = InputEvent.CTRL_MASK;</span>
         // for MacOSX we can't use the CTRL key for mouse drags, see:
         // http://developer.apple.com/qa/qa2004/qa1362.html
-<span class="nc" id="L603">        String osName = System.getProperty(&quot;os.name&quot;).toLowerCase();</span>
-<span class="nc bnc" id="L604" title="All 2 branches missed.">        if (osName.startsWith(&quot;mac os x&quot;)) {</span>
+<span class="fc" id="L603">        String osName = System.getProperty(&quot;os.name&quot;).toLowerCase();</span>
+<span class="pc bpc" id="L604" title="1 of 2 branches missed.">        if (osName.startsWith(&quot;mac os x&quot;)) {</span>
 <span class="nc" id="L605">            this.panMask = InputEvent.ALT_MASK;</span>
         }
 
-<span class="nc" id="L608">        this.overlays = new java.util.ArrayList&lt;Overlay&gt;();</span>
-<span class="nc" id="L609">    }</span>
+<span class="fc" id="L608">        this.overlays = new java.util.ArrayList&lt;Overlay&gt;();</span>
+<span class="fc" id="L609">    }</span>
 
     /**
      * Returns the chart contained in the panel.
@@ -614,7 +614,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @return The chart (possibly {@code null}).
      */
     public JFreeChart getChart() {
-<span class="nc" id="L617">        return this.chart;</span>
+<span class="fc" id="L617">        return this.chart;</span>
     }
 
     /**
@@ -625,36 +625,36 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     public void setChart(JFreeChart chart) {
 
         // stop listening for changes to the existing chart
-<span class="nc bnc" id="L628" title="All 2 branches missed.">        if (this.chart != null) {</span>
-<span class="nc" id="L629">            this.chart.removeChangeListener(this);</span>
-<span class="nc" id="L630">            this.chart.removeProgressListener(this);</span>
+<span class="fc bfc" id="L628" title="All 2 branches covered.">        if (this.chart != null) {</span>
+<span class="fc" id="L629">            this.chart.removeChangeListener(this);</span>
+<span class="fc" id="L630">            this.chart.removeProgressListener(this);</span>
         }
 
         // add the new chart
-<span class="nc" id="L634">        this.chart = chart;</span>
-<span class="nc bnc" id="L635" title="All 2 branches missed.">        if (chart != null) {</span>
-<span class="nc" id="L636">            this.chart.addChangeListener(this);</span>
-<span class="nc" id="L637">            this.chart.addProgressListener(this);</span>
-<span class="nc" id="L638">            Plot plot = chart.getPlot();</span>
-<span class="nc" id="L639">            this.domainZoomable = false;</span>
-<span class="nc" id="L640">            this.rangeZoomable = false;</span>
-<span class="nc bnc" id="L641" title="All 2 branches missed.">            if (plot instanceof Zoomable) {</span>
-<span class="nc" id="L642">                Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L643">                this.domainZoomable = z.isDomainZoomable();</span>
-<span class="nc" id="L644">                this.rangeZoomable = z.isRangeZoomable();</span>
-<span class="nc" id="L645">                this.orientation = z.getOrientation();</span>
+<span class="fc" id="L634">        this.chart = chart;</span>
+<span class="fc bfc" id="L635" title="All 2 branches covered.">        if (chart != null) {</span>
+<span class="fc" id="L636">            this.chart.addChangeListener(this);</span>
+<span class="fc" id="L637">            this.chart.addProgressListener(this);</span>
+<span class="fc" id="L638">            Plot plot = chart.getPlot();</span>
+<span class="fc" id="L639">            this.domainZoomable = false;</span>
+<span class="fc" id="L640">            this.rangeZoomable = false;</span>
+<span class="pc bpc" id="L641" title="1 of 2 branches missed.">            if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L642">                Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L643">                this.domainZoomable = z.isDomainZoomable();</span>
+<span class="fc" id="L644">                this.rangeZoomable = z.isRangeZoomable();</span>
+<span class="fc" id="L645">                this.orientation = z.getOrientation();</span>
             }
-<span class="nc" id="L647">        }</span>
+<span class="fc" id="L647">        }</span>
         else {
-<span class="nc" id="L649">            this.domainZoomable = false;</span>
-<span class="nc" id="L650">            this.rangeZoomable = false;</span>
+<span class="fc" id="L649">            this.domainZoomable = false;</span>
+<span class="fc" id="L650">            this.rangeZoomable = false;</span>
         }
-<span class="nc bnc" id="L652" title="All 2 branches missed.">        if (this.useBuffer) {</span>
-<span class="nc" id="L653">            this.refreshBuffer = true;</span>
+<span class="fc bfc" id="L652" title="All 2 branches covered.">        if (this.useBuffer) {</span>
+<span class="fc" id="L653">            this.refreshBuffer = true;</span>
         }
-<span class="nc" id="L655">        repaint();</span>
+<span class="fc" id="L655">        repaint();</span>
 
-<span class="nc" id="L657">    }</span>
+<span class="fc" id="L657">    }</span>
 
     /**
      * Returns the minimum drawing width for charts.
@@ -1094,7 +1094,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @since 1.0.13
      */
     public boolean isMouseWheelEnabled() {
-<span class="nc bnc" id="L1097" title="All 2 branches missed.">        return this.mouseWheelHandler != null;</span>
+<span class="fc bfc" id="L1097" title="All 2 branches covered.">        return this.mouseWheelHandler != null;</span>
     }
 
     /**
@@ -1105,14 +1105,14 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @since 1.0.13
      */
     public void setMouseWheelEnabled(boolean flag) {
-<span class="nc bnc" id="L1108" title="All 4 branches missed.">        if (flag &amp;&amp; this.mouseWheelHandler == null) {</span>
-<span class="nc" id="L1109">            this.mouseWheelHandler = new MouseWheelHandler(this);</span>
+<span class="fc bfc" id="L1108" title="All 4 branches covered.">        if (flag &amp;&amp; this.mouseWheelHandler == null) {</span>
+<span class="fc" id="L1109">            this.mouseWheelHandler = new MouseWheelHandler(this);</span>
         }
-<span class="nc bnc" id="L1111" title="All 4 branches missed.">        else if (!flag &amp;&amp; this.mouseWheelHandler != null) {</span>
-<span class="nc" id="L1112">            this.removeMouseWheelListener(this.mouseWheelHandler);</span>
-<span class="nc" id="L1113">            this.mouseWheelHandler = null;</span>
+<span class="pc bpc" id="L1111" title="1 of 4 branches missed.">        else if (!flag &amp;&amp; this.mouseWheelHandler != null) {</span>
+<span class="fc" id="L1112">            this.removeMouseWheelListener(this.mouseWheelHandler);</span>
+<span class="fc" id="L1113">            this.mouseWheelHandler = null;</span>
         } 
-<span class="nc" id="L1115">    }</span>
+<span class="fc" id="L1115">    }</span>
 
     /**
      * Add an overlay to the panel.
@@ -1165,13 +1165,13 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      *              disable tooltips.
      */
     public void setDisplayToolTips(boolean flag) {
-<span class="nc bnc" id="L1168" title="All 2 branches missed.">        if (flag) {</span>
-<span class="nc" id="L1169">            ToolTipManager.sharedInstance().registerComponent(this);</span>
+<span class="pc bpc" id="L1168" title="1 of 2 branches missed.">        if (flag) {</span>
+<span class="fc" id="L1169">            ToolTipManager.sharedInstance().registerComponent(this);</span>
         }
         else {
 <span class="nc" id="L1172">            ToolTipManager.sharedInstance().unregisterComponent(this);</span>
         }
-<span class="nc" id="L1174">    }</span>
+<span class="fc" id="L1174">    }</span>
 
     /**
      * Returns a string for the tooltip.
@@ -1221,10 +1221,10 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @return The Java2D coordinates.
      */
     public Point2D translateScreenToJava2D(Point screenPoint) {
-<span class="nc" id="L1224">        Insets insets = getInsets();</span>
-<span class="nc" id="L1225">        double x = (screenPoint.getX() - insets.left) / this.scaleX;</span>
-<span class="nc" id="L1226">        double y = (screenPoint.getY() - insets.top) / this.scaleY;</span>
-<span class="nc" id="L1227">        return new Point2D.Double(x, y);</span>
+<span class="fc" id="L1224">        Insets insets = getInsets();</span>
+<span class="fc" id="L1225">        double x = (screenPoint.getX() - insets.left) / this.scaleX;</span>
+<span class="fc" id="L1226">        double y = (screenPoint.getY() - insets.top) / this.scaleY;</span>
+<span class="fc" id="L1227">        return new Point2D.Double(x, y);</span>
     }
 
     /**
@@ -1432,14 +1432,14 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      */
     @Override
     public void chartChanged(ChartChangeEvent event) {
-<span class="nc" id="L1435">        this.refreshBuffer = true;</span>
-<span class="nc" id="L1436">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L1437" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
-<span class="nc" id="L1438">            Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L1439">            this.orientation = z.getOrientation();</span>
+<span class="fc" id="L1435">        this.refreshBuffer = true;</span>
+<span class="fc" id="L1436">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L1437" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L1438">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L1439">            this.orientation = z.getOrientation();</span>
         }
-<span class="nc" id="L1441">        repaint();</span>
-<span class="nc" id="L1442">    }</span>
+<span class="fc" id="L1441">        repaint();</span>
+<span class="fc" id="L1442">    }</span>
 
     /**
      * Receives notification of a chart progress event.
@@ -1929,19 +1929,19 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y value (in screen coordinates).
      */
     public void zoomInBoth(double x, double y) {
-<span class="nc" id="L1932">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L1933" title="All 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L1932">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L1933" title="1 of 2 branches missed.">        if (plot == null) {</span>
 <span class="nc" id="L1934">            return;</span>
         }
         // here we tweak the notify flag on the plot so that only
         // one notification happens even though we update multiple
         // axes...
-<span class="nc" id="L1939">        boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L1940">        plot.setNotify(false);</span>
-<span class="nc" id="L1941">        zoomInDomain(x, y);</span>
-<span class="nc" id="L1942">        zoomInRange(x, y);</span>
-<span class="nc" id="L1943">        plot.setNotify(savedNotify);</span>
-<span class="nc" id="L1944">    }</span>
+<span class="fc" id="L1939">        boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L1940">        plot.setNotify(false);</span>
+<span class="fc" id="L1941">        zoomInDomain(x, y);</span>
+<span class="fc" id="L1942">        zoomInRange(x, y);</span>
+<span class="fc" id="L1943">        plot.setNotify(savedNotify);</span>
+<span class="fc" id="L1944">    }</span>
 
     /**
      * Decreases the length of the domain axis, centered about the given
@@ -1952,20 +1952,20 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y-coordinate (in screen coordinates).
      */
     public void zoomInDomain(double x, double y) {
-<span class="nc" id="L1955">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L1956" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L1955">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L1956" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L1960">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L1961">            plot.setNotify(false);</span>
-<span class="nc" id="L1962">            Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L1963">            z.zoomDomainAxes(this.zoomInFactor, this.info.getPlotInfo(),</span>
-<span class="nc" id="L1964">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
+<span class="fc" id="L1960">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L1961">            plot.setNotify(false);</span>
+<span class="fc" id="L1962">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L1963">            z.zoomDomainAxes(this.zoomInFactor, this.info.getPlotInfo(),</span>
+<span class="fc" id="L1964">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
                     this.zoomAroundAnchor);
-<span class="nc" id="L1966">            plot.setNotify(savedNotify);</span>
+<span class="fc" id="L1966">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L1968">    }</span>
+<span class="fc" id="L1968">    }</span>
 
     /**
      * Decreases the length of the range axis, centered about the given
@@ -1976,20 +1976,20 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y coordinate (in screen coordinates).
      */
     public void zoomInRange(double x, double y) {
-<span class="nc" id="L1979">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L1980" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L1979">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L1980" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L1984">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L1985">            plot.setNotify(false);</span>
-<span class="nc" id="L1986">            Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L1987">            z.zoomRangeAxes(this.zoomInFactor, this.info.getPlotInfo(),</span>
-<span class="nc" id="L1988">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
+<span class="fc" id="L1984">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L1985">            plot.setNotify(false);</span>
+<span class="fc" id="L1986">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L1987">            z.zoomRangeAxes(this.zoomInFactor, this.info.getPlotInfo(),</span>
+<span class="fc" id="L1988">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
                     this.zoomAroundAnchor);
-<span class="nc" id="L1990">            plot.setNotify(savedNotify);</span>
+<span class="fc" id="L1990">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L1992">    }</span>
+<span class="fc" id="L1992">    }</span>
 
     /**
      * Zooms out on an anchor point (specified in screen coordinate space).
@@ -1998,19 +1998,19 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y value (in screen coordinates).
      */
     public void zoomOutBoth(double x, double y) {
-<span class="nc" id="L2001">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2002" title="All 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L2001">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2002" title="1 of 2 branches missed.">        if (plot == null) {</span>
 <span class="nc" id="L2003">            return;</span>
         }
         // here we tweak the notify flag on the plot so that only
         // one notification happens even though we update multiple
         // axes...
-<span class="nc" id="L2008">        boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2009">        plot.setNotify(false);</span>
-<span class="nc" id="L2010">        zoomOutDomain(x, y);</span>
-<span class="nc" id="L2011">        zoomOutRange(x, y);</span>
-<span class="nc" id="L2012">        plot.setNotify(savedNotify);</span>
-<span class="nc" id="L2013">    }</span>
+<span class="fc" id="L2008">        boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2009">        plot.setNotify(false);</span>
+<span class="fc" id="L2010">        zoomOutDomain(x, y);</span>
+<span class="fc" id="L2011">        zoomOutRange(x, y);</span>
+<span class="fc" id="L2012">        plot.setNotify(savedNotify);</span>
+<span class="fc" id="L2013">    }</span>
 
     /**
      * Increases the length of the domain axis, centered about the given
@@ -2021,20 +2021,20 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y-coordinate (in screen coordinates).
      */
     public void zoomOutDomain(double x, double y) {
-<span class="nc" id="L2024">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2025" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L2024">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2025" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L2029">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2030">            plot.setNotify(false);</span>
-<span class="nc" id="L2031">            Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L2032">            z.zoomDomainAxes(this.zoomOutFactor, this.info.getPlotInfo(),</span>
-<span class="nc" id="L2033">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
+<span class="fc" id="L2029">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2030">            plot.setNotify(false);</span>
+<span class="fc" id="L2031">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L2032">            z.zoomDomainAxes(this.zoomOutFactor, this.info.getPlotInfo(),</span>
+<span class="fc" id="L2033">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
                     this.zoomAroundAnchor);
-<span class="nc" id="L2035">            plot.setNotify(savedNotify);</span>
+<span class="fc" id="L2035">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L2037">    }</span>
+<span class="fc" id="L2037">    }</span>
 
     /**
      * Increases the length the range axis, centered about the given
@@ -2045,20 +2045,20 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param y  the y-coordinate (in screen coordinates).
      */
     public void zoomOutRange(double x, double y) {
-<span class="nc" id="L2048">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2049" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L2048">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2049" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L2053">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2054">            plot.setNotify(false);</span>
-<span class="nc" id="L2055">            Zoomable z = (Zoomable) plot;</span>
-<span class="nc" id="L2056">            z.zoomRangeAxes(this.zoomOutFactor, this.info.getPlotInfo(),</span>
-<span class="nc" id="L2057">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
+<span class="fc" id="L2053">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2054">            plot.setNotify(false);</span>
+<span class="fc" id="L2055">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L2056">            z.zoomRangeAxes(this.zoomOutFactor, this.info.getPlotInfo(),</span>
+<span class="fc" id="L2057">                    translateScreenToJava2D(new Point((int) x, (int) y)),</span>
                     this.zoomAroundAnchor);
-<span class="nc" id="L2059">            plot.setNotify(savedNotify);</span>
+<span class="fc" id="L2059">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L2061">    }</span>
+<span class="fc" id="L2061">    }</span>
 
     /**
      * Zooms in on a selected region.
@@ -2069,103 +2069,103 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
 
         // get the origin of the zoom selection in the Java2D space used for
         // drawing the chart (that is, before any scaling to fit the panel)
-<span class="nc" id="L2072">        Point2D selectOrigin = translateScreenToJava2D(new Point(</span>
-<span class="nc" id="L2073">                (int) Math.ceil(selection.getX()),</span>
-<span class="nc" id="L2074">                (int) Math.ceil(selection.getY())));</span>
-<span class="nc" id="L2075">        PlotRenderingInfo plotInfo = this.info.getPlotInfo();</span>
-<span class="nc" id="L2076">        Rectangle2D scaledDataArea = getScreenDataArea(</span>
-<span class="nc" id="L2077">                (int) selection.getCenterX(), (int) selection.getCenterY());</span>
-<span class="nc bnc" id="L2078" title="All 4 branches missed.">        if ((selection.getHeight() &gt; 0) &amp;&amp; (selection.getWidth() &gt; 0)) {</span>
+<span class="fc" id="L2072">        Point2D selectOrigin = translateScreenToJava2D(new Point(</span>
+<span class="fc" id="L2073">                (int) Math.ceil(selection.getX()),</span>
+<span class="fc" id="L2074">                (int) Math.ceil(selection.getY())));</span>
+<span class="fc" id="L2075">        PlotRenderingInfo plotInfo = this.info.getPlotInfo();</span>
+<span class="fc" id="L2076">        Rectangle2D scaledDataArea = getScreenDataArea(</span>
+<span class="fc" id="L2077">                (int) selection.getCenterX(), (int) selection.getCenterY());</span>
+<span class="pc bpc" id="L2078" title="2 of 4 branches missed.">        if ((selection.getHeight() &gt; 0) &amp;&amp; (selection.getWidth() &gt; 0)) {</span>
 
-<span class="nc" id="L2080">            double hLower = (selection.getMinX() - scaledDataArea.getMinX())</span>
-<span class="nc" id="L2081">                / scaledDataArea.getWidth();</span>
-<span class="nc" id="L2082">            double hUpper = (selection.getMaxX() - scaledDataArea.getMinX())</span>
-<span class="nc" id="L2083">                / scaledDataArea.getWidth();</span>
-<span class="nc" id="L2084">            double vLower = (scaledDataArea.getMaxY() - selection.getMaxY())</span>
-<span class="nc" id="L2085">                / scaledDataArea.getHeight();</span>
-<span class="nc" id="L2086">            double vUpper = (scaledDataArea.getMaxY() - selection.getMinY())</span>
-<span class="nc" id="L2087">                / scaledDataArea.getHeight();</span>
+<span class="fc" id="L2080">            double hLower = (selection.getMinX() - scaledDataArea.getMinX())</span>
+<span class="fc" id="L2081">                / scaledDataArea.getWidth();</span>
+<span class="fc" id="L2082">            double hUpper = (selection.getMaxX() - scaledDataArea.getMinX())</span>
+<span class="fc" id="L2083">                / scaledDataArea.getWidth();</span>
+<span class="fc" id="L2084">            double vLower = (scaledDataArea.getMaxY() - selection.getMaxY())</span>
+<span class="fc" id="L2085">                / scaledDataArea.getHeight();</span>
+<span class="fc" id="L2086">            double vUpper = (scaledDataArea.getMaxY() - selection.getMinY())</span>
+<span class="fc" id="L2087">                / scaledDataArea.getHeight();</span>
 
-<span class="nc" id="L2089">            Plot p = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2090" title="All 2 branches missed.">            if (p instanceof Zoomable) {</span>
+<span class="fc" id="L2089">            Plot p = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2090" title="1 of 2 branches missed.">            if (p instanceof Zoomable) {</span>
                 // here we tweak the notify flag on the plot so that only
                 // one notification happens even though we update multiple
                 // axes...
-<span class="nc" id="L2094">                boolean savedNotify = p.isNotify();</span>
-<span class="nc" id="L2095">                p.setNotify(false);</span>
-<span class="nc" id="L2096">                Zoomable z = (Zoomable) p;</span>
-<span class="nc bnc" id="L2097" title="All 2 branches missed.">                if (z.getOrientation() == PlotOrientation.HORIZONTAL) {</span>
+<span class="fc" id="L2094">                boolean savedNotify = p.isNotify();</span>
+<span class="fc" id="L2095">                p.setNotify(false);</span>
+<span class="fc" id="L2096">                Zoomable z = (Zoomable) p;</span>
+<span class="pc bpc" id="L2097" title="1 of 2 branches missed.">                if (z.getOrientation() == PlotOrientation.HORIZONTAL) {</span>
 <span class="nc" id="L2098">                    z.zoomDomainAxes(vLower, vUpper, plotInfo, selectOrigin);</span>
 <span class="nc" id="L2099">                    z.zoomRangeAxes(hLower, hUpper, plotInfo, selectOrigin);</span>
                 }
                 else {
-<span class="nc" id="L2102">                    z.zoomDomainAxes(hLower, hUpper, plotInfo, selectOrigin);</span>
-<span class="nc" id="L2103">                    z.zoomRangeAxes(vLower, vUpper, plotInfo, selectOrigin);</span>
+<span class="fc" id="L2102">                    z.zoomDomainAxes(hLower, hUpper, plotInfo, selectOrigin);</span>
+<span class="fc" id="L2103">                    z.zoomRangeAxes(vLower, vUpper, plotInfo, selectOrigin);</span>
                 }
-<span class="nc" id="L2105">                p.setNotify(savedNotify);</span>
+<span class="fc" id="L2105">                p.setNotify(savedNotify);</span>
             }
 
         }
 
-<span class="nc" id="L2110">    }</span>
+<span class="fc" id="L2110">    }</span>
 
     /**
      * Restores the auto-range calculation on both axes.
      */
     public void restoreAutoBounds() {
-<span class="nc" id="L2116">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2117" title="All 2 branches missed.">        if (plot == null) {</span>
+<span class="fc" id="L2116">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2117" title="1 of 2 branches missed.">        if (plot == null) {</span>
 <span class="nc" id="L2118">            return;</span>
         }
         // here we tweak the notify flag on the plot so that only
         // one notification happens even though we update multiple
         // axes...
-<span class="nc" id="L2123">        boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2124">        plot.setNotify(false);</span>
-<span class="nc" id="L2125">        restoreAutoDomainBounds();</span>
-<span class="nc" id="L2126">        restoreAutoRangeBounds();</span>
-<span class="nc" id="L2127">        plot.setNotify(savedNotify);</span>
-<span class="nc" id="L2128">    }</span>
+<span class="fc" id="L2123">        boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2124">        plot.setNotify(false);</span>
+<span class="fc" id="L2125">        restoreAutoDomainBounds();</span>
+<span class="fc" id="L2126">        restoreAutoRangeBounds();</span>
+<span class="fc" id="L2127">        plot.setNotify(savedNotify);</span>
+<span class="fc" id="L2128">    }</span>
 
     /**
      * Restores the auto-range calculation on the domain axis.
      */
     public void restoreAutoDomainBounds() {
-<span class="nc" id="L2134">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2135" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
-<span class="nc" id="L2136">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L2134">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2135" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L2136">            Zoomable z = (Zoomable) plot;</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L2140">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2141">            plot.setNotify(false);</span>
+<span class="fc" id="L2140">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2141">            plot.setNotify(false);</span>
             // we need to guard against this.zoomPoint being null
-<span class="nc bnc" id="L2143" title="All 2 branches missed.">            Point2D zp = (this.zoomPoint != null</span>
-<span class="nc" id="L2144">                    ? this.zoomPoint : new Point());</span>
-<span class="nc" id="L2145">            z.zoomDomainAxes(0.0, this.info.getPlotInfo(), zp);</span>
-<span class="nc" id="L2146">            plot.setNotify(savedNotify);</span>
+<span class="pc bpc" id="L2143" title="1 of 2 branches missed.">            Point2D zp = (this.zoomPoint != null</span>
+<span class="pc" id="L2144">                    ? this.zoomPoint : new Point());</span>
+<span class="fc" id="L2145">            z.zoomDomainAxes(0.0, this.info.getPlotInfo(), zp);</span>
+<span class="fc" id="L2146">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L2148">    }</span>
+<span class="fc" id="L2148">    }</span>
 
     /**
      * Restores the auto-range calculation on the range axis.
      */
     public void restoreAutoRangeBounds() {
-<span class="nc" id="L2154">        Plot plot = this.chart.getPlot();</span>
-<span class="nc bnc" id="L2155" title="All 2 branches missed.">        if (plot instanceof Zoomable) {</span>
-<span class="nc" id="L2156">            Zoomable z = (Zoomable) plot;</span>
+<span class="fc" id="L2154">        Plot plot = this.chart.getPlot();</span>
+<span class="pc bpc" id="L2155" title="1 of 2 branches missed.">        if (plot instanceof Zoomable) {</span>
+<span class="fc" id="L2156">            Zoomable z = (Zoomable) plot;</span>
             // here we tweak the notify flag on the plot so that only
             // one notification happens even though we update multiple
             // axes...
-<span class="nc" id="L2160">            boolean savedNotify = plot.isNotify();</span>
-<span class="nc" id="L2161">            plot.setNotify(false);</span>
+<span class="fc" id="L2160">            boolean savedNotify = plot.isNotify();</span>
+<span class="fc" id="L2161">            plot.setNotify(false);</span>
             // we need to guard against this.zoomPoint being null
-<span class="nc bnc" id="L2163" title="All 2 branches missed.">            Point2D zp = (this.zoomPoint != null</span>
-<span class="nc" id="L2164">                    ? this.zoomPoint : new Point());</span>
-<span class="nc" id="L2165">            z.zoomRangeAxes(0.0, this.info.getPlotInfo(), zp);</span>
-<span class="nc" id="L2166">            plot.setNotify(savedNotify);</span>
+<span class="pc bpc" id="L2163" title="1 of 2 branches missed.">            Point2D zp = (this.zoomPoint != null</span>
+<span class="pc" id="L2164">                    ? this.zoomPoint : new Point());</span>
+<span class="fc" id="L2165">            z.zoomRangeAxes(0.0, this.info.getPlotInfo(), zp);</span>
+<span class="fc" id="L2166">            plot.setNotify(savedNotify);</span>
         }
-<span class="nc" id="L2168">    }</span>
+<span class="fc" id="L2168">    }</span>
 
     /**
      * Returns the data area for the chart (the area inside the axes) with the
@@ -2174,13 +2174,13 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @return The scaled data area.
      */
     public Rectangle2D getScreenDataArea() {
-<span class="nc" id="L2177">        Rectangle2D dataArea = this.info.getPlotInfo().getDataArea();</span>
-<span class="nc" id="L2178">        Insets insets = getInsets();</span>
-<span class="nc" id="L2179">        double x = dataArea.getX() * this.scaleX + insets.left;</span>
-<span class="nc" id="L2180">        double y = dataArea.getY() * this.scaleY + insets.top;</span>
-<span class="nc" id="L2181">        double w = dataArea.getWidth() * this.scaleX;</span>
-<span class="nc" id="L2182">        double h = dataArea.getHeight() * this.scaleY;</span>
-<span class="nc" id="L2183">        return new Rectangle2D.Double(x, y, w, h);</span>
+<span class="fc" id="L2177">        Rectangle2D dataArea = this.info.getPlotInfo().getDataArea();</span>
+<span class="fc" id="L2178">        Insets insets = getInsets();</span>
+<span class="fc" id="L2179">        double x = dataArea.getX() * this.scaleX + insets.left;</span>
+<span class="fc" id="L2180">        double y = dataArea.getY() * this.scaleY + insets.top;</span>
+<span class="fc" id="L2181">        double w = dataArea.getWidth() * this.scaleX;</span>
+<span class="fc" id="L2182">        double h = dataArea.getHeight() * this.scaleY;</span>
+<span class="fc" id="L2183">        return new Rectangle2D.Double(x, y, w, h);</span>
     }
 
     /**
@@ -2193,10 +2193,10 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @return The scaled data area.
      */
     public Rectangle2D getScreenDataArea(int x, int y) {
-<span class="nc" id="L2196">        PlotRenderingInfo plotInfo = this.info.getPlotInfo();</span>
+<span class="fc" id="L2196">        PlotRenderingInfo plotInfo = this.info.getPlotInfo();</span>
         Rectangle2D result;
-<span class="nc bnc" id="L2198" title="All 2 branches missed.">        if (plotInfo.getSubplotCount() == 0) {</span>
-<span class="nc" id="L2199">            result = getScreenDataArea();</span>
+<span class="pc bpc" id="L2198" title="1 of 2 branches missed.">        if (plotInfo.getSubplotCount() == 0) {</span>
+<span class="fc" id="L2199">            result = getScreenDataArea();</span>
         }
         else {
             // get the origin of the zoom selection in the Java2D space used for
@@ -2208,7 +2208,7 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
             }
 <span class="nc" id="L2209">            result = scale(plotInfo.getSubplotInfo(subplotIndex).getDataArea());</span>
         }
-<span class="nc" id="L2211">        return result;</span>
+<span class="fc" id="L2211">        return result;</span>
     }
 
     /**
@@ -2467,14 +2467,14 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
 <span class="nc" id="L2467">                writer.write(svg + &quot;\n&quot;);</span>
 <span class="nc" id="L2468">                writer.flush();</span>
             } finally {
-<span class="nc" id="L2470">                try {</span>
-<span class="nc bnc" id="L2471" title="All 4 branches missed.">                    if (writer != null) {</span>
+                try {
+<span class="nc bnc" id="L2471" title="All 2 branches missed.">                    if (writer != null) {</span>
 <span class="nc" id="L2472">                        writer.close();</span>
                     }
 <span class="nc" id="L2474">                } catch (IOException ex) {</span>
 <span class="nc" id="L2475">                    throw new RuntimeException(ex);</span>
 <span class="nc" id="L2476">                }</span>
-<span class="nc" id="L2477">            } </span>
+            } 
 
         }
 <span class="nc" id="L2480">    }</span>
@@ -2683,9 +2683,9 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param listener  the listener ({@code null} not permitted).
      */
     public void addChartMouseListener(ChartMouseListener listener) {
-<span class="nc" id="L2686">        Args.nullNotPermitted(listener, &quot;listener&quot;);</span>
-<span class="nc" id="L2687">        this.chartMouseListeners.add(ChartMouseListener.class, listener);</span>
-<span class="nc" id="L2688">    }</span>
+<span class="fc" id="L2686">        Args.nullNotPermitted(listener, &quot;listener&quot;);</span>
+<span class="fc" id="L2687">        this.chartMouseListeners.add(ChartMouseListener.class, listener);</span>
+<span class="fc" id="L2688">    }</span>
 
     /**
      * Removes a listener from the list of objects listening for chart mouse
@@ -2694,8 +2694,8 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      * @param listener  the listener.
      */
     public void removeChartMouseListener(ChartMouseListener listener) {
-<span class="nc" id="L2697">        this.chartMouseListeners.remove(ChartMouseListener.class, listener);</span>
-<span class="nc" id="L2698">    }</span>
+<span class="fc" id="L2697">        this.chartMouseListeners.remove(ChartMouseListener.class, listener);</span>
+<span class="fc" id="L2698">    }</span>
 
     /**
      * Returns an array of the listeners of the given type registered with the
@@ -2707,12 +2707,12 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
      */
     @Override
     public EventListener[] getListeners(Class listenerType) {
-<span class="nc bnc" id="L2710" title="All 2 branches missed.">        if (listenerType == ChartMouseListener.class) {</span>
+<span class="fc bfc" id="L2710" title="All 2 branches covered.">        if (listenerType == ChartMouseListener.class) {</span>
             // fetch listeners from local storage
-<span class="nc" id="L2712">            return this.chartMouseListeners.getListeners(listenerType);</span>
+<span class="fc" id="L2712">            return this.chartMouseListeners.getListeners(listenerType);</span>
         }
         else {
-<span class="nc" id="L2715">            return super.getListeners(listenerType);</span>
+<span class="fc" id="L2715">            return super.getListeners(listenerType);</span>
         }
     }
 
@@ -2754,43 +2754,43 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     protected JPopupMenu createPopupMenu(boolean properties,
             boolean copy, boolean save, boolean print, boolean zoom) {
 
-<span class="nc" id="L2757">        JPopupMenu result = new JPopupMenu(localizationResources.getString(&quot;Chart&quot;) + &quot;:&quot;);</span>
-<span class="nc" id="L2758">        boolean separator = false;</span>
+<span class="fc" id="L2757">        JPopupMenu result = new JPopupMenu(localizationResources.getString(&quot;Chart&quot;) + &quot;:&quot;);</span>
+<span class="fc" id="L2758">        boolean separator = false;</span>
 
-<span class="nc bnc" id="L2760" title="All 2 branches missed.">        if (properties) {</span>
-<span class="nc" id="L2761">            JMenuItem propertiesItem = new JMenuItem(</span>
-<span class="nc" id="L2762">                    localizationResources.getString(&quot;Properties...&quot;));</span>
-<span class="nc" id="L2763">            propertiesItem.setActionCommand(PROPERTIES_COMMAND);</span>
-<span class="nc" id="L2764">            propertiesItem.addActionListener(this);</span>
-<span class="nc" id="L2765">            result.add(propertiesItem);</span>
-<span class="nc" id="L2766">            separator = true;</span>
+<span class="pc bpc" id="L2760" title="1 of 2 branches missed.">        if (properties) {</span>
+<span class="fc" id="L2761">            JMenuItem propertiesItem = new JMenuItem(</span>
+<span class="fc" id="L2762">                    localizationResources.getString(&quot;Properties...&quot;));</span>
+<span class="fc" id="L2763">            propertiesItem.setActionCommand(PROPERTIES_COMMAND);</span>
+<span class="fc" id="L2764">            propertiesItem.addActionListener(this);</span>
+<span class="fc" id="L2765">            result.add(propertiesItem);</span>
+<span class="fc" id="L2766">            separator = true;</span>
         }
 
-<span class="nc bnc" id="L2769" title="All 2 branches missed.">        if (copy) {</span>
-<span class="nc bnc" id="L2770" title="All 2 branches missed.">            if (separator) {</span>
-<span class="nc" id="L2771">                result.addSeparator();</span>
+<span class="pc bpc" id="L2769" title="1 of 2 branches missed.">        if (copy) {</span>
+<span class="pc bpc" id="L2770" title="1 of 2 branches missed.">            if (separator) {</span>
+<span class="fc" id="L2771">                result.addSeparator();</span>
             }
-<span class="nc" id="L2773">            JMenuItem copyItem = new JMenuItem(</span>
-<span class="nc" id="L2774">                    localizationResources.getString(&quot;Copy&quot;));</span>
-<span class="nc" id="L2775">            copyItem.setActionCommand(COPY_COMMAND);</span>
-<span class="nc" id="L2776">            copyItem.addActionListener(this);</span>
-<span class="nc" id="L2777">            result.add(copyItem);</span>
-<span class="nc bnc" id="L2778" title="All 2 branches missed.">            separator = !save;</span>
+<span class="fc" id="L2773">            JMenuItem copyItem = new JMenuItem(</span>
+<span class="fc" id="L2774">                    localizationResources.getString(&quot;Copy&quot;));</span>
+<span class="fc" id="L2775">            copyItem.setActionCommand(COPY_COMMAND);</span>
+<span class="fc" id="L2776">            copyItem.addActionListener(this);</span>
+<span class="fc" id="L2777">            result.add(copyItem);</span>
+<span class="pc bpc" id="L2778" title="1 of 2 branches missed.">            separator = !save;</span>
         }
 
-<span class="nc bnc" id="L2781" title="All 2 branches missed.">        if (save) {</span>
-<span class="nc bnc" id="L2782" title="All 2 branches missed.">            if (separator) {</span>
+<span class="pc bpc" id="L2781" title="1 of 2 branches missed.">        if (save) {</span>
+<span class="pc bpc" id="L2782" title="1 of 2 branches missed.">            if (separator) {</span>
 <span class="nc" id="L2783">                result.addSeparator();</span>
             }
-<span class="nc" id="L2785">            JMenu saveSubMenu = new JMenu(localizationResources.getString(</span>
+<span class="fc" id="L2785">            JMenu saveSubMenu = new JMenu(localizationResources.getString(</span>
                     &quot;Save_as&quot;));
-<span class="nc" id="L2787">            JMenuItem pngItem = new JMenuItem(localizationResources.getString(</span>
+<span class="fc" id="L2787">            JMenuItem pngItem = new JMenuItem(localizationResources.getString(</span>
                     &quot;PNG...&quot;));
-<span class="nc" id="L2789">            pngItem.setActionCommand(&quot;SAVE_AS_PNG&quot;);</span>
-<span class="nc" id="L2790">            pngItem.addActionListener(this);</span>
-<span class="nc" id="L2791">            saveSubMenu.add(pngItem);</span>
+<span class="fc" id="L2789">            pngItem.setActionCommand(&quot;SAVE_AS_PNG&quot;);</span>
+<span class="fc" id="L2790">            pngItem.addActionListener(this);</span>
+<span class="fc" id="L2791">            saveSubMenu.add(pngItem);</span>
             
-<span class="nc bnc" id="L2793" title="All 2 branches missed.">            if (ChartUtils.isJFreeSVGAvailable()) {</span>
+<span class="pc bpc" id="L2793" title="1 of 2 branches missed.">            if (ChartUtils.isJFreeSVGAvailable()) {</span>
 <span class="nc" id="L2794">                JMenuItem svgItem = new JMenuItem(localizationResources.getString(</span>
                         &quot;SVG...&quot;));
 <span class="nc" id="L2796">                svgItem.setActionCommand(&quot;SAVE_AS_SVG&quot;);</span>
@@ -2798,116 +2798,116 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
 <span class="nc" id="L2798">                saveSubMenu.add(svgItem);                </span>
             }
             
-<span class="nc bnc" id="L2801" title="All 2 branches missed.">            if (ChartUtils.isOrsonPDFAvailable()) {</span>
+<span class="pc bpc" id="L2801" title="1 of 2 branches missed.">            if (ChartUtils.isOrsonPDFAvailable()) {</span>
 <span class="nc" id="L2802">                JMenuItem pdfItem = new JMenuItem(</span>
 <span class="nc" id="L2803">                        localizationResources.getString(&quot;PDF...&quot;));</span>
 <span class="nc" id="L2804">                pdfItem.setActionCommand(&quot;SAVE_AS_PDF&quot;);</span>
 <span class="nc" id="L2805">                pdfItem.addActionListener(this);</span>
 <span class="nc" id="L2806">                saveSubMenu.add(pdfItem);</span>
             }
-<span class="nc" id="L2808">            result.add(saveSubMenu);</span>
-<span class="nc" id="L2809">            separator = true;</span>
+<span class="fc" id="L2808">            result.add(saveSubMenu);</span>
+<span class="fc" id="L2809">            separator = true;</span>
         }
 
-<span class="nc bnc" id="L2812" title="All 2 branches missed.">        if (print) {</span>
-<span class="nc bnc" id="L2813" title="All 2 branches missed.">            if (separator) {</span>
-<span class="nc" id="L2814">                result.addSeparator();</span>
+<span class="pc bpc" id="L2812" title="1 of 2 branches missed.">        if (print) {</span>
+<span class="pc bpc" id="L2813" title="1 of 2 branches missed.">            if (separator) {</span>
+<span class="fc" id="L2814">                result.addSeparator();</span>
             }
-<span class="nc" id="L2816">            JMenuItem printItem = new JMenuItem(</span>
-<span class="nc" id="L2817">                    localizationResources.getString(&quot;Print...&quot;));</span>
-<span class="nc" id="L2818">            printItem.setActionCommand(PRINT_COMMAND);</span>
-<span class="nc" id="L2819">            printItem.addActionListener(this);</span>
-<span class="nc" id="L2820">            result.add(printItem);</span>
-<span class="nc" id="L2821">            separator = true;</span>
+<span class="fc" id="L2816">            JMenuItem printItem = new JMenuItem(</span>
+<span class="fc" id="L2817">                    localizationResources.getString(&quot;Print...&quot;));</span>
+<span class="fc" id="L2818">            printItem.setActionCommand(PRINT_COMMAND);</span>
+<span class="fc" id="L2819">            printItem.addActionListener(this);</span>
+<span class="fc" id="L2820">            result.add(printItem);</span>
+<span class="fc" id="L2821">            separator = true;</span>
         }
 
-<span class="nc bnc" id="L2824" title="All 2 branches missed.">        if (zoom) {</span>
-<span class="nc bnc" id="L2825" title="All 2 branches missed.">            if (separator) {</span>
-<span class="nc" id="L2826">                result.addSeparator();</span>
+<span class="pc bpc" id="L2824" title="1 of 2 branches missed.">        if (zoom) {</span>
+<span class="pc bpc" id="L2825" title="1 of 2 branches missed.">            if (separator) {</span>
+<span class="fc" id="L2826">                result.addSeparator();</span>
             }
 
-<span class="nc" id="L2829">            JMenu zoomInMenu = new JMenu(</span>
-<span class="nc" id="L2830">                    localizationResources.getString(&quot;Zoom_In&quot;));</span>
+<span class="fc" id="L2829">            JMenu zoomInMenu = new JMenu(</span>
+<span class="fc" id="L2830">                    localizationResources.getString(&quot;Zoom_In&quot;));</span>
 
-<span class="nc" id="L2832">            this.zoomInBothMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2833">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
-<span class="nc" id="L2834">            this.zoomInBothMenuItem.setActionCommand(ZOOM_IN_BOTH_COMMAND);</span>
-<span class="nc" id="L2835">            this.zoomInBothMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2836">            zoomInMenu.add(this.zoomInBothMenuItem);</span>
+<span class="fc" id="L2832">            this.zoomInBothMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2833">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
+<span class="fc" id="L2834">            this.zoomInBothMenuItem.setActionCommand(ZOOM_IN_BOTH_COMMAND);</span>
+<span class="fc" id="L2835">            this.zoomInBothMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2836">            zoomInMenu.add(this.zoomInBothMenuItem);</span>
 
-<span class="nc" id="L2838">            zoomInMenu.addSeparator();</span>
+<span class="fc" id="L2838">            zoomInMenu.addSeparator();</span>
 
-<span class="nc" id="L2840">            this.zoomInDomainMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2841">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
-<span class="nc" id="L2842">            this.zoomInDomainMenuItem.setActionCommand(ZOOM_IN_DOMAIN_COMMAND);</span>
-<span class="nc" id="L2843">            this.zoomInDomainMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2844">            zoomInMenu.add(this.zoomInDomainMenuItem);</span>
+<span class="fc" id="L2840">            this.zoomInDomainMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2841">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
+<span class="fc" id="L2842">            this.zoomInDomainMenuItem.setActionCommand(ZOOM_IN_DOMAIN_COMMAND);</span>
+<span class="fc" id="L2843">            this.zoomInDomainMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2844">            zoomInMenu.add(this.zoomInDomainMenuItem);</span>
 
-<span class="nc" id="L2846">            this.zoomInRangeMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2847">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
-<span class="nc" id="L2848">            this.zoomInRangeMenuItem.setActionCommand(ZOOM_IN_RANGE_COMMAND);</span>
-<span class="nc" id="L2849">            this.zoomInRangeMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2850">            zoomInMenu.add(this.zoomInRangeMenuItem);</span>
+<span class="fc" id="L2846">            this.zoomInRangeMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2847">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
+<span class="fc" id="L2848">            this.zoomInRangeMenuItem.setActionCommand(ZOOM_IN_RANGE_COMMAND);</span>
+<span class="fc" id="L2849">            this.zoomInRangeMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2850">            zoomInMenu.add(this.zoomInRangeMenuItem);</span>
 
-<span class="nc" id="L2852">            result.add(zoomInMenu);</span>
+<span class="fc" id="L2852">            result.add(zoomInMenu);</span>
 
-<span class="nc" id="L2854">            JMenu zoomOutMenu = new JMenu(</span>
-<span class="nc" id="L2855">                    localizationResources.getString(&quot;Zoom_Out&quot;));</span>
+<span class="fc" id="L2854">            JMenu zoomOutMenu = new JMenu(</span>
+<span class="fc" id="L2855">                    localizationResources.getString(&quot;Zoom_Out&quot;));</span>
 
-<span class="nc" id="L2857">            this.zoomOutBothMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2858">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
-<span class="nc" id="L2859">            this.zoomOutBothMenuItem.setActionCommand(ZOOM_OUT_BOTH_COMMAND);</span>
-<span class="nc" id="L2860">            this.zoomOutBothMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2861">            zoomOutMenu.add(this.zoomOutBothMenuItem);</span>
+<span class="fc" id="L2857">            this.zoomOutBothMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2858">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
+<span class="fc" id="L2859">            this.zoomOutBothMenuItem.setActionCommand(ZOOM_OUT_BOTH_COMMAND);</span>
+<span class="fc" id="L2860">            this.zoomOutBothMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2861">            zoomOutMenu.add(this.zoomOutBothMenuItem);</span>
 
-<span class="nc" id="L2863">            zoomOutMenu.addSeparator();</span>
+<span class="fc" id="L2863">            zoomOutMenu.addSeparator();</span>
 
-<span class="nc" id="L2865">            this.zoomOutDomainMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2866">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
-<span class="nc" id="L2867">            this.zoomOutDomainMenuItem.setActionCommand(</span>
+<span class="fc" id="L2865">            this.zoomOutDomainMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2866">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
+<span class="fc" id="L2867">            this.zoomOutDomainMenuItem.setActionCommand(</span>
                     ZOOM_OUT_DOMAIN_COMMAND);
-<span class="nc" id="L2869">            this.zoomOutDomainMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2870">            zoomOutMenu.add(this.zoomOutDomainMenuItem);</span>
+<span class="fc" id="L2869">            this.zoomOutDomainMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2870">            zoomOutMenu.add(this.zoomOutDomainMenuItem);</span>
 
-<span class="nc" id="L2872">            this.zoomOutRangeMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2873">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
-<span class="nc" id="L2874">            this.zoomOutRangeMenuItem.setActionCommand(ZOOM_OUT_RANGE_COMMAND);</span>
-<span class="nc" id="L2875">            this.zoomOutRangeMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2876">            zoomOutMenu.add(this.zoomOutRangeMenuItem);</span>
+<span class="fc" id="L2872">            this.zoomOutRangeMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2873">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
+<span class="fc" id="L2874">            this.zoomOutRangeMenuItem.setActionCommand(ZOOM_OUT_RANGE_COMMAND);</span>
+<span class="fc" id="L2875">            this.zoomOutRangeMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2876">            zoomOutMenu.add(this.zoomOutRangeMenuItem);</span>
 
-<span class="nc" id="L2878">            result.add(zoomOutMenu);</span>
+<span class="fc" id="L2878">            result.add(zoomOutMenu);</span>
 
-<span class="nc" id="L2880">            JMenu autoRangeMenu = new JMenu(</span>
-<span class="nc" id="L2881">                    localizationResources.getString(&quot;Auto_Range&quot;));</span>
+<span class="fc" id="L2880">            JMenu autoRangeMenu = new JMenu(</span>
+<span class="fc" id="L2881">                    localizationResources.getString(&quot;Auto_Range&quot;));</span>
 
-<span class="nc" id="L2883">            this.zoomResetBothMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2884">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
-<span class="nc" id="L2885">            this.zoomResetBothMenuItem.setActionCommand(</span>
+<span class="fc" id="L2883">            this.zoomResetBothMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2884">                    localizationResources.getString(&quot;All_Axes&quot;));</span>
+<span class="fc" id="L2885">            this.zoomResetBothMenuItem.setActionCommand(</span>
                     ZOOM_RESET_BOTH_COMMAND);
-<span class="nc" id="L2887">            this.zoomResetBothMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2888">            autoRangeMenu.add(this.zoomResetBothMenuItem);</span>
+<span class="fc" id="L2887">            this.zoomResetBothMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2888">            autoRangeMenu.add(this.zoomResetBothMenuItem);</span>
 
-<span class="nc" id="L2890">            autoRangeMenu.addSeparator();</span>
-<span class="nc" id="L2891">            this.zoomResetDomainMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2892">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
-<span class="nc" id="L2893">            this.zoomResetDomainMenuItem.setActionCommand(</span>
+<span class="fc" id="L2890">            autoRangeMenu.addSeparator();</span>
+<span class="fc" id="L2891">            this.zoomResetDomainMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2892">                    localizationResources.getString(&quot;Domain_Axis&quot;));</span>
+<span class="fc" id="L2893">            this.zoomResetDomainMenuItem.setActionCommand(</span>
                     ZOOM_RESET_DOMAIN_COMMAND);
-<span class="nc" id="L2895">            this.zoomResetDomainMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2896">            autoRangeMenu.add(this.zoomResetDomainMenuItem);</span>
+<span class="fc" id="L2895">            this.zoomResetDomainMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2896">            autoRangeMenu.add(this.zoomResetDomainMenuItem);</span>
 
-<span class="nc" id="L2898">            this.zoomResetRangeMenuItem = new JMenuItem(</span>
-<span class="nc" id="L2899">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
-<span class="nc" id="L2900">            this.zoomResetRangeMenuItem.setActionCommand(</span>
+<span class="fc" id="L2898">            this.zoomResetRangeMenuItem = new JMenuItem(</span>
+<span class="fc" id="L2899">                    localizationResources.getString(&quot;Range_Axis&quot;));</span>
+<span class="fc" id="L2900">            this.zoomResetRangeMenuItem.setActionCommand(</span>
                     ZOOM_RESET_RANGE_COMMAND);
-<span class="nc" id="L2902">            this.zoomResetRangeMenuItem.addActionListener(this);</span>
-<span class="nc" id="L2903">            autoRangeMenu.add(this.zoomResetRangeMenuItem);</span>
+<span class="fc" id="L2902">            this.zoomResetRangeMenuItem.addActionListener(this);</span>
+<span class="fc" id="L2903">            autoRangeMenu.add(this.zoomResetRangeMenuItem);</span>
 
-<span class="nc" id="L2905">            result.addSeparator();</span>
-<span class="nc" id="L2906">            result.add(autoRangeMenu);</span>
+<span class="fc" id="L2905">            result.addSeparator();</span>
+<span class="fc" id="L2906">            result.add(autoRangeMenu);</span>
 
         }
 
-<span class="nc" id="L2910">        return result;</span>
+<span class="fc" id="L2910">        return result;</span>
 
     }
 
@@ -2980,11 +2980,11 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
     public void updateUI() {
         // here we need to update the UI for the popup menu, if the panel
         // has one...
-<span class="nc bnc" id="L2983" title="All 2 branches missed.">        if (this.popup != null) {</span>
+<span class="pc bpc" id="L2983" title="1 of 2 branches missed.">        if (this.popup != null) {</span>
 <span class="nc" id="L2984">            SwingUtilities.updateComponentTreeUI(this.popup);</span>
         }
-<span class="nc" id="L2986">        super.updateUI();</span>
-<span class="nc" id="L2987">    }</span>
+<span class="fc" id="L2986">        super.updateUI();</span>
+<span class="fc" id="L2987">    }</span>
 
     /**
      * Provides serialization support.
@@ -3024,4 +3024,4 @@ public class ChartPanel extends JPanel implements ChartChangeListener,
 <span class="nc" id="L3024">    }</span>
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

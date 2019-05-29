@@ -61,10 +61,10 @@ public class TextBlock implements Serializable {
     /**
      * Creates a new empty text block.
      */
-<span class="nc" id="L64">    public TextBlock() {</span>
-<span class="nc" id="L65">        this.lines = new java.util.ArrayList();</span>
-<span class="nc" id="L66">        this.lineAlignment = HorizontalAlignment.CENTER;</span>
-<span class="nc" id="L67">    }</span>
+<span class="fc" id="L64">    public TextBlock() {</span>
+<span class="fc" id="L65">        this.lines = new java.util.ArrayList();</span>
+<span class="fc" id="L66">        this.lineAlignment = HorizontalAlignment.CENTER;</span>
+<span class="fc" id="L67">    }</span>
     
     /**
      * Returns the alignment of the lines of text within the block.
@@ -81,11 +81,11 @@ public class TextBlock implements Serializable {
      * @param alignment  the alignment ({@code null} not permitted).
      */
     public void setLineAlignment(HorizontalAlignment alignment) {
-<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (alignment == null) {</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (alignment == null) {</span>
 <span class="nc" id="L85">            throw new IllegalArgumentException(&quot;Null 'alignment' argument.&quot;);</span>
         }
-<span class="nc" id="L87">        this.lineAlignment = alignment;   </span>
-<span class="nc" id="L88">    }</span>
+<span class="fc" id="L87">        this.lineAlignment = alignment;   </span>
+<span class="fc" id="L88">    }</span>
     
     /**
      * Adds a line of text that will be displayed using the specified font.
@@ -95,8 +95,8 @@ public class TextBlock implements Serializable {
      * @param paint  the paint.
      */
     public void addLine(String text, Font font, Paint paint) {
-<span class="nc" id="L98">        addLine(new TextLine(text, font, paint));</span>
-<span class="nc" id="L99">    }</span>
+<span class="fc" id="L98">        addLine(new TextLine(text, font, paint));</span>
+<span class="fc" id="L99">    }</span>
     
     /**
      * Adds a {@link TextLine} to the block.
@@ -104,8 +104,8 @@ public class TextBlock implements Serializable {
      * @param line  the line.
      */
     public void addLine(TextLine line) {
-<span class="nc" id="L107">        this.lines.add(line);    </span>
-<span class="nc" id="L108">    }</span>
+<span class="fc" id="L107">        this.lines.add(line);    </span>
+<span class="fc" id="L108">    }</span>
     
     /**
      * Returns the last line in the block.
@@ -113,12 +113,12 @@ public class TextBlock implements Serializable {
      * @return The last line in the block.
      */
     public TextLine getLastLine() {
-<span class="nc" id="L116">        TextLine last = null;</span>
-<span class="nc" id="L117">        final int index = this.lines.size() - 1;</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (index &gt;= 0) {</span>
-<span class="nc" id="L119">            last = (TextLine) this.lines.get(index);</span>
+<span class="fc" id="L116">        TextLine last = null;</span>
+<span class="fc" id="L117">        final int index = this.lines.size() - 1;</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        if (index &gt;= 0) {</span>
+<span class="fc" id="L119">            last = (TextLine) this.lines.get(index);</span>
         }
-<span class="nc" id="L121">        return last;</span>
+<span class="fc" id="L121">        return last;</span>
     }
     
     /**
@@ -138,16 +138,16 @@ public class TextBlock implements Serializable {
      * @return The width and height.
      */
     public Size2D calculateDimensions(Graphics2D g2) {
-<span class="nc" id="L141">        double width = 0.0;</span>
-<span class="nc" id="L142">        double height = 0.0;</span>
-<span class="nc" id="L143">        Iterator iterator = this.lines.iterator();</span>
-<span class="nc bnc" id="L144" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L145">            final TextLine line = (TextLine) iterator.next();</span>
-<span class="nc" id="L146">            final Size2D dimension = line.calculateDimensions(g2);</span>
-<span class="nc" id="L147">            width = Math.max(width, dimension.getWidth());</span>
-<span class="nc" id="L148">            height = height + dimension.getHeight();</span>
-<span class="nc" id="L149">        }</span>
-<span class="nc" id="L150">        return new Size2D(width, height);</span>
+<span class="fc" id="L141">        double width = 0.0;</span>
+<span class="fc" id="L142">        double height = 0.0;</span>
+<span class="fc" id="L143">        Iterator iterator = this.lines.iterator();</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L145">            final TextLine line = (TextLine) iterator.next();</span>
+<span class="fc" id="L146">            final Size2D dimension = line.calculateDimensions(g2);</span>
+<span class="fc" id="L147">            width = Math.max(width, dimension.getWidth());</span>
+<span class="fc" id="L148">            height = height + dimension.getHeight();</span>
+<span class="fc" id="L149">        }</span>
+<span class="fc" id="L150">        return new Size2D(width, height);</span>
     }
     
     /**
@@ -166,13 +166,13 @@ public class TextBlock implements Serializable {
     public Shape calculateBounds(Graphics2D g2, float anchorX, float anchorY, 
             TextBlockAnchor anchor, float rotateX, float rotateY, double angle) {
         
-<span class="nc" id="L169">        Size2D d = calculateDimensions(g2);</span>
-<span class="nc" id="L170">        float[] offsets = calculateOffsets(anchor, d.getWidth(), d.getHeight());</span>
-<span class="nc" id="L171">        Rectangle2D bounds = new Rectangle2D.Double(anchorX + offsets[0], </span>
-<span class="nc" id="L172">                anchorY + offsets[1], d.getWidth(), d.getHeight());</span>
-<span class="nc" id="L173">        Shape rotatedBounds = ShapeUtils.rotateShape(bounds, angle, rotateX, </span>
+<span class="fc" id="L169">        Size2D d = calculateDimensions(g2);</span>
+<span class="fc" id="L170">        float[] offsets = calculateOffsets(anchor, d.getWidth(), d.getHeight());</span>
+<span class="fc" id="L171">        Rectangle2D bounds = new Rectangle2D.Double(anchorX + offsets[0], </span>
+<span class="fc" id="L172">                anchorY + offsets[1], d.getWidth(), d.getHeight());</span>
+<span class="fc" id="L173">        Shape rotatedBounds = ShapeUtils.rotateShape(bounds, angle, rotateX, </span>
                 rotateY);
-<span class="nc" id="L175">        return rotatedBounds;   </span>
+<span class="fc" id="L175">        return rotatedBounds;   </span>
         
     }
     
@@ -185,8 +185,8 @@ public class TextBlock implements Serializable {
      * @param anchor  the anchor point.
      */
     public void draw(Graphics2D g2, float x, float y, TextBlockAnchor anchor) {
-<span class="nc" id="L188">        draw(g2, x, y, anchor, 0.0f, 0.0f, 0.0);</span>
-<span class="nc" id="L189">    }</span>
+<span class="fc" id="L188">        draw(g2, x, y, anchor, 0.0f, 0.0f, 0.0);</span>
+<span class="fc" id="L189">    }</span>
     
     /**
      * Draws the text block, aligning it with the specified anchor point and 
@@ -204,29 +204,29 @@ public class TextBlock implements Serializable {
     public void draw(Graphics2D g2, float anchorX, float anchorY, 
             TextBlockAnchor anchor, float rotateX, float rotateY, double angle) {
     
-<span class="nc" id="L207">        Size2D d = calculateDimensions(g2);</span>
-<span class="nc" id="L208">        float[] offsets = calculateOffsets(anchor, d.getWidth(), </span>
-<span class="nc" id="L209">                d.getHeight());</span>
-<span class="nc" id="L210">        Iterator iterator = this.lines.iterator();</span>
-<span class="nc" id="L211">        float yCursor = 0.0f;</span>
-<span class="nc bnc" id="L212" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L213">            TextLine line = (TextLine) iterator.next();</span>
-<span class="nc" id="L214">            Size2D dimension = line.calculateDimensions(g2);</span>
-<span class="nc" id="L215">            float lineOffset = 0.0f;</span>
-<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (this.lineAlignment == HorizontalAlignment.CENTER) {</span>
-<span class="nc" id="L217">                lineOffset = (float) (d.getWidth() - dimension.getWidth()) </span>
+<span class="fc" id="L207">        Size2D d = calculateDimensions(g2);</span>
+<span class="fc" id="L208">        float[] offsets = calculateOffsets(anchor, d.getWidth(), </span>
+<span class="fc" id="L209">                d.getHeight());</span>
+<span class="fc" id="L210">        Iterator iterator = this.lines.iterator();</span>
+<span class="fc" id="L211">        float yCursor = 0.0f;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L213">            TextLine line = (TextLine) iterator.next();</span>
+<span class="fc" id="L214">            Size2D dimension = line.calculateDimensions(g2);</span>
+<span class="fc" id="L215">            float lineOffset = 0.0f;</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">            if (this.lineAlignment == HorizontalAlignment.CENTER) {</span>
+<span class="fc" id="L217">                lineOffset = (float) (d.getWidth() - dimension.getWidth()) </span>
                     / 2.0f;   
             }
 <span class="nc bnc" id="L220" title="All 2 branches missed.">            else if (this.lineAlignment == HorizontalAlignment.RIGHT) {</span>
 <span class="nc" id="L221">                lineOffset = (float) (d.getWidth() - dimension.getWidth());   </span>
             }
-<span class="nc" id="L223">            line.draw(g2, anchorX + offsets[0] + lineOffset, </span>
+<span class="fc" id="L223">            line.draw(g2, anchorX + offsets[0] + lineOffset, </span>
                     anchorY + offsets[1] + yCursor, TextAnchor.TOP_LEFT, 
                     rotateX, rotateY, angle);
-<span class="nc" id="L226">            yCursor = yCursor + (float) dimension.getHeight();</span>
-<span class="nc" id="L227">        }</span>
+<span class="fc" id="L226">            yCursor = yCursor + (float) dimension.getHeight();</span>
+<span class="fc" id="L227">        }</span>
         
-<span class="nc" id="L229">    }</span>
+<span class="fc" id="L229">    }</span>
  
     /**
      * Calculates the x and y offsets required to align the text block with the
@@ -241,37 +241,37 @@ public class TextBlock implements Serializable {
      */
     private float[] calculateOffsets(TextBlockAnchor anchor, double width, 
             double height) {
-<span class="nc" id="L244">        float[] result = new float[2];</span>
-<span class="nc" id="L245">        float xAdj = 0.0f;</span>
-<span class="nc" id="L246">        float yAdj = 0.0f;</span>
+<span class="fc" id="L244">        float[] result = new float[2];</span>
+<span class="fc" id="L245">        float xAdj = 0.0f;</span>
+<span class="fc" id="L246">        float yAdj = 0.0f;</span>
 
-<span class="nc bnc" id="L248" title="All 6 branches missed.">        if (anchor == TextBlockAnchor.TOP_CENTER</span>
+<span class="pc bpc" id="L248" title="1 of 6 branches missed.">        if (anchor == TextBlockAnchor.TOP_CENTER</span>
                 || anchor == TextBlockAnchor.CENTER
                 || anchor == TextBlockAnchor.BOTTOM_CENTER) {
                     
-<span class="nc" id="L252">            xAdj = (float) -width / 2.0f;</span>
+<span class="fc" id="L252">            xAdj = (float) -width / 2.0f;</span>
             
         }
-<span class="nc bnc" id="L255" title="All 6 branches missed.">        else if (anchor == TextBlockAnchor.TOP_RIGHT</span>
+<span class="pc bpc" id="L255" title="2 of 6 branches missed.">        else if (anchor == TextBlockAnchor.TOP_RIGHT</span>
                 || anchor == TextBlockAnchor.CENTER_RIGHT
                 || anchor == TextBlockAnchor.BOTTOM_RIGHT) {
                     
-<span class="nc" id="L259">            xAdj = (float) -width;</span>
+<span class="fc" id="L259">            xAdj = (float) -width;</span>
             
         }
 
-<span class="nc bnc" id="L263" title="All 6 branches missed.">        if (anchor == TextBlockAnchor.TOP_LEFT</span>
+<span class="pc bpc" id="L263" title="1 of 6 branches missed.">        if (anchor == TextBlockAnchor.TOP_LEFT</span>
                 || anchor == TextBlockAnchor.TOP_CENTER
                 || anchor == TextBlockAnchor.TOP_RIGHT) {
                     
-<span class="nc" id="L267">            yAdj = 0.0f;</span>
+<span class="fc" id="L267">            yAdj = 0.0f;</span>
             
         }
-<span class="nc bnc" id="L270" title="All 6 branches missed.">        else if (anchor == TextBlockAnchor.CENTER_LEFT</span>
+<span class="pc bpc" id="L270" title="2 of 6 branches missed.">        else if (anchor == TextBlockAnchor.CENTER_LEFT</span>
                 || anchor == TextBlockAnchor.CENTER
                 || anchor == TextBlockAnchor.CENTER_RIGHT) {
                     
-<span class="nc" id="L274">            yAdj = (float) -height / 2.0f;</span>
+<span class="fc" id="L274">            yAdj = (float) -height / 2.0f;</span>
             
         }
 <span class="nc bnc" id="L277" title="All 6 branches missed.">        else if (anchor == TextBlockAnchor.BOTTOM_LEFT</span>
@@ -281,9 +281,9 @@ public class TextBlock implements Serializable {
 <span class="nc" id="L281">            yAdj = (float) -height;</span>
             
         }
-<span class="nc" id="L284">        result[0] = xAdj;</span>
-<span class="nc" id="L285">        result[1] = yAdj;</span>
-<span class="nc" id="L286">        return result;</span>
+<span class="fc" id="L284">        result[0] = xAdj;</span>
+<span class="fc" id="L285">        result[1] = yAdj;</span>
+<span class="fc" id="L286">        return result;</span>
     }   
     
     /**
@@ -295,12 +295,12 @@ public class TextBlock implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (obj == this) {</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (obj == this) {</span>
 <span class="nc" id="L299">            return true;   </span>
         }
-<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (obj instanceof TextBlock) {</span>
-<span class="nc" id="L302">            TextBlock block = (TextBlock) obj;</span>
-<span class="nc" id="L303">            return this.lines.equals(block.lines);</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">        if (obj instanceof TextBlock) {</span>
+<span class="fc" id="L302">            TextBlock block = (TextBlock) obj;</span>
+<span class="fc" id="L303">            return this.lines.equals(block.lines);</span>
         }
 <span class="nc" id="L305">        return false;</span>
     }
@@ -312,8 +312,8 @@ public class TextBlock implements Serializable {
      */
     @Override
     public int hashCode() {
-<span class="nc bnc" id="L315" title="All 2 branches missed.">        return (this.lines != null ? this.lines.hashCode() : 0);</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">        return (this.lines != null ? this.lines.hashCode() : 0);</span>
     }
 }
 
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -168,9 +168,9 @@ public final class DatasetUtils {
     /**
      * Private constructor for non-instanceability.
      */
-<span class="nc" id="L171">    private DatasetUtils() {</span>
+    private DatasetUtils() {
         // now try to instantiate this ;-)
-<span class="nc" id="L173">    }</span>
+    }
 
     /**
      * Calculates the total of all the values in a {@link PieDataset}.  If
@@ -182,24 +182,24 @@ public final class DatasetUtils {
      * @return The total.
      */
     public static double calculatePieDatasetTotal(PieDataset dataset) {
-<span class="nc" id="L185">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L186">        List keys = dataset.getKeys();</span>
-<span class="nc" id="L187">        double totalValue = 0;</span>
-<span class="nc" id="L188">        Iterator iterator = keys.iterator();</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L190">            Comparable current = (Comparable) iterator.next();</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">            if (current != null) {</span>
-<span class="nc" id="L192">                Number value = dataset.getValue(current);</span>
-<span class="nc" id="L193">                double v = 0.0;</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">                if (value != null) {</span>
-<span class="nc" id="L195">                    v = value.doubleValue();</span>
+<span class="fc" id="L185">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L186">        List keys = dataset.getKeys();</span>
+<span class="fc" id="L187">        double totalValue = 0;</span>
+<span class="fc" id="L188">        Iterator iterator = keys.iterator();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L190">            Comparable current = (Comparable) iterator.next();</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">            if (current != null) {</span>
+<span class="fc" id="L192">                Number value = dataset.getValue(current);</span>
+<span class="fc" id="L193">                double v = 0.0;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">                if (value != null) {</span>
+<span class="fc" id="L195">                    v = value.doubleValue();</span>
                 }
-<span class="nc bnc" id="L197" title="All 2 branches missed.">                if (v &gt; 0) {</span>
-<span class="nc" id="L198">                    totalValue = totalValue + v;</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">                if (v &gt; 0) {</span>
+<span class="fc" id="L198">                    totalValue = totalValue + v;</span>
                 }
             }
-<span class="nc" id="L201">        }</span>
-<span class="nc" id="L202">        return totalValue;</span>
+<span class="fc" id="L201">        }</span>
+<span class="fc" id="L202">        return totalValue;</span>
     }
 
     /**
@@ -287,7 +287,7 @@ public final class DatasetUtils {
      */
     public static PieDataset createConsolidatedPieDataset(PieDataset source,
             Comparable key, double minimumPercent) {
-<span class="nc" id="L290">        return DatasetUtils.createConsolidatedPieDataset(source, key,</span>
+<span class="fc" id="L290">        return DatasetUtils.createConsolidatedPieDataset(source, key,</span>
                 minimumPercent, 2);
     }
 
@@ -309,47 +309,47 @@ public final class DatasetUtils {
     public static PieDataset createConsolidatedPieDataset(PieDataset source,
             Comparable key, double minimumPercent, int minItems) {
 
-<span class="nc" id="L312">        DefaultPieDataset result = new DefaultPieDataset();</span>
-<span class="nc" id="L313">        double total = DatasetUtils.calculatePieDatasetTotal(source);</span>
+<span class="fc" id="L312">        DefaultPieDataset result = new DefaultPieDataset();</span>
+<span class="fc" id="L313">        double total = DatasetUtils.calculatePieDatasetTotal(source);</span>
 
         //  Iterate and find all keys below threshold percentThreshold
-<span class="nc" id="L316">        List keys = source.getKeys();</span>
-<span class="nc" id="L317">        ArrayList otherKeys = new ArrayList();</span>
-<span class="nc" id="L318">        Iterator iterator = keys.iterator();</span>
-<span class="nc bnc" id="L319" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L320">            Comparable currentKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L321">            Number dataValue = source.getValue(currentKey);</span>
-<span class="nc bnc" id="L322" title="All 2 branches missed.">            if (dataValue != null) {</span>
-<span class="nc" id="L323">                double value = dataValue.doubleValue();</span>
-<span class="nc bnc" id="L324" title="All 2 branches missed.">                if (value / total &lt; minimumPercent) {</span>
-<span class="nc" id="L325">                    otherKeys.add(currentKey);</span>
+<span class="fc" id="L316">        List keys = source.getKeys();</span>
+<span class="fc" id="L317">        ArrayList otherKeys = new ArrayList();</span>
+<span class="fc" id="L318">        Iterator iterator = keys.iterator();</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L320">            Comparable currentKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L321">            Number dataValue = source.getValue(currentKey);</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">            if (dataValue != null) {</span>
+<span class="fc" id="L323">                double value = dataValue.doubleValue();</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">                if (value / total &lt; minimumPercent) {</span>
+<span class="fc" id="L325">                    otherKeys.add(currentKey);</span>
                 }
             }
-<span class="nc" id="L328">        }</span>
+<span class="fc" id="L328">        }</span>
 
         //  Create new dataset with keys above threshold percentThreshold
-<span class="nc" id="L331">        iterator = keys.iterator();</span>
-<span class="nc" id="L332">        double otherValue = 0;</span>
-<span class="nc bnc" id="L333" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
-<span class="nc" id="L334">            Comparable currentKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L335">            Number dataValue = source.getValue(currentKey);</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">            if (dataValue != null) {</span>
-<span class="nc bnc" id="L337" title="All 2 branches missed.">                if (otherKeys.contains(currentKey)</span>
-<span class="nc bnc" id="L338" title="All 2 branches missed.">                    &amp;&amp; otherKeys.size() &gt;= minItems) {</span>
+<span class="fc" id="L331">        iterator = keys.iterator();</span>
+<span class="fc" id="L332">        double otherValue = 0;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L334">            Comparable currentKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L335">            Number dataValue = source.getValue(currentKey);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">            if (dataValue != null) {</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">                if (otherKeys.contains(currentKey)</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                    &amp;&amp; otherKeys.size() &gt;= minItems) {</span>
                     //  Do not add key to dataset
-<span class="nc" id="L340">                    otherValue += dataValue.doubleValue();</span>
+<span class="fc" id="L340">                    otherValue += dataValue.doubleValue();</span>
                 }
                 else {
                     //  Add key to dataset
-<span class="nc" id="L344">                    result.setValue(currentKey, dataValue);</span>
+<span class="fc" id="L344">                    result.setValue(currentKey, dataValue);</span>
                 }
             }
-<span class="nc" id="L347">        }</span>
+<span class="fc" id="L347">        }</span>
         //  Add other category if applicable
-<span class="nc bnc" id="L349" title="All 2 branches missed.">        if (otherKeys.size() &gt;= minItems) {</span>
-<span class="nc" id="L350">            result.setValue(key, otherValue);</span>
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (otherKeys.size() &gt;= minItems) {</span>
+<span class="fc" id="L350">            result.setValue(key, otherValue);</span>
         }
-<span class="nc" id="L352">        return result;</span>
+<span class="fc" id="L352">        return result;</span>
     }
 
     /**
@@ -397,15 +397,15 @@ public final class DatasetUtils {
     public static CategoryDataset createCategoryDataset(String rowKeyPrefix,
             String columnKeyPrefix, Number[][] data) {
 
-<span class="nc" id="L400">        DefaultCategoryDataset result = new DefaultCategoryDataset();</span>
-<span class="nc bnc" id="L401" title="All 2 branches missed.">        for (int r = 0; r &lt; data.length; r++) {</span>
-<span class="nc" id="L402">            String rowKey = rowKeyPrefix + (r + 1);</span>
-<span class="nc bnc" id="L403" title="All 2 branches missed.">            for (int c = 0; c &lt; data[r].length; c++) {</span>
-<span class="nc" id="L404">                String columnKey = columnKeyPrefix + (c + 1);</span>
-<span class="nc" id="L405">                result.addValue(data[r][c], rowKey, columnKey);</span>
+<span class="fc" id="L400">        DefaultCategoryDataset result = new DefaultCategoryDataset();</span>
+<span class="fc bfc" id="L401" title="All 2 branches covered.">        for (int r = 0; r &lt; data.length; r++) {</span>
+<span class="fc" id="L402">            String rowKey = rowKeyPrefix + (r + 1);</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">            for (int c = 0; c &lt; data[r].length; c++) {</span>
+<span class="fc" id="L404">                String columnKey = columnKeyPrefix + (c + 1);</span>
+<span class="fc" id="L405">                result.addValue(data[r][c], rowKey, columnKey);</span>
             }
         }
-<span class="nc" id="L408">        return result;</span>
+<span class="fc" id="L408">        return result;</span>
 
     }
 
@@ -425,40 +425,40 @@ public final class DatasetUtils {
     public static CategoryDataset createCategoryDataset(Comparable[] rowKeys,
             Comparable[] columnKeys, double[][] data) {
 
-<span class="nc" id="L428">        Args.nullNotPermitted(rowKeys, &quot;rowKeys&quot;);</span>
-<span class="nc" id="L429">        Args.nullNotPermitted(columnKeys, &quot;columnKeys&quot;);</span>
-<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (ArrayUtils.hasDuplicateItems(rowKeys)) {</span>
+<span class="fc" id="L428">        Args.nullNotPermitted(rowKeys, &quot;rowKeys&quot;);</span>
+<span class="fc" id="L429">        Args.nullNotPermitted(columnKeys, &quot;columnKeys&quot;);</span>
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">        if (ArrayUtils.hasDuplicateItems(rowKeys)) {</span>
 <span class="nc" id="L431">            throw new IllegalArgumentException(&quot;Duplicate items in 'rowKeys'.&quot;);</span>
         }
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (ArrayUtils.hasDuplicateItems(columnKeys)) {</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">        if (ArrayUtils.hasDuplicateItems(columnKeys)) {</span>
 <span class="nc" id="L434">            throw new IllegalArgumentException(</span>
                     &quot;Duplicate items in 'columnKeys'.&quot;);
         }
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        if (rowKeys.length != data.length) {</span>
-<span class="nc" id="L438">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">        if (rowKeys.length != data.length) {</span>
+<span class="fc" id="L438">            throw new IllegalArgumentException(</span>
                 &quot;The number of row keys does not match the number of rows in &quot;
                 + &quot;the data array.&quot;);
         }
-<span class="nc" id="L442">        int columnCount = 0;</span>
-<span class="nc bnc" id="L443" title="All 2 branches missed.">        for (int r = 0; r &lt; data.length; r++) {</span>
-<span class="nc" id="L444">            columnCount = Math.max(columnCount, data[r].length);</span>
+<span class="fc" id="L442">        int columnCount = 0;</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">        for (int r = 0; r &lt; data.length; r++) {</span>
+<span class="fc" id="L444">            columnCount = Math.max(columnCount, data[r].length);</span>
         }
-<span class="nc bnc" id="L446" title="All 2 branches missed.">        if (columnKeys.length != columnCount) {</span>
+<span class="pc bpc" id="L446" title="1 of 2 branches missed.">        if (columnKeys.length != columnCount) {</span>
 <span class="nc" id="L447">            throw new IllegalArgumentException(</span>
                 &quot;The number of column keys does not match the number of &quot;
                 + &quot;columns in the data array.&quot;);
         }
 
         // now do the work...
-<span class="nc" id="L453">        DefaultCategoryDataset result = new DefaultCategoryDataset();</span>
-<span class="nc bnc" id="L454" title="All 2 branches missed.">        for (int r = 0; r &lt; data.length; r++) {</span>
-<span class="nc" id="L455">            Comparable rowKey = rowKeys[r];</span>
-<span class="nc bnc" id="L456" title="All 2 branches missed.">            for (int c = 0; c &lt; data[r].length; c++) {</span>
-<span class="nc" id="L457">                Comparable columnKey = columnKeys[c];</span>
-<span class="nc" id="L458">                result.addValue(new Double(data[r][c]), rowKey, columnKey);</span>
+<span class="fc" id="L453">        DefaultCategoryDataset result = new DefaultCategoryDataset();</span>
+<span class="fc bfc" id="L454" title="All 2 branches covered.">        for (int r = 0; r &lt; data.length; r++) {</span>
+<span class="fc" id="L455">            Comparable rowKey = rowKeys[r];</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">            for (int c = 0; c &lt; data[r].length; c++) {</span>
+<span class="fc" id="L457">                Comparable columnKey = columnKeys[c];</span>
+<span class="fc" id="L458">                result.addValue(new Double(data[r][c]), rowKey, columnKey);</span>
             }
         }
-<span class="nc" id="L461">        return result;</span>
+<span class="fc" id="L461">        return result;</span>
 
     }
 
@@ -501,10 +501,10 @@ public final class DatasetUtils {
             double end, int samples, Comparable seriesKey) {
 
         // defer argument checking
-<span class="nc" id="L504">        XYSeries series = sampleFunction2DToSeries(f, start, end, samples,</span>
+<span class="fc" id="L504">        XYSeries series = sampleFunction2DToSeries(f, start, end, samples,</span>
                 seriesKey);
-<span class="nc" id="L506">        XYSeriesCollection collection = new XYSeriesCollection(series);</span>
-<span class="nc" id="L507">        return collection;</span>
+<span class="fc" id="L506">        XYSeriesCollection collection = new XYSeriesCollection(series);</span>
+<span class="fc" id="L507">        return collection;</span>
     }
 
     /**
@@ -525,22 +525,22 @@ public final class DatasetUtils {
     public static XYSeries sampleFunction2DToSeries(Function2D f,
             double start, double end, int samples, Comparable seriesKey) {
 
-<span class="nc" id="L528">        Args.nullNotPermitted(f, &quot;f&quot;);</span>
-<span class="nc" id="L529">        Args.nullNotPermitted(seriesKey, &quot;seriesKey&quot;);</span>
-<span class="nc bnc" id="L530" title="All 2 branches missed.">        if (start &gt;= end) {</span>
+<span class="fc" id="L528">        Args.nullNotPermitted(f, &quot;f&quot;);</span>
+<span class="fc" id="L529">        Args.nullNotPermitted(seriesKey, &quot;seriesKey&quot;);</span>
+<span class="pc bpc" id="L530" title="1 of 2 branches missed.">        if (start &gt;= end) {</span>
 <span class="nc" id="L531">            throw new IllegalArgumentException(&quot;Requires 'start' &lt; 'end'.&quot;);</span>
         }
-<span class="nc bnc" id="L533" title="All 2 branches missed.">        if (samples &lt; 2) {</span>
+<span class="pc bpc" id="L533" title="1 of 2 branches missed.">        if (samples &lt; 2) {</span>
 <span class="nc" id="L534">            throw new IllegalArgumentException(&quot;Requires 'samples' &gt; 1&quot;);</span>
         }
 
-<span class="nc" id="L537">        XYSeries series = new XYSeries(seriesKey);</span>
-<span class="nc" id="L538">        double step = (end - start) / (samples - 1);</span>
-<span class="nc bnc" id="L539" title="All 2 branches missed.">        for (int i = 0; i &lt; samples; i++) {</span>
-<span class="nc" id="L540">            double x = start + (step * i);</span>
-<span class="nc" id="L541">            series.add(x, f.getValue(x));</span>
+<span class="fc" id="L537">        XYSeries series = new XYSeries(seriesKey);</span>
+<span class="fc" id="L538">        double step = (end - start) / (samples - 1);</span>
+<span class="fc bfc" id="L539" title="All 2 branches covered.">        for (int i = 0; i &lt; samples; i++) {</span>
+<span class="fc" id="L540">            double x = start + (step * i);</span>
+<span class="fc" id="L541">            series.add(x, f.getValue(x));</span>
         }
-<span class="nc" id="L543">        return series;</span>
+<span class="fc" id="L543">        return series;</span>
     }
 
     /**
@@ -553,21 +553,21 @@ public final class DatasetUtils {
      */
     public static boolean isEmptyOrNull(PieDataset dataset) {
 
-<span class="nc bnc" id="L556" title="All 2 branches missed.">        if (dataset == null) {</span>
-<span class="nc" id="L557">            return true;</span>
+<span class="fc bfc" id="L556" title="All 2 branches covered.">        if (dataset == null) {</span>
+<span class="fc" id="L557">            return true;</span>
         }
 
-<span class="nc" id="L560">        int itemCount = dataset.getItemCount();</span>
-<span class="nc bnc" id="L561" title="All 2 branches missed.">        if (itemCount == 0) {</span>
+<span class="fc" id="L560">        int itemCount = dataset.getItemCount();</span>
+<span class="pc bpc" id="L561" title="1 of 2 branches missed.">        if (itemCount == 0) {</span>
 <span class="nc" id="L562">            return true;</span>
         }
 
-<span class="nc bnc" id="L565" title="All 2 branches missed.">        for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L566">            Number y = dataset.getValue(item);</span>
-<span class="nc bnc" id="L567" title="All 2 branches missed.">            if (y != null) {</span>
-<span class="nc" id="L568">                double yy = y.doubleValue();</span>
-<span class="nc bnc" id="L569" title="All 2 branches missed.">                if (yy &gt; 0.0) {</span>
-<span class="nc" id="L570">                    return false;</span>
+<span class="pc bpc" id="L565" title="1 of 2 branches missed.">        for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L566">            Number y = dataset.getValue(item);</span>
+<span class="pc bpc" id="L567" title="1 of 2 branches missed.">            if (y != null) {</span>
+<span class="fc" id="L568">                double yy = y.doubleValue();</span>
+<span class="pc bpc" id="L569" title="1 of 2 branches missed.">                if (yy &gt; 0.0) {</span>
+<span class="fc" id="L570">                    return false;</span>
                 }
             }
         }
@@ -586,26 +586,26 @@ public final class DatasetUtils {
      */
     public static boolean isEmptyOrNull(CategoryDataset dataset) {
 
-<span class="nc bnc" id="L589" title="All 2 branches missed.">        if (dataset == null) {</span>
+<span class="pc bpc" id="L589" title="1 of 2 branches missed.">        if (dataset == null) {</span>
 <span class="nc" id="L590">            return true;</span>
         }
 
-<span class="nc" id="L593">        int rowCount = dataset.getRowCount();</span>
-<span class="nc" id="L594">        int columnCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L595" title="All 4 branches missed.">        if (rowCount == 0 || columnCount == 0) {</span>
-<span class="nc" id="L596">            return true;</span>
+<span class="fc" id="L593">        int rowCount = dataset.getRowCount();</span>
+<span class="fc" id="L594">        int columnCount = dataset.getColumnCount();</span>
+<span class="pc bpc" id="L595" title="1 of 4 branches missed.">        if (rowCount == 0 || columnCount == 0) {</span>
+<span class="fc" id="L596">            return true;</span>
         }
 
-<span class="nc bnc" id="L599" title="All 2 branches missed.">        for (int r = 0; r &lt; rowCount; r++) {</span>
-<span class="nc bnc" id="L600" title="All 2 branches missed.">            for (int c = 0; c &lt; columnCount; c++) {</span>
-<span class="nc bnc" id="L601" title="All 2 branches missed.">                if (dataset.getValue(r, c) != null) {</span>
-<span class="nc" id="L602">                    return false;</span>
+<span class="fc bfc" id="L599" title="All 2 branches covered.">        for (int r = 0; r &lt; rowCount; r++) {</span>
+<span class="fc bfc" id="L600" title="All 2 branches covered.">            for (int c = 0; c &lt; columnCount; c++) {</span>
+<span class="fc bfc" id="L601" title="All 2 branches covered.">                if (dataset.getValue(r, c) != null) {</span>
+<span class="fc" id="L602">                    return false;</span>
                 }
 
             }
         }
 
-<span class="nc" id="L608">        return true;</span>
+<span class="fc" id="L608">        return true;</span>
 
     }
 
@@ -618,14 +618,14 @@ public final class DatasetUtils {
      * @return A boolean.
      */
     public static boolean isEmptyOrNull(XYDataset dataset) {
-<span class="nc bnc" id="L621" title="All 2 branches missed.">        if (dataset != null) {</span>
-<span class="nc bnc" id="L622" title="All 2 branches missed.">            for (int s = 0; s &lt; dataset.getSeriesCount(); s++) {</span>
-<span class="nc bnc" id="L623" title="All 2 branches missed.">                if (dataset.getItemCount(s) &gt; 0) {</span>
-<span class="nc" id="L624">                    return false;</span>
+<span class="fc bfc" id="L621" title="All 2 branches covered.">        if (dataset != null) {</span>
+<span class="fc bfc" id="L622" title="All 2 branches covered.">            for (int s = 0; s &lt; dataset.getSeriesCount(); s++) {</span>
+<span class="fc bfc" id="L623" title="All 2 branches covered.">                if (dataset.getItemCount(s) &gt; 0) {</span>
+<span class="fc" id="L624">                    return false;</span>
                 }
             }
         }
-<span class="nc" id="L628">        return true;</span>
+<span class="fc" id="L628">        return true;</span>
     }
 
     /**
@@ -636,7 +636,7 @@ public final class DatasetUtils {
      * @return The range of values (possibly {@code null}).
      */
     public static Range findDomainBounds(XYDataset dataset) {
-<span class="nc" id="L639">        return findDomainBounds(dataset, true);</span>
+<span class="fc" id="L639">        return findDomainBounds(dataset, true);</span>
     }
 
     /**
@@ -652,18 +652,18 @@ public final class DatasetUtils {
     public static Range findDomainBounds(XYDataset dataset,
             boolean includeInterval) {
 
-<span class="nc" id="L655">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L655">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
 
         Range result;
         // if the dataset implements DomainInfo, life is easier
-<span class="nc bnc" id="L659" title="All 2 branches missed.">        if (dataset instanceof DomainInfo) {</span>
-<span class="nc" id="L660">            DomainInfo info = (DomainInfo) dataset;</span>
-<span class="nc" id="L661">            result = info.getDomainBounds(includeInterval);</span>
-<span class="nc" id="L662">        }</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">        if (dataset instanceof DomainInfo) {</span>
+<span class="fc" id="L660">            DomainInfo info = (DomainInfo) dataset;</span>
+<span class="fc" id="L661">            result = info.getDomainBounds(includeInterval);</span>
+<span class="fc" id="L662">        }</span>
         else {
-<span class="nc" id="L664">            result = iterateDomainBounds(dataset, includeInterval);</span>
+<span class="fc" id="L664">            result = iterateDomainBounds(dataset, includeInterval);</span>
         }
-<span class="nc" id="L666">        return result;</span>
+<span class="fc" id="L666">        return result;</span>
 
     }
 
@@ -685,17 +685,17 @@ public final class DatasetUtils {
     public static Range findDomainBounds(XYDataset dataset,
             List visibleSeriesKeys, boolean includeInterval) {
         
-<span class="nc" id="L688">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L688">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Range result;
-<span class="nc bnc" id="L690" title="All 2 branches missed.">        if (dataset instanceof XYDomainInfo) {</span>
-<span class="nc" id="L691">            XYDomainInfo info = (XYDomainInfo) dataset;</span>
-<span class="nc" id="L692">            result = info.getDomainBounds(visibleSeriesKeys, includeInterval);</span>
-<span class="nc" id="L693">        }</span>
+<span class="fc bfc" id="L690" title="All 2 branches covered.">        if (dataset instanceof XYDomainInfo) {</span>
+<span class="fc" id="L691">            XYDomainInfo info = (XYDomainInfo) dataset;</span>
+<span class="fc" id="L692">            result = info.getDomainBounds(visibleSeriesKeys, includeInterval);</span>
+<span class="fc" id="L693">        }</span>
         else {
-<span class="nc" id="L695">            result = iterateToFindDomainBounds(dataset, visibleSeriesKeys,</span>
+<span class="fc" id="L695">            result = iterateToFindDomainBounds(dataset, visibleSeriesKeys,</span>
                     includeInterval);
         }
-<span class="nc" id="L698">        return result;</span>
+<span class="fc" id="L698">        return result;</span>
     }
 
     /**
@@ -709,7 +709,7 @@ public final class DatasetUtils {
      * @return The range (possibly {@code null}).
      */
     public static Range iterateDomainBounds(XYDataset dataset) {
-<span class="nc" id="L712">        return iterateDomainBounds(dataset, true);</span>
+<span class="fc" id="L712">        return iterateDomainBounds(dataset, true);</span>
     }
 
     /**
@@ -725,52 +725,52 @@ public final class DatasetUtils {
      */
     public static Range iterateDomainBounds(XYDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L728">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L729">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L730">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L731">        int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc" id="L728">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L729">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L730">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L731">        int seriesCount = dataset.getSeriesCount();</span>
         double lvalue, uvalue;
-<span class="nc bnc" id="L733" title="All 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
-<span class="nc" id="L734">            IntervalXYDataset intervalXYData = (IntervalXYDataset) dataset;</span>
-<span class="nc bnc" id="L735" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L736">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L737" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L738">                    double value = intervalXYData.getXValue(series, item);</span>
-<span class="nc" id="L739">                    lvalue = intervalXYData.getStartXValue(series, item);</span>
-<span class="nc" id="L740">                    uvalue = intervalXYData.getEndXValue(series, item);</span>
-<span class="nc bnc" id="L741" title="All 2 branches missed.">                    if (!Double.isNaN(value)) {</span>
-<span class="nc" id="L742">                        minimum = Math.min(minimum, value);</span>
-<span class="nc" id="L743">                        maximum = Math.max(maximum, value);</span>
+<span class="fc bfc" id="L733" title="All 4 branches covered.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
+<span class="fc" id="L734">            IntervalXYDataset intervalXYData = (IntervalXYDataset) dataset;</span>
+<span class="fc bfc" id="L735" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L736">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L737" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L738">                    double value = intervalXYData.getXValue(series, item);</span>
+<span class="fc" id="L739">                    lvalue = intervalXYData.getStartXValue(series, item);</span>
+<span class="fc" id="L740">                    uvalue = intervalXYData.getEndXValue(series, item);</span>
+<span class="fc bfc" id="L741" title="All 2 branches covered.">                    if (!Double.isNaN(value)) {</span>
+<span class="fc" id="L742">                        minimum = Math.min(minimum, value);</span>
+<span class="fc" id="L743">                        maximum = Math.max(maximum, value);</span>
                     }
-<span class="nc bnc" id="L745" title="All 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L746">                        minimum = Math.min(minimum, lvalue);</span>
-<span class="nc" id="L747">                        maximum = Math.max(maximum, lvalue);</span>
+<span class="fc bfc" id="L745" title="All 2 branches covered.">                    if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L746">                        minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L747">                        maximum = Math.max(maximum, lvalue);</span>
                     }
-<span class="nc bnc" id="L749" title="All 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L750">                        minimum = Math.min(minimum, uvalue);</span>
-<span class="nc" id="L751">                        maximum = Math.max(maximum, uvalue);</span>
+<span class="fc bfc" id="L749" title="All 2 branches covered.">                    if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L750">                        minimum = Math.min(minimum, uvalue);</span>
+<span class="fc" id="L751">                        maximum = Math.max(maximum, uvalue);</span>
                     }
                 }
             }
-<span class="nc" id="L755">        }</span>
+<span class="fc" id="L755">        }</span>
         else {
-<span class="nc bnc" id="L757" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L758">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L759" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L760">                    lvalue = dataset.getXValue(series, item);</span>
-<span class="nc" id="L761">                    uvalue = lvalue;</span>
-<span class="nc bnc" id="L762" title="All 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L763">                        minimum = Math.min(minimum, lvalue);</span>
-<span class="nc" id="L764">                        maximum = Math.max(maximum, uvalue);</span>
+<span class="fc bfc" id="L757" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L758">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L759" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L760">                    lvalue = dataset.getXValue(series, item);</span>
+<span class="fc" id="L761">                    uvalue = lvalue;</span>
+<span class="fc bfc" id="L762" title="All 2 branches covered.">                    if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L763">                        minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L764">                        maximum = Math.max(maximum, uvalue);</span>
                     }
                 }
             }
         }
-<span class="nc bnc" id="L769" title="All 2 branches missed.">        if (minimum &gt; maximum) {</span>
-<span class="nc" id="L770">            return null;</span>
+<span class="fc bfc" id="L769" title="All 2 branches covered.">        if (minimum &gt; maximum) {</span>
+<span class="fc" id="L770">            return null;</span>
         }
         else {
-<span class="nc" id="L773">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L773">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -782,7 +782,7 @@ public final class DatasetUtils {
      * @return The range (possibly {@code null}).
      */
     public static Range findRangeBounds(CategoryDataset dataset) {
-<span class="nc" id="L785">        return findRangeBounds(dataset, true);</span>
+<span class="fc" id="L785">        return findRangeBounds(dataset, true);</span>
     }
 
     /**
@@ -796,16 +796,16 @@ public final class DatasetUtils {
      */
     public static Range findRangeBounds(CategoryDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L799">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L799">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Range result;
-<span class="nc bnc" id="L801" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
+<span class="pc bpc" id="L801" title="1 of 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
 <span class="nc" id="L802">            RangeInfo info = (RangeInfo) dataset;</span>
 <span class="nc" id="L803">            result = info.getRangeBounds(includeInterval);</span>
 <span class="nc" id="L804">        }</span>
         else {
-<span class="nc" id="L806">            result = iterateRangeBounds(dataset, includeInterval);</span>
+<span class="fc" id="L806">            result = iterateRangeBounds(dataset, includeInterval);</span>
         }
-<span class="nc" id="L808">        return result;</span>
+<span class="fc" id="L808">        return result;</span>
     }
 
     /**
@@ -824,17 +824,17 @@ public final class DatasetUtils {
      */
     public static Range findRangeBounds(CategoryDataset dataset,
             List visibleSeriesKeys, boolean includeInterval) {
-<span class="nc" id="L827">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L827">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Range result;
-<span class="nc bnc" id="L829" title="All 2 branches missed.">        if (dataset instanceof CategoryRangeInfo) {</span>
+<span class="pc bpc" id="L829" title="1 of 2 branches missed.">        if (dataset instanceof CategoryRangeInfo) {</span>
 <span class="nc" id="L830">            CategoryRangeInfo info = (CategoryRangeInfo) dataset;</span>
 <span class="nc" id="L831">            result = info.getRangeBounds(visibleSeriesKeys, includeInterval);</span>
 <span class="nc" id="L832">        }</span>
         else {
-<span class="nc" id="L834">            result = iterateToFindRangeBounds(dataset, visibleSeriesKeys,</span>
+<span class="fc" id="L834">            result = iterateToFindRangeBounds(dataset, visibleSeriesKeys,</span>
                     includeInterval);
         }
-<span class="nc" id="L837">        return result;</span>
+<span class="fc" id="L837">        return result;</span>
     }
 
     /**
@@ -846,7 +846,7 @@ public final class DatasetUtils {
      * @return The range (possibly {@code null}).
      */
     public static Range findRangeBounds(XYDataset dataset) {
-<span class="nc" id="L849">        return findRangeBounds(dataset, true);</span>
+<span class="fc" id="L849">        return findRangeBounds(dataset, true);</span>
     }
 
     /**
@@ -862,16 +862,16 @@ public final class DatasetUtils {
      */
     public static Range findRangeBounds(XYDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L865">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L865">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Range result;
-<span class="nc bnc" id="L867" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
-<span class="nc" id="L868">            RangeInfo info = (RangeInfo) dataset;</span>
-<span class="nc" id="L869">            result = info.getRangeBounds(includeInterval);</span>
-<span class="nc" id="L870">        }</span>
+<span class="fc bfc" id="L867" title="All 2 branches covered.">        if (dataset instanceof RangeInfo) {</span>
+<span class="fc" id="L868">            RangeInfo info = (RangeInfo) dataset;</span>
+<span class="fc" id="L869">            result = info.getRangeBounds(includeInterval);</span>
+<span class="fc" id="L870">        }</span>
         else {
-<span class="nc" id="L872">            result = iterateRangeBounds(dataset, includeInterval);</span>
+<span class="fc" id="L872">            result = iterateRangeBounds(dataset, includeInterval);</span>
         }
-<span class="nc" id="L874">        return result;</span>
+<span class="fc" id="L874">        return result;</span>
     }
 
     /**
@@ -892,18 +892,18 @@ public final class DatasetUtils {
      */
     public static Range findRangeBounds(XYDataset dataset,
             List visibleSeriesKeys, Range xRange, boolean includeInterval) {
-<span class="nc" id="L895">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L895">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Range result;
-<span class="nc bnc" id="L897" title="All 2 branches missed.">        if (dataset instanceof XYRangeInfo) {</span>
-<span class="nc" id="L898">            XYRangeInfo info = (XYRangeInfo) dataset;</span>
-<span class="nc" id="L899">            result = info.getRangeBounds(visibleSeriesKeys, xRange,</span>
+<span class="fc bfc" id="L897" title="All 2 branches covered.">        if (dataset instanceof XYRangeInfo) {</span>
+<span class="fc" id="L898">            XYRangeInfo info = (XYRangeInfo) dataset;</span>
+<span class="fc" id="L899">            result = info.getRangeBounds(visibleSeriesKeys, xRange,</span>
                     includeInterval);
-<span class="nc" id="L901">        }</span>
+<span class="fc" id="L901">        }</span>
         else {
-<span class="nc" id="L903">            result = iterateToFindRangeBounds(dataset, visibleSeriesKeys,</span>
+<span class="fc" id="L903">            result = iterateToFindRangeBounds(dataset, visibleSeriesKeys,</span>
                     xRange, includeInterval);
         }
-<span class="nc" id="L906">        return result;</span>
+<span class="fc" id="L906">        return result;</span>
     }
 
     /**
@@ -917,7 +917,7 @@ public final class DatasetUtils {
      * @since 1.0.10
      */
     public static Range iterateRangeBounds(CategoryDataset dataset) {
-<span class="nc" id="L920">        return iterateRangeBounds(dataset, true);</span>
+<span class="fc" id="L920">        return iterateRangeBounds(dataset, true);</span>
     }
 
     /**
@@ -934,59 +934,59 @@ public final class DatasetUtils {
      */
     public static Range iterateRangeBounds(CategoryDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L937">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L938">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L939">        int rowCount = dataset.getRowCount();</span>
-<span class="nc" id="L940">        int columnCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L941" title="All 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof IntervalCategoryDataset) {</span>
+<span class="fc" id="L937">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L938">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L939">        int rowCount = dataset.getRowCount();</span>
+<span class="fc" id="L940">        int columnCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L941" title="All 4 branches covered.">        if (includeInterval &amp;&amp; dataset instanceof IntervalCategoryDataset) {</span>
             // handle the special case where the dataset has y-intervals that
             // we want to measure
-<span class="nc" id="L944">            IntervalCategoryDataset icd = (IntervalCategoryDataset) dataset;</span>
+<span class="fc" id="L944">            IntervalCategoryDataset icd = (IntervalCategoryDataset) dataset;</span>
             Number value, lvalue, uvalue;
-<span class="nc bnc" id="L946" title="All 2 branches missed.">            for (int row = 0; row &lt; rowCount; row++) {</span>
-<span class="nc bnc" id="L947" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L948">                    value = icd.getValue(row, column);</span>
+<span class="fc bfc" id="L946" title="All 2 branches covered.">            for (int row = 0; row &lt; rowCount; row++) {</span>
+<span class="fc bfc" id="L947" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L948">                    value = icd.getValue(row, column);</span>
                     double v;
-<span class="nc bnc" id="L950" title="All 2 branches missed.">                    if ((value != null)</span>
-<span class="nc bnc" id="L951" title="All 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = value.doubleValue())) {</span>
-<span class="nc" id="L952">                        minimum = Math.min(v, minimum);</span>
-<span class="nc" id="L953">                        maximum = Math.max(v, maximum);</span>
+<span class="fc bfc" id="L950" title="All 2 branches covered.">                    if ((value != null)</span>
+<span class="pc bpc" id="L951" title="1 of 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = value.doubleValue())) {</span>
+<span class="fc" id="L952">                        minimum = Math.min(v, minimum);</span>
+<span class="fc" id="L953">                        maximum = Math.max(v, maximum);</span>
                     }
-<span class="nc" id="L955">                    lvalue = icd.getStartValue(row, column);</span>
-<span class="nc bnc" id="L956" title="All 2 branches missed.">                    if (lvalue != null</span>
-<span class="nc bnc" id="L957" title="All 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = lvalue.doubleValue())) {</span>
-<span class="nc" id="L958">                        minimum = Math.min(v, minimum);</span>
-<span class="nc" id="L959">                        maximum = Math.max(v, maximum);</span>
+<span class="fc" id="L955">                    lvalue = icd.getStartValue(row, column);</span>
+<span class="fc bfc" id="L956" title="All 2 branches covered.">                    if (lvalue != null</span>
+<span class="pc bpc" id="L957" title="1 of 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = lvalue.doubleValue())) {</span>
+<span class="fc" id="L958">                        minimum = Math.min(v, minimum);</span>
+<span class="fc" id="L959">                        maximum = Math.max(v, maximum);</span>
                     }
-<span class="nc" id="L961">                    uvalue = icd.getEndValue(row, column);</span>
-<span class="nc bnc" id="L962" title="All 2 branches missed.">                    if (uvalue != null</span>
-<span class="nc bnc" id="L963" title="All 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = uvalue.doubleValue())) {</span>
-<span class="nc" id="L964">                        minimum = Math.min(v, minimum);</span>
-<span class="nc" id="L965">                        maximum = Math.max(v, maximum);</span>
+<span class="fc" id="L961">                    uvalue = icd.getEndValue(row, column);</span>
+<span class="fc bfc" id="L962" title="All 2 branches covered.">                    if (uvalue != null</span>
+<span class="pc bpc" id="L963" title="1 of 2 branches missed.">                            &amp;&amp; !Double.isNaN(v = uvalue.doubleValue())) {</span>
+<span class="fc" id="L964">                        minimum = Math.min(v, minimum);</span>
+<span class="fc" id="L965">                        maximum = Math.max(v, maximum);</span>
                     }
                 }
             }
-<span class="nc" id="L969">        }</span>
+<span class="fc" id="L969">        }</span>
         else {
             // handle the standard case (plain CategoryDataset)
-<span class="nc bnc" id="L972" title="All 2 branches missed.">            for (int row = 0; row &lt; rowCount; row++) {</span>
-<span class="nc bnc" id="L973" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L974">                    Number value = dataset.getValue(row, column);</span>
-<span class="nc bnc" id="L975" title="All 2 branches missed.">                    if (value != null) {</span>
-<span class="nc" id="L976">                        double v = value.doubleValue();</span>
-<span class="nc bnc" id="L977" title="All 2 branches missed.">                        if (!Double.isNaN(v)) {</span>
-<span class="nc" id="L978">                            minimum = Math.min(minimum, v);</span>
-<span class="nc" id="L979">                            maximum = Math.max(maximum, v);</span>
+<span class="fc bfc" id="L972" title="All 2 branches covered.">            for (int row = 0; row &lt; rowCount; row++) {</span>
+<span class="fc bfc" id="L973" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L974">                    Number value = dataset.getValue(row, column);</span>
+<span class="fc bfc" id="L975" title="All 2 branches covered.">                    if (value != null) {</span>
+<span class="fc" id="L976">                        double v = value.doubleValue();</span>
+<span class="fc bfc" id="L977" title="All 2 branches covered.">                        if (!Double.isNaN(v)) {</span>
+<span class="fc" id="L978">                            minimum = Math.min(minimum, v);</span>
+<span class="fc" id="L979">                            maximum = Math.max(maximum, v);</span>
                         }
                     }
                 }
             }
         }
-<span class="nc bnc" id="L985" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L986">            return null;</span>
+<span class="fc bfc" id="L985" title="All 2 branches covered.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L986">            return null;</span>
         }
         else {
-<span class="nc" id="L989">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L989">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1006,141 +1006,141 @@ public final class DatasetUtils {
     public static Range iterateToFindRangeBounds(CategoryDataset dataset,
             List visibleSeriesKeys, boolean includeInterval) {
 
-<span class="nc" id="L1009">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1010">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
+<span class="fc" id="L1009">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1010">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
 
-<span class="nc" id="L1012">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1013">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L1014">        int columnCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L1015" title="All 4 branches missed.">        if (includeInterval</span>
+<span class="fc" id="L1012">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1013">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1014">        int columnCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L1015" title="All 4 branches covered.">        if (includeInterval</span>
                 &amp;&amp; dataset instanceof BoxAndWhiskerCategoryDataset) {
             // handle special case of BoxAndWhiskerDataset
-<span class="nc" id="L1018">            BoxAndWhiskerCategoryDataset bx</span>
+<span class="fc" id="L1018">            BoxAndWhiskerCategoryDataset bx</span>
                     = (BoxAndWhiskerCategoryDataset) dataset;
-<span class="nc" id="L1020">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1021" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1022">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1023">                int series = dataset.getRowIndex(seriesKey);</span>
-<span class="nc" id="L1024">                int itemCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L1025" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1026">                    Number lvalue = bx.getMinRegularValue(series, item);</span>
-<span class="nc bnc" id="L1027" title="All 2 branches missed.">                    if (lvalue == null) {</span>
-<span class="nc" id="L1028">                        lvalue = bx.getValue(series, item);</span>
+<span class="fc" id="L1020">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1021" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1022">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1023">                int series = dataset.getRowIndex(seriesKey);</span>
+<span class="fc" id="L1024">                int itemCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L1025" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1026">                    Number lvalue = bx.getMinRegularValue(series, item);</span>
+<span class="fc bfc" id="L1027" title="All 2 branches covered.">                    if (lvalue == null) {</span>
+<span class="fc" id="L1028">                        lvalue = bx.getValue(series, item);</span>
                     }
-<span class="nc" id="L1030">                    Number uvalue = bx.getMaxRegularValue(series, item);</span>
-<span class="nc bnc" id="L1031" title="All 2 branches missed.">                    if (uvalue == null) {</span>
-<span class="nc" id="L1032">                        uvalue = bx.getValue(series, item);</span>
+<span class="fc" id="L1030">                    Number uvalue = bx.getMaxRegularValue(series, item);</span>
+<span class="fc bfc" id="L1031" title="All 2 branches covered.">                    if (uvalue == null) {</span>
+<span class="fc" id="L1032">                        uvalue = bx.getValue(series, item);</span>
                     }
-<span class="nc bnc" id="L1034" title="All 2 branches missed.">                    if (lvalue != null) {</span>
-<span class="nc" id="L1035">                        minimum = Math.min(minimum, lvalue.doubleValue());</span>
+<span class="pc bpc" id="L1034" title="1 of 2 branches missed.">                    if (lvalue != null) {</span>
+<span class="fc" id="L1035">                        minimum = Math.min(minimum, lvalue.doubleValue());</span>
                     }
-<span class="nc bnc" id="L1037" title="All 2 branches missed.">                    if (uvalue != null) {</span>
-<span class="nc" id="L1038">                        maximum = Math.max(maximum, uvalue.doubleValue());</span>
+<span class="pc bpc" id="L1037" title="1 of 2 branches missed.">                    if (uvalue != null) {</span>
+<span class="fc" id="L1038">                        maximum = Math.max(maximum, uvalue.doubleValue());</span>
                     }
                 }
-<span class="nc" id="L1041">            }</span>
-<span class="nc" id="L1042">        }</span>
-<span class="nc bnc" id="L1043" title="All 4 branches missed.">        else if (includeInterval</span>
+<span class="fc" id="L1041">            }</span>
+<span class="fc" id="L1042">        }</span>
+<span class="fc bfc" id="L1043" title="All 4 branches covered.">        else if (includeInterval</span>
                 &amp;&amp; dataset instanceof IntervalCategoryDataset) {
             // handle the special case where the dataset has y-intervals that
             // we want to measure
-<span class="nc" id="L1047">            IntervalCategoryDataset icd = (IntervalCategoryDataset) dataset;</span>
+<span class="fc" id="L1047">            IntervalCategoryDataset icd = (IntervalCategoryDataset) dataset;</span>
             Number lvalue, uvalue;
-<span class="nc" id="L1049">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1050" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1051">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1052">                int series = dataset.getRowIndex(seriesKey);</span>
-<span class="nc bnc" id="L1053" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L1054">                    lvalue = icd.getStartValue(series, column);</span>
-<span class="nc" id="L1055">                    uvalue = icd.getEndValue(series, column);</span>
-<span class="nc bnc" id="L1056" title="All 4 branches missed.">                    if (lvalue != null &amp;&amp; !Double.isNaN(lvalue.doubleValue())) {</span>
-<span class="nc" id="L1057">                        minimum = Math.min(minimum, lvalue.doubleValue());</span>
+<span class="fc" id="L1049">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1050" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1051">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1052">                int series = dataset.getRowIndex(seriesKey);</span>
+<span class="fc bfc" id="L1053" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L1054">                    lvalue = icd.getStartValue(series, column);</span>
+<span class="fc" id="L1055">                    uvalue = icd.getEndValue(series, column);</span>
+<span class="pc bpc" id="L1056" title="2 of 4 branches missed.">                    if (lvalue != null &amp;&amp; !Double.isNaN(lvalue.doubleValue())) {</span>
+<span class="fc" id="L1057">                        minimum = Math.min(minimum, lvalue.doubleValue());</span>
                     }
-<span class="nc bnc" id="L1059" title="All 4 branches missed.">                    if (uvalue != null &amp;&amp; !Double.isNaN(uvalue.doubleValue())) {</span>
-<span class="nc" id="L1060">                        maximum = Math.max(maximum, uvalue.doubleValue());</span>
+<span class="pc bpc" id="L1059" title="2 of 4 branches missed.">                    if (uvalue != null &amp;&amp; !Double.isNaN(uvalue.doubleValue())) {</span>
+<span class="fc" id="L1060">                        maximum = Math.max(maximum, uvalue.doubleValue());</span>
                     }
                 }
-<span class="nc" id="L1063">            }</span>
-<span class="nc" id="L1064">        }</span>
-<span class="nc bnc" id="L1065" title="All 4 branches missed.">        else if (includeInterval</span>
+<span class="fc" id="L1063">            }</span>
+<span class="fc" id="L1064">        }</span>
+<span class="fc bfc" id="L1065" title="All 4 branches covered.">        else if (includeInterval</span>
                 &amp;&amp; dataset instanceof MultiValueCategoryDataset) {
             // handle the special case where the dataset has y-intervals that
             // we want to measure
-<span class="nc" id="L1069">            MultiValueCategoryDataset mvcd</span>
+<span class="fc" id="L1069">            MultiValueCategoryDataset mvcd</span>
                     = (MultiValueCategoryDataset) dataset;
-<span class="nc" id="L1071">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1072" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1073">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1074">                int series = dataset.getRowIndex(seriesKey);</span>
-<span class="nc bnc" id="L1075" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L1076">                    List values = mvcd.getValues(series, column);</span>
-<span class="nc" id="L1077">                    Iterator valueIterator = values.iterator();</span>
-<span class="nc bnc" id="L1078" title="All 2 branches missed.">                    while (valueIterator.hasNext()) {</span>
-<span class="nc" id="L1079">                        Object o = valueIterator.next();</span>
-<span class="nc bnc" id="L1080" title="All 2 branches missed.">                        if (o instanceof Number){</span>
-<span class="nc" id="L1081">                            double v = ((Number) o).doubleValue();</span>
-<span class="nc bnc" id="L1082" title="All 2 branches missed.">                            if (!Double.isNaN(v)){</span>
-<span class="nc" id="L1083">                                minimum = Math.min(minimum, v);</span>
-<span class="nc" id="L1084">                                maximum = Math.max(maximum, v);</span>
+<span class="fc" id="L1071">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1072" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1073">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1074">                int series = dataset.getRowIndex(seriesKey);</span>
+<span class="fc bfc" id="L1075" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L1076">                    List values = mvcd.getValues(series, column);</span>
+<span class="fc" id="L1077">                    Iterator valueIterator = values.iterator();</span>
+<span class="fc bfc" id="L1078" title="All 2 branches covered.">                    while (valueIterator.hasNext()) {</span>
+<span class="fc" id="L1079">                        Object o = valueIterator.next();</span>
+<span class="pc bpc" id="L1080" title="1 of 2 branches missed.">                        if (o instanceof Number){</span>
+<span class="fc" id="L1081">                            double v = ((Number) o).doubleValue();</span>
+<span class="pc bpc" id="L1082" title="1 of 2 branches missed.">                            if (!Double.isNaN(v)){</span>
+<span class="fc" id="L1083">                                minimum = Math.min(minimum, v);</span>
+<span class="fc" id="L1084">                                maximum = Math.max(maximum, v);</span>
                             }
                         }
-<span class="nc" id="L1087">                    }</span>
+<span class="fc" id="L1087">                    }</span>
                }
-<span class="nc" id="L1089">            }</span>
-<span class="nc" id="L1090">        }</span>
-<span class="nc bnc" id="L1091" title="All 4 branches missed.">        else if (includeInterval </span>
+<span class="fc" id="L1089">            }</span>
+<span class="fc" id="L1090">        }</span>
+<span class="fc bfc" id="L1091" title="All 4 branches covered.">        else if (includeInterval </span>
                 &amp;&amp; dataset instanceof StatisticalCategoryDataset) {
             // handle the special case where the dataset has y-intervals that
             // we want to measure
-<span class="nc" id="L1095">            StatisticalCategoryDataset scd</span>
+<span class="fc" id="L1095">            StatisticalCategoryDataset scd</span>
                     = (StatisticalCategoryDataset) dataset;
-<span class="nc" id="L1097">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1098" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1099">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1100">                int series = dataset.getRowIndex(seriesKey);</span>
-<span class="nc bnc" id="L1101" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L1102">                    Number meanN = scd.getMeanValue(series, column);</span>
-<span class="nc bnc" id="L1103" title="All 2 branches missed.">                    if (meanN != null) {</span>
-<span class="nc" id="L1104">                        double std = 0.0;</span>
-<span class="nc" id="L1105">                        Number stdN = scd.getStdDevValue(series, column);</span>
-<span class="nc bnc" id="L1106" title="All 2 branches missed.">                        if (stdN != null) {</span>
-<span class="nc" id="L1107">                            std = stdN.doubleValue();</span>
-<span class="nc bnc" id="L1108" title="All 2 branches missed.">                            if (Double.isNaN(std)) {</span>
+<span class="fc" id="L1097">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1098" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1099">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1100">                int series = dataset.getRowIndex(seriesKey);</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L1102">                    Number meanN = scd.getMeanValue(series, column);</span>
+<span class="fc bfc" id="L1103" title="All 2 branches covered.">                    if (meanN != null) {</span>
+<span class="fc" id="L1104">                        double std = 0.0;</span>
+<span class="fc" id="L1105">                        Number stdN = scd.getStdDevValue(series, column);</span>
+<span class="fc bfc" id="L1106" title="All 2 branches covered.">                        if (stdN != null) {</span>
+<span class="fc" id="L1107">                            std = stdN.doubleValue();</span>
+<span class="pc bpc" id="L1108" title="1 of 2 branches missed.">                            if (Double.isNaN(std)) {</span>
 <span class="nc" id="L1109">                                std = 0.0;</span>
                             }
                         }
-<span class="nc" id="L1112">                        double mean = meanN.doubleValue();</span>
-<span class="nc bnc" id="L1113" title="All 2 branches missed.">                        if (!Double.isNaN(mean)) {</span>
-<span class="nc" id="L1114">                            minimum = Math.min(minimum, mean - std);</span>
-<span class="nc" id="L1115">                            maximum = Math.max(maximum, mean + std);</span>
+<span class="fc" id="L1112">                        double mean = meanN.doubleValue();</span>
+<span class="pc bpc" id="L1113" title="1 of 2 branches missed.">                        if (!Double.isNaN(mean)) {</span>
+<span class="fc" id="L1114">                            minimum = Math.min(minimum, mean - std);</span>
+<span class="fc" id="L1115">                            maximum = Math.max(maximum, mean + std);</span>
                         }
                     }
                 }
-<span class="nc" id="L1119">            }</span>
-<span class="nc" id="L1120">        }</span>
+<span class="fc" id="L1119">            }</span>
+<span class="fc" id="L1120">        }</span>
         else {
             // handle the standard case (plain CategoryDataset)
-<span class="nc" id="L1123">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1124" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1125">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1126">                int series = dataset.getRowIndex(seriesKey);</span>
-<span class="nc bnc" id="L1127" title="All 2 branches missed.">                for (int column = 0; column &lt; columnCount; column++) {</span>
-<span class="nc" id="L1128">                    Number value = dataset.getValue(series, column);</span>
-<span class="nc bnc" id="L1129" title="All 2 branches missed.">                    if (value != null) {</span>
-<span class="nc" id="L1130">                        double v = value.doubleValue();</span>
-<span class="nc bnc" id="L1131" title="All 2 branches missed.">                        if (!Double.isNaN(v)) {</span>
-<span class="nc" id="L1132">                            minimum = Math.min(minimum, v);</span>
-<span class="nc" id="L1133">                            maximum = Math.max(maximum, v);</span>
+<span class="fc" id="L1123">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1124" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1125">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1126">                int series = dataset.getRowIndex(seriesKey);</span>
+<span class="fc bfc" id="L1127" title="All 2 branches covered.">                for (int column = 0; column &lt; columnCount; column++) {</span>
+<span class="fc" id="L1128">                    Number value = dataset.getValue(series, column);</span>
+<span class="fc bfc" id="L1129" title="All 2 branches covered.">                    if (value != null) {</span>
+<span class="fc" id="L1130">                        double v = value.doubleValue();</span>
+<span class="pc bpc" id="L1131" title="1 of 2 branches missed.">                        if (!Double.isNaN(v)) {</span>
+<span class="fc" id="L1132">                            minimum = Math.min(minimum, v);</span>
+<span class="fc" id="L1133">                            maximum = Math.max(maximum, v);</span>
                         }
                     }
                 }
-<span class="nc" id="L1137">            }</span>
+<span class="fc" id="L1137">            }</span>
         }
-<span class="nc bnc" id="L1139" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L1140">            return null;</span>
+<span class="fc bfc" id="L1139" title="All 2 branches covered.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L1140">            return null;</span>
         }
         else {
-<span class="nc" id="L1143">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L1143">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1155,7 +1155,7 @@ public final class DatasetUtils {
      * @since 1.0.10
      */
     public static Range iterateRangeBounds(XYDataset dataset) {
-<span class="nc" id="L1158">        return iterateRangeBounds(dataset, true);</span>
+<span class="fc" id="L1158">        return iterateRangeBounds(dataset, true);</span>
     }
 
     /**
@@ -1173,70 +1173,70 @@ public final class DatasetUtils {
      */
     public static Range iterateRangeBounds(XYDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L1176">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1177">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L1178">        int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc" id="L1176">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1177">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1178">        int seriesCount = dataset.getSeriesCount();</span>
 
         // handle three cases by dataset type
-<span class="nc bnc" id="L1181" title="All 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
+<span class="fc bfc" id="L1181" title="All 4 branches covered.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
             // handle special case of IntervalXYDataset
-<span class="nc" id="L1183">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
-<span class="nc bnc" id="L1184" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1185">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1186" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1187">                    double value = ixyd.getYValue(series, item);</span>
-<span class="nc" id="L1188">                    double lvalue = ixyd.getStartYValue(series, item);</span>
-<span class="nc" id="L1189">                    double uvalue = ixyd.getEndYValue(series, item);</span>
-<span class="nc bnc" id="L1190" title="All 2 branches missed.">                    if (!Double.isNaN(value)) {</span>
-<span class="nc" id="L1191">                        minimum = Math.min(minimum, value);</span>
-<span class="nc" id="L1192">                        maximum = Math.max(maximum, value);</span>
+<span class="fc" id="L1183">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
+<span class="fc bfc" id="L1184" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1185">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1186" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1187">                    double value = ixyd.getYValue(series, item);</span>
+<span class="fc" id="L1188">                    double lvalue = ixyd.getStartYValue(series, item);</span>
+<span class="fc" id="L1189">                    double uvalue = ixyd.getEndYValue(series, item);</span>
+<span class="fc bfc" id="L1190" title="All 2 branches covered.">                    if (!Double.isNaN(value)) {</span>
+<span class="fc" id="L1191">                        minimum = Math.min(minimum, value);</span>
+<span class="fc" id="L1192">                        maximum = Math.max(maximum, value);</span>
                     }
-<span class="nc bnc" id="L1194" title="All 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L1195">                        minimum = Math.min(minimum, lvalue);</span>
-<span class="nc" id="L1196">                        maximum = Math.max(maximum, lvalue);</span>
+<span class="fc bfc" id="L1194" title="All 2 branches covered.">                    if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L1195">                        minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L1196">                        maximum = Math.max(maximum, lvalue);</span>
                     }
-<span class="nc bnc" id="L1198" title="All 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L1199">                        minimum = Math.min(minimum, uvalue);</span>
-<span class="nc" id="L1200">                        maximum = Math.max(maximum, uvalue);</span>
+<span class="fc bfc" id="L1198" title="All 2 branches covered.">                    if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L1199">                        minimum = Math.min(minimum, uvalue);</span>
+<span class="fc" id="L1200">                        maximum = Math.max(maximum, uvalue);</span>
                     }
                 }
             }
-<span class="nc" id="L1204">        }</span>
-<span class="nc bnc" id="L1205" title="All 4 branches missed.">        else if (includeInterval &amp;&amp; dataset instanceof OHLCDataset) {</span>
+<span class="fc" id="L1204">        }</span>
+<span class="fc bfc" id="L1205" title="All 4 branches covered.">        else if (includeInterval &amp;&amp; dataset instanceof OHLCDataset) {</span>
             // handle special case of OHLCDataset
-<span class="nc" id="L1207">            OHLCDataset ohlc = (OHLCDataset) dataset;</span>
-<span class="nc bnc" id="L1208" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1209">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1210" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1211">                    double lvalue = ohlc.getLowValue(series, item);</span>
-<span class="nc" id="L1212">                    double uvalue = ohlc.getHighValue(series, item);</span>
-<span class="nc bnc" id="L1213" title="All 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L1214">                        minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L1207">            OHLCDataset ohlc = (OHLCDataset) dataset;</span>
+<span class="fc bfc" id="L1208" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1209">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1210" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1211">                    double lvalue = ohlc.getLowValue(series, item);</span>
+<span class="fc" id="L1212">                    double uvalue = ohlc.getHighValue(series, item);</span>
+<span class="pc bpc" id="L1213" title="1 of 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L1214">                        minimum = Math.min(minimum, lvalue);</span>
                     }
-<span class="nc bnc" id="L1216" title="All 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L1217">                        maximum = Math.max(maximum, uvalue);</span>
+<span class="pc bpc" id="L1216" title="1 of 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L1217">                        maximum = Math.max(maximum, uvalue);</span>
                     }
                 }
             }
-<span class="nc" id="L1221">        }</span>
+<span class="fc" id="L1221">        }</span>
         else {
             // standard case - plain XYDataset
-<span class="nc bnc" id="L1224" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1225">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1226" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1227">                    double value = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L1228" title="All 2 branches missed.">                    if (!Double.isNaN(value)) {</span>
-<span class="nc" id="L1229">                        minimum = Math.min(minimum, value);</span>
-<span class="nc" id="L1230">                        maximum = Math.max(maximum, value);</span>
+<span class="fc bfc" id="L1224" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1225">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1226" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1227">                    double value = dataset.getYValue(series, item);</span>
+<span class="pc bpc" id="L1228" title="1 of 2 branches missed.">                    if (!Double.isNaN(value)) {</span>
+<span class="fc" id="L1229">                        minimum = Math.min(minimum, value);</span>
+<span class="fc" id="L1230">                        maximum = Math.max(maximum, value);</span>
                     }
                 }
             }
         }
-<span class="nc bnc" id="L1235" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L1236">            return null;</span>
+<span class="fc bfc" id="L1235" title="All 2 branches covered.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L1236">            return null;</span>
         }
         else {
-<span class="nc" id="L1239">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L1239">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1250,7 +1250,7 @@ public final class DatasetUtils {
      * @return The range (possibly {@code null}).
      */
     public static Range findZBounds(XYZDataset dataset) {
-<span class="nc" id="L1253">        return findZBounds(dataset, true);</span>
+<span class="fc" id="L1253">        return findZBounds(dataset, true);</span>
     }
 
     /**
@@ -1267,9 +1267,9 @@ public final class DatasetUtils {
      */
     public static Range findZBounds(XYZDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L1270">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1271">        Range result = iterateZBounds(dataset, includeInterval);</span>
-<span class="nc" id="L1272">        return result;</span>
+<span class="fc" id="L1270">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1271">        Range result = iterateZBounds(dataset, includeInterval);</span>
+<span class="fc" id="L1272">        return result;</span>
     }
 
     /**
@@ -1318,26 +1318,26 @@ public final class DatasetUtils {
      */
     public static Range iterateZBounds(XYZDataset dataset,
             boolean includeInterval) {
-<span class="nc" id="L1321">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1322">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L1323">        int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc" id="L1321">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1322">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1323">        int seriesCount = dataset.getSeriesCount();</span>
 
-<span class="nc bnc" id="L1325" title="All 2 branches missed.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1326">            int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1327" title="All 2 branches missed.">            for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1328">                double value = dataset.getZValue(series, item);</span>
-<span class="nc bnc" id="L1329" title="All 2 branches missed.">                if (!Double.isNaN(value)) {</span>
-<span class="nc" id="L1330">                    minimum = Math.min(minimum, value);</span>
-<span class="nc" id="L1331">                    maximum = Math.max(maximum, value);</span>
+<span class="fc bfc" id="L1325" title="All 2 branches covered.">        for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1326">            int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1327" title="All 2 branches covered.">            for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1328">                double value = dataset.getZValue(series, item);</span>
+<span class="pc bpc" id="L1329" title="1 of 2 branches missed.">                if (!Double.isNaN(value)) {</span>
+<span class="fc" id="L1330">                    minimum = Math.min(minimum, value);</span>
+<span class="fc" id="L1331">                    maximum = Math.max(maximum, value);</span>
                 }
             }
         }
 
-<span class="nc bnc" id="L1336" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="pc bpc" id="L1336" title="1 of 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
 <span class="nc" id="L1337">            return null;</span>
         }
         else {
-<span class="nc" id="L1340">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L1340">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1358,57 +1358,57 @@ public final class DatasetUtils {
      */
     public static Range iterateToFindDomainBounds(XYDataset dataset,
             List visibleSeriesKeys, boolean includeInterval) {
-<span class="nc" id="L1361">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1362">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
+<span class="fc" id="L1361">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1362">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
 
-<span class="nc" id="L1364">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1365">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1364">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1365">        double maximum = Double.NEGATIVE_INFINITY;</span>
 
-<span class="nc bnc" id="L1367" title="All 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
+<span class="pc bpc" id="L1367" title="1 of 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
             // handle special case of IntervalXYDataset
-<span class="nc" id="L1369">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
-<span class="nc" id="L1370">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1371" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1372">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1373">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1374">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1375" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1376">                    double xvalue = ixyd.getXValue(series, item);</span>
-<span class="nc" id="L1377">                    double lvalue = ixyd.getStartXValue(series, item);</span>
-<span class="nc" id="L1378">                    double uvalue = ixyd.getEndXValue(series, item);</span>
-<span class="nc bnc" id="L1379" title="All 2 branches missed.">                    if (!Double.isNaN(xvalue)) {</span>
-<span class="nc" id="L1380">                        minimum = Math.min(minimum, xvalue);</span>
-<span class="nc" id="L1381">                        maximum = Math.max(maximum, xvalue);</span>
+<span class="fc" id="L1369">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
+<span class="fc" id="L1370">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1371" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1372">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1373">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1374">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1375" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1376">                    double xvalue = ixyd.getXValue(series, item);</span>
+<span class="fc" id="L1377">                    double lvalue = ixyd.getStartXValue(series, item);</span>
+<span class="fc" id="L1378">                    double uvalue = ixyd.getEndXValue(series, item);</span>
+<span class="pc bpc" id="L1379" title="1 of 2 branches missed.">                    if (!Double.isNaN(xvalue)) {</span>
+<span class="fc" id="L1380">                        minimum = Math.min(minimum, xvalue);</span>
+<span class="fc" id="L1381">                        maximum = Math.max(maximum, xvalue);</span>
                     }
-<span class="nc bnc" id="L1383" title="All 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L1384">                        minimum = Math.min(minimum, lvalue);</span>
+<span class="pc bpc" id="L1383" title="1 of 2 branches missed.">                    if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L1384">                        minimum = Math.min(minimum, lvalue);</span>
                     }
-<span class="nc bnc" id="L1386" title="All 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L1387">                        maximum = Math.max(maximum, uvalue);</span>
+<span class="pc bpc" id="L1386" title="1 of 2 branches missed.">                    if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L1387">                        maximum = Math.max(maximum, uvalue);</span>
                     }
                 }
-<span class="nc" id="L1390">            }</span>
-<span class="nc" id="L1391">        } else {</span>
+<span class="fc" id="L1390">            }</span>
+<span class="fc" id="L1391">        } else {</span>
             // standard case - plain XYDataset
-<span class="nc" id="L1393">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1394" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1395">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1396">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1397">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1398" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1399">                    double x = dataset.getXValue(series, item);</span>
-<span class="nc bnc" id="L1400" title="All 2 branches missed.">                    if (!Double.isNaN(x)) {</span>
-<span class="nc" id="L1401">                        minimum = Math.min(minimum, x);</span>
-<span class="nc" id="L1402">                        maximum = Math.max(maximum, x);</span>
+<span class="fc" id="L1393">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1394" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1395">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1396">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1397">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1398" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1399">                    double x = dataset.getXValue(series, item);</span>
+<span class="fc bfc" id="L1400" title="All 2 branches covered.">                    if (!Double.isNaN(x)) {</span>
+<span class="fc" id="L1401">                        minimum = Math.min(minimum, x);</span>
+<span class="fc" id="L1402">                        maximum = Math.max(maximum, x);</span>
                     }
                 }
-<span class="nc" id="L1405">            }</span>
+<span class="fc" id="L1405">            }</span>
         }
 
-<span class="nc bnc" id="L1408" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L1409">            return null;</span>
+<span class="fc bfc" id="L1408" title="All 2 branches covered.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L1409">            return null;</span>
         } else {
-<span class="nc" id="L1411">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L1411">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1432,110 +1432,110 @@ public final class DatasetUtils {
     public static Range iterateToFindRangeBounds(XYDataset dataset,
             List visibleSeriesKeys, Range xRange, boolean includeInterval) {
 
-<span class="nc" id="L1435">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1436">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
-<span class="nc" id="L1437">        Args.nullNotPermitted(xRange, &quot;xRange&quot;);</span>
+<span class="fc" id="L1435">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1436">        Args.nullNotPermitted(visibleSeriesKeys, &quot;visibleSeriesKeys&quot;);</span>
+<span class="fc" id="L1437">        Args.nullNotPermitted(xRange, &quot;xRange&quot;);</span>
 
-<span class="nc" id="L1439">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1440">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1439">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1440">        double maximum = Double.NEGATIVE_INFINITY;</span>
 
         // handle three cases by dataset type
-<span class="nc bnc" id="L1443" title="All 4 branches missed.">        if (includeInterval &amp;&amp; dataset instanceof OHLCDataset) {</span>
+<span class="fc bfc" id="L1443" title="All 4 branches covered.">        if (includeInterval &amp;&amp; dataset instanceof OHLCDataset) {</span>
             // handle special case of OHLCDataset
-<span class="nc" id="L1445">            OHLCDataset ohlc = (OHLCDataset) dataset;</span>
-<span class="nc" id="L1446">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1447" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1448">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1449">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1450">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1451" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1452">                    double x = ohlc.getXValue(series, item);</span>
-<span class="nc bnc" id="L1453" title="All 2 branches missed.">                    if (xRange.contains(x)) {</span>
-<span class="nc" id="L1454">                        double lvalue = ohlc.getLowValue(series, item);</span>
-<span class="nc" id="L1455">                        double uvalue = ohlc.getHighValue(series, item);</span>
-<span class="nc bnc" id="L1456" title="All 2 branches missed.">                        if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L1457">                            minimum = Math.min(minimum, lvalue);</span>
+<span class="fc" id="L1445">            OHLCDataset ohlc = (OHLCDataset) dataset;</span>
+<span class="fc" id="L1446">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1447" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1448">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1449">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1450">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1451" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1452">                    double x = ohlc.getXValue(series, item);</span>
+<span class="pc bpc" id="L1453" title="1 of 2 branches missed.">                    if (xRange.contains(x)) {</span>
+<span class="fc" id="L1454">                        double lvalue = ohlc.getLowValue(series, item);</span>
+<span class="fc" id="L1455">                        double uvalue = ohlc.getHighValue(series, item);</span>
+<span class="pc bpc" id="L1456" title="1 of 2 branches missed.">                        if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L1457">                            minimum = Math.min(minimum, lvalue);</span>
                         }
-<span class="nc bnc" id="L1459" title="All 2 branches missed.">                        if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L1460">                            maximum = Math.max(maximum, uvalue);</span>
+<span class="pc bpc" id="L1459" title="1 of 2 branches missed.">                        if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L1460">                            maximum = Math.max(maximum, uvalue);</span>
                         }
                     }
                 }
-<span class="nc" id="L1464">            }</span>
-<span class="nc" id="L1465">        }</span>
-<span class="nc bnc" id="L1466" title="All 4 branches missed.">        else if (includeInterval &amp;&amp; dataset instanceof BoxAndWhiskerXYDataset) {</span>
+<span class="fc" id="L1464">            }</span>
+<span class="fc" id="L1465">        }</span>
+<span class="fc bfc" id="L1466" title="All 4 branches covered.">        else if (includeInterval &amp;&amp; dataset instanceof BoxAndWhiskerXYDataset) {</span>
             // handle special case of BoxAndWhiskerXYDataset
-<span class="nc" id="L1468">            BoxAndWhiskerXYDataset bx = (BoxAndWhiskerXYDataset) dataset;</span>
-<span class="nc" id="L1469">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1470" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1471">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1472">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1473">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1474" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1475">                    double x = bx.getXValue(series, item);</span>
-<span class="nc bnc" id="L1476" title="All 2 branches missed.">                    if (xRange.contains(x)) {</span>
-<span class="nc" id="L1477">                        Number lvalue = bx.getMinRegularValue(series, item);</span>
-<span class="nc" id="L1478">                        Number uvalue = bx.getMaxRegularValue(series, item);</span>
-<span class="nc bnc" id="L1479" title="All 2 branches missed.">                        if (lvalue != null) {</span>
-<span class="nc" id="L1480">                            minimum = Math.min(minimum, lvalue.doubleValue());</span>
+<span class="fc" id="L1468">            BoxAndWhiskerXYDataset bx = (BoxAndWhiskerXYDataset) dataset;</span>
+<span class="fc" id="L1469">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1470" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1471">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1472">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1473">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1474" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1475">                    double x = bx.getXValue(series, item);</span>
+<span class="pc bpc" id="L1476" title="1 of 2 branches missed.">                    if (xRange.contains(x)) {</span>
+<span class="fc" id="L1477">                        Number lvalue = bx.getMinRegularValue(series, item);</span>
+<span class="fc" id="L1478">                        Number uvalue = bx.getMaxRegularValue(series, item);</span>
+<span class="pc bpc" id="L1479" title="1 of 2 branches missed.">                        if (lvalue != null) {</span>
+<span class="fc" id="L1480">                            minimum = Math.min(minimum, lvalue.doubleValue());</span>
                         }
-<span class="nc bnc" id="L1482" title="All 2 branches missed.">                        if (uvalue != null) {</span>
-<span class="nc" id="L1483">                            maximum = Math.max(maximum, uvalue.doubleValue());</span>
+<span class="pc bpc" id="L1482" title="1 of 2 branches missed.">                        if (uvalue != null) {</span>
+<span class="fc" id="L1483">                            maximum = Math.max(maximum, uvalue.doubleValue());</span>
                         }
                     }
                 }
-<span class="nc" id="L1487">            }</span>
-<span class="nc" id="L1488">        }</span>
-<span class="nc bnc" id="L1489" title="All 4 branches missed.">        else if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
+<span class="fc" id="L1487">            }</span>
+<span class="fc" id="L1488">        }</span>
+<span class="pc bpc" id="L1489" title="1 of 4 branches missed.">        else if (includeInterval &amp;&amp; dataset instanceof IntervalXYDataset) {</span>
             // handle special case of IntervalXYDataset
-<span class="nc" id="L1491">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
-<span class="nc" id="L1492">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1493" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1494">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1495">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1496">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1497" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1498">                    double x = ixyd.getXValue(series, item);</span>
-<span class="nc bnc" id="L1499" title="All 2 branches missed.">                    if (xRange.contains(x)) {</span>
-<span class="nc" id="L1500">                        double yvalue = ixyd.getYValue(series, item);</span>
-<span class="nc" id="L1501">                        double lvalue = ixyd.getStartYValue(series, item);</span>
-<span class="nc" id="L1502">                        double uvalue = ixyd.getEndYValue(series, item);</span>
-<span class="nc bnc" id="L1503" title="All 2 branches missed.">                        if (!Double.isNaN(yvalue)) {</span>
-<span class="nc" id="L1504">                            minimum = Math.min(minimum, yvalue);</span>
-<span class="nc" id="L1505">                            maximum = Math.max(maximum, yvalue);</span>
+<span class="fc" id="L1491">            IntervalXYDataset ixyd = (IntervalXYDataset) dataset;</span>
+<span class="fc" id="L1492">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1493" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1494">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1495">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1496">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1497" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1498">                    double x = ixyd.getXValue(series, item);</span>
+<span class="pc bpc" id="L1499" title="1 of 2 branches missed.">                    if (xRange.contains(x)) {</span>
+<span class="fc" id="L1500">                        double yvalue = ixyd.getYValue(series, item);</span>
+<span class="fc" id="L1501">                        double lvalue = ixyd.getStartYValue(series, item);</span>
+<span class="fc" id="L1502">                        double uvalue = ixyd.getEndYValue(series, item);</span>
+<span class="pc bpc" id="L1503" title="1 of 2 branches missed.">                        if (!Double.isNaN(yvalue)) {</span>
+<span class="fc" id="L1504">                            minimum = Math.min(minimum, yvalue);</span>
+<span class="fc" id="L1505">                            maximum = Math.max(maximum, yvalue);</span>
                         }
-<span class="nc bnc" id="L1507" title="All 2 branches missed.">                        if (!Double.isNaN(lvalue)) {</span>
-<span class="nc" id="L1508">                            minimum = Math.min(minimum, lvalue);</span>
+<span class="pc bpc" id="L1507" title="1 of 2 branches missed.">                        if (!Double.isNaN(lvalue)) {</span>
+<span class="fc" id="L1508">                            minimum = Math.min(minimum, lvalue);</span>
                         }
-<span class="nc bnc" id="L1510" title="All 2 branches missed.">                        if (!Double.isNaN(uvalue)) {</span>
-<span class="nc" id="L1511">                            maximum = Math.max(maximum, uvalue);</span>
+<span class="pc bpc" id="L1510" title="1 of 2 branches missed.">                        if (!Double.isNaN(uvalue)) {</span>
+<span class="fc" id="L1511">                            maximum = Math.max(maximum, uvalue);</span>
                         }
                     }
                 }
-<span class="nc" id="L1515">            }</span>
-<span class="nc" id="L1516">        } else {</span>
+<span class="fc" id="L1515">            }</span>
+<span class="fc" id="L1516">        } else {</span>
             // standard case - plain XYDataset
-<span class="nc" id="L1518">            Iterator iterator = visibleSeriesKeys.iterator();</span>
-<span class="nc bnc" id="L1519" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
-<span class="nc" id="L1520">                Comparable seriesKey = (Comparable) iterator.next();</span>
-<span class="nc" id="L1521">                int series = dataset.indexOf(seriesKey);</span>
-<span class="nc" id="L1522">                int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L1523" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
-<span class="nc" id="L1524">                    double x = dataset.getXValue(series, item);</span>
-<span class="nc" id="L1525">                    double y = dataset.getYValue(series, item);</span>
-<span class="nc bnc" id="L1526" title="All 2 branches missed.">                    if (xRange.contains(x)) {</span>
-<span class="nc bnc" id="L1527" title="All 2 branches missed.">                        if (!Double.isNaN(y)) {</span>
-<span class="nc" id="L1528">                            minimum = Math.min(minimum, y);</span>
-<span class="nc" id="L1529">                            maximum = Math.max(maximum, y);</span>
+<span class="fc" id="L1518">            Iterator iterator = visibleSeriesKeys.iterator();</span>
+<span class="fc bfc" id="L1519" title="All 2 branches covered.">            while (iterator.hasNext()) {</span>
+<span class="fc" id="L1520">                Comparable seriesKey = (Comparable) iterator.next();</span>
+<span class="fc" id="L1521">                int series = dataset.indexOf(seriesKey);</span>
+<span class="fc" id="L1522">                int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L1523" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1524">                    double x = dataset.getXValue(series, item);</span>
+<span class="fc" id="L1525">                    double y = dataset.getYValue(series, item);</span>
+<span class="fc bfc" id="L1526" title="All 2 branches covered.">                    if (xRange.contains(x)) {</span>
+<span class="fc bfc" id="L1527" title="All 2 branches covered.">                        if (!Double.isNaN(y)) {</span>
+<span class="fc" id="L1528">                            minimum = Math.min(minimum, y);</span>
+<span class="fc" id="L1529">                            maximum = Math.max(maximum, y);</span>
                         }
                     }
                 }
-<span class="nc" id="L1533">            }</span>
+<span class="fc" id="L1533">            }</span>
         }
-<span class="nc bnc" id="L1535" title="All 2 branches missed.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
-<span class="nc" id="L1536">            return null;</span>
+<span class="fc bfc" id="L1535" title="All 2 branches covered.">        if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="fc" id="L1536">            return null;</span>
         } else {
-<span class="nc" id="L1538">            return new Range(minimum, maximum);</span>
+<span class="fc" id="L1538">            return new Range(minimum, maximum);</span>
         }
     }
 
@@ -1601,12 +1601,12 @@ public final class DatasetUtils {
      * @return The minimum value (possibly {@code null}).
      */
     public static Number findMinimumDomainValue(XYDataset dataset) {
-<span class="nc" id="L1604">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1604">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Number result;
         // if the dataset implements DomainInfo, life is easy
-<span class="nc bnc" id="L1607" title="All 2 branches missed.">        if (dataset instanceof DomainInfo) {</span>
-<span class="nc" id="L1608">            DomainInfo info = (DomainInfo) dataset;</span>
-<span class="nc" id="L1609">            return new Double(info.getDomainLowerBound(true));</span>
+<span class="pc bpc" id="L1607" title="1 of 2 branches missed.">        if (dataset instanceof DomainInfo) {</span>
+<span class="fc" id="L1608">            DomainInfo info = (DomainInfo) dataset;</span>
+<span class="fc" id="L1609">            return new Double(info.getDomainLowerBound(true));</span>
         }
         else {
 <span class="nc" id="L1612">            double minimum = Double.POSITIVE_INFINITY;</span>
@@ -1654,12 +1654,12 @@ public final class DatasetUtils {
      * @return The maximum value (possibly {@code null}).
      */
     public static Number findMaximumDomainValue(XYDataset dataset) {
-<span class="nc" id="L1657">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1657">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
         Number result;
         // if the dataset implements DomainInfo, life is easy
-<span class="nc bnc" id="L1660" title="All 2 branches missed.">        if (dataset instanceof DomainInfo) {</span>
-<span class="nc" id="L1661">            DomainInfo info = (DomainInfo) dataset;</span>
-<span class="nc" id="L1662">            return new Double(info.getDomainUpperBound(true));</span>
+<span class="pc bpc" id="L1660" title="1 of 2 branches missed.">        if (dataset instanceof DomainInfo) {</span>
+<span class="fc" id="L1661">            DomainInfo info = (DomainInfo) dataset;</span>
+<span class="fc" id="L1662">            return new Double(info.getDomainUpperBound(true));</span>
         }
 
         // hasn't implemented DomainInfo, so iterate...
@@ -1709,38 +1709,38 @@ public final class DatasetUtils {
      * @return The minimum value (possibly {@code null}).
      */
     public static Number findMinimumRangeValue(CategoryDataset dataset) {
-<span class="nc" id="L1712">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc bnc" id="L1713" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
+<span class="fc" id="L1712">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="pc bpc" id="L1713" title="1 of 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
 <span class="nc" id="L1714">            RangeInfo info = (RangeInfo) dataset;</span>
 <span class="nc" id="L1715">            return new Double(info.getRangeLowerBound(true));</span>
         }
 
         // hasn't implemented RangeInfo, so we'll have to iterate...
         else {
-<span class="nc" id="L1720">            double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1721">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc" id="L1722">            int itemCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L1723" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc bnc" id="L1724" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1720">            double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1721">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc" id="L1722">            int itemCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L1723" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc bfc" id="L1724" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
                     Number value;
-<span class="nc bnc" id="L1726" title="All 2 branches missed.">                    if (dataset instanceof IntervalCategoryDataset) {</span>
+<span class="pc bpc" id="L1726" title="1 of 2 branches missed.">                    if (dataset instanceof IntervalCategoryDataset) {</span>
 <span class="nc" id="L1727">                        IntervalCategoryDataset icd</span>
                                 = (IntervalCategoryDataset) dataset;
 <span class="nc" id="L1729">                        value = icd.getStartValue(series, item);</span>
 <span class="nc" id="L1730">                    }</span>
                     else {
-<span class="nc" id="L1732">                        value = dataset.getValue(series, item);</span>
+<span class="fc" id="L1732">                        value = dataset.getValue(series, item);</span>
                     }
-<span class="nc bnc" id="L1734" title="All 2 branches missed.">                    if (value != null) {</span>
-<span class="nc" id="L1735">                        minimum = Math.min(minimum, value.doubleValue());</span>
+<span class="pc bpc" id="L1734" title="1 of 2 branches missed.">                    if (value != null) {</span>
+<span class="fc" id="L1735">                        minimum = Math.min(minimum, value.doubleValue());</span>
                     }
                 }
             }
-<span class="nc bnc" id="L1739" title="All 2 branches missed.">            if (minimum == Double.POSITIVE_INFINITY) {</span>
+<span class="pc bpc" id="L1739" title="1 of 2 branches missed.">            if (minimum == Double.POSITIVE_INFINITY) {</span>
 <span class="nc" id="L1740">                return null;</span>
             }
             else {
-<span class="nc" id="L1743">                return new Double(minimum);</span>
+<span class="fc" id="L1743">                return new Double(minimum);</span>
             }
 
         }
@@ -1760,12 +1760,12 @@ public final class DatasetUtils {
      * @return The minimum value (possibly {@code null}).
      */
     public static Number findMinimumRangeValue(XYDataset dataset) {
-<span class="nc" id="L1763">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1763">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
 
         // work out the minimum value...
-<span class="nc bnc" id="L1766" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
-<span class="nc" id="L1767">            RangeInfo info = (RangeInfo) dataset;</span>
-<span class="nc" id="L1768">            return new Double(info.getRangeLowerBound(true));</span>
+<span class="pc bpc" id="L1766" title="1 of 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
+<span class="fc" id="L1767">            RangeInfo info = (RangeInfo) dataset;</span>
+<span class="fc" id="L1768">            return new Double(info.getRangeLowerBound(true));</span>
         }
 
         // hasn't implemented RangeInfo, so we'll have to iterate...
@@ -1819,10 +1819,10 @@ public final class DatasetUtils {
      */
     public static Number findMaximumRangeValue(CategoryDataset dataset) {
 
-<span class="nc" id="L1822">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1822">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
 
         // work out the minimum value...
-<span class="nc bnc" id="L1825" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
+<span class="pc bpc" id="L1825" title="1 of 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
 <span class="nc" id="L1826">            RangeInfo info = (RangeInfo) dataset;</span>
 <span class="nc" id="L1827">            return new Double(info.getRangeUpperBound(true));</span>
         }
@@ -1830,30 +1830,30 @@ public final class DatasetUtils {
         // hasn't implemented RangeInfo, so we'll have to iterate...
         else {
 
-<span class="nc" id="L1833">            double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L1834">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc" id="L1835">            int itemCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L1836" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc bnc" id="L1837" title="All 2 branches missed.">                for (int item = 0; item &lt; itemCount; item++) {</span>
+<span class="fc" id="L1833">            double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1834">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc" id="L1835">            int itemCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L1836" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc bfc" id="L1837" title="All 2 branches covered.">                for (int item = 0; item &lt; itemCount; item++) {</span>
                     Number value;
-<span class="nc bnc" id="L1839" title="All 2 branches missed.">                    if (dataset instanceof IntervalCategoryDataset) {</span>
+<span class="pc bpc" id="L1839" title="1 of 2 branches missed.">                    if (dataset instanceof IntervalCategoryDataset) {</span>
 <span class="nc" id="L1840">                        IntervalCategoryDataset icd</span>
                             = (IntervalCategoryDataset) dataset;
 <span class="nc" id="L1842">                        value = icd.getEndValue(series, item);</span>
 <span class="nc" id="L1843">                    }</span>
                     else {
-<span class="nc" id="L1845">                        value = dataset.getValue(series, item);</span>
+<span class="fc" id="L1845">                        value = dataset.getValue(series, item);</span>
                     }
-<span class="nc bnc" id="L1847" title="All 2 branches missed.">                    if (value != null) {</span>
-<span class="nc" id="L1848">                        maximum = Math.max(maximum, value.doubleValue());</span>
+<span class="pc bpc" id="L1847" title="1 of 2 branches missed.">                    if (value != null) {</span>
+<span class="fc" id="L1848">                        maximum = Math.max(maximum, value.doubleValue());</span>
                     }
                 }
             }
-<span class="nc bnc" id="L1852" title="All 2 branches missed.">            if (maximum == Double.NEGATIVE_INFINITY) {</span>
+<span class="pc bpc" id="L1852" title="1 of 2 branches missed.">            if (maximum == Double.NEGATIVE_INFINITY) {</span>
 <span class="nc" id="L1853">                return null;</span>
             }
             else {
-<span class="nc" id="L1856">                return new Double(maximum);</span>
+<span class="fc" id="L1856">                return new Double(maximum);</span>
             }
 
         }
@@ -1873,12 +1873,12 @@ public final class DatasetUtils {
      */
     public static Number findMaximumRangeValue(XYDataset dataset) {
 
-<span class="nc" id="L1876">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1876">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
 
         // work out the minimum value...
-<span class="nc bnc" id="L1879" title="All 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
-<span class="nc" id="L1880">            RangeInfo info = (RangeInfo) dataset;</span>
-<span class="nc" id="L1881">            return new Double(info.getRangeUpperBound(true));</span>
+<span class="pc bpc" id="L1879" title="1 of 2 branches missed.">        if (dataset instanceof RangeInfo) {</span>
+<span class="fc" id="L1880">            RangeInfo info = (RangeInfo) dataset;</span>
+<span class="fc" id="L1881">            return new Double(info.getRangeUpperBound(true));</span>
         }
 
         // hasn't implemented RangeInfo, so we'll have to iterate...
@@ -1927,7 +1927,7 @@ public final class DatasetUtils {
      * @return The range ({@code null} if the dataset contains no values).
      */
     public static Range findStackedRangeBounds(CategoryDataset dataset) {
-<span class="nc" id="L1930">        return findStackedRangeBounds(dataset, 0.0);</span>
+<span class="fc" id="L1930">        return findStackedRangeBounds(dataset, 0.0);</span>
     }
 
     /**
@@ -1941,35 +1941,35 @@ public final class DatasetUtils {
      */
     public static Range findStackedRangeBounds(CategoryDataset dataset,
             double base) {
-<span class="nc" id="L1944">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1945">        Range result = null;</span>
-<span class="nc" id="L1946">        double minimum = Double.POSITIVE_INFINITY;</span>
-<span class="nc" id="L1947">        double maximum = Double.NEGATIVE_INFINITY;</span>
-<span class="nc" id="L1948">        int categoryCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L1949" title="All 2 branches missed.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
-<span class="nc" id="L1950">            double positive = base;</span>
-<span class="nc" id="L1951">            double negative = base;</span>
-<span class="nc" id="L1952">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L1953" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L1954">                Number number = dataset.getValue(series, item);</span>
-<span class="nc bnc" id="L1955" title="All 2 branches missed.">                if (number != null) {</span>
-<span class="nc" id="L1956">                    double value = number.doubleValue();</span>
-<span class="nc bnc" id="L1957" title="All 2 branches missed.">                    if (value &gt; 0.0) {</span>
-<span class="nc" id="L1958">                        positive = positive + value;</span>
+<span class="fc" id="L1944">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1945">        Range result = null;</span>
+<span class="fc" id="L1946">        double minimum = Double.POSITIVE_INFINITY;</span>
+<span class="fc" id="L1947">        double maximum = Double.NEGATIVE_INFINITY;</span>
+<span class="fc" id="L1948">        int categoryCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L1949" title="All 2 branches covered.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
+<span class="fc" id="L1950">            double positive = base;</span>
+<span class="fc" id="L1951">            double negative = base;</span>
+<span class="fc" id="L1952">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc bfc" id="L1953" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L1954">                Number number = dataset.getValue(series, item);</span>
+<span class="fc bfc" id="L1955" title="All 2 branches covered.">                if (number != null) {</span>
+<span class="fc" id="L1956">                    double value = number.doubleValue();</span>
+<span class="fc bfc" id="L1957" title="All 2 branches covered.">                    if (value &gt; 0.0) {</span>
+<span class="fc" id="L1958">                        positive = positive + value;</span>
                     }
-<span class="nc bnc" id="L1960" title="All 2 branches missed.">                    if (value &lt; 0.0) {</span>
-<span class="nc" id="L1961">                        negative = negative + value;</span>
+<span class="fc bfc" id="L1960" title="All 2 branches covered.">                    if (value &lt; 0.0) {</span>
+<span class="fc" id="L1961">                        negative = negative + value;</span>
                         // '+', remember value is negative
                     }
                 }
             }
-<span class="nc" id="L1966">            minimum = Math.min(minimum, negative);</span>
-<span class="nc" id="L1967">            maximum = Math.max(maximum, positive);</span>
+<span class="fc" id="L1966">            minimum = Math.min(minimum, negative);</span>
+<span class="fc" id="L1967">            maximum = Math.max(maximum, positive);</span>
         }
-<span class="nc bnc" id="L1969" title="All 2 branches missed.">        if (minimum &lt;= maximum) {</span>
-<span class="nc" id="L1970">            result = new Range(minimum, maximum);</span>
+<span class="fc bfc" id="L1969" title="All 2 branches covered.">        if (minimum &lt;= maximum) {</span>
+<span class="fc" id="L1970">            result = new Range(minimum, maximum);</span>
         }
-<span class="nc" id="L1972">        return result;</span>
+<span class="fc" id="L1972">        return result;</span>
 
     }
 
@@ -1985,55 +1985,55 @@ public final class DatasetUtils {
      */
     public static Range findStackedRangeBounds(CategoryDataset dataset,
             KeyToGroupMap map) {
-<span class="nc" id="L1988">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L1989">        boolean hasValidData = false;</span>
-<span class="nc" id="L1990">        Range result = null;</span>
+<span class="fc" id="L1988">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L1989">        boolean hasValidData = false;</span>
+<span class="fc" id="L1990">        Range result = null;</span>
 
         // create an array holding the group indices for each series...
-<span class="nc" id="L1993">        int[] groupIndex = new int[dataset.getRowCount()];</span>
-<span class="nc bnc" id="L1994" title="All 2 branches missed.">        for (int i = 0; i &lt; dataset.getRowCount(); i++) {</span>
-<span class="nc" id="L1995">            groupIndex[i] = map.getGroupIndex(map.getGroup(</span>
-<span class="nc" id="L1996">                    dataset.getRowKey(i)));</span>
+<span class="fc" id="L1993">        int[] groupIndex = new int[dataset.getRowCount()];</span>
+<span class="fc bfc" id="L1994" title="All 2 branches covered.">        for (int i = 0; i &lt; dataset.getRowCount(); i++) {</span>
+<span class="fc" id="L1995">            groupIndex[i] = map.getGroupIndex(map.getGroup(</span>
+<span class="fc" id="L1996">                    dataset.getRowKey(i)));</span>
         }
 
         // minimum and maximum for each group...
-<span class="nc" id="L2000">        int groupCount = map.getGroupCount();</span>
-<span class="nc" id="L2001">        double[] minimum = new double[groupCount];</span>
-<span class="nc" id="L2002">        double[] maximum = new double[groupCount];</span>
+<span class="fc" id="L2000">        int groupCount = map.getGroupCount();</span>
+<span class="fc" id="L2001">        double[] minimum = new double[groupCount];</span>
+<span class="fc" id="L2002">        double[] maximum = new double[groupCount];</span>
 
-<span class="nc" id="L2004">        int categoryCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L2005" title="All 2 branches missed.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
-<span class="nc" id="L2006">            double[] positive = new double[groupCount];</span>
-<span class="nc" id="L2007">            double[] negative = new double[groupCount];</span>
-<span class="nc" id="L2008">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L2009" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L2010">                Number number = dataset.getValue(series, item);</span>
-<span class="nc bnc" id="L2011" title="All 2 branches missed.">                if (number != null) {</span>
-<span class="nc" id="L2012">                    hasValidData = true;</span>
-<span class="nc" id="L2013">                    double value = number.doubleValue();</span>
-<span class="nc bnc" id="L2014" title="All 2 branches missed.">                    if (value &gt; 0.0) {</span>
-<span class="nc" id="L2015">                        positive[groupIndex[series]]</span>
+<span class="fc" id="L2004">        int categoryCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L2005" title="All 2 branches covered.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
+<span class="fc" id="L2006">            double[] positive = new double[groupCount];</span>
+<span class="fc" id="L2007">            double[] negative = new double[groupCount];</span>
+<span class="fc" id="L2008">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc bfc" id="L2009" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L2010">                Number number = dataset.getValue(series, item);</span>
+<span class="fc bfc" id="L2011" title="All 2 branches covered.">                if (number != null) {</span>
+<span class="fc" id="L2012">                    hasValidData = true;</span>
+<span class="fc" id="L2013">                    double value = number.doubleValue();</span>
+<span class="fc bfc" id="L2014" title="All 2 branches covered.">                    if (value &gt; 0.0) {</span>
+<span class="fc" id="L2015">                        positive[groupIndex[series]]</span>
                                  = positive[groupIndex[series]] + value;
                     }
-<span class="nc bnc" id="L2018" title="All 2 branches missed.">                    if (value &lt; 0.0) {</span>
-<span class="nc" id="L2019">                        negative[groupIndex[series]]</span>
+<span class="fc bfc" id="L2018" title="All 2 branches covered.">                    if (value &lt; 0.0) {</span>
+<span class="fc" id="L2019">                        negative[groupIndex[series]]</span>
                                  = negative[groupIndex[series]] + value;
                                  // '+', remember value is negative
                     }
                 }
             }
-<span class="nc bnc" id="L2025" title="All 2 branches missed.">            for (int g = 0; g &lt; groupCount; g++) {</span>
-<span class="nc" id="L2026">                minimum[g] = Math.min(minimum[g], negative[g]);</span>
-<span class="nc" id="L2027">                maximum[g] = Math.max(maximum[g], positive[g]);</span>
+<span class="fc bfc" id="L2025" title="All 2 branches covered.">            for (int g = 0; g &lt; groupCount; g++) {</span>
+<span class="fc" id="L2026">                minimum[g] = Math.min(minimum[g], negative[g]);</span>
+<span class="fc" id="L2027">                maximum[g] = Math.max(maximum[g], positive[g]);</span>
             }
         }
-<span class="nc bnc" id="L2030" title="All 2 branches missed.">        if (hasValidData) {</span>
-<span class="nc bnc" id="L2031" title="All 2 branches missed.">            for (int j = 0; j &lt; groupCount; j++) {</span>
-<span class="nc" id="L2032">                result = Range.combine(result, new Range(minimum[j],</span>
+<span class="fc bfc" id="L2030" title="All 2 branches covered.">        if (hasValidData) {</span>
+<span class="fc bfc" id="L2031" title="All 2 branches covered.">            for (int j = 0; j &lt; groupCount; j++) {</span>
+<span class="fc" id="L2032">                result = Range.combine(result, new Range(minimum[j],</span>
                         maximum[j]));
             }
         }
-<span class="nc" id="L2036">        return result;</span>
+<span class="fc" id="L2036">        return result;</span>
     }
 
     /**
@@ -2047,31 +2047,31 @@ public final class DatasetUtils {
      * @see #findMaximumStackedRangeValue(CategoryDataset)
      */
     public static Number findMinimumStackedRangeValue(CategoryDataset dataset) {
-<span class="nc" id="L2050">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L2051">        Number result = null;</span>
-<span class="nc" id="L2052">        boolean hasValidData = false;</span>
-<span class="nc" id="L2053">        double minimum = 0.0;</span>
-<span class="nc" id="L2054">        int categoryCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L2055" title="All 2 branches missed.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
-<span class="nc" id="L2056">            double total = 0.0;</span>
-<span class="nc" id="L2057">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L2058" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L2059">                Number number = dataset.getValue(series, item);</span>
-<span class="nc bnc" id="L2060" title="All 2 branches missed.">                if (number != null) {</span>
-<span class="nc" id="L2061">                    hasValidData = true;</span>
-<span class="nc" id="L2062">                    double value = number.doubleValue();</span>
-<span class="nc bnc" id="L2063" title="All 2 branches missed.">                    if (value &lt; 0.0) {</span>
-<span class="nc" id="L2064">                        total = total + value;</span>
+<span class="fc" id="L2050">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L2051">        Number result = null;</span>
+<span class="fc" id="L2052">        boolean hasValidData = false;</span>
+<span class="fc" id="L2053">        double minimum = 0.0;</span>
+<span class="fc" id="L2054">        int categoryCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L2055" title="All 2 branches covered.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
+<span class="fc" id="L2056">            double total = 0.0;</span>
+<span class="fc" id="L2057">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc bfc" id="L2058" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L2059">                Number number = dataset.getValue(series, item);</span>
+<span class="pc bpc" id="L2060" title="1 of 2 branches missed.">                if (number != null) {</span>
+<span class="fc" id="L2061">                    hasValidData = true;</span>
+<span class="fc" id="L2062">                    double value = number.doubleValue();</span>
+<span class="fc bfc" id="L2063" title="All 2 branches covered.">                    if (value &lt; 0.0) {</span>
+<span class="fc" id="L2064">                        total = total + value;</span>
                         // '+', remember value is negative
                     }
                 }
             }
-<span class="nc" id="L2069">            minimum = Math.min(minimum, total);</span>
+<span class="fc" id="L2069">            minimum = Math.min(minimum, total);</span>
         }
-<span class="nc bnc" id="L2071" title="All 2 branches missed.">        if (hasValidData) {</span>
-<span class="nc" id="L2072">            result = new Double(minimum);</span>
+<span class="fc bfc" id="L2071" title="All 2 branches covered.">        if (hasValidData) {</span>
+<span class="fc" id="L2072">            result = new Double(minimum);</span>
         }
-<span class="nc" id="L2074">        return result;</span>
+<span class="fc" id="L2074">        return result;</span>
     }
 
     /**
@@ -2085,30 +2085,30 @@ public final class DatasetUtils {
      * @see #findMinimumStackedRangeValue(CategoryDataset)
      */
     public static Number findMaximumStackedRangeValue(CategoryDataset dataset) {
-<span class="nc" id="L2088">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L2089">        Number result = null;</span>
-<span class="nc" id="L2090">        boolean hasValidData = false;</span>
-<span class="nc" id="L2091">        double maximum = 0.0;</span>
-<span class="nc" id="L2092">        int categoryCount = dataset.getColumnCount();</span>
-<span class="nc bnc" id="L2093" title="All 2 branches missed.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
-<span class="nc" id="L2094">            double total = 0.0;</span>
-<span class="nc" id="L2095">            int seriesCount = dataset.getRowCount();</span>
-<span class="nc bnc" id="L2096" title="All 2 branches missed.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
-<span class="nc" id="L2097">                Number number = dataset.getValue(series, item);</span>
-<span class="nc bnc" id="L2098" title="All 2 branches missed.">                if (number != null) {</span>
-<span class="nc" id="L2099">                    hasValidData = true;</span>
-<span class="nc" id="L2100">                    double value = number.doubleValue();</span>
-<span class="nc bnc" id="L2101" title="All 2 branches missed.">                    if (value &gt; 0.0) {</span>
-<span class="nc" id="L2102">                        total = total + value;</span>
+<span class="fc" id="L2088">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L2089">        Number result = null;</span>
+<span class="fc" id="L2090">        boolean hasValidData = false;</span>
+<span class="fc" id="L2091">        double maximum = 0.0;</span>
+<span class="fc" id="L2092">        int categoryCount = dataset.getColumnCount();</span>
+<span class="fc bfc" id="L2093" title="All 2 branches covered.">        for (int item = 0; item &lt; categoryCount; item++) {</span>
+<span class="fc" id="L2094">            double total = 0.0;</span>
+<span class="fc" id="L2095">            int seriesCount = dataset.getRowCount();</span>
+<span class="fc bfc" id="L2096" title="All 2 branches covered.">            for (int series = 0; series &lt; seriesCount; series++) {</span>
+<span class="fc" id="L2097">                Number number = dataset.getValue(series, item);</span>
+<span class="pc bpc" id="L2098" title="1 of 2 branches missed.">                if (number != null) {</span>
+<span class="fc" id="L2099">                    hasValidData = true;</span>
+<span class="fc" id="L2100">                    double value = number.doubleValue();</span>
+<span class="fc bfc" id="L2101" title="All 2 branches covered.">                    if (value &gt; 0.0) {</span>
+<span class="fc" id="L2102">                        total = total + value;</span>
                     }
                 }
             }
-<span class="nc" id="L2106">            maximum = Math.max(maximum, total);</span>
+<span class="fc" id="L2106">            maximum = Math.max(maximum, total);</span>
         }
-<span class="nc bnc" id="L2108" title="All 2 branches missed.">        if (hasValidData) {</span>
-<span class="nc" id="L2109">            result = new Double(maximum);</span>
+<span class="fc bfc" id="L2108" title="All 2 branches covered.">        if (hasValidData) {</span>
+<span class="fc" id="L2109">            result = new Double(maximum);</span>
         }
-<span class="nc" id="L2111">        return result;</span>
+<span class="fc" id="L2111">        return result;</span>
     }
 
     /**
@@ -2120,7 +2120,7 @@ public final class DatasetUtils {
      * @return The range ([0.0, 0.0] if the dataset contains no values).
      */
     public static Range findStackedRangeBounds(TableXYDataset dataset) {
-<span class="nc" id="L2123">        return findStackedRangeBounds(dataset, 0.0);</span>
+<span class="fc" id="L2123">        return findStackedRangeBounds(dataset, 0.0);</span>
     }
 
     /**
@@ -2134,33 +2134,33 @@ public final class DatasetUtils {
      */
     public static Range findStackedRangeBounds(TableXYDataset dataset,
             double base) {
-<span class="nc" id="L2137">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L2138">        double minimum = base;</span>
-<span class="nc" id="L2139">        double maximum = base;</span>
-<span class="nc bnc" id="L2140" title="All 2 branches missed.">        for (int itemNo = 0; itemNo &lt; dataset.getItemCount(); itemNo++) {</span>
-<span class="nc" id="L2141">            double positive = base;</span>
-<span class="nc" id="L2142">            double negative = base;</span>
-<span class="nc" id="L2143">            int seriesCount = dataset.getSeriesCount();</span>
-<span class="nc bnc" id="L2144" title="All 2 branches missed.">            for (int seriesNo = 0; seriesNo &lt; seriesCount; seriesNo++) {</span>
-<span class="nc" id="L2145">                double y = dataset.getYValue(seriesNo, itemNo);</span>
-<span class="nc bnc" id="L2146" title="All 2 branches missed.">                if (!Double.isNaN(y)) {</span>
-<span class="nc bnc" id="L2147" title="All 2 branches missed.">                    if (y &gt; 0.0) {</span>
-<span class="nc" id="L2148">                        positive += y;</span>
+<span class="fc" id="L2137">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L2138">        double minimum = base;</span>
+<span class="fc" id="L2139">        double maximum = base;</span>
+<span class="fc bfc" id="L2140" title="All 2 branches covered.">        for (int itemNo = 0; itemNo &lt; dataset.getItemCount(); itemNo++) {</span>
+<span class="fc" id="L2141">            double positive = base;</span>
+<span class="fc" id="L2142">            double negative = base;</span>
+<span class="fc" id="L2143">            int seriesCount = dataset.getSeriesCount();</span>
+<span class="fc bfc" id="L2144" title="All 2 branches covered.">            for (int seriesNo = 0; seriesNo &lt; seriesCount; seriesNo++) {</span>
+<span class="fc" id="L2145">                double y = dataset.getYValue(seriesNo, itemNo);</span>
+<span class="pc bpc" id="L2146" title="1 of 2 branches missed.">                if (!Double.isNaN(y)) {</span>
+<span class="fc bfc" id="L2147" title="All 2 branches covered.">                    if (y &gt; 0.0) {</span>
+<span class="fc" id="L2148">                        positive += y;</span>
                     }
                     else {
-<span class="nc" id="L2151">                        negative += y;</span>
+<span class="fc" id="L2151">                        negative += y;</span>
                     }
                 }
             }
-<span class="nc bnc" id="L2155" title="All 2 branches missed.">            if (positive &gt; maximum) {</span>
-<span class="nc" id="L2156">                maximum = positive;</span>
+<span class="fc bfc" id="L2155" title="All 2 branches covered.">            if (positive &gt; maximum) {</span>
+<span class="fc" id="L2156">                maximum = positive;</span>
             }
-<span class="nc bnc" id="L2158" title="All 2 branches missed.">            if (negative &lt; minimum) {</span>
-<span class="nc" id="L2159">                minimum = negative;</span>
+<span class="fc bfc" id="L2158" title="All 2 branches covered.">            if (negative &lt; minimum) {</span>
+<span class="fc" id="L2159">                minimum = negative;</span>
             }
         }
-<span class="nc bnc" id="L2162" title="All 2 branches missed.">        if (minimum &lt;= maximum) {</span>
-<span class="nc" id="L2163">            return new Range(minimum, maximum);</span>
+<span class="pc bpc" id="L2162" title="1 of 2 branches missed.">        if (minimum &lt;= maximum) {</span>
+<span class="fc" id="L2163">            return new Range(minimum, maximum);</span>
         }
         else {
 <span class="nc" id="L2166">            return null;</span>
@@ -2201,29 +2201,29 @@ public final class DatasetUtils {
      * @see #findRangeBounds(CategoryDataset)
      */
     public static Range findCumulativeRangeBounds(CategoryDataset dataset) {
-<span class="nc" id="L2204">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L2205">        boolean allItemsNull = true; // we'll set this to false if there is at</span>
+<span class="fc" id="L2204">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L2205">        boolean allItemsNull = true; // we'll set this to false if there is at</span>
                                      // least one non-null data item...
-<span class="nc" id="L2207">        double minimum = 0.0;</span>
-<span class="nc" id="L2208">        double maximum = 0.0;</span>
-<span class="nc bnc" id="L2209" title="All 2 branches missed.">        for (int row = 0; row &lt; dataset.getRowCount(); row++) {</span>
-<span class="nc" id="L2210">            double runningTotal = 0.0;</span>
-<span class="nc bnc" id="L2211" title="All 2 branches missed.">            for (int column = 0; column &lt;= dataset.getColumnCount() - 1;</span>
-<span class="nc" id="L2212">                 column++) {</span>
-<span class="nc" id="L2213">                Number n = dataset.getValue(row, column);</span>
-<span class="nc bnc" id="L2214" title="All 2 branches missed.">                if (n != null) {</span>
-<span class="nc" id="L2215">                    allItemsNull = false;</span>
-<span class="nc" id="L2216">                    double value = n.doubleValue();</span>
-<span class="nc bnc" id="L2217" title="All 2 branches missed.">                    if (!Double.isNaN(value)) {</span>
-<span class="nc" id="L2218">                        runningTotal = runningTotal + value;</span>
-<span class="nc" id="L2219">                        minimum = Math.min(minimum, runningTotal);</span>
-<span class="nc" id="L2220">                        maximum = Math.max(maximum, runningTotal);</span>
+<span class="fc" id="L2207">        double minimum = 0.0;</span>
+<span class="fc" id="L2208">        double maximum = 0.0;</span>
+<span class="fc bfc" id="L2209" title="All 2 branches covered.">        for (int row = 0; row &lt; dataset.getRowCount(); row++) {</span>
+<span class="fc" id="L2210">            double runningTotal = 0.0;</span>
+<span class="fc bfc" id="L2211" title="All 2 branches covered.">            for (int column = 0; column &lt;= dataset.getColumnCount() - 1;</span>
+<span class="fc" id="L2212">                 column++) {</span>
+<span class="fc" id="L2213">                Number n = dataset.getValue(row, column);</span>
+<span class="pc bpc" id="L2214" title="1 of 2 branches missed.">                if (n != null) {</span>
+<span class="fc" id="L2215">                    allItemsNull = false;</span>
+<span class="fc" id="L2216">                    double value = n.doubleValue();</span>
+<span class="fc bfc" id="L2217" title="All 2 branches covered.">                    if (!Double.isNaN(value)) {</span>
+<span class="fc" id="L2218">                        runningTotal = runningTotal + value;</span>
+<span class="fc" id="L2219">                        minimum = Math.min(minimum, runningTotal);</span>
+<span class="fc" id="L2220">                        maximum = Math.max(maximum, runningTotal);</span>
                     }
                 }
             }
         }
-<span class="nc bnc" id="L2225" title="All 2 branches missed.">        if (!allItemsNull) {</span>
-<span class="nc" id="L2226">            return new Range(minimum, maximum);</span>
+<span class="pc bpc" id="L2225" title="1 of 2 branches missed.">        if (!allItemsNull) {</span>
+<span class="fc" id="L2226">            return new Range(minimum, maximum);</span>
         }
         else {
 <span class="nc" id="L2229">            return null;</span>
@@ -2245,18 +2245,18 @@ public final class DatasetUtils {
      */
     public static double findYValue(XYDataset dataset, int series, double x) {
         // delegate null check on dataset
-<span class="nc" id="L2248">        int[] indices = findItemIndicesForX(dataset, series, x);</span>
-<span class="nc bnc" id="L2249" title="All 2 branches missed.">        if (indices[0] == -1) {</span>
-<span class="nc" id="L2250">            return Double.NaN;</span>
+<span class="fc" id="L2248">        int[] indices = findItemIndicesForX(dataset, series, x);</span>
+<span class="fc bfc" id="L2249" title="All 2 branches covered.">        if (indices[0] == -1) {</span>
+<span class="fc" id="L2250">            return Double.NaN;</span>
         }
-<span class="nc bnc" id="L2252" title="All 2 branches missed.">        if (indices[0] == indices[1]) {</span>
-<span class="nc" id="L2253">            return dataset.getYValue(series, indices[0]);</span>
+<span class="fc bfc" id="L2252" title="All 2 branches covered.">        if (indices[0] == indices[1]) {</span>
+<span class="fc" id="L2253">            return dataset.getYValue(series, indices[0]);</span>
         }
-<span class="nc" id="L2255">        double x0 = dataset.getXValue(series, indices[0]);</span>
-<span class="nc" id="L2256">        double x1 = dataset.getXValue(series, indices[1]);</span>
-<span class="nc" id="L2257">        double y0 = dataset.getYValue(series, indices[0]);</span>
-<span class="nc" id="L2258">        double y1 = dataset.getYValue(series, indices[1]);</span>
-<span class="nc" id="L2259">        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);</span>
+<span class="fc" id="L2255">        double x0 = dataset.getXValue(series, indices[0]);</span>
+<span class="fc" id="L2256">        double x1 = dataset.getXValue(series, indices[1]);</span>
+<span class="fc" id="L2257">        double y0 = dataset.getYValue(series, indices[0]);</span>
+<span class="fc" id="L2258">        double y1 = dataset.getYValue(series, indices[1]);</span>
+<span class="fc" id="L2259">        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);</span>
     }
     
     /**
@@ -2282,52 +2282,52 @@ public final class DatasetUtils {
      */
     public static int[] findItemIndicesForX(XYDataset dataset, int series,
             double x) {
-<span class="nc" id="L2285">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
-<span class="nc" id="L2286">        int itemCount = dataset.getItemCount(series);</span>
-<span class="nc bnc" id="L2287" title="All 2 branches missed.">        if (itemCount == 0) {</span>
-<span class="nc" id="L2288">            return new int[] {-1, -1};</span>
+<span class="fc" id="L2285">        Args.nullNotPermitted(dataset, &quot;dataset&quot;);</span>
+<span class="fc" id="L2286">        int itemCount = dataset.getItemCount(series);</span>
+<span class="fc bfc" id="L2287" title="All 2 branches covered.">        if (itemCount == 0) {</span>
+<span class="fc" id="L2288">            return new int[] {-1, -1};</span>
         }
-<span class="nc bnc" id="L2290" title="All 2 branches missed.">        if (itemCount == 1) {</span>
-<span class="nc bnc" id="L2291" title="All 2 branches missed.">            if (x == dataset.getXValue(series, 0)) {</span>
-<span class="nc" id="L2292">                return new int[] {0, 0};</span>
+<span class="fc bfc" id="L2290" title="All 2 branches covered.">        if (itemCount == 1) {</span>
+<span class="fc bfc" id="L2291" title="All 2 branches covered.">            if (x == dataset.getXValue(series, 0)) {</span>
+<span class="fc" id="L2292">                return new int[] {0, 0};</span>
             } else {
-<span class="nc" id="L2294">                return new int[] {-1, -1};</span>
+<span class="fc" id="L2294">                return new int[] {-1, -1};</span>
             }
         }
-<span class="nc bnc" id="L2297" title="All 2 branches missed.">        if (dataset.getDomainOrder() == DomainOrder.ASCENDING) {</span>
-<span class="nc" id="L2298">            int low = 0;</span>
-<span class="nc" id="L2299">            int high = itemCount - 1;</span>
-<span class="nc" id="L2300">            double lowValue = dataset.getXValue(series, low);</span>
-<span class="nc bnc" id="L2301" title="All 2 branches missed.">            if (lowValue &gt; x) {</span>
-<span class="nc" id="L2302">                return new int[] {-1, -1};</span>
+<span class="fc bfc" id="L2297" title="All 2 branches covered.">        if (dataset.getDomainOrder() == DomainOrder.ASCENDING) {</span>
+<span class="fc" id="L2298">            int low = 0;</span>
+<span class="fc" id="L2299">            int high = itemCount - 1;</span>
+<span class="fc" id="L2300">            double lowValue = dataset.getXValue(series, low);</span>
+<span class="fc bfc" id="L2301" title="All 2 branches covered.">            if (lowValue &gt; x) {</span>
+<span class="fc" id="L2302">                return new int[] {-1, -1};</span>
             }
-<span class="nc bnc" id="L2304" title="All 2 branches missed.">            if (lowValue == x) {</span>
-<span class="nc" id="L2305">                return new int[] {low, low};</span>
+<span class="fc bfc" id="L2304" title="All 2 branches covered.">            if (lowValue == x) {</span>
+<span class="fc" id="L2305">                return new int[] {low, low};</span>
             }
-<span class="nc" id="L2307">            double highValue = dataset.getXValue(series, high);</span>
-<span class="nc bnc" id="L2308" title="All 2 branches missed.">            if (highValue &lt; x) {</span>
-<span class="nc" id="L2309">                return new int[] {-1, -1};</span>
+<span class="fc" id="L2307">            double highValue = dataset.getXValue(series, high);</span>
+<span class="fc bfc" id="L2308" title="All 2 branches covered.">            if (highValue &lt; x) {</span>
+<span class="fc" id="L2309">                return new int[] {-1, -1};</span>
             }
-<span class="nc bnc" id="L2311" title="All 2 branches missed.">            if (highValue == x) {</span>
-<span class="nc" id="L2312">                return new int[] {high, high};</span>
+<span class="fc bfc" id="L2311" title="All 2 branches covered.">            if (highValue == x) {</span>
+<span class="fc" id="L2312">                return new int[] {high, high};</span>
             }
-<span class="nc" id="L2314">            int mid = (low + high) / 2;</span>
-<span class="nc bnc" id="L2315" title="All 2 branches missed.">            while (high - low &gt; 1) {</span>
-<span class="nc" id="L2316">                double midV = dataset.getXValue(series, mid);</span>
-<span class="nc bnc" id="L2317" title="All 2 branches missed.">                if (x == midV) {</span>
+<span class="fc" id="L2314">            int mid = (low + high) / 2;</span>
+<span class="fc bfc" id="L2315" title="All 2 branches covered.">            while (high - low &gt; 1) {</span>
+<span class="fc" id="L2316">                double midV = dataset.getXValue(series, mid);</span>
+<span class="pc bpc" id="L2317" title="1 of 2 branches missed.">                if (x == midV) {</span>
 <span class="nc" id="L2318">                    return new int[] {mid, mid};</span>
                 }
-<span class="nc bnc" id="L2320" title="All 2 branches missed.">                if (midV &lt; x) {</span>
-<span class="nc" id="L2321">                    low = mid;</span>
+<span class="pc bpc" id="L2320" title="1 of 2 branches missed.">                if (midV &lt; x) {</span>
+<span class="fc" id="L2321">                    low = mid;</span>
                 }
                 else {
 <span class="nc" id="L2324">                    high = mid;</span>
                 }
-<span class="nc" id="L2326">                mid = (low + high) / 2;</span>
-<span class="nc" id="L2327">            }</span>
-<span class="nc" id="L2328">            return new int[] {low, high};</span>
+<span class="fc" id="L2326">                mid = (low + high) / 2;</span>
+<span class="fc" id="L2327">            }</span>
+<span class="fc" id="L2328">            return new int[] {low, high};</span>
         }
-<span class="nc bnc" id="L2330" title="All 2 branches missed.">        else if (dataset.getDomainOrder() == DomainOrder.DESCENDING) {</span>
+<span class="pc bpc" id="L2330" title="1 of 2 branches missed.">        else if (dataset.getDomainOrder() == DomainOrder.DESCENDING) {</span>
 <span class="nc" id="L2331">            int high = 0;</span>
 <span class="nc" id="L2332">            int low = itemCount - 1;</span>
 <span class="nc" id="L2333">            double lowValue = dataset.getXValue(series, low);</span>
@@ -2358,22 +2358,22 @@ public final class DatasetUtils {
             // we don't know anything about the ordering of the x-values,
             // so we iterate until we find the first crossing of x (if any)
             // we know there are at least 2 items in the series at this point
-<span class="nc" id="L2361">            double prev = dataset.getXValue(series, 0);</span>
-<span class="nc bnc" id="L2362" title="All 2 branches missed.">            if (x == prev) {</span>
-<span class="nc" id="L2363">                return new int[] {0, 0}; // exact match on first item</span>
+<span class="fc" id="L2361">            double prev = dataset.getXValue(series, 0);</span>
+<span class="fc bfc" id="L2362" title="All 2 branches covered.">            if (x == prev) {</span>
+<span class="fc" id="L2363">                return new int[] {0, 0}; // exact match on first item</span>
             }
-<span class="nc bnc" id="L2365" title="All 2 branches missed.">            for (int i = 1; i &lt; itemCount; i++) {</span>
-<span class="nc" id="L2366">                double next = dataset.getXValue(series, i);</span>
-<span class="nc bnc" id="L2367" title="All 2 branches missed.">                if (x == next) {</span>
-<span class="nc" id="L2368">                    return new int[] {i, i}; // exact match</span>
+<span class="fc bfc" id="L2365" title="All 2 branches covered.">            for (int i = 1; i &lt; itemCount; i++) {</span>
+<span class="fc" id="L2366">                double next = dataset.getXValue(series, i);</span>
+<span class="fc bfc" id="L2367" title="All 2 branches covered.">                if (x == next) {</span>
+<span class="fc" id="L2368">                    return new int[] {i, i}; // exact match</span>
                 }
-<span class="nc bnc" id="L2370" title="All 8 branches missed.">                if ((x &gt; prev &amp;&amp; x &lt; next) || (x &lt; prev &amp;&amp; x &gt; next)) {</span>
-<span class="nc" id="L2371">                    return new int[] {i - 1, i}; // spanning match</span>
+<span class="pc bpc" id="L2370" title="1 of 8 branches missed.">                if ((x &gt; prev &amp;&amp; x &lt; next) || (x &lt; prev &amp;&amp; x &gt; next)) {</span>
+<span class="fc" id="L2371">                    return new int[] {i - 1, i}; // spanning match</span>
                 }
             }
-<span class="nc" id="L2374">            return new int[] {-1, -1}; // no crossing of x</span>
+<span class="fc" id="L2374">            return new int[] {-1, -1}; // no crossing of x</span>
         }
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
