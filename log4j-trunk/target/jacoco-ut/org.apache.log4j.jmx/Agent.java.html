@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Agent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.jmx</a> &gt; <span class="el_source">Agent.java</span></div><h1>Agent.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.jmx;
+
+import org.apache.log4j.Logger;
+
+import javax.management.JMException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.ObjectName;
+import java.lang.reflect.InvocationTargetException;
+import java.io.InterruptedIOException;
+
+
+/**
+ * Manages an instance of com.sun.jdmk.comm.HtmlAdapterServer which
+ * was provided for demonstration purposes in the
+ * Java Management Extensions Reference Implementation 1.2.1.
+ * This class is provided to maintain compatibility with earlier
+ * versions of log4j and use in new code is discouraged.
+ *
+ * @deprecated
+ */
+public class Agent {
+
+    /**
+     * Diagnostic logger.
+     * @deprecated
+     */
+<span class="nc bnc" id="L45" title="All 2 branches missed.">  static Logger log = Logger.getLogger(Agent.class);</span>
+
+    /**
+     * Create new instance.
+     * @deprecated
+     */
+<span class="nc" id="L51">  public Agent() {</span>
+<span class="nc" id="L52">  }</span>
+
+    /**
+     * Creates a new instance of com.sun.jdmk.comm.HtmlAdapterServer
+     * using reflection.
+     *
+     * @since 1.2.16
+     * @return new instance.
+     */
+  private static Object createServer() {
+<span class="nc" id="L62">      Object newInstance = null;</span>
+      try {
+<span class="nc" id="L64">        newInstance = Class.forName(</span>
+<span class="nc" id="L65">                &quot;com.sun.jdmk.comm.HtmlAdapterServer&quot;).newInstance();</span>
+<span class="nc" id="L66">      } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L67">          throw new RuntimeException(ex.toString());</span>
+<span class="nc" id="L68">      } catch (InstantiationException ex) {</span>
+<span class="nc" id="L69">          throw new RuntimeException(ex.toString());</span>
+<span class="nc" id="L70">      } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L71">          throw new RuntimeException(ex.toString());</span>
+<span class="nc" id="L72">      }</span>
+<span class="nc" id="L73">      return newInstance;</span>
+  }
+
+    /**
+     * Invokes HtmlAdapterServer.start() using reflection.
+     *
+     * @since 1.2.16
+     * @param server instance of com.sun.jdmk.comm.HtmlAdapterServer.
+     */
+  private static void startServer(final Object server) {
+      try {
+<span class="nc" id="L84">          server.getClass().getMethod(&quot;start&quot;, new Class[0]).</span>
+<span class="nc" id="L85">                  invoke(server, new Object[0]);</span>
+<span class="nc" id="L86">      } catch(InvocationTargetException ex) {</span>
+<span class="nc" id="L87">          Throwable cause = ex.getTargetException();</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">          if (cause instanceof RuntimeException) {</span>
+<span class="nc" id="L89">              throw (RuntimeException) cause;</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">          } else if (cause != null) {</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">              if (cause instanceof InterruptedException</span>
+                      || cause instanceof InterruptedIOException) {
+<span class="nc" id="L93">                  Thread.currentThread().interrupt();</span>
+              }
+<span class="nc" id="L95">              throw new RuntimeException(cause.toString());</span>
+          } else {
+<span class="nc" id="L97">              throw new RuntimeException();</span>
+          }
+<span class="nc" id="L99">      } catch(NoSuchMethodException ex) {</span>
+<span class="nc" id="L100">          throw new RuntimeException(ex.toString());</span>
+<span class="nc" id="L101">      } catch(IllegalAccessException ex) {</span>
+<span class="nc" id="L102">        throw new RuntimeException(ex.toString());</span>
+<span class="nc" id="L103">    }</span>
+<span class="nc" id="L104">  }</span>
+
+
+    /**
+     * Starts instance of HtmlAdapterServer.
+     * @deprecated
+      */
+  public void start() {
+
+<span class="nc" id="L113">    MBeanServer server = MBeanServerFactory.createMBeanServer();</span>
+<span class="nc" id="L114">    Object html = createServer();</span>
+
+    try {
+<span class="nc" id="L117">      log.info(&quot;Registering HtmlAdaptorServer instance.&quot;);</span>
+<span class="nc" id="L118">      server.registerMBean(html, new ObjectName(&quot;Adaptor:name=html,port=8082&quot;));</span>
+<span class="nc" id="L119">      log.info(&quot;Registering HierarchyDynamicMBean instance.&quot;);</span>
+<span class="nc" id="L120">      HierarchyDynamicMBean hdm = new HierarchyDynamicMBean();</span>
+<span class="nc" id="L121">      server.registerMBean(hdm, new ObjectName(&quot;log4j:hiearchy=default&quot;));</span>
+<span class="nc" id="L122">    } catch(JMException e) {</span>
+<span class="nc" id="L123">      log.error(&quot;Problem while registering MBeans instances.&quot;, e);</span>
+<span class="nc" id="L124">      return;</span>
+<span class="nc" id="L125">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L126">      log.error(&quot;Problem while registering MBeans instances.&quot;, e);</span>
+<span class="nc" id="L127">      return;</span>
+<span class="nc" id="L128">    }</span>
+<span class="nc" id="L129">    startServer(html);</span>
+<span class="nc" id="L130">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

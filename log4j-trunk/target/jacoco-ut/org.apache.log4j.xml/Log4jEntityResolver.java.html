@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Log4jEntityResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.xml</a> &gt; <span class="el_source">Log4jEntityResolver.java</span></div><h1>Log4jEntityResolver.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.xml;
+
+import org.apache.log4j.helpers.LogLog;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+
+/**
+ * An {@link EntityResolver} specifically designed to return
+ * &lt;code&gt;log4j.dtd&lt;/code&gt; which is embedded within the log4j jar
+ * file. 
+ *
+ * @author Paul Austin
+ * */
+<span class="fc" id="L34">public class Log4jEntityResolver implements EntityResolver {</span>
+  private static final String PUBLIC_ID = &quot;-//APACHE//DTD LOG4J 1.2//EN&quot;;
+
+  public InputSource resolveEntity (String publicId, String systemId) {
+<span class="pc bpc" id="L38" title="1 of 4 branches missed.">    if (systemId.endsWith(&quot;log4j.dtd&quot;)  || PUBLIC_ID.equals(publicId)) {</span>
+<span class="fc" id="L39">      Class clazz = getClass();</span>
+<span class="fc" id="L40">      InputStream in = clazz.getResourceAsStream(&quot;/org/apache/log4j/xml/log4j.dtd&quot;);</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">      if (in == null) {</span>
+<span class="nc" id="L42">	    LogLog.warn(&quot;Could not find [log4j.dtd] using [&quot; + clazz.getClassLoader()</span>
+		     + &quot;] class loader, parsed without DTD.&quot;);
+<span class="nc" id="L44">        in = new ByteArrayInputStream(new byte[0]);</span>
+      }
+<span class="fc" id="L46">	  return new InputSource(in);</span>
+    } else {
+<span class="fc" id="L48">      return null;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

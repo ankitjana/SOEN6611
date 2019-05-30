@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transform.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">Transform.java</span></div><h1>Transform.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+/**
+   Utility class for transforming strings.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Michael A. McAngus 
+ */
+<span class="nc" id="L26">public class Transform {</span>
+
+   private static final String CDATA_START  = &quot;&lt;![CDATA[&quot;;
+   private static final String CDATA_END    = &quot;]]&gt;&quot;;
+   private static final String CDATA_PSEUDO_END = &quot;]]&amp;gt;&quot;;
+   private static final String CDATA_EMBEDED_END = CDATA_END + CDATA_PSEUDO_END + CDATA_START;
+<span class="fc" id="L32">   private static final int CDATA_END_LEN = CDATA_END.length();</span>
+
+  /**
+   * This method takes a string which may contain HTML tags (ie,
+   * &amp;lt;b&amp;gt;, &amp;lt;table&amp;gt;, etc) and replaces any
+   * '&lt;',  '&gt;' , '&amp;' or '&quot;'
+   * characters with respective predefined entity references.
+   *
+   * @param input The text to be converted.
+   * @return The input string with the special characters replaced.
+   * */
+  static public String escapeTags(final String input) {
+    //Check if the string is null, zero length or devoid of special characters
+    // if so, return what was sent in.
+
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if(input == null</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">       || input.length() == 0</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">       || (input.indexOf('&quot;') == -1 &amp;&amp;</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">           input.indexOf('&amp;') == -1 &amp;&amp;</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">           input.indexOf('&lt;') == -1 &amp;&amp;</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">           input.indexOf('&gt;') == -1)) {</span>
+<span class="fc" id="L53">      return input;</span>
+    }
+
+    //Use a StringBuffer in lieu of String concatenation -- it is
+    //much more efficient this way.
+
+<span class="fc" id="L59">    StringBuffer buf = new StringBuffer(input.length() + 6);</span>
+<span class="fc" id="L60">    char ch = ' ';</span>
+
+<span class="fc" id="L62">    int len = input.length();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    for(int i=0; i &lt; len; i++) {</span>
+<span class="fc" id="L64">      ch = input.charAt(i);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">      if (ch &gt; '&gt;') {</span>
+<span class="fc" id="L66">          buf.append(ch);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      } else if(ch == '&lt;') {</span>
+<span class="fc" id="L68">	      buf.append(&quot;&amp;lt;&quot;);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">      } else if(ch == '&gt;') {</span>
+<span class="fc" id="L70">	      buf.append(&quot;&amp;gt;&quot;);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">      } else if(ch == '&amp;') {</span>
+<span class="fc" id="L72">	      buf.append(&quot;&amp;amp;&quot;);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">      } else if(ch == '&quot;') {</span>
+<span class="fc" id="L74">	      buf.append(&quot;&amp;quot;&quot;);</span>
+      } else {
+<span class="fc" id="L76">	      buf.append(ch);</span>
+      }
+    }
+<span class="fc" id="L79">    return buf.toString();</span>
+  }
+
+  /**
+  * Ensures that embeded CDEnd strings (]]&gt;) are handled properly
+  * within message, NDC and throwable tag text.
+  *
+  * @param buf StringBuffer holding the XML data to this point.  The
+  * initial CDStart (&lt;![CDATA[) and final CDEnd (]]&gt;) of the CDATA
+  * section are the responsibility of the calling method.
+  * @param str The String that is inserted into an existing CDATA Section within buf.  
+  * */
+  static public void appendEscapingCDATA(final StringBuffer buf,
+                                         final String str) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">      if (str != null) {</span>
+<span class="fc" id="L94">          int end = str.indexOf(CDATA_END);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">          if (end &lt; 0) {</span>
+<span class="fc" id="L96">              buf.append(str);</span>
+          } else {
+<span class="fc" id="L98">              int start = 0;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">              while (end &gt; -1) {</span>
+<span class="fc" id="L100">                  buf.append(str.substring(start, end));</span>
+<span class="fc" id="L101">                  buf.append(CDATA_EMBEDED_END);</span>
+<span class="fc" id="L102">                  start = end + CDATA_END_LEN;</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                  if (start &lt; str.length()) {</span>
+<span class="fc" id="L104">                      end = str.indexOf(CDATA_END, start);</span>
+                  } else {
+<span class="nc" id="L106">                      return;</span>
+                  }
+              }
+<span class="fc" id="L109">              buf.append(str.substring(start));</span>
+          }
+      }
+<span class="fc" id="L112">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

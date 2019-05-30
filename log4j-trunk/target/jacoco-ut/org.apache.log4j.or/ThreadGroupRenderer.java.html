@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ThreadGroupRenderer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.or</a> &gt; <span class="el_source">ThreadGroupRenderer.java</span></div><h1>ThreadGroupRenderer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.or;
+
+import org.apache.log4j.Layout;
+
+
+/**
+   Render {@link ThreadGroup} objects in a format similar to the
+   information output by the {@link ThreadGroup#list} method.
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since 1.0 */
+public class ThreadGroupRenderer implements ObjectRenderer {
+
+  public
+<span class="nc" id="L31">  ThreadGroupRenderer() {</span>
+<span class="nc" id="L32">  }</span>
+  
+  /**
+     Render a {@link ThreadGroup} object similar to the way that the
+     {@link ThreadGroup#list} method output information. 
+
+     &lt;p&gt;The output of a simple program consisting of one
+     &lt;code&gt;main&lt;/code&gt; thread is:
+     &lt;pre&gt;
+     java.lang.ThreadGroup[name=main, maxpri=10]
+         Thread=[main,5,false]
+     &lt;/pre&gt;
+     
+     &lt;p&gt;The boolean value in thread information is the value returned
+     by {@link Thread#isDaemon}.
+     
+  */
+  public
+  String  doRender(Object o) {
+<span class="nc bnc" id="L51" title="All 2 branches missed.">    if(o instanceof ThreadGroup) {</span>
+<span class="nc" id="L52">      StringBuffer sbuf = new StringBuffer();</span>
+<span class="nc" id="L53">      ThreadGroup tg = (ThreadGroup) o;</span>
+<span class="nc" id="L54">      sbuf.append(&quot;java.lang.ThreadGroup[name=&quot;);</span>
+<span class="nc" id="L55">      sbuf.append(tg.getName());</span>
+<span class="nc" id="L56">      sbuf.append(&quot;, maxpri=&quot;);</span>
+<span class="nc" id="L57">      sbuf.append(tg.getMaxPriority());</span>
+<span class="nc" id="L58">      sbuf.append(&quot;]&quot;);</span>
+<span class="nc" id="L59">      Thread[] t = new Thread[tg.activeCount()];</span>
+<span class="nc" id="L60">      tg.enumerate(t);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">      for(int i = 0; i &lt; t.length; i++) {</span>
+<span class="nc" id="L62">	sbuf.append(Layout.LINE_SEP);	</span>
+<span class="nc" id="L63">	sbuf.append(&quot;   Thread=[&quot;);</span>
+<span class="nc" id="L64">	sbuf.append(t[i].getName());</span>
+<span class="nc" id="L65">	sbuf.append(&quot;,&quot;);</span>
+<span class="nc" id="L66">	sbuf.append(t[i].getPriority());</span>
+<span class="nc" id="L67">	sbuf.append(&quot;,&quot;);</span>
+<span class="nc" id="L68">	sbuf.append(t[i].isDaemon());</span>
+<span class="nc" id="L69">	sbuf.append(&quot;]&quot;);</span>
+      }
+<span class="nc" id="L71">      return sbuf.toString();</span>
+    } else {
+      try {
+        // this is the best we can do
+<span class="nc" id="L75">        return o.toString();</span>
+<span class="nc" id="L76">      } catch(Exception ex) {</span>
+<span class="nc" id="L77">          return ex.toString();</span>
+      }
+    }    
+  }
+}  
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

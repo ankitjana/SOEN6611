@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleSocketServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SimpleSocketServer.java</span></div><h1>SimpleSocketServer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
+
+
+/**
+ *  A simple {@link SocketNode} based server.
+ *
+   &lt;pre&gt;
+   &lt;b&gt;Usage:&lt;/b&gt; java org.apache.log4j.net.SimpleSocketServer port configFile
+
+   where &lt;em&gt;port&lt;/em&gt; is a port number where the server listens and
+   &lt;em&gt;configFile&lt;/em&gt; is a configuration file fed to the {@link
+   PropertyConfigurator} or to {@link DOMConfigurator} if an XML file.
+   &lt;/pre&gt;
+  *
+  * @author  Ceki G&amp;uuml;lc&amp;uuml;
+  *
+  *  @since 0.8.4 
+  * */
+<span class="nc" id="L44">public class SimpleSocketServer  {</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">  static Logger cat = Logger.getLogger(SimpleSocketServer.class);</span>
+
+  static int port;
+
+  public
+  static
+  void main(String argv[]) {
+<span class="nc bnc" id="L53" title="All 2 branches missed.">    if(argv.length == 2) {</span>
+<span class="nc" id="L54">      init(argv[0], argv[1]);</span>
+    } else {
+<span class="nc" id="L56">      usage(&quot;Wrong number of arguments.&quot;);</span>
+    }
+    
+    try {
+<span class="nc" id="L60">      cat.info(&quot;Listening on port &quot; + port);</span>
+<span class="nc" id="L61">      ServerSocket serverSocket = new ServerSocket(port);</span>
+      while(true) {
+<span class="nc" id="L63">	cat.info(&quot;Waiting to accept a new client.&quot;);</span>
+<span class="nc" id="L64">	Socket socket = serverSocket.accept();</span>
+<span class="nc" id="L65">	cat.info(&quot;Connected to client at &quot; + socket.getInetAddress());</span>
+<span class="nc" id="L66">	cat.info(&quot;Starting new socket node.&quot;);</span>
+<span class="nc" id="L67">	new Thread(new SocketNode(socket,</span>
+<span class="nc" id="L68">				  LogManager.getLoggerRepository()),&quot;SimpleSocketServer-&quot; + port).start();</span>
+<span class="nc" id="L69">      }</span>
+<span class="nc" id="L70">    } catch(Exception e) {</span>
+<span class="nc" id="L71">      e.printStackTrace();</span>
+    }
+<span class="nc" id="L73">  }</span>
+
+
+  static void  usage(String msg) {
+<span class="nc" id="L77">    System.err.println(msg);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">    System.err.println(</span>
+<span class="nc" id="L79">      &quot;Usage: java &quot; +SimpleSocketServer.class.getName() + &quot; port configFile&quot;);</span>
+<span class="nc" id="L80">    System.exit(1);</span>
+<span class="nc" id="L81">  }</span>
+
+  static void init(String portStr, String configFile) {
+    try {
+<span class="nc" id="L85">      port = Integer.parseInt(portStr);</span>
+<span class="nc" id="L86">    } catch(java.lang.NumberFormatException e) {</span>
+<span class="nc" id="L87">      e.printStackTrace();</span>
+<span class="nc" id="L88">      usage(&quot;Could not interpret port number [&quot;+ portStr +&quot;].&quot;);</span>
+<span class="nc" id="L89">    }</span>
+   
+<span class="nc bnc" id="L91" title="All 2 branches missed.">    if(configFile.endsWith(&quot;.xml&quot;)) {</span>
+<span class="nc" id="L92">      DOMConfigurator.configure(configFile);</span>
+    } else {
+<span class="nc" id="L94">      PropertyConfigurator.configure(configFile);</span>
+    }
+<span class="nc" id="L96">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

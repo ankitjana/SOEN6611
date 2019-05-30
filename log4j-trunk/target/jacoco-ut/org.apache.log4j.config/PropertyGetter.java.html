@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyGetter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.config</a> &gt; <span class="el_source">PropertyGetter.java</span></div><h1>PropertyGetter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.config;
+
+import org.apache.log4j.Priority;
+import org.apache.log4j.helpers.LogLog;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.InterruptedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+
+/**
+   Used for inferring configuration information for a log4j's component.
+
+   @author  Anders Kristensen
+ */
+public class PropertyGetter {
+<span class="nc" id="L38">  protected static final Object[] NULL_ARG = new Object[] {};</span>
+  protected Object obj;
+  protected PropertyDescriptor[] props;
+
+  public interface PropertyCallback {
+    void foundProperty(Object obj, String prefix, String name, Object value);
+  }
+
+  /**
+    Create a new PropertyGetter for the specified Object. This is done
+    in prepartion for invoking {@link
+    #getProperties(PropertyGetter.PropertyCallback, String)} one or
+    more times.
+
+    @param obj the object for which to set properties */
+  public
+<span class="nc" id="L54">  PropertyGetter(Object obj) throws IntrospectionException {</span>
+<span class="nc" id="L55">    BeanInfo bi = Introspector.getBeanInfo(obj.getClass());</span>
+<span class="nc" id="L56">    props = bi.getPropertyDescriptors();</span>
+<span class="nc" id="L57">    this.obj = obj;</span>
+<span class="nc" id="L58">  }</span>
+
+  public
+  static
+  void getProperties(Object obj, PropertyCallback callback, String prefix) {
+    try {
+<span class="nc" id="L64">      new PropertyGetter(obj).getProperties(callback, prefix);</span>
+<span class="nc" id="L65">    } catch (IntrospectionException ex) {</span>
+<span class="nc" id="L66">      LogLog.error(&quot;Failed to introspect object &quot; + obj, ex);</span>
+<span class="nc" id="L67">    }</span>
+<span class="nc" id="L68">  }</span>
+
+  public
+  void getProperties(PropertyCallback callback, String prefix) {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">    for (int i = 0; i &lt; props.length; i++) {</span>
+<span class="nc" id="L73">      Method getter = props[i].getReadMethod();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">      if (getter == null) {</span>
+<span class="nc" id="L75">        continue;</span>
+    }
+<span class="nc bnc" id="L77" title="All 2 branches missed.">      if (!isHandledType(getter.getReturnType())) {</span>
+	//System.err.println(&quot;Ignoring &quot; + props[i].getName() +&quot; &quot; + getter.getReturnType());
+<span class="nc" id="L79">	continue;</span>
+      }
+<span class="nc" id="L81">      String name = props[i].getName();</span>
+      try {
+<span class="nc" id="L83">	Object result = getter.invoke(obj, NULL_ARG);</span>
+	//System.err.println(&quot;PROP &quot; + name +&quot;: &quot; + result);
+<span class="nc bnc" id="L85" title="All 2 branches missed.">	if (result != null) {</span>
+<span class="nc" id="L86">	  callback.foundProperty(obj, prefix, name, result);</span>
+	}
+<span class="nc" id="L88">      } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L89">	    LogLog.warn(&quot;Failed to get value of property &quot; + name);</span>
+<span class="nc" id="L90">      } catch (InvocationTargetException ex) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (ex.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                || ex.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L93">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L95">        LogLog.warn(&quot;Failed to get value of property &quot; + name);</span>
+<span class="nc" id="L96">      } catch (RuntimeException ex) {</span>
+<span class="nc" id="L97">	    LogLog.warn(&quot;Failed to get value of property &quot; + name);</span>
+<span class="nc" id="L98">      }</span>
+    }
+<span class="nc" id="L100">  }</span>
+
+  protected
+  boolean isHandledType(Class type) {
+<span class="nc bnc" id="L104" title="All 4 branches missed.">    return String.class.isAssignableFrom(type) ||</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">      Integer.TYPE.isAssignableFrom(type) ||</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">      Long.TYPE.isAssignableFrom(type)    ||</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">      Boolean.TYPE.isAssignableFrom(type) ||</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">      Priority.class.isAssignableFrom(type);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

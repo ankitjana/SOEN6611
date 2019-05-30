@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesPatternConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">PropertiesPatternConverter.java</span></div><h1>PropertiesPatternConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.util.Iterator;
+import java.util.Set;
+import org.apache.log4j.helpers.*;
+
+
+/**
+ * Able to handle the contents of the LoggingEvent's Property bundle and either
+ * output the entire contents of the properties in a similar format to the
+ * java.util.Hashtable.toString(), or to output the value of a specific key
+ * within the property bundle
+ * when this pattern converter has the option set.
+ *
+ * @author Paul Smith
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+public final class PropertiesPatternConverter
+  extends LoggingEventPatternConverter {
+  /**
+   * Name of property to output.
+   */
+  private final String option;
+
+  /**
+   * Private constructor.
+   * @param options options, may be null.
+   */
+  private PropertiesPatternConverter(
+    final String[] options) {
+<span class="nc bnc" id="L50" title="All 4 branches missed.">    super(</span>
+      ((options != null) &amp;&amp; (options.length &gt; 0))
+      ? (&quot;Property{&quot; + options[0] + &quot;}&quot;) : &quot;Properties&quot;, &quot;property&quot;);
+
+<span class="nc bnc" id="L54" title="All 4 branches missed.">    if ((options != null) &amp;&amp; (options.length &gt; 0)) {</span>
+<span class="nc" id="L55">      option = options[0];</span>
+    } else {
+<span class="nc" id="L57">      option = null;</span>
+    }
+<span class="nc" id="L59">  }</span>
+
+  /**
+   * Obtains an instance of PropertiesPatternConverter.
+   * @param options options, may be null or first element contains name of property to format.
+   * @return instance of PropertiesPatternConverter.
+   */
+  public static PropertiesPatternConverter newInstance(
+    final String[] options) {
+<span class="nc" id="L68">    return new PropertiesPatternConverter(options);</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void format(final LoggingEvent event, final StringBuffer toAppendTo) {
+    // if there is no additional options, we output every single
+    // Key/Value pair for the MDC in a similar format to Hashtable.toString()
+<span class="nc bnc" id="L77" title="All 2 branches missed.">    if (option == null) {</span>
+<span class="nc" id="L78">      toAppendTo.append(&quot;{&quot;);</span>
+
+      try {
+<span class="nc" id="L81">        Set keySet = MDCKeySetExtractor.INSTANCE.getPropertyKeySet(event);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">          if (keySet != null) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            for (Iterator i = keySet.iterator(); i.hasNext();) {</span>
+<span class="nc" id="L84">                Object item = i.next();</span>
+<span class="nc" id="L85">                Object val = event.getMDC(item.toString());</span>
+<span class="nc" id="L86">                toAppendTo.append(&quot;{&quot;).append(item).append(&quot;,&quot;).append(val).append(</span>
+                &quot;}&quot;);
+<span class="nc" id="L88">            }</span>
+          }
+<span class="nc" id="L90">      } catch(Exception ex) {</span>
+<span class="nc" id="L91">              LogLog.error(&quot;Unexpected exception while extracting MDC keys&quot;, ex);</span>
+<span class="nc" id="L92">      }</span>
+
+<span class="nc" id="L94">      toAppendTo.append(&quot;}&quot;);</span>
+    } else {
+      // otherwise they just want a single key output
+<span class="nc" id="L97">      Object val = event.getMDC(option);</span>
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">      if (val != null) {</span>
+<span class="nc" id="L100">        toAppendTo.append(val);</span>
+      }
+    }
+<span class="nc" id="L103">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

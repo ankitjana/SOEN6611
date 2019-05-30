@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RollingFileAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">RollingFileAppender.java</span></div><h1>RollingFileAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+
+package org.apache.log4j;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.io.File;
+import java.io.InterruptedIOException;
+
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.CountingQuietWriter;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+   RollingFileAppender extends FileAppender to backup the log files when
+   they reach a certain size.
+   
+   The log4j extras companion includes alternatives which should be considered
+   for new deployments and which are discussed in the documentation
+   for org.apache.log4j.rolling.RollingFileAppender.
+   
+
+   @author Heinz Richter
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+
+*/
+public class RollingFileAppender extends FileAppender {
+
+  /**
+     The default maximum file size is 10MB.
+  */
+<span class="fc" id="L50">  protected long maxFileSize = 10*1024*1024;</span>
+
+  /**
+     There is one backup file by default.
+   */
+<span class="fc" id="L55">  protected int  maxBackupIndex  = 1;</span>
+
+<span class="fc" id="L57">  private long nextRollover = 0;</span>
+
+  /**
+     The default constructor simply calls its {@link
+     FileAppender#FileAppender parents constructor}.  */
+  public
+  RollingFileAppender() {
+<span class="fc" id="L64">    super();</span>
+<span class="fc" id="L65">  }</span>
+
+  /**
+    Instantiate a RollingFileAppender and open the file designated by
+    &lt;code&gt;filename&lt;/code&gt;. The opened filename will become the ouput
+    destination for this appender.
+
+    &lt;p&gt;If the &lt;code&gt;append&lt;/code&gt; parameter is true, the file will be
+    appended to. Otherwise, the file desginated by
+    &lt;code&gt;filename&lt;/code&gt; will be truncated before being opened.
+  */
+  public
+  RollingFileAppender(Layout layout, String filename, boolean append)
+                                      throws IOException {
+<span class="fc" id="L79">    super(layout, filename, append);</span>
+<span class="fc" id="L80">  }</span>
+
+  /**
+     Instantiate a FileAppender and open the file designated by
+    &lt;code&gt;filename&lt;/code&gt;. The opened filename will become the output
+    destination for this appender.
+
+    &lt;p&gt;The file will be appended to.  */
+  public
+  RollingFileAppender(Layout layout, String filename) throws IOException {
+<span class="fc" id="L90">    super(layout, filename);</span>
+<span class="fc" id="L91">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;MaxBackupIndex&lt;/b&gt; option.
+   */
+  public
+  int getMaxBackupIndex() {
+<span class="fc" id="L98">    return maxBackupIndex;</span>
+  }
+
+ /**
+    Get the maximum size that the output file is allowed to reach
+    before being rolled over to backup files.
+
+    @since 1.1
+ */
+  public
+  long getMaximumFileSize() {
+<span class="fc" id="L109">    return maxFileSize;</span>
+  }
+
+  /**
+     Implements the usual roll over behaviour.
+
+     &lt;p&gt;If &lt;code&gt;MaxBackupIndex&lt;/code&gt; is positive, then files
+     {&lt;code&gt;File.1&lt;/code&gt;, ..., &lt;code&gt;File.MaxBackupIndex -1&lt;/code&gt;}
+     are renamed to {&lt;code&gt;File.2&lt;/code&gt;, ...,
+     &lt;code&gt;File.MaxBackupIndex&lt;/code&gt;}. Moreover, &lt;code&gt;File&lt;/code&gt; is
+     renamed &lt;code&gt;File.1&lt;/code&gt; and closed. A new &lt;code&gt;File&lt;/code&gt; is
+     created to receive further log output.
+
+     &lt;p&gt;If &lt;code&gt;MaxBackupIndex&lt;/code&gt; is equal to zero, then the
+     &lt;code&gt;File&lt;/code&gt; is truncated with no backup files created.
+
+   */
+  public // synchronization not necessary since doAppend is alreasy synched
+  void rollOver() {
+    File target;
+    File file;
+
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">    if (qw != null) {</span>
+<span class="fc" id="L132">        long size = ((CountingQuietWriter) qw).getCount();</span>
+<span class="fc" id="L133">        LogLog.debug(&quot;rolling over count=&quot; + size);</span>
+        //   if operation fails, do not roll again until
+        //      maxFileSize more bytes are written
+<span class="fc" id="L136">        nextRollover = size + maxFileSize;</span>
+    }
+<span class="fc" id="L138">    LogLog.debug(&quot;maxBackupIndex=&quot;+maxBackupIndex);</span>
+
+<span class="fc" id="L140">    boolean renameSucceeded = true;</span>
+    // If maxBackups &lt;= 0, then there is no file renaming to be done.
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">    if(maxBackupIndex &gt; 0) {</span>
+      // Delete the oldest file, to keep Windows happy.
+<span class="fc" id="L144">      file = new File(fileName + '.' + maxBackupIndex);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">      if (file.exists()) {</span>
+<span class="fc" id="L146">        renameSucceeded = file.delete();</span>
+    }
+
+      // Map {(maxBackupIndex - 1), ..., 2, 1} to {maxBackupIndex, ..., 3, 2}
+<span class="fc bfc" id="L150" title="All 4 branches covered.">      for (int i = maxBackupIndex - 1; i &gt;= 1 &amp;&amp; renameSucceeded; i--) {</span>
+<span class="fc" id="L151">	file = new File(fileName + &quot;.&quot; + i);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">	if (file.exists()) {</span>
+<span class="fc" id="L153">	  target = new File(fileName + '.' + (i + 1));</span>
+<span class="fc" id="L154">	  LogLog.debug(&quot;Renaming file &quot; + file + &quot; to &quot; + target);</span>
+<span class="fc" id="L155">	  renameSucceeded = file.renameTo(target);</span>
+	}
+      }
+
+<span class="fc bfc" id="L159" title="All 2 branches covered.">    if(renameSucceeded) {</span>
+      // Rename fileName to fileName.1
+<span class="fc" id="L161">      target = new File(fileName + &quot;.&quot; + 1);</span>
+
+<span class="fc" id="L163">      this.closeFile(); // keep windows happy.</span>
+
+<span class="fc" id="L165">      file = new File(fileName);</span>
+<span class="fc" id="L166">      LogLog.debug(&quot;Renaming file &quot; + file + &quot; to &quot; + target);</span>
+<span class="fc" id="L167">      renameSucceeded = file.renameTo(target);</span>
+      //
+      //   if file rename failed, reopen file with append = true
+      //
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">      if (!renameSucceeded) {</span>
+          try {
+<span class="nc" id="L173">            this.setFile(fileName, true, bufferedIO, bufferSize);</span>
+          }
+<span class="nc" id="L175">          catch(IOException e) {</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">              if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L177">                  Thread.currentThread().interrupt();</span>
+              }
+<span class="nc" id="L179">              LogLog.error(&quot;setFile(&quot;+fileName+&quot;, true) call failed.&quot;, e);</span>
+<span class="nc" id="L180">          }</span>
+      }
+    }
+    }
+
+    //
+    //   if all renames were successful, then
+    //
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    if (renameSucceeded) {</span>
+    try {
+      // This will also close the file. This is OK since multiple
+      // close operations are safe.
+<span class="fc" id="L192">      this.setFile(fileName, false, bufferedIO, bufferSize);</span>
+<span class="fc" id="L193">      nextRollover = 0;</span>
+    }
+<span class="nc" id="L195">    catch(IOException e) {</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L197">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L199">        LogLog.error(&quot;setFile(&quot;+fileName+&quot;, false) call failed.&quot;, e);</span>
+<span class="fc" id="L200">    }</span>
+    }
+<span class="fc" id="L202">  }</span>
+
+  public
+  synchronized
+  void setFile(String fileName, boolean append, boolean bufferedIO, int bufferSize)
+                                                                 throws IOException {
+<span class="fc" id="L208">    super.setFile(fileName, append, this.bufferedIO, this.bufferSize);</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">    if(append) {</span>
+<span class="fc" id="L210">      File f = new File(fileName);</span>
+<span class="fc" id="L211">      ((CountingQuietWriter) qw).setCount(f.length());</span>
+    }
+<span class="fc" id="L213">  }</span>
+
+
+  /**
+     Set the maximum number of backup files to keep around.
+
+     &lt;p&gt;The &lt;b&gt;MaxBackupIndex&lt;/b&gt; option determines how many backup
+     files are kept before the oldest is erased. This option takes
+     a positive integer value. If set to zero, then there will be no
+     backup files and the log file will be truncated when it reaches
+     &lt;code&gt;MaxFileSize&lt;/code&gt;.
+   */
+  public
+  void setMaxBackupIndex(int maxBackups) {
+<span class="fc" id="L227">    this.maxBackupIndex = maxBackups;</span>
+<span class="fc" id="L228">  }</span>
+
+  /**
+     Set the maximum size that the output file is allowed to reach
+     before being rolled over to backup files.
+
+     &lt;p&gt;This method is equivalent to {@link #setMaxFileSize} except
+     that it is required for differentiating the setter taking a
+     &lt;code&gt;long&lt;/code&gt; argument from the setter taking a
+     &lt;code&gt;String&lt;/code&gt; argument by the JavaBeans {@link
+     java.beans.Introspector Introspector}.
+
+     @see #setMaxFileSize(String)
+ */
+  public
+  void setMaximumFileSize(long maxFileSize) {
+<span class="fc" id="L244">    this.maxFileSize = maxFileSize;</span>
+<span class="fc" id="L245">  }</span>
+
+
+  /**
+     Set the maximum size that the output file is allowed to reach
+     before being rolled over to backup files.
+
+     &lt;p&gt;In configuration files, the &lt;b&gt;MaxFileSize&lt;/b&gt; option takes an
+     long integer in the range 0 - 2^63. You can specify the value
+     with the suffixes &quot;KB&quot;, &quot;MB&quot; or &quot;GB&quot; so that the integer is
+     interpreted being expressed respectively in kilobytes, megabytes
+     or gigabytes. For example, the value &quot;10KB&quot; will be interpreted
+     as 10240.
+   */
+  public
+  void setMaxFileSize(String value) {
+<span class="fc" id="L261">    maxFileSize = OptionConverter.toFileSize(value, maxFileSize + 1);</span>
+<span class="fc" id="L262">  }</span>
+
+  protected
+  void setQWForFiles(Writer writer) {
+<span class="fc" id="L266">     this.qw = new CountingQuietWriter(writer, errorHandler);</span>
+<span class="fc" id="L267">  }</span>
+
+  /**
+     This method differentiates RollingFileAppender from its super
+     class.
+
+     @since 0.9.0
+  */
+  protected
+  void subAppend(LoggingEvent event) {
+<span class="fc" id="L277">    super.subAppend(event);</span>
+<span class="pc bpc" id="L278" title="2 of 4 branches missed.">    if(fileName != null &amp;&amp; qw != null) {</span>
+<span class="fc" id="L279">        long size = ((CountingQuietWriter) qw).getCount();</span>
+<span class="fc bfc" id="L280" title="All 4 branches covered.">        if (size &gt;= maxFileSize &amp;&amp; size &gt;= nextRollover) {</span>
+<span class="fc" id="L281">            rollOver();</span>
+        }
+    }
+<span class="fc" id="L284">   }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

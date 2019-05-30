@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocketServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SocketServer.java</span></div><h1>SocketServer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Hashtable;
+
+import org.apache.log4j.Hierarchy;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.RootLogger;
+
+
+/**
+   A {@link SocketNode} based server that uses a different hierarchy
+   for each client.
+
+   &lt;pre&gt;
+     &lt;b&gt;Usage:&lt;/b&gt; java org.apache.log4j.net.SocketServer port configFile configDir
+
+     where &lt;b&gt;port&lt;/b&gt; is a part number where the server listens,
+           &lt;b&gt;configFile&lt;/b&gt; is a configuration file fed to the {@link PropertyConfigurator} and
+           &lt;b&gt;configDir&lt;/b&gt; is a path to a directory containing configuration files, possibly one for each client host.
+     &lt;/pre&gt;
+
+     &lt;p&gt;The &lt;code&gt;configFile&lt;/code&gt; is used to configure the log4j
+     default hierarchy that the &lt;code&gt;SocketServer&lt;/code&gt; will use to
+     report on its actions.
+
+     &lt;p&gt;When a new connection is opened from a previously unknown
+     host, say &lt;code&gt;foo.bar.net&lt;/code&gt;, then the
+     &lt;code&gt;SocketServer&lt;/code&gt; will search for a configuration file
+     called &lt;code&gt;foo.bar.net.lcf&lt;/code&gt; under the directory
+     &lt;code&gt;configDir&lt;/code&gt; that was passed as the third argument. If
+     the file can be found, then a new hierarchy is instantiated and
+     configured using the configuration file
+     &lt;code&gt;foo.bar.net.lcf&lt;/code&gt;. If and when the host
+     &lt;code&gt;foo.bar.net&lt;/code&gt; opens another connection to the server,
+     then the previously configured hierarchy is used.
+
+     &lt;p&gt;In case there is no file called &lt;code&gt;foo.bar.net.lcf&lt;/code&gt;
+     under the directory &lt;code&gt;configDir&lt;/code&gt;, then the
+     &lt;em&gt;generic&lt;/em&gt; hierarchy is used. The generic hierarchy is
+     configured using a configuration file called
+     &lt;code&gt;generic.lcf&lt;/code&gt; under the &lt;code&gt;configDir&lt;/code&gt;
+     directory. If no such file exists, then the generic hierarchy will be
+     identical to the log4j default hierarchy.
+
+     &lt;p&gt;Having different client hosts log using different hierarchies
+     ensures the total independence of the clients with respect to
+     their logging settings.
+
+     &lt;p&gt;Currently, the hierarchy that will be used for a given request
+     depends on the IP address of the client host. For example, two
+     separate applications running on the same host and logging to the
+     same server will share the same hierarchy. This is perfectly safe
+     except that it might not provide the right amount of independence
+     between applications. The &lt;code&gt;SocketServer&lt;/code&gt; is intended
+     as an example to be enhanced in order to implement more elaborate
+     policies.
+
+
+    @author  Ceki G&amp;uuml;lc&amp;uuml;
+
+    @since 1.0 */
+
+public class SocketServer  {
+
+<span class="nc" id="L90">  static String GENERIC = &quot;generic&quot;;</span>
+<span class="nc" id="L91">  static String CONFIG_FILE_EXT = &quot;.lcf&quot;;</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">  static Logger cat = Logger.getLogger(SocketServer.class);</span>
+  static SocketServer server;
+  static int port;
+
+  // key=inetAddress, value=hierarchy
+  Hashtable hierarchyMap;
+  LoggerRepository genericHierarchy;
+  File dir;
+
+  public
+  static
+  void main(String argv[]) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">    if(argv.length == 3) {</span>
+<span class="nc" id="L106">        init(argv[0], argv[1], argv[2]);</span>
+    } else {
+<span class="nc" id="L108">        usage(&quot;Wrong number of arguments.&quot;);</span>
+    }
+
+    try {
+<span class="nc" id="L112">      cat.info(&quot;Listening on port &quot; + port);</span>
+<span class="nc" id="L113">      ServerSocket serverSocket = new ServerSocket(port);</span>
+      while(true) {
+<span class="nc" id="L115">	cat.info(&quot;Waiting to accept a new client.&quot;);</span>
+<span class="nc" id="L116">	Socket socket = serverSocket.accept();</span>
+<span class="nc" id="L117">	InetAddress inetAddress =  socket.getInetAddress();</span>
+<span class="nc" id="L118">	cat.info(&quot;Connected to client at &quot; + inetAddress);</span>
+
+<span class="nc" id="L120">	LoggerRepository h = (LoggerRepository) server.hierarchyMap.get(inetAddress);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">	if(h == null) {</span>
+<span class="nc" id="L122">	  h = server.configureHierarchy(inetAddress);</span>
+	}
+
+<span class="nc" id="L125">	cat.info(&quot;Starting new socket node.&quot;);</span>
+<span class="nc" id="L126">	new Thread(new SocketNode(socket, h)).start();</span>
+<span class="nc" id="L127">      }</span>
+    }
+<span class="nc" id="L129">    catch(Exception e) {</span>
+<span class="nc" id="L130">      e.printStackTrace();</span>
+    }
+<span class="nc" id="L132">  }</span>
+
+
+  static
+  void  usage(String msg) {
+<span class="nc" id="L137">    System.err.println(msg);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">    System.err.println(</span>
+<span class="nc" id="L139">      &quot;Usage: java &quot; +SocketServer.class.getName() + &quot; port configFile directory&quot;);</span>
+<span class="nc" id="L140">    System.exit(1);</span>
+<span class="nc" id="L141">  }</span>
+
+  static
+  void init(String portStr, String configFile, String dirStr) {
+    try {
+<span class="nc" id="L146">      port = Integer.parseInt(portStr);</span>
+    }
+<span class="nc" id="L148">    catch(java.lang.NumberFormatException e) {</span>
+<span class="nc" id="L149">      e.printStackTrace();</span>
+<span class="nc" id="L150">      usage(&quot;Could not interpret port number [&quot;+ portStr +&quot;].&quot;);</span>
+<span class="nc" id="L151">    }</span>
+
+<span class="nc" id="L153">    PropertyConfigurator.configure(configFile);</span>
+
+<span class="nc" id="L155">    File dir = new File(dirStr);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">    if(!dir.isDirectory()) {</span>
+<span class="nc" id="L157">      usage(&quot;[&quot;+dirStr+&quot;] is not a directory.&quot;);</span>
+    }
+<span class="nc" id="L159">    server = new SocketServer(dir);</span>
+<span class="nc" id="L160">  }</span>
+
+
+  public
+<span class="nc" id="L164">  SocketServer(File directory) {</span>
+<span class="nc" id="L165">    this.dir = directory;</span>
+<span class="nc" id="L166">    hierarchyMap = new Hashtable(11);</span>
+<span class="nc" id="L167">  }</span>
+
+  // This method assumes that there is no hiearchy for inetAddress
+  // yet. It will configure one and return it.
+  LoggerRepository configureHierarchy(InetAddress inetAddress) {
+<span class="nc" id="L172">    cat.info(&quot;Locating configuration file for &quot;+inetAddress);</span>
+    // We assume that the toSting method of InetAddress returns is in
+    // the format hostname/d1.d2.d3.d4 e.g. torino/192.168.1.1
+<span class="nc" id="L175">    String s = inetAddress.toString();</span>
+<span class="nc" id="L176">    int i = s.indexOf(&quot;/&quot;);</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">    if(i == -1) {</span>
+<span class="nc" id="L178">      cat.warn(&quot;Could not parse the inetAddress [&quot;+inetAddress+</span>
+	       &quot;]. Using default hierarchy.&quot;);
+<span class="nc" id="L180">      return genericHierarchy();</span>
+    } else {
+<span class="nc" id="L182">      String key = s.substring(0, i);</span>
+
+<span class="nc" id="L184">      File configFile = new File(dir, key+CONFIG_FILE_EXT);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">      if(configFile.exists()) {</span>
+<span class="nc" id="L186">	Hierarchy h = new Hierarchy(new RootLogger(Level.DEBUG));</span>
+<span class="nc" id="L187">	hierarchyMap.put(inetAddress, h);</span>
+
+<span class="nc" id="L189">	new PropertyConfigurator().doConfigure(configFile.getAbsolutePath(), h);</span>
+
+<span class="nc" id="L191">	return h;</span>
+      } else {
+<span class="nc" id="L193">	cat.warn(&quot;Could not find config file [&quot;+configFile+&quot;].&quot;);</span>
+<span class="nc" id="L194">	return genericHierarchy();</span>
+      }
+    }
+  }
+
+  LoggerRepository  genericHierarchy() {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">    if(genericHierarchy == null) {</span>
+<span class="nc" id="L201">      File f = new File(dir, GENERIC+CONFIG_FILE_EXT);</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">      if(f.exists()) {</span>
+<span class="nc" id="L203">	genericHierarchy = new Hierarchy(new RootLogger(Level.DEBUG));</span>
+<span class="nc" id="L204">	new PropertyConfigurator().doConfigure(f.getAbsolutePath(), genericHierarchy);</span>
+      } else {
+<span class="nc" id="L206">	cat.warn(&quot;Could not find config file [&quot;+f+</span>
+		 &quot;]. Will use the default hierarchy.&quot;);
+<span class="nc" id="L208">	genericHierarchy = LogManager.getLoggerRepository();</span>
+      }
+    }
+<span class="nc" id="L211">    return genericHierarchy;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

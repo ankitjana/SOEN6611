@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatternParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">PatternParser.java</span></div><h1>PatternParser.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.LocationInfo;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Arrays;
+
+// Contributors:   Nelson Minar &lt;(nelson@monkey.org&gt;
+//                 Igor E. Poteryaev &lt;jah@mail.ru&gt;
+//                 Reinhard Deschler &lt;reinhard.deschler@web.de&gt;
+
+/**
+   Most of the work of the {@link org.apache.log4j.PatternLayout} class
+   is delegated to the PatternParser class.
+
+   &lt;p&gt;It is this class that parses conversion patterns and creates
+   a chained list of {@link OptionConverter OptionConverters}.
+
+   @author &lt;a href=mailto:&quot;cakalijp@Maritz.com&quot;&gt;James P. Cakalic&lt;/a&gt;
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Anders Kristensen
+
+   @since 0.8.2
+*/
+public class PatternParser {
+
+  private static final char ESCAPE_CHAR = '%';
+
+  private static final int LITERAL_STATE = 0;
+  private static final int CONVERTER_STATE = 1;
+  private static final int DOT_STATE = 3;
+  private static final int MIN_STATE = 4;
+  private static final int MAX_STATE = 5;
+
+  static final int FULL_LOCATION_CONVERTER = 1000;
+  static final int METHOD_LOCATION_CONVERTER = 1001;
+  static final int CLASS_LOCATION_CONVERTER = 1002;
+  static final int LINE_LOCATION_CONVERTER = 1003;
+  static final int FILE_LOCATION_CONVERTER = 1004;
+
+  static final int RELATIVE_TIME_CONVERTER = 2000;
+  static final int THREAD_CONVERTER = 2001;
+  static final int LEVEL_CONVERTER = 2002;
+  static final int NDC_CONVERTER = 2003;
+  static final int MESSAGE_CONVERTER = 2004;
+
+  int state;
+<span class="fc" id="L68">  protected StringBuffer currentLiteral = new StringBuffer(32);</span>
+  protected int patternLength;
+  protected int i;
+  PatternConverter head;
+  PatternConverter tail;
+<span class="fc" id="L73">  protected FormattingInfo formattingInfo = new FormattingInfo();</span>
+  protected String pattern;
+
+  public
+<span class="fc" id="L77">  PatternParser(String pattern) {</span>
+<span class="fc" id="L78">    this.pattern = pattern;</span>
+<span class="fc" id="L79">    patternLength =  pattern.length();</span>
+<span class="fc" id="L80">    state = LITERAL_STATE;</span>
+<span class="fc" id="L81">  }</span>
+
+  private
+  void  addToList(PatternConverter pc) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    if(head == null) {</span>
+<span class="fc" id="L86">      head = tail = pc;</span>
+    } else {
+<span class="fc" id="L88">      tail.next = pc;</span>
+<span class="fc" id="L89">      tail = pc;</span>
+    }
+<span class="fc" id="L91">  }</span>
+
+  protected
+  String extractOption() {
+<span class="pc bpc" id="L95" title="1 of 4 branches missed.">    if((i &lt; patternLength) &amp;&amp; (pattern.charAt(i) == '{')) {</span>
+<span class="fc" id="L96">      int end = pattern.indexOf('}', i);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">      if (end &gt; i) {</span>
+<span class="fc" id="L98">	String r = pattern.substring(i + 1, end);</span>
+<span class="fc" id="L99">	i = end+1;</span>
+<span class="fc" id="L100">	return r;</span>
+      }
+    }
+<span class="fc" id="L103">    return null;</span>
+  }
+
+
+  /**
+     The option is expected to be in decimal and positive. In case of
+     error, zero is returned.  */
+  protected
+  int extractPrecisionOption() {
+<span class="fc" id="L112">    String opt = extractOption();</span>
+<span class="fc" id="L113">    int r = 0;</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    if(opt != null) {</span>
+      try {
+<span class="fc" id="L116">	r = Integer.parseInt(opt);</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">	if(r &lt;= 0) {</span>
+<span class="nc" id="L118">	    LogLog.error(</span>
+	        &quot;Precision option (&quot; + opt + &quot;) isn't a positive integer.&quot;);
+<span class="nc" id="L120">	    r = 0;</span>
+	}
+      }
+<span class="nc" id="L123">      catch (NumberFormatException e) {</span>
+<span class="nc" id="L124">	LogLog.error(&quot;Category option \&quot;&quot;+opt+&quot;\&quot; not a decimal integer.&quot;, e);</span>
+<span class="fc" id="L125">      }</span>
+    }
+<span class="fc" id="L127">    return r;</span>
+  }
+
+  public
+  PatternConverter parse() {
+    char c;
+<span class="fc" id="L133">    i = 0;</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    while(i &lt; patternLength) {</span>
+<span class="fc" id="L135">      c = pattern.charAt(i++);</span>
+<span class="pc bpc" id="L136" title="1 of 6 branches missed.">      switch(state) {</span>
+      case LITERAL_STATE:
+        // In literal state, the last char is always a literal.
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if(i == patternLength) {</span>
+<span class="fc" id="L140">          currentLiteral.append(c);</span>
+<span class="fc" id="L141">          continue;</span>
+        }
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if(c == ESCAPE_CHAR) {</span>
+          // peek at the next char.
+<span class="pc bpc" id="L145" title="1 of 3 branches missed.">          switch(pattern.charAt(i)) {</span>
+          case ESCAPE_CHAR:
+<span class="nc" id="L147">            currentLiteral.append(c);</span>
+<span class="nc" id="L148">            i++; // move pointer</span>
+<span class="nc" id="L149">            break;</span>
+          case 'n':
+<span class="fc" id="L151">            currentLiteral.append(Layout.LINE_SEP);</span>
+<span class="fc" id="L152">            i++; // move pointer</span>
+<span class="fc" id="L153">            break;</span>
+          default:
+<span class="fc bfc" id="L155" title="All 2 branches covered.">            if(currentLiteral.length() != 0) {</span>
+<span class="fc" id="L156">              addToList(new LiteralPatternConverter(</span>
+<span class="fc" id="L157">                                                  currentLiteral.toString()));</span>
+              //LogLog.debug(&quot;Parsed LITERAL converter: \&quot;&quot;
+              //           +currentLiteral+&quot;\&quot;.&quot;);
+            }
+<span class="fc" id="L161">            currentLiteral.setLength(0);</span>
+<span class="fc" id="L162">            currentLiteral.append(c); // append %</span>
+<span class="fc" id="L163">            state = CONVERTER_STATE;</span>
+<span class="fc" id="L164">            formattingInfo.reset();</span>
+          }
+        }
+        else {
+<span class="fc" id="L168">          currentLiteral.append(c);</span>
+        }
+<span class="fc" id="L170">        break;</span>
+      case CONVERTER_STATE:
+<span class="fc" id="L172">	currentLiteral.append(c);</span>
+<span class="fc bfc" id="L173" title="All 3 branches covered.">	switch(c) {</span>
+	case '-':
+<span class="fc" id="L175">	  formattingInfo.leftAlign = true;</span>
+<span class="fc" id="L176">	  break;</span>
+	case '.':
+<span class="fc" id="L178">	  state = DOT_STATE;</span>
+<span class="fc" id="L179">	  break;</span>
+	default:
+<span class="pc bpc" id="L181" title="1 of 4 branches missed.">	  if(c &gt;= '0' &amp;&amp; c &lt;= '9') {</span>
+<span class="fc" id="L182">	    formattingInfo.min = c - '0';</span>
+<span class="fc" id="L183">	    state = MIN_STATE;</span>
+	  } else {
+<span class="fc" id="L185">        finalizeConverter(c);</span>
+    }
+	} // switch
+<span class="fc" id="L188">	break;</span>
+      case MIN_STATE:
+<span class="fc" id="L190">	currentLiteral.append(c);</span>
+<span class="pc bpc" id="L191" title="1 of 4 branches missed.">	if(c &gt;= '0' &amp;&amp; c &lt;= '9') {</span>
+<span class="nc" id="L192">        formattingInfo.min = formattingInfo.min*10 + (c - '0');</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">    } else if(c == '.') {</span>
+<span class="nc" id="L194">        state = DOT_STATE;</span>
+    } else {
+<span class="fc" id="L196">	  finalizeConverter(c);</span>
+	}
+<span class="fc" id="L198">	break;</span>
+      case DOT_STATE:
+<span class="fc" id="L200">	currentLiteral.append(c);</span>
+<span class="pc bpc" id="L201" title="2 of 4 branches missed.">	if(c &gt;= '0' &amp;&amp; c &lt;= '9') {</span>
+<span class="fc" id="L202">	  formattingInfo.max = c - '0';</span>
+<span class="fc" id="L203">	   state = MAX_STATE;</span>
+	}
+	else {
+<span class="nc" id="L206">	  LogLog.error(&quot;Error occured in position &quot;+i</span>
+		     +&quot;.\n Was expecting digit, instead got char \&quot;&quot;+c+&quot;\&quot;.&quot;);
+<span class="nc" id="L208">	  state = LITERAL_STATE;</span>
+	}
+<span class="nc" id="L210">	break;</span>
+      case MAX_STATE:
+<span class="fc" id="L212">	currentLiteral.append(c);</span>
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">	if(c &gt;= '0' &amp;&amp; c &lt;= '9') {</span>
+<span class="fc" id="L214">        formattingInfo.max = formattingInfo.max*10 + (c - '0');</span>
+    } else {
+<span class="fc" id="L216">	  finalizeConverter(c);</span>
+<span class="fc" id="L217">	  state = LITERAL_STATE;</span>
+	}
+<span class="fc" id="L219">	break;</span>
+      } // switch
+    } // while
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">    if(currentLiteral.length() != 0) {</span>
+<span class="fc" id="L223">      addToList(new LiteralPatternConverter(currentLiteral.toString()));</span>
+      //LogLog.debug(&quot;Parsed LITERAL converter: \&quot;&quot;+currentLiteral+&quot;\&quot;.&quot;);
+    }
+<span class="fc" id="L226">    return head;</span>
+  }
+
+  protected
+  void finalizeConverter(char c) {
+<span class="fc" id="L231">    PatternConverter pc = null;</span>
+<span class="pc bpc" id="L232" title="2 of 14 branches missed.">    switch(c) {</span>
+    case 'c':
+<span class="fc" id="L234">      pc = new CategoryPatternConverter(formattingInfo,</span>
+<span class="fc" id="L235">					extractPrecisionOption());</span>
+      //LogLog.debug(&quot;CATEGORY converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L238">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L239">      break;</span>
+    case 'C':
+<span class="fc" id="L241">      pc = new ClassNamePatternConverter(formattingInfo,</span>
+<span class="fc" id="L242">					 extractPrecisionOption());</span>
+      //LogLog.debug(&quot;CLASS_NAME converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L245">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L246">      break;</span>
+    case 'd':
+<span class="fc" id="L248">      String dateFormatStr = AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT;</span>
+      DateFormat df;
+<span class="fc" id="L250">      String dOpt = extractOption();</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">      if(dOpt != null) {</span>
+<span class="fc" id="L252">        dateFormatStr = dOpt;</span>
+    }
+
+<span class="fc bfc" id="L255" title="All 2 branches covered.">      if(dateFormatStr.equalsIgnoreCase(</span>
+                                    AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT)) {
+<span class="fc" id="L257">        df = new  ISO8601DateFormat();</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">    } else if(dateFormatStr.equalsIgnoreCase(</span>
+                                   AbsoluteTimeDateFormat.ABS_TIME_DATE_FORMAT)) {
+<span class="fc" id="L260">        df = new AbsoluteTimeDateFormat();</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">    } else if(dateFormatStr.equalsIgnoreCase(</span>
+                              AbsoluteTimeDateFormat.DATE_AND_TIME_DATE_FORMAT)) {
+<span class="fc" id="L263">        df = new DateTimeDateFormat();</span>
+    } else {
+	try {
+<span class="fc" id="L266">	  df = new SimpleDateFormat(dateFormatStr);</span>
+	}
+<span class="nc" id="L268">	catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L269">	  LogLog.error(&quot;Could not instantiate SimpleDateFormat with &quot; +</span>
+		       dateFormatStr, e);
+<span class="nc bnc" id="L271" title="All 2 branches missed.">	  df = (DateFormat) OptionConverter.instantiateByClassName(</span>
+			           &quot;org.apache.log4j.helpers.ISO8601DateFormat&quot;,
+<span class="nc" id="L273">				   DateFormat.class, null);</span>
+<span class="fc" id="L274">	}</span>
+      }
+<span class="fc" id="L276">      pc = new DatePatternConverter(formattingInfo, df);</span>
+      //LogLog.debug(&quot;DATE converter {&quot;+dateFormatStr+&quot;}.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L279">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L280">      break;</span>
+    case 'F':
+<span class="fc" id="L282">      pc = new LocationPatternConverter(formattingInfo,</span>
+					FILE_LOCATION_CONVERTER);
+      //LogLog.debug(&quot;File name converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L286">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L287">      break;</span>
+    case 'l':
+<span class="fc" id="L289">      pc = new LocationPatternConverter(formattingInfo,</span>
+					FULL_LOCATION_CONVERTER);
+      //LogLog.debug(&quot;Location converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L293">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L294">      break;</span>
+    case 'L':
+<span class="fc" id="L296">      pc = new LocationPatternConverter(formattingInfo,</span>
+					LINE_LOCATION_CONVERTER);
+      //LogLog.debug(&quot;LINE NUMBER converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L300">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L301">      break;</span>
+    case 'm':
+<span class="fc" id="L303">      pc = new BasicPatternConverter(formattingInfo, MESSAGE_CONVERTER);</span>
+      //LogLog.debug(&quot;MESSAGE converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L306">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L307">      break;</span>
+    case 'M':
+<span class="fc" id="L309">      pc = new LocationPatternConverter(formattingInfo,</span>
+					METHOD_LOCATION_CONVERTER);
+      //LogLog.debug(&quot;METHOD converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L313">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L314">      break;</span>
+    case 'p':
+<span class="fc" id="L316">      pc = new BasicPatternConverter(formattingInfo, LEVEL_CONVERTER);</span>
+      //LogLog.debug(&quot;LEVEL converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L319">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L320">      break;</span>
+    case 'r':
+<span class="fc" id="L322">      pc = new BasicPatternConverter(formattingInfo,</span>
+					 RELATIVE_TIME_CONVERTER);
+      //LogLog.debug(&quot;RELATIVE time converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L326">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L327">      break;</span>
+    case 't':
+<span class="fc" id="L329">      pc = new BasicPatternConverter(formattingInfo, THREAD_CONVERTER);</span>
+      //LogLog.debug(&quot;THREAD converter.&quot;);
+      //formattingInfo.dump();
+<span class="fc" id="L332">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L333">      break;</span>
+      /*case 'u':
+      if(i &lt; patternLength) {
+	char cNext = pattern.charAt(i);
+	if(cNext &gt;= '0' &amp;&amp; cNext &lt;= '9') {
+	  pc = new UserFieldPatternConverter(formattingInfo, cNext - '0');
+	  LogLog.debug(&quot;USER converter [&quot;+cNext+&quot;].&quot;);
+	  formattingInfo.dump();
+	  currentLiteral.setLength(0);
+	  i++;
+	}
+	else
+	  LogLog.error(&quot;Unexpected char&quot; +cNext+&quot; at position &quot;+i);
+      }
+      break;*/
+    case 'x':
+<span class="nc" id="L349">      pc = new BasicPatternConverter(formattingInfo, NDC_CONVERTER);</span>
+      //LogLog.debug(&quot;NDC converter.&quot;);
+<span class="nc" id="L351">      currentLiteral.setLength(0);</span>
+<span class="nc" id="L352">      break;</span>
+    case 'X':
+<span class="fc" id="L354">      String xOpt = extractOption();</span>
+<span class="fc" id="L355">      pc = new MDCPatternConverter(formattingInfo, xOpt);</span>
+<span class="fc" id="L356">      currentLiteral.setLength(0);</span>
+<span class="fc" id="L357">      break;</span>
+    default:
+<span class="nc" id="L359">      LogLog.error(&quot;Unexpected char [&quot; +c+&quot;] at position &quot;+i</span>
+		   +&quot; in conversion patterrn.&quot;);
+<span class="nc" id="L361">      pc = new LiteralPatternConverter(currentLiteral.toString());</span>
+<span class="nc" id="L362">      currentLiteral.setLength(0);</span>
+    }
+
+<span class="fc" id="L365">    addConverter(pc);</span>
+<span class="fc" id="L366">  }</span>
+
+  protected
+  void addConverter(PatternConverter pc) {
+<span class="fc" id="L370">    currentLiteral.setLength(0);</span>
+    // Add the pattern converter to the list.
+<span class="fc" id="L372">    addToList(pc);</span>
+    // Next pattern is assumed to be a literal.
+<span class="fc" id="L374">    state = LITERAL_STATE;</span>
+    // Reset formatting info
+<span class="fc" id="L376">    formattingInfo.reset();</span>
+<span class="fc" id="L377">  }</span>
+
+  // ---------------------------------------------------------------------
+  //                      PatternConverters
+  // ---------------------------------------------------------------------
+
+  private static class BasicPatternConverter extends PatternConverter {
+    int type;
+
+    BasicPatternConverter(FormattingInfo formattingInfo, int type) {
+<span class="fc" id="L387">      super(formattingInfo);</span>
+<span class="fc" id="L388">      this.type = type;</span>
+<span class="fc" id="L389">    }</span>
+
+    public
+    String convert(LoggingEvent event) {
+<span class="pc bpc" id="L393" title="2 of 6 branches missed.">      switch(type) {</span>
+      case RELATIVE_TIME_CONVERTER:
+<span class="fc" id="L395">	return (Long.toString(event.timeStamp - LoggingEvent.getStartTime()));</span>
+      case THREAD_CONVERTER:
+<span class="fc" id="L397">	return event.getThreadName();</span>
+      case LEVEL_CONVERTER:
+<span class="fc" id="L399">	return event.getLevel().toString();</span>
+      case NDC_CONVERTER:
+<span class="nc" id="L401">	return event.getNDC();</span>
+      case MESSAGE_CONVERTER: {
+<span class="fc" id="L403">	return event.getRenderedMessage();</span>
+      }
+<span class="nc" id="L405">      default: return null;</span>
+      }
+    }
+  }
+
+  private static class LiteralPatternConverter extends PatternConverter {
+    private String literal;
+
+<span class="fc" id="L413">    LiteralPatternConverter(String value) {</span>
+<span class="fc" id="L414">      literal = value;</span>
+<span class="fc" id="L415">    }</span>
+
+    public
+    final
+    void format(StringBuffer sbuf, LoggingEvent event) {
+<span class="fc" id="L420">      sbuf.append(literal);</span>
+<span class="fc" id="L421">    }</span>
+
+    public
+    String convert(LoggingEvent event) {
+<span class="nc" id="L425">      return literal;</span>
+    }
+  }
+
+  private static class DatePatternConverter extends PatternConverter {
+    private DateFormat df;
+    private Date date;
+
+    DatePatternConverter(FormattingInfo formattingInfo, DateFormat df) {
+<span class="fc" id="L434">      super(formattingInfo);</span>
+<span class="fc" id="L435">      date = new Date();</span>
+<span class="fc" id="L436">      this.df = df;</span>
+<span class="fc" id="L437">    }</span>
+
+    public
+    String convert(LoggingEvent event) {
+<span class="fc" id="L441">      date.setTime(event.timeStamp);</span>
+<span class="fc" id="L442">      String converted = null;</span>
+      try {
+<span class="fc" id="L444">        converted = df.format(date);</span>
+      }
+<span class="nc" id="L446">      catch (Exception ex) {</span>
+<span class="nc" id="L447">        LogLog.error(&quot;Error occured while converting date.&quot;, ex);</span>
+<span class="fc" id="L448">      }</span>
+<span class="fc" id="L449">      return converted;</span>
+    }
+  }
+
+  private static class MDCPatternConverter extends PatternConverter {
+    private String key;
+
+    MDCPatternConverter(FormattingInfo formattingInfo, String key) {
+<span class="fc" id="L457">      super(formattingInfo);</span>
+<span class="fc" id="L458">      this.key = key;</span>
+<span class="fc" id="L459">    }</span>
+
+    public
+    String convert(LoggingEvent event) {
+<span class="fc bfc" id="L463" title="All 2 branches covered.">      if (key == null) {</span>
+<span class="fc" id="L464">          StringBuffer buf = new StringBuffer(&quot;{&quot;);</span>
+<span class="fc" id="L465">          Map properties = event.getProperties();</span>
+<span class="fc bfc" id="L466" title="All 2 branches covered.">          if (properties.size() &gt; 0) {</span>
+<span class="fc" id="L467">            Object[] keys = properties.keySet().toArray();</span>
+<span class="fc" id="L468">            Arrays.sort(keys);</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">            for (int i = 0; i &lt; keys.length; i++) {</span>
+<span class="fc" id="L470">                buf.append('{');</span>
+<span class="fc" id="L471">                buf.append(keys[i]);</span>
+<span class="fc" id="L472">                buf.append(',');</span>
+<span class="fc" id="L473">                buf.append(properties.get(keys[i]));</span>
+<span class="fc" id="L474">                buf.append('}');</span>
+            }
+          }
+<span class="fc" id="L477">          buf.append('}');</span>
+<span class="fc" id="L478">          return buf.toString();</span>
+      } else {
+<span class="fc" id="L480">        Object val = event.getMDC(key);</span>
+<span class="fc bfc" id="L481" title="All 2 branches covered.">        if(val == null) {</span>
+<span class="fc" id="L482">	        return null;</span>
+        } else {
+<span class="fc" id="L484">	        return val.toString();</span>
+        }
+      }
+    }
+  }
+
+
+  private class LocationPatternConverter extends PatternConverter {
+    int type;
+
+<span class="fc" id="L494">    LocationPatternConverter(FormattingInfo formattingInfo, int type) {</span>
+<span class="fc" id="L495">      super(formattingInfo);</span>
+<span class="fc" id="L496">      this.type = type;</span>
+<span class="fc" id="L497">    }</span>
+
+    public
+    String convert(LoggingEvent event) {
+<span class="fc" id="L501">      LocationInfo locationInfo = event.getLocationInformation();</span>
+<span class="pc bpc" id="L502" title="1 of 5 branches missed.">      switch(type) {</span>
+      case FULL_LOCATION_CONVERTER:
+<span class="fc" id="L504">	return locationInfo.fullInfo;</span>
+      case METHOD_LOCATION_CONVERTER:
+<span class="fc" id="L506">	return locationInfo.getMethodName();</span>
+      case LINE_LOCATION_CONVERTER:
+<span class="fc" id="L508">	return locationInfo.getLineNumber();</span>
+      case FILE_LOCATION_CONVERTER:
+<span class="fc" id="L510">	return locationInfo.getFileName();</span>
+<span class="nc" id="L511">      default: return null;</span>
+      }
+    }
+  }
+
+  private static abstract class NamedPatternConverter extends PatternConverter {
+    int precision;
+
+    NamedPatternConverter(FormattingInfo formattingInfo, int precision) {
+<span class="fc" id="L520">      super(formattingInfo);</span>
+<span class="fc" id="L521">      this.precision =  precision;</span>
+<span class="fc" id="L522">    }</span>
+
+    abstract
+    String getFullyQualifiedName(LoggingEvent event);
+
+    public
+    String convert(LoggingEvent event) {
+<span class="fc" id="L529">      String n = getFullyQualifiedName(event);</span>
+<span class="fc bfc" id="L530" title="All 2 branches covered.">      if(precision &lt;= 0) {</span>
+<span class="fc" id="L531">        return n;</span>
+    } else {
+<span class="fc" id="L533">	int len = n.length();</span>
+
+	// We substract 1 from 'len' when assigning to 'end' to avoid out of
+	// bounds exception in return r.substring(end+1, len). This can happen if
+	// precision is 1 and the category name ends with a dot.
+<span class="fc" id="L538">	int end = len -1 ;</span>
+<span class="fc bfc" id="L539" title="All 2 branches covered.">	for(int i = precision; i &gt; 0; i--) {</span>
+<span class="fc" id="L540">	  end = n.lastIndexOf('.', end-1);</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">	  if(end == -1) {</span>
+<span class="fc" id="L542">        return n;</span>
+    }
+	}
+<span class="fc" id="L545">	return n.substring(end+1, len);</span>
+      }
+    }
+  }
+
+  private class ClassNamePatternConverter extends NamedPatternConverter {
+
+<span class="fc" id="L552">    ClassNamePatternConverter(FormattingInfo formattingInfo, int precision) {</span>
+<span class="fc" id="L553">      super(formattingInfo, precision);</span>
+<span class="fc" id="L554">    }</span>
+
+    String getFullyQualifiedName(LoggingEvent event) {
+<span class="fc" id="L557">      return event.getLocationInformation().getClassName();</span>
+    }
+  }
+
+  private class CategoryPatternConverter extends NamedPatternConverter {
+
+<span class="fc" id="L563">    CategoryPatternConverter(FormattingInfo formattingInfo, int precision) {</span>
+<span class="fc" id="L564">      super(formattingInfo, precision);</span>
+<span class="fc" id="L565">    }</span>
+
+    String getFullyQualifiedName(LoggingEvent event) {
+<span class="fc" id="L568">      return event.getLoggerName();</span>
+    }
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

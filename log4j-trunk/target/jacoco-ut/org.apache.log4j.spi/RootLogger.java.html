@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RootLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.spi</a> &gt; <span class="el_source">RootLogger.java</span></div><h1>RootLogger.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.spi;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.LogLog;
+
+
+// Contibutors: Mathias Bogaert
+
+/**
+   RootLogger sits at the top of the logger hierachy. It is a
+   regular logger except that it provides several guarantees.
+
+   &lt;p&gt;First, it cannot be assigned a &lt;code&gt;null&lt;/code&gt;
+   level. Second, since root logger cannot have a parent, the
+   {@link #getChainedLevel} method always returns the value of the
+   level field without walking the hierarchy.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+
+ */
+public final class RootLogger extends Logger {
+  /**
+     The root logger names itself as &quot;root&quot;. However, the root
+     logger cannot be retrieved by name.
+  */
+  public RootLogger(Level level) {
+<span class="fc" id="L45">    super(&quot;root&quot;);</span>
+<span class="fc" id="L46">    setLevel(level);</span>
+<span class="fc" id="L47">  }</span>
+
+  /**
+     Return the assigned level value without walking the logger
+     hierarchy.
+  */
+  public final Level getChainedLevel() {
+<span class="nc" id="L54">    return level;</span>
+  }
+
+  /**
+     Setting a null value to the level of the root logger may have catastrophic
+     results. We prevent this here.
+
+     @since 0.8.3 */
+  public final void setLevel(Level level) {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">    if (level == null) {</span>
+<span class="nc" id="L64">      LogLog.error(</span>
+        &quot;You have tried to set a null level to root.&quot;, new Throwable());
+    } else {
+<span class="fc" id="L67">      this.level = level;</span>
+    }
+<span class="fc" id="L69">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

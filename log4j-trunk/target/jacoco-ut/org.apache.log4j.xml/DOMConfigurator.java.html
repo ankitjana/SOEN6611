@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DOMConfigurator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.xml</a> &gt; <span class="el_source">DOMConfigurator.java</span></div><h1>DOMConfigurator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.xml;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.config.PropertySetter;
+import org.apache.log4j.helpers.FileWatchdog;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.or.RendererMap;
+import org.apache.log4j.spi.AppenderAttachable;
+import org.apache.log4j.spi.Configurator;
+import org.apache.log4j.spi.ErrorHandler;
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggerFactory;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.RendererSupport;
+import org.apache.log4j.spi.ThrowableRenderer;
+import org.apache.log4j.spi.ThrowableRendererSupport;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.io.Reader;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Hashtable;
+import java.util.Properties;
+
+// Contributors:   Mark Womack
+//                 Arun Katkere 
+
+/**
+   Use this class to initialize the log4j environment using a DOM tree.
+
+   &lt;p&gt;The DTD is specified in &lt;a
+   href=&quot;doc-files/log4j.dtd&quot;&gt;&lt;b&gt;log4j.dtd&lt;/b&gt;&lt;/a&gt;.
+
+   &lt;p&gt;Sometimes it is useful to see how log4j is reading configuration
+   files. You can enable log4j internal logging by defining the
+   &lt;b&gt;log4j.debug&lt;/b&gt; variable on the java command
+   line. Alternatively, set the &lt;code&gt;debug&lt;/code&gt; attribute in the
+   &lt;code&gt;log4j:configuration&lt;/code&gt; element. As in
+&lt;pre&gt;
+   &amp;lt;log4j:configuration &lt;b&gt;debug=&quot;true&quot;&lt;/b&gt; xmlns:log4j=&quot;http://jakarta.apache.org/log4j/&quot;&gt;
+   ...
+   &amp;lt;/log4j:configuration&gt;
+&lt;/pre&gt;
+
+   &lt;p&gt;There are sample XML files included in the package.
+   
+   @author Christopher Taylor
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Anders Kristensen
+
+   @since 0.8.3 */
+public class DOMConfigurator implements Configurator {
+
+  static final String CONFIGURATION_TAG = &quot;log4j:configuration&quot;;
+  static final String OLD_CONFIGURATION_TAG = &quot;configuration&quot;;
+  static final String RENDERER_TAG      = &quot;renderer&quot;;
+  private static final String THROWABLE_RENDERER_TAG = &quot;throwableRenderer&quot;;
+  static final String APPENDER_TAG 	= &quot;appender&quot;;
+  static final String APPENDER_REF_TAG 	= &quot;appender-ref&quot;;  
+  static final String PARAM_TAG    	= &quot;param&quot;;
+  static final String LAYOUT_TAG	= &quot;layout&quot;;
+  static final String CATEGORY		= &quot;category&quot;;
+  static final String LOGGER		= &quot;logger&quot;;
+  static final String LOGGER_REF	= &quot;logger-ref&quot;;
+  static final String CATEGORY_FACTORY_TAG  = &quot;categoryFactory&quot;;
+  static final String LOGGER_FACTORY_TAG  = &quot;loggerFactory&quot;;
+  static final String NAME_ATTR		= &quot;name&quot;;
+  static final String CLASS_ATTR        = &quot;class&quot;;
+  static final String VALUE_ATTR	= &quot;value&quot;;
+  static final String ROOT_TAG		= &quot;root&quot;;
+  static final String ROOT_REF		= &quot;root-ref&quot;;
+  static final String LEVEL_TAG	        = &quot;level&quot;;
+  static final String PRIORITY_TAG      = &quot;priority&quot;;
+  static final String FILTER_TAG	= &quot;filter&quot;;
+  static final String ERROR_HANDLER_TAG	= &quot;errorHandler&quot;;
+  static final String REF_ATTR		= &quot;ref&quot;;
+  static final String ADDITIVITY_ATTR    = &quot;additivity&quot;;  
+  static final String THRESHOLD_ATTR       = &quot;threshold&quot;;
+  static final String CONFIG_DEBUG_ATTR  = &quot;configDebug&quot;;
+  static final String INTERNAL_DEBUG_ATTR  = &quot;debug&quot;;
+  private static final String RESET_ATTR  = &quot;reset&quot;;
+  static final String RENDERING_CLASS_ATTR = &quot;renderingClass&quot;;
+  static final String RENDERED_CLASS_ATTR = &quot;renderedClass&quot;;
+
+  static final String EMPTY_STR = &quot;&quot;;
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">  static final Class[] ONE_STRING_PARAM = new Class[] {String.class};</span>
+
+  final static String dbfKey = &quot;javax.xml.parsers.DocumentBuilderFactory&quot;;
+
+  
+  // key: appenderName, value: appender
+  Hashtable appenderBag;
+
+  Properties props;
+  LoggerRepository repository;
+
+<span class="fc" id="L135">  protected LoggerFactory catFactory = null;</span>
+
+  /**
+     No argument constructor.
+  */
+  public
+<span class="fc" id="L141">  DOMConfigurator () { </span>
+<span class="fc" id="L142">    appenderBag = new Hashtable();</span>
+<span class="fc" id="L143">  }</span>
+
+  /**
+     Used internally to parse appenders by IDREF name.
+  */
+  protected
+  Appender findAppenderByName(Document doc, String appenderName)  {      
+<span class="fc" id="L150">    Appender appender = (Appender) appenderBag.get(appenderName);</span>
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">    if(appender != null) {</span>
+<span class="fc" id="L153">      return appender;</span>
+    } else {
+      // Doesn't work on DOM Level 1 :
+      // Element element = doc.getElementById(appenderName);
+                        
+      // Endre's hack:
+<span class="fc" id="L159">      Element element = null;</span>
+<span class="fc" id="L160">      NodeList list = doc.getElementsByTagName(&quot;appender&quot;);</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">      for (int t=0; t &lt; list.getLength(); t++) {</span>
+<span class="fc" id="L162">	Node node = list.item(t);</span>
+<span class="fc" id="L163">	NamedNodeMap map= node.getAttributes();</span>
+<span class="fc" id="L164">	Node attrNode = map.getNamedItem(&quot;name&quot;);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">	if (appenderName.equals(attrNode.getNodeValue())) {</span>
+<span class="fc" id="L166">	  element = (Element) node;</span>
+<span class="fc" id="L167">	  break;</span>
+	}
+      }
+      // Hack finished.
+
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">      if(element == null) {</span>
+<span class="nc" id="L173">	LogLog.error(&quot;No appender named [&quot;+appenderName+&quot;] could be found.&quot;); </span>
+<span class="nc" id="L174">	return null;</span>
+      } else {
+<span class="fc" id="L176">	      appender = parseAppender(element);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">          if (appender != null) {</span>
+<span class="fc" id="L178">            appenderBag.put(appenderName, appender);</span>
+          }
+<span class="fc" id="L180">    return appender;</span>
+      }
+    } 
+  }
+  /**
+     Used internally to parse appenders by IDREF element.
+   */
+  protected
+  Appender findAppenderByReference(Element appenderRef) {    
+<span class="fc" id="L189">    String appenderName = subst(appenderRef.getAttribute(REF_ATTR));    </span>
+<span class="fc" id="L190">    Document doc = appenderRef.getOwnerDocument();</span>
+<span class="fc" id="L191">    return findAppenderByName(doc, appenderName);</span>
+  }
+
+    /**
+     * Delegates unrecognized content to created instance if
+     * it supports UnrecognizedElementParser.
+     * @since 1.2.15
+     * @param instance instance, may be null.
+     * @param element element, may not be null.
+     * @param props properties
+     * @throws IOException thrown if configuration of owner object
+     * should be abandoned.
+     */
+  private static void parseUnrecognizedElement(final Object instance,
+                                        final Element element,
+                                        final Properties props) throws Exception {
+<span class="nc" id="L207">      boolean recognized = false;</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">      if (instance instanceof UnrecognizedElementHandler) {</span>
+<span class="nc" id="L209">          recognized = ((UnrecognizedElementHandler) instance).parseUnrecognizedElement(</span>
+                  element, props);
+      }
+<span class="nc bnc" id="L212" title="All 2 branches missed.">      if (!recognized) {</span>
+<span class="nc" id="L213">          LogLog.warn(&quot;Unrecognized element &quot; + element.getNodeName());</span>
+      }
+<span class="nc" id="L215">  }</span>
+
+    /**
+      * Delegates unrecognized content to created instance if
+      * it supports UnrecognizedElementParser and catches and
+     *  logs any exception.
+      * @since 1.2.15
+      * @param instance instance, may be null.
+      * @param element element, may not be null.
+      * @param props properties
+      */
+   private static void quietParseUnrecognizedElement(final Object instance,
+                                          final Element element,
+                                          final Properties props) {
+      try {
+<span class="nc" id="L230">          parseUnrecognizedElement(instance, element, props);</span>
+<span class="nc" id="L231">      } catch (Exception ex) {</span>
+<span class="nc bnc" id="L232" title="All 4 branches missed.">          if (ex instanceof InterruptedException || ex instanceof InterruptedIOException) {</span>
+<span class="nc" id="L233">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L235">          LogLog.error(&quot;Error in extension content: &quot;, ex);</span>
+<span class="nc" id="L236">      }</span>
+<span class="nc" id="L237">  }</span>
+
+  /**
+     Used internally to parse an appender element.
+   */
+  protected
+  Appender parseAppender (Element appenderElement) {
+<span class="fc" id="L244">    String className = subst(appenderElement.getAttribute(CLASS_ATTR));</span>
+<span class="fc" id="L245">    LogLog.debug(&quot;Class name: [&quot; + className+']');    </span>
+    try {
+<span class="fc" id="L247">      Object instance 	= Loader.loadClass(className).newInstance();</span>
+<span class="fc" id="L248">      Appender appender	= (Appender)instance;</span>
+<span class="fc" id="L249">      PropertySetter propSetter = new PropertySetter(appender);</span>
+
+<span class="fc" id="L251">      appender.setName(subst(appenderElement.getAttribute(NAME_ATTR)));</span>
+      
+<span class="fc" id="L253">      NodeList children	= appenderElement.getChildNodes();</span>
+<span class="fc" id="L254">      final int length 	= children.getLength();</span>
+
+<span class="fc bfc" id="L256" title="All 2 branches covered.">      for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L257">	Node currentNode = children.item(loop);</span>
+
+	/* We're only interested in Elements */
+<span class="fc bfc" id="L260" title="All 2 branches covered.">	if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L261">	  Element currentElement = (Element)currentNode;</span>
+
+	  // Parse appender parameters 
+<span class="fc bfc" id="L264" title="All 2 branches covered.">	  if (currentElement.getTagName().equals(PARAM_TAG)) {</span>
+<span class="fc" id="L265">            setParameter(currentElement, propSetter);</span>
+	  }
+	  // Set appender layout
+<span class="fc bfc" id="L268" title="All 2 branches covered.">	  else if (currentElement.getTagName().equals(LAYOUT_TAG)) {</span>
+<span class="fc" id="L269">	    appender.setLayout(parseLayout(currentElement));</span>
+	  }
+	  // Add filters
+<span class="fc bfc" id="L272" title="All 2 branches covered.">	  else if (currentElement.getTagName().equals(FILTER_TAG)) {</span>
+<span class="fc" id="L273">	    parseFilters(currentElement, appender);</span>
+	  }
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">	  else if (currentElement.getTagName().equals(ERROR_HANDLER_TAG)) {</span>
+<span class="fc" id="L276">	    parseErrorHandler(currentElement, appender);</span>
+	  }
+<span class="nc bnc" id="L278" title="All 2 branches missed.">	  else if (currentElement.getTagName().equals(APPENDER_REF_TAG)) {</span>
+<span class="nc" id="L279">	    String refName = subst(currentElement.getAttribute(REF_ATTR));</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">	    if(appender instanceof AppenderAttachable) {</span>
+<span class="nc" id="L281">	      AppenderAttachable aa = (AppenderAttachable) appender;</span>
+<span class="nc" id="L282">	      LogLog.debug(&quot;Attaching appender named [&quot;+ refName+</span>
+<span class="nc" id="L283">			   &quot;] to appender named [&quot;+ appender.getName()+&quot;].&quot;);</span>
+<span class="nc" id="L284">	      aa.addAppender(findAppenderByReference(currentElement));</span>
+<span class="nc" id="L285">	    } else {</span>
+<span class="nc" id="L286">	      LogLog.error(&quot;Requesting attachment of appender named [&quot;+</span>
+<span class="nc" id="L287">			   refName+ &quot;] to appender named [&quot;+ appender.getName()+</span>
+                &quot;] which does not implement org.apache.log4j.spi.AppenderAttachable.&quot;);
+	    }
+<span class="nc" id="L290">	  } else {</span>
+<span class="nc" id="L291">          parseUnrecognizedElement(instance, currentElement, props);</span>
+      }
+	}
+      }
+<span class="fc" id="L295">      propSetter.activate();</span>
+<span class="fc" id="L296">      return appender;</span>
+    }
+    /* Yes, it's ugly.  But all of these exceptions point to the same
+       problem: we can't create an Appender */
+<span class="nc" id="L300">    catch (Exception oops) {</span>
+<span class="nc bnc" id="L301" title="All 4 branches missed.">        if (oops instanceof InterruptedException || oops instanceof InterruptedIOException) {</span>
+<span class="nc" id="L302">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L304">      LogLog.error(&quot;Could not create an Appender. Reported error follows.&quot;,</span>
+		   oops);
+<span class="nc" id="L306">      return null;</span>
+    }
+  }
+
+  /**
+     Used internally to parse an {@link ErrorHandler} element.
+   */
+  protected
+  void parseErrorHandler(Element element, Appender appender) {
+<span class="fc" id="L315">    ErrorHandler eh = (ErrorHandler) OptionConverter.instantiateByClassName(</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">                                       subst(element.getAttribute(CLASS_ATTR)),</span>
+<span class="pc" id="L317">                                       org.apache.log4j.spi.ErrorHandler.class, </span>
+ 				       null);
+    
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">    if(eh != null) {</span>
+<span class="fc" id="L321">      eh.setAppender(appender);</span>
+
+<span class="fc" id="L323">      PropertySetter propSetter = new PropertySetter(eh);</span>
+<span class="fc" id="L324">      NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L325">      final int length 	= children.getLength();</span>
+
+<span class="fc bfc" id="L327" title="All 2 branches covered.">      for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L328">	Node currentNode = children.item(loop);</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">	if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L330">	  Element currentElement = (Element) currentNode;</span>
+<span class="fc" id="L331">	  String tagName = currentElement.getTagName();</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">	  if(tagName.equals(PARAM_TAG)) {</span>
+<span class="nc" id="L333">            setParameter(currentElement, propSetter);</span>
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">	  } else if(tagName.equals(APPENDER_REF_TAG)) {</span>
+<span class="nc" id="L335">	    eh.setBackupAppender(findAppenderByReference(currentElement));</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">	  } else if(tagName.equals(LOGGER_REF)) {</span>
+<span class="fc" id="L337">	    String loggerName = currentElement.getAttribute(REF_ATTR);	    </span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">	    Logger logger = (catFactory == null) ? repository.getLogger(loggerName)</span>
+<span class="fc" id="L339">                : repository.getLogger(loggerName, catFactory);</span>
+<span class="fc" id="L340">	    eh.setLogger(logger);</span>
+<span class="pc bnc" id="L341" title="All 2 branches missed.">	  } else if(tagName.equals(ROOT_REF)) {</span>
+<span class="nc" id="L342">	    Logger root = repository.getRootLogger();</span>
+<span class="nc" id="L343">	    eh.setLogger(root);</span>
+<span class="nc" id="L344">	  } else {</span>
+<span class="nc" id="L345">          quietParseUnrecognizedElement(eh, currentElement, props);</span>
+      }
+	}
+      }
+<span class="fc" id="L349">      propSetter.activate();</span>
+<span class="fc" id="L350">      appender.setErrorHandler(eh);</span>
+    }
+<span class="fc" id="L352">  }</span>
+  
+  /**
+     Used internally to parse a filter element.
+   */
+  protected
+  void parseFilters(Element element, Appender appender) {
+<span class="fc" id="L359">    String clazz = subst(element.getAttribute(CLASS_ATTR));</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">    Filter filter = (Filter) OptionConverter.instantiateByClassName(clazz,</span>
+<span class="fc" id="L361">                                                Filter.class, null);</span>
+    
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">    if(filter != null) {</span>
+<span class="fc" id="L364">      PropertySetter propSetter = new PropertySetter(filter);</span>
+<span class="fc" id="L365">      NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L366">      final int length 	= children.getLength();</span>
+
+<span class="fc bfc" id="L368" title="All 2 branches covered.">      for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L369">	Node currentNode = children.item(loop);</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">	if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L371">	  Element currentElement = (Element) currentNode;</span>
+<span class="fc" id="L372">	  String tagName = currentElement.getTagName();</span>
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">	  if(tagName.equals(PARAM_TAG)) {</span>
+<span class="fc" id="L374">            setParameter(currentElement, propSetter);</span>
+	  } else {
+<span class="nc" id="L376">            quietParseUnrecognizedElement(filter, currentElement, props);</span>
+      }
+	}
+      }
+<span class="fc" id="L380">      propSetter.activate();</span>
+<span class="fc" id="L381">      LogLog.debug(&quot;Adding filter of type [&quot;+filter.getClass()</span>
+<span class="fc" id="L382">		   +&quot;] to appender named [&quot;+appender.getName()+&quot;].&quot;);</span>
+<span class="fc" id="L383">      appender.addFilter(filter);</span>
+    }    
+<span class="fc" id="L385">  }</span>
+  
+  /**
+     Used internally to parse an category element.
+  */
+  protected
+  void parseCategory (Element loggerElement) {
+    // Create a new org.apache.log4j.Category object from the &lt;category&gt; element.
+<span class="fc" id="L393">    String catName = subst(loggerElement.getAttribute(NAME_ATTR));</span>
+
+    Logger cat;    
+
+<span class="fc" id="L397">    String className = subst(loggerElement.getAttribute(CLASS_ATTR));</span>
+
+
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">    if(EMPTY_STR.equals(className)) {</span>
+<span class="fc" id="L401">      LogLog.debug(&quot;Retreiving an instance of org.apache.log4j.Logger.&quot;);</span>
+<span class="fc bfc" id="L402" title="All 2 branches covered.">      cat = (catFactory == null) ? repository.getLogger(catName) : repository.getLogger(catName, catFactory);</span>
+    }
+    else {
+<span class="nc" id="L405">      LogLog.debug(&quot;Desired logger sub-class: [&quot;+className+']');</span>
+       try {	 
+<span class="nc" id="L407">	 Class clazz = Loader.loadClass(className);</span>
+<span class="nc" id="L408">	 Method getInstanceMethod = clazz.getMethod(&quot;getLogger&quot;, </span>
+						    ONE_STRING_PARAM);
+<span class="nc" id="L410">	 cat = (Logger) getInstanceMethod.invoke(null, new Object[] {catName});</span>
+<span class="nc" id="L411">       } catch (InvocationTargetException oops) {</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">          if (oops.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">                  || oops.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L414">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L416">          LogLog.error(&quot;Could not retrieve category [&quot;+catName+</span>
+		      &quot;]. Reported error follows.&quot;, oops);
+<span class="nc" id="L418">	      return;</span>
+<span class="nc" id="L419">       } catch (Exception oops) {</span>
+<span class="nc" id="L420">	      LogLog.error(&quot;Could not retrieve category [&quot;+catName+</span>
+		      &quot;]. Reported error follows.&quot;, oops);
+<span class="nc" id="L422">	      return;</span>
+<span class="nc" id="L423">       }</span>
+    }
+
+    // Setting up a category needs to be an atomic operation, in order
+    // to protect potential log operations while category
+    // configuration is in progress.
+<span class="fc" id="L429">    synchronized(cat) {</span>
+<span class="fc" id="L430">      boolean additivity = OptionConverter.toBoolean(</span>
+<span class="fc" id="L431">                           subst(loggerElement.getAttribute(ADDITIVITY_ATTR)),</span>
+			   true);
+    
+<span class="fc" id="L434">      LogLog.debug(&quot;Setting [&quot;+cat.getName()+&quot;] additivity to [&quot;+additivity+&quot;].&quot;);</span>
+<span class="fc" id="L435">      cat.setAdditivity(additivity);</span>
+<span class="fc" id="L436">      parseChildrenOfLoggerElement(loggerElement, cat, false);</span>
+<span class="fc" id="L437">    }</span>
+<span class="fc" id="L438">  }</span>
+
+
+  /**
+     Used internally to parse the category factory element.
+  */
+  protected
+  void parseCategoryFactory(Element factoryElement) {
+<span class="fc" id="L446">    String className = subst(factoryElement.getAttribute(CLASS_ATTR));</span>
+
+<span class="pc bpc" id="L448" title="1 of 2 branches missed.">    if(EMPTY_STR.equals(className)) {</span>
+<span class="nc" id="L449">      LogLog.error(&quot;Category Factory tag &quot; + CLASS_ATTR + &quot; attribute not found.&quot;);</span>
+<span class="nc" id="L450">      LogLog.debug(&quot;No Category Factory configured.&quot;);</span>
+    }
+    else {
+<span class="fc" id="L453">      LogLog.debug(&quot;Desired category factory: [&quot;+className+']');</span>
+<span class="fc bfc" id="L454" title="All 2 branches covered.">      Object factory = OptionConverter.instantiateByClassName(className,</span>
+<span class="fc" id="L455">                                                                 LoggerFactory.class, </span>
+                                                                 null);
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">      if (factory instanceof LoggerFactory) {</span>
+<span class="fc" id="L458">          catFactory = (LoggerFactory) factory;</span>
+      } else {
+<span class="nc" id="L460">          LogLog.error(&quot;Category Factory class &quot; + className + &quot; does not implement org.apache.log4j.LoggerFactory&quot;);</span>
+      }
+<span class="fc" id="L462">      PropertySetter propSetter = new PropertySetter(factory);</span>
+
+<span class="fc" id="L464">      Element  currentElement = null;</span>
+<span class="fc" id="L465">      Node     currentNode    = null;</span>
+<span class="fc" id="L466">      NodeList children       = factoryElement.getChildNodes();</span>
+<span class="fc" id="L467">      final int length        = children.getLength();</span>
+
+<span class="fc bfc" id="L469" title="All 2 branches covered.">      for (int loop=0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L470">        currentNode = children.item(loop);</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">	if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L472">	  currentElement = (Element)currentNode;</span>
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">	  if (currentElement.getTagName().equals(PARAM_TAG)) {</span>
+<span class="fc" id="L474">	    setParameter(currentElement, propSetter);</span>
+	  } else {
+<span class="nc" id="L476">           quietParseUnrecognizedElement(factory, currentElement, props);</span>
+      }
+	}
+      }
+    }
+<span class="fc" id="L481">  }</span>
+
+
+  /**
+     Used internally to parse the roor category element.
+  */
+  protected
+  void parseRoot (Element rootElement) {
+<span class="fc" id="L489">    Logger root = repository.getRootLogger();</span>
+    // category configuration needs to be atomic
+<span class="fc" id="L491">    synchronized(root) {    </span>
+<span class="fc" id="L492">      parseChildrenOfLoggerElement(rootElement, root, true);</span>
+<span class="fc" id="L493">    }</span>
+<span class="fc" id="L494">  }</span>
+
+
+  /**
+     Used internally to parse the children of a category element.
+  */
+  protected
+  void parseChildrenOfLoggerElement(Element catElement,
+				      Logger cat, boolean isRoot) {
+    
+<span class="fc" id="L504">    PropertySetter propSetter = new PropertySetter(cat);</span>
+    
+    // Remove all existing appenders from cat. They will be
+    // reconstructed if need be.
+<span class="fc" id="L508">    cat.removeAllAppenders();</span>
+
+
+<span class="fc" id="L511">    NodeList children 	= catElement.getChildNodes();</span>
+<span class="fc" id="L512">    final int length 	= children.getLength();</span>
+    
+<span class="fc bfc" id="L514" title="All 2 branches covered.">    for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L515">      Node currentNode = children.item(loop);</span>
+
+<span class="fc bfc" id="L517" title="All 2 branches covered.">      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L518">	Element currentElement = (Element) currentNode;</span>
+<span class="fc" id="L519">	String tagName = currentElement.getTagName();</span>
+	
+<span class="fc bfc" id="L521" title="All 2 branches covered.">	if (tagName.equals(APPENDER_REF_TAG)) {</span>
+<span class="fc" id="L522">	  Element appenderRef = (Element) currentNode;</span>
+<span class="fc" id="L523">	  Appender appender = findAppenderByReference(appenderRef);</span>
+<span class="fc" id="L524">	  String refName =  subst(appenderRef.getAttribute(REF_ATTR));</span>
+<span class="pc bpc" id="L525" title="1 of 2 branches missed.">	  if(appender != null) {</span>
+<span class="fc" id="L526">        LogLog.debug(&quot;Adding appender named [&quot;+ refName+ </span>
+<span class="fc" id="L527">			 &quot;] to category [&quot;+cat.getName()+&quot;].&quot;);</span>
+    } else {
+<span class="nc" id="L529">        LogLog.debug(&quot;Appender named [&quot;+ refName + &quot;] not found.&quot;);</span>
+    }
+	    
+<span class="fc" id="L532">	  cat.addAppender(appender);</span>
+	  
+<span class="fc bfc" id="L534" title="All 2 branches covered.">	} else if(tagName.equals(LEVEL_TAG)) {</span>
+<span class="fc" id="L535">	  parseLevel(currentElement, cat, isRoot);	</span>
+<span class="pc bpc" id="L536" title="1 of 2 branches missed.">	} else if(tagName.equals(PRIORITY_TAG)) {</span>
+<span class="fc" id="L537">	  parseLevel(currentElement, cat, isRoot);</span>
+<span class="nc bnc" id="L538" title="All 2 branches missed.">	} else if(tagName.equals(PARAM_TAG)) {</span>
+<span class="nc" id="L539">          setParameter(currentElement, propSetter);</span>
+	} else {
+<span class="nc" id="L541">        quietParseUnrecognizedElement(cat, currentElement, props);</span>
+    }
+      }
+    }
+<span class="fc" id="L545">    propSetter.activate();</span>
+<span class="fc" id="L546">  }</span>
+
+  /**
+     Used internally to parse a layout element.
+  */  
+  protected
+  Layout parseLayout (Element layout_element) {
+<span class="fc" id="L553">    String className = subst(layout_element.getAttribute(CLASS_ATTR));</span>
+<span class="fc" id="L554">    LogLog.debug(&quot;Parsing layout of class: \&quot;&quot;+className+&quot;\&quot;&quot;);		 </span>
+    try {
+<span class="fc" id="L556">      Object instance 	= Loader.loadClass(className).newInstance();</span>
+<span class="fc" id="L557">      Layout layout   	= (Layout)instance;</span>
+<span class="fc" id="L558">      PropertySetter propSetter = new PropertySetter(layout);</span>
+      
+<span class="fc" id="L560">      NodeList params 	= layout_element.getChildNodes();</span>
+<span class="fc" id="L561">      final int length 	= params.getLength();</span>
+
+<span class="fc bfc" id="L563" title="All 2 branches covered.">      for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L564">	Node currentNode = params.item(loop);</span>
+<span class="fc bfc" id="L565" title="All 2 branches covered.">	if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L566">	  Element currentElement = (Element) currentNode;</span>
+<span class="fc" id="L567">	  String tagName = currentElement.getTagName();</span>
+<span class="pc bpc" id="L568" title="1 of 2 branches missed.">	  if(tagName.equals(PARAM_TAG)) {</span>
+<span class="fc" id="L569">            setParameter(currentElement, propSetter);</span>
+	  } else {
+<span class="nc" id="L571">          parseUnrecognizedElement(instance, currentElement, props);</span>
+      }
+	}
+      }
+      
+<span class="fc" id="L576">      propSetter.activate();</span>
+<span class="fc" id="L577">      return layout;</span>
+    }
+<span class="nc" id="L579">    catch (Exception oops) {</span>
+<span class="nc bnc" id="L580" title="All 4 branches missed.">        if (oops instanceof InterruptedException || oops instanceof InterruptedIOException) {</span>
+<span class="nc" id="L581">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L583">      LogLog.error(&quot;Could not create the Layout. Reported error follows.&quot;,</span>
+		   oops);
+<span class="nc" id="L585">      return null;</span>
+    }
+  }
+
+  protected 
+  void parseRenderer(Element element) {
+<span class="nc" id="L591">    String renderingClass = subst(element.getAttribute(RENDERING_CLASS_ATTR));</span>
+<span class="nc" id="L592">    String renderedClass = subst(element.getAttribute(RENDERED_CLASS_ATTR));</span>
+<span class="nc bnc" id="L593" title="All 2 branches missed.">    if(repository instanceof RendererSupport) {</span>
+<span class="nc" id="L594">      RendererMap.addRenderer((RendererSupport) repository, renderedClass, </span>
+			      renderingClass);
+    }
+<span class="nc" id="L597">  }</span>
+
+    /**
+     * Parses throwable renderer.
+     * @param element throwableRenderer element.
+     * @return configured throwable renderer.
+     * @since 1.2.16.
+     */
+    protected ThrowableRenderer parseThrowableRenderer(final Element element) {
+<span class="fc" id="L606">        String className = subst(element.getAttribute(CLASS_ATTR));</span>
+<span class="fc" id="L607">        LogLog.debug(&quot;Parsing throwableRenderer of class: \&quot;&quot;+className+&quot;\&quot;&quot;);</span>
+        try {
+<span class="fc" id="L609">          Object instance 	= Loader.loadClass(className).newInstance();</span>
+<span class="fc" id="L610">          ThrowableRenderer tr   	= (ThrowableRenderer)instance;</span>
+<span class="fc" id="L611">          PropertySetter propSetter = new PropertySetter(tr);</span>
+
+<span class="fc" id="L613">          NodeList params 	= element.getChildNodes();</span>
+<span class="fc" id="L614">          final int length 	= params.getLength();</span>
+
+<span class="fc bfc" id="L616" title="All 2 branches covered.">          for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L617">                Node currentNode = params.item(loop);</span>
+<span class="fc bfc" id="L618" title="All 2 branches covered.">                if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L619">                    Element currentElement = (Element) currentNode;</span>
+<span class="fc" id="L620">                    String tagName = currentElement.getTagName();</span>
+<span class="pc bpc" id="L621" title="1 of 2 branches missed.">                    if(tagName.equals(PARAM_TAG)) {</span>
+<span class="fc" id="L622">                        setParameter(currentElement, propSetter);</span>
+                    } else {
+<span class="nc" id="L624">                        parseUnrecognizedElement(instance, currentElement, props);</span>
+                    }
+                }
+          }
+
+<span class="fc" id="L629">          propSetter.activate();</span>
+<span class="fc" id="L630">          return tr;</span>
+        }
+<span class="nc" id="L632">        catch (Exception oops) {</span>
+<span class="nc bnc" id="L633" title="All 4 branches missed.">            if (oops instanceof InterruptedException || oops instanceof InterruptedIOException) {</span>
+<span class="nc" id="L634">                Thread.currentThread().interrupt();</span>
+            }
+<span class="nc" id="L636">            LogLog.error(&quot;Could not create the ThrowableRenderer. Reported error follows.&quot;,</span>
+               oops);
+<span class="nc" id="L638">          return null;</span>
+        }
+    }
+
+  /**
+     Used internally to parse a level  element.
+  */
+  protected
+  void parseLevel(Element element, Logger logger, boolean isRoot) {
+<span class="fc" id="L647">    String catName = logger.getName();</span>
+<span class="fc bfc" id="L648" title="All 2 branches covered.">    if(isRoot) {</span>
+<span class="fc" id="L649">      catName = &quot;root&quot;;</span>
+    }
+
+<span class="fc" id="L652">    String priStr = subst(element.getAttribute(VALUE_ATTR));</span>
+<span class="fc" id="L653">    LogLog.debug(&quot;Level value for &quot;+catName+&quot; is  [&quot;+priStr+&quot;].&quot;);</span>
+    
+<span class="pc bpc" id="L655" title="2 of 4 branches missed.">    if(INHERITED.equalsIgnoreCase(priStr) || NULL.equalsIgnoreCase(priStr)) {</span>
+<span class="nc bnc" id="L656" title="All 2 branches missed.">      if(isRoot) {</span>
+<span class="nc" id="L657">	LogLog.error(&quot;Root level cannot be inherited. Ignoring directive.&quot;);</span>
+      } else {
+<span class="nc" id="L659">	logger.setLevel(null);</span>
+      }
+    } else {
+<span class="fc" id="L662">      String className = subst(element.getAttribute(CLASS_ATTR));      </span>
+<span class="fc bfc" id="L663" title="All 2 branches covered.">      if(EMPTY_STR.equals(className)) {	</span>
+<span class="fc" id="L664">	logger.setLevel(OptionConverter.toLevel(priStr, Level.DEBUG));</span>
+      } else {
+<span class="fc" id="L666">	LogLog.debug(&quot;Desired Level sub-class: [&quot;+className+']');</span>
+	try {	 
+<span class="fc" id="L668">	  Class clazz = Loader.loadClass(className);</span>
+<span class="fc" id="L669">	  Method toLevelMethod = clazz.getMethod(&quot;toLevel&quot;, </span>
+						    ONE_STRING_PARAM);
+<span class="fc" id="L671">	  Level pri = (Level) toLevelMethod.invoke(null, </span>
+						    new Object[] {priStr});
+<span class="fc" id="L673">	  logger.setLevel(pri);</span>
+<span class="nc" id="L674">	} catch (Exception oops) {</span>
+<span class="nc bnc" id="L675" title="All 4 branches missed.">        if (oops instanceof InterruptedException || oops instanceof InterruptedIOException) {</span>
+<span class="nc" id="L676">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L678">	  LogLog.error(&quot;Could not create level [&quot;+priStr+</span>
+		       &quot;]. Reported error follows.&quot;, oops);
+<span class="nc" id="L680">	  return;</span>
+<span class="fc" id="L681">	}</span>
+      }
+    }
+<span class="fc" id="L684">    LogLog.debug(catName + &quot; level set to &quot; + logger.getLevel());    </span>
+<span class="fc" id="L685">  }</span>
+
+  protected
+  void setParameter(Element elem, PropertySetter propSetter) {
+<span class="fc" id="L689">      String name = subst(elem.getAttribute(NAME_ATTR));</span>
+<span class="fc" id="L690">      String value = (elem.getAttribute(VALUE_ATTR));</span>
+<span class="fc" id="L691">      value = subst(OptionConverter.convertSpecialChars(value));</span>
+<span class="fc" id="L692">      propSetter.setProperty(name, value);</span>
+<span class="fc" id="L693">  }</span>
+
+
+  /**
+     Configure log4j using a &lt;code&gt;configuration&lt;/code&gt; element as
+     defined in the log4j.dtd. 
+
+  */
+  static
+  public
+  void configure (Element element) {
+<span class="nc" id="L704">    DOMConfigurator configurator = new DOMConfigurator();</span>
+<span class="nc" id="L705">    configurator.doConfigure(element,  LogManager.getLoggerRepository());</span>
+<span class="nc" id="L706">  }</span>
+
+ /**
+     Like {@link #configureAndWatch(String, long)} except that the
+     default delay as defined by {@link FileWatchdog#DEFAULT_DELAY} is
+     used. 
+
+     @param configFilename A log4j configuration file in XML format.
+
+  */
+  static
+  public
+  void configureAndWatch(String configFilename) {
+<span class="fc" id="L719">    configureAndWatch(configFilename, FileWatchdog.DEFAULT_DELAY);</span>
+<span class="fc" id="L720">  }</span>
+
+  /**
+     Read the configuration file &lt;code&gt;configFilename&lt;/code&gt; if it
+     exists. Moreover, a thread will be created that will periodically
+     check if &lt;code&gt;configFilename&lt;/code&gt; has been created or
+     modified. The period is determined by the &lt;code&gt;delay&lt;/code&gt;
+     argument. If a change or file creation is detected, then
+     &lt;code&gt;configFilename&lt;/code&gt; is read to configure log4j.  
+
+      @param configFilename A log4j configuration file in XML format.
+      @param delay The delay in milliseconds to wait between each check.
+  */
+  static
+  public
+  void configureAndWatch(String configFilename, long delay) {
+<span class="fc" id="L736">    XMLWatchdog xdog = new XMLWatchdog(configFilename);</span>
+<span class="fc" id="L737">    xdog.setDelay(delay);</span>
+<span class="fc" id="L738">    xdog.start();</span>
+<span class="fc" id="L739">  }</span>
+  
+  private interface ParseAction {
+      Document parse(final DocumentBuilder parser) throws SAXException, IOException;
+  }
+
+
+  public
+  void doConfigure(final String filename, LoggerRepository repository) {
+<span class="fc" id="L748">    ParseAction action = new ParseAction() {</span>
+          public Document parse(final DocumentBuilder parser) throws SAXException, IOException {
+<span class="fc" id="L750">              return parser.parse(new File(filename));</span>
+          }
+          public String toString() { 
+<span class="nc" id="L753">              return &quot;file [&quot; + filename + &quot;]&quot;; </span>
+          }
+    };
+<span class="fc" id="L756">    doConfigure(action, repository);</span>
+<span class="fc" id="L757">  }</span>
+  
+
+  public
+  void doConfigure(final URL url, LoggerRepository repository) {
+<span class="fc" id="L762">      ParseAction action = new ParseAction() {</span>
+          public Document parse(final DocumentBuilder parser) throws SAXException, IOException {
+<span class="fc" id="L764">              URLConnection uConn = url.openConnection();</span>
+<span class="fc" id="L765">              uConn.setUseCaches(false);</span>
+<span class="fc" id="L766">              InputStream stream = uConn.getInputStream();</span>
+              try {
+<span class="fc" id="L768">                InputSource src = new InputSource(stream);</span>
+<span class="fc" id="L769">                src.setSystemId(url.toString());</span>
+<span class="fc" id="L770">                return parser.parse(src);</span>
+              } finally {
+<span class="fc" id="L772">                stream.close();</span>
+              }
+          }
+          public String toString() { 
+<span class="nc" id="L776">              return &quot;url [&quot; + url.toString() + &quot;]&quot;; </span>
+          }
+      };
+<span class="fc" id="L779">      doConfigure(action, repository);</span>
+<span class="fc" id="L780">  }</span>
+
+  /**
+     Configure log4j by reading in a log4j.dtd compliant XML
+     configuration file.
+
+  */
+  public
+  void doConfigure(final InputStream inputStream, LoggerRepository repository) 
+                                          throws FactoryConfigurationError {
+<span class="nc" id="L790">      ParseAction action = new ParseAction() {</span>
+          public Document parse(final DocumentBuilder parser) throws SAXException, IOException {
+<span class="nc" id="L792">              InputSource inputSource = new InputSource(inputStream);</span>
+<span class="nc" id="L793">              inputSource.setSystemId(&quot;dummy://log4j.dtd&quot;);</span>
+<span class="nc" id="L794">              return parser.parse(inputSource);</span>
+          }
+          public String toString() { 
+<span class="nc" id="L797">              return &quot;input stream [&quot; + inputStream.toString() + &quot;]&quot;; </span>
+          }
+      };
+<span class="nc" id="L800">      doConfigure(action, repository);</span>
+<span class="nc" id="L801">  }</span>
+
+  /**
+     Configure log4j by reading in a log4j.dtd compliant XML
+     configuration file.
+
+  */
+  public
+  void doConfigure(final Reader reader, LoggerRepository repository) 
+                                          throws FactoryConfigurationError {
+<span class="nc" id="L811">      ParseAction action = new ParseAction() {</span>
+          public Document parse(final DocumentBuilder parser) throws SAXException, IOException {
+<span class="nc" id="L813">              InputSource inputSource = new InputSource(reader);</span>
+<span class="nc" id="L814">              inputSource.setSystemId(&quot;dummy://log4j.dtd&quot;);</span>
+<span class="nc" id="L815">              return parser.parse(inputSource);</span>
+          }
+          public String toString() { 
+<span class="nc" id="L818">              return &quot;reader [&quot; + reader.toString() + &quot;]&quot;; </span>
+          }
+      };
+<span class="nc" id="L821">    doConfigure(action, repository);</span>
+<span class="nc" id="L822">  }</span>
+
+  /**
+     Configure log4j by reading in a log4j.dtd compliant XML
+     configuration file.
+
+  */
+  protected
+  void doConfigure(final InputSource inputSource, LoggerRepository repository) 
+                                          throws FactoryConfigurationError {
+<span class="nc bnc" id="L832" title="All 2 branches missed.">      if (inputSource.getSystemId() == null) {</span>
+<span class="nc" id="L833">          inputSource.setSystemId(&quot;dummy://log4j.dtd&quot;);</span>
+      }
+<span class="nc" id="L835">      ParseAction action = new ParseAction() {</span>
+          public Document parse(final DocumentBuilder parser) throws SAXException, IOException {
+<span class="nc" id="L837">              return parser.parse(inputSource);</span>
+          }
+          public String toString() { 
+<span class="nc" id="L840">              return &quot;input source [&quot; + inputSource.toString() + &quot;]&quot;; </span>
+          }
+      };
+<span class="nc" id="L843">      doConfigure(action, repository);</span>
+<span class="nc" id="L844">    }</span>
+    
+    
+  private final void doConfigure(final ParseAction action, final LoggerRepository repository)
+         throws FactoryConfigurationError {
+<span class="fc" id="L849">    DocumentBuilderFactory dbf = null;</span>
+<span class="fc" id="L850">    this.repository = repository;</span>
+    try { 
+<span class="fc" id="L852">      LogLog.debug(&quot;System property is :&quot;+</span>
+<span class="fc" id="L853">  	                        OptionConverter.getSystemProperty(dbfKey, </span>
+								  null)); 
+<span class="fc" id="L855">      dbf = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L856">      LogLog.debug(&quot;Standard DocumentBuilderFactory search succeded.&quot;);</span>
+<span class="fc" id="L857">      LogLog.debug(&quot;DocumentBuilderFactory is: &quot;+dbf.getClass().getName());</span>
+<span class="nc" id="L858">    } catch(FactoryConfigurationError fce) {</span>
+<span class="nc" id="L859">      Exception e = fce.getException();</span>
+<span class="nc" id="L860">      LogLog.debug(&quot;Could not instantiate a DocumentBuilderFactory.&quot;, e);</span>
+<span class="nc" id="L861">      throw fce;</span>
+<span class="fc" id="L862">    }</span>
+      
+    try {
+<span class="fc" id="L865">      dbf.setValidating(true);</span>
+
+<span class="fc" id="L867">      DocumentBuilder docBuilder = dbf.newDocumentBuilder();</span>
+
+<span class="fc" id="L869">      docBuilder.setErrorHandler(new SAXErrorHandler());      </span>
+<span class="fc" id="L870">      docBuilder.setEntityResolver(new Log4jEntityResolver());</span>
+         
+<span class="fc" id="L872">      Document doc = action.parse(docBuilder);     </span>
+<span class="fc" id="L873">      parse(doc.getDocumentElement());</span>
+<span class="nc" id="L874">    } catch (Exception e) {</span>
+<span class="nc bnc" id="L875" title="All 4 branches missed.">        if (e instanceof InterruptedException || e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L876">            Thread.currentThread().interrupt();</span>
+        }
+      // I know this is miserable...
+<span class="nc" id="L879">      LogLog.error(&quot;Could not parse &quot;+ action.toString() + &quot;.&quot;, e);</span>
+<span class="fc" id="L880">    }</span>
+<span class="fc" id="L881">  }</span>
+
+  /**
+     Configure by taking in an DOM element. 
+  */
+  public void doConfigure(Element element, LoggerRepository repository) {
+<span class="nc" id="L887">    this.repository = repository;</span>
+<span class="nc" id="L888">    parse(element);</span>
+<span class="nc" id="L889">  }</span>
+
+  
+  /**
+     A static version of {@link #doConfigure(String, LoggerRepository)}.  */
+  static
+  public
+  void configure(String filename) throws FactoryConfigurationError {
+<span class="fc" id="L897">    new DOMConfigurator().doConfigure(filename, </span>
+<span class="fc" id="L898">				      LogManager.getLoggerRepository());</span>
+<span class="fc" id="L899">  }</span>
+
+  /**
+     A static version of {@link #doConfigure(URL, LoggerRepository)}.
+   */
+  static
+  public
+  void configure(URL url) throws FactoryConfigurationError {
+<span class="fc" id="L907">    new DOMConfigurator().doConfigure(url, LogManager.getLoggerRepository());</span>
+<span class="fc" id="L908">  }</span>
+
+  /**
+     Used internally to configure the log4j framework by parsing a DOM
+     tree of XML elements based on &lt;a
+     href=&quot;doc-files/log4j.dtd&quot;&gt;log4j.dtd&lt;/a&gt;.
+     
+  */
+  protected
+  void parse(Element element) {
+
+<span class="fc" id="L919">    String rootElementName = element.getTagName();</span>
+
+<span class="pc bpc" id="L921" title="1 of 2 branches missed.">    if (!rootElementName.equals(CONFIGURATION_TAG)) {</span>
+<span class="nc bnc" id="L922" title="All 2 branches missed.">      if(rootElementName.equals(OLD_CONFIGURATION_TAG)) {</span>
+<span class="nc" id="L923">	LogLog.warn(&quot;The &lt;&quot;+OLD_CONFIGURATION_TAG+</span>
+		     &quot;&gt; element has been deprecated.&quot;);
+<span class="nc" id="L925">	LogLog.warn(&quot;Use the &lt;&quot;+CONFIGURATION_TAG+&quot;&gt; element instead.&quot;);</span>
+      } else {
+<span class="nc" id="L927">	LogLog.error(&quot;DOM element is - not a &lt;&quot;+CONFIGURATION_TAG+&quot;&gt; element.&quot;);</span>
+<span class="nc" id="L928">	return;</span>
+      }
+    }
+
+
+<span class="fc" id="L933">    String debugAttrib = subst(element.getAttribute(INTERNAL_DEBUG_ATTR));</span>
+      
+<span class="fc" id="L935">    LogLog.debug(&quot;debug attribute= \&quot;&quot; + debugAttrib +&quot;\&quot;.&quot;);</span>
+    // if the log4j.dtd is not specified in the XML file, then the
+    // &quot;debug&quot; attribute is returned as the empty string.
+<span class="pc bpc" id="L938" title="1 of 4 branches missed.">    if(!debugAttrib.equals(&quot;&quot;) &amp;&amp; !debugAttrib.equals(&quot;null&quot;)) {      </span>
+<span class="fc" id="L939">      LogLog.setInternalDebugging(OptionConverter.toBoolean(debugAttrib, true));</span>
+    } else {
+<span class="fc" id="L941">      LogLog.debug(&quot;Ignoring &quot; + INTERNAL_DEBUG_ATTR + &quot; attribute.&quot;);</span>
+    }
+
+      //
+      //   reset repository before configuration if reset=&quot;true&quot;
+      //       on configuration element.
+      //
+<span class="fc" id="L948">    String resetAttrib = subst(element.getAttribute(RESET_ATTR));</span>
+<span class="fc" id="L949">    LogLog.debug(&quot;reset attribute= \&quot;&quot; + resetAttrib +&quot;\&quot;.&quot;);</span>
+<span class="pc bpc" id="L950" title="1 of 2 branches missed.">    if(!(&quot;&quot;.equals(resetAttrib))) {</span>
+<span class="fc bfc" id="L951" title="All 2 branches covered.">         if (OptionConverter.toBoolean(resetAttrib, false)) {</span>
+<span class="fc" id="L952">             repository.resetConfiguration();</span>
+         }
+    }
+
+
+
+<span class="fc" id="L958">    String confDebug = subst(element.getAttribute(CONFIG_DEBUG_ATTR));</span>
+<span class="pc bpc" id="L959" title="3 of 4 branches missed.">    if(!confDebug.equals(&quot;&quot;) &amp;&amp; !confDebug.equals(&quot;null&quot;)) {      </span>
+<span class="nc" id="L960">      LogLog.warn(&quot;The \&quot;&quot;+CONFIG_DEBUG_ATTR+&quot;\&quot; attribute is deprecated.&quot;);</span>
+<span class="nc" id="L961">      LogLog.warn(&quot;Use the \&quot;&quot;+INTERNAL_DEBUG_ATTR+&quot;\&quot; attribute instead.&quot;);</span>
+<span class="nc" id="L962">      LogLog.setInternalDebugging(OptionConverter.toBoolean(confDebug, true));</span>
+    }
+
+<span class="fc" id="L965">    String thresholdStr = subst(element.getAttribute(THRESHOLD_ATTR));</span>
+<span class="fc" id="L966">    LogLog.debug(&quot;Threshold =\&quot;&quot; + thresholdStr +&quot;\&quot;.&quot;);</span>
+<span class="pc bpc" id="L967" title="2 of 4 branches missed.">    if(!&quot;&quot;.equals(thresholdStr) &amp;&amp; !&quot;null&quot;.equals(thresholdStr)) {</span>
+<span class="nc" id="L968">      repository.setThreshold(thresholdStr);</span>
+    }
+
+    //Hashtable appenderBag = new Hashtable(11);
+
+    /* Building Appender objects, placing them in a local namespace
+       for future reference */
+
+    // First configure each category factory under the root element.
+    // Category factories need to be configured before any of
+    // categories they support.
+    //
+<span class="fc" id="L980">    String   tagName = null;</span>
+<span class="fc" id="L981">    Element  currentElement = null;</span>
+<span class="fc" id="L982">    Node     currentNode = null;</span>
+<span class="fc" id="L983">    NodeList children = element.getChildNodes();</span>
+<span class="fc" id="L984">    final int length = children.getLength();</span>
+
+<span class="fc bfc" id="L986" title="All 2 branches covered.">    for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L987">      currentNode = children.item(loop);</span>
+<span class="fc bfc" id="L988" title="All 2 branches covered.">      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L989">	currentElement = (Element) currentNode;</span>
+<span class="fc" id="L990">	tagName = currentElement.getTagName();</span>
+
+<span class="fc bfc" id="L992" title="All 4 branches covered.">	if (tagName.equals(CATEGORY_FACTORY_TAG) || tagName.equals(LOGGER_FACTORY_TAG)) {</span>
+<span class="fc" id="L993">	  parseCategoryFactory(currentElement);</span>
+	}
+      }
+    }
+    
+<span class="fc bfc" id="L998" title="All 2 branches covered.">    for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="fc" id="L999">      currentNode = children.item(loop);</span>
+<span class="fc bfc" id="L1000" title="All 2 branches covered.">      if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="fc" id="L1001">	currentElement = (Element) currentNode;</span>
+<span class="fc" id="L1002">	tagName = currentElement.getTagName();</span>
+
+<span class="pc bpc" id="L1004" title="1 of 4 branches missed.">	if (tagName.equals(CATEGORY) || tagName.equals(LOGGER)) {</span>
+<span class="fc" id="L1005">	  parseCategory(currentElement);</span>
+<span class="fc bfc" id="L1006" title="All 2 branches covered.">	} else if (tagName.equals(ROOT_TAG)) {</span>
+<span class="fc" id="L1007">	  parseRoot(currentElement);</span>
+<span class="pc bpc" id="L1008" title="1 of 2 branches missed.">	} else if(tagName.equals(RENDERER_TAG)) {</span>
+<span class="nc" id="L1009">	  parseRenderer(currentElement);</span>
+<span class="fc bfc" id="L1010" title="All 2 branches covered.">    } else if(tagName.equals(THROWABLE_RENDERER_TAG)) {</span>
+<span class="pc bpc" id="L1011" title="1 of 2 branches missed.">        if (repository instanceof ThrowableRendererSupport) {</span>
+<span class="fc" id="L1012">            ThrowableRenderer tr = parseThrowableRenderer(currentElement);</span>
+<span class="pc bpc" id="L1013" title="1 of 2 branches missed.">            if (tr != null) {</span>
+<span class="fc" id="L1014">                ((ThrowableRendererSupport) repository).setThrowableRenderer(tr);</span>
+            }
+<span class="fc" id="L1016">        }</span>
+<span class="fc bfc" id="L1017" title="All 2 branches covered.">    } else if (!(tagName.equals(APPENDER_TAG)</span>
+<span class="fc bfc" id="L1018" title="All 2 branches covered.">            || tagName.equals(CATEGORY_FACTORY_TAG)</span>
+<span class="pc bpc" id="L1019" title="1 of 2 branches missed.">            || tagName.equals(LOGGER_FACTORY_TAG))) {</span>
+<span class="nc" id="L1020">        quietParseUnrecognizedElement(repository, currentElement, props);</span>
+    }
+      }
+    }
+<span class="fc" id="L1024">  }</span>
+
+  
+  protected
+  String subst(final String value) {
+<span class="fc" id="L1029">      return subst(value, props);</span>
+  }
+
+    /**
+     * Substitutes property value for any references in expression.
+     *
+     * @param value value from configuration file, may contain
+     *              literal text, property references or both
+     * @param props properties.
+     * @return evaluated expression, may still contain expressions
+     *         if unable to expand.
+     * @since 1.2.15
+     */
+    public static String subst(final String value, final Properties props) {
+        try {
+<span class="fc" id="L1044">            return OptionConverter.substVars(value, props);</span>
+<span class="nc" id="L1045">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L1046">            LogLog.warn(&quot;Could not perform variable substitution.&quot;, e);</span>
+<span class="nc" id="L1047">            return value;</span>
+        }
+    }
+
+
+    /**
+     * Sets a parameter based from configuration file content.
+     *
+     * @param elem       param element, may not be null.
+     * @param propSetter property setter, may not be null.
+     * @param props      properties
+     * @since 1.2.15
+     */
+    public static void setParameter(final Element elem,
+                                    final PropertySetter propSetter,
+                                    final Properties props) {
+<span class="nc" id="L1063">        String name = subst(elem.getAttribute(&quot;name&quot;), props);</span>
+<span class="nc" id="L1064">        String value = (elem.getAttribute(&quot;value&quot;));</span>
+<span class="nc" id="L1065">        value = subst(OptionConverter.convertSpecialChars(value), props);</span>
+<span class="nc" id="L1066">        propSetter.setProperty(name, value);</span>
+<span class="nc" id="L1067">    }</span>
+
+    /**
+     * Creates an object and processes any nested param elements
+     * but does not call activateOptions.  If the class also supports
+     * UnrecognizedElementParser, the parseUnrecognizedElement method
+     * will be call for any child elements other than param.
+     *
+     * @param element       element, may not be null.
+     * @param props         properties
+     * @param expectedClass interface or class expected to be implemented
+     *                      by created class
+     * @return created class or null.
+     * @throws Exception thrown if the contain object should be abandoned.
+     * @since 1.2.15
+     */
+    public static Object parseElement(final Element element,
+                                             final Properties props,
+                                             final Class expectedClass) throws Exception {
+<span class="nc" id="L1086">        String clazz = subst(element.getAttribute(&quot;class&quot;), props);</span>
+<span class="nc" id="L1087">        Object instance = OptionConverter.instantiateByClassName(clazz,</span>
+                expectedClass, null);
+
+<span class="nc bnc" id="L1090" title="All 2 branches missed.">        if (instance != null) {</span>
+<span class="nc" id="L1091">            PropertySetter propSetter = new PropertySetter(instance);</span>
+<span class="nc" id="L1092">            NodeList children = element.getChildNodes();</span>
+<span class="nc" id="L1093">            final int length = children.getLength();</span>
+
+<span class="nc bnc" id="L1095" title="All 2 branches missed.">            for (int loop = 0; loop &lt; length; loop++) {</span>
+<span class="nc" id="L1096">                Node currentNode = children.item(loop);</span>
+<span class="nc bnc" id="L1097" title="All 2 branches missed.">                if (currentNode.getNodeType() == Node.ELEMENT_NODE) {</span>
+<span class="nc" id="L1098">                    Element currentElement = (Element) currentNode;</span>
+<span class="nc" id="L1099">                    String tagName = currentElement.getTagName();</span>
+<span class="nc bnc" id="L1100" title="All 2 branches missed.">                    if (tagName.equals(&quot;param&quot;)) {</span>
+<span class="nc" id="L1101">                        setParameter(currentElement, propSetter, props);</span>
+                    } else {
+<span class="nc" id="L1103">                         parseUnrecognizedElement(instance, currentElement, props);</span>
+                    }
+                }
+            }
+<span class="nc" id="L1107">            return instance;</span>
+        }
+<span class="nc" id="L1109">        return null;</span>
+    }
+
+}
+
+
+class XMLWatchdog extends FileWatchdog {
+
+    XMLWatchdog(String filename) {
+<span class="fc" id="L1118">    super(filename);</span>
+<span class="fc" id="L1119">  }</span>
+
+  /**
+     Call {@link DOMConfigurator#configure(String)} with the
+     &lt;code&gt;filename&lt;/code&gt; to reconfigure log4j. */
+  public
+  void doOnChange() {
+<span class="fc" id="L1126">    new DOMConfigurator().doConfigure(filename, </span>
+<span class="fc" id="L1127">				      LogManager.getLoggerRepository());</span>
+<span class="fc" id="L1128">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

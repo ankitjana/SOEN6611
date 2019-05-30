@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CyclicBuffer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">CyclicBuffer.java</span></div><h1>CyclicBuffer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+     
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+
+   CyclicBuffer is used by other appenders to hold {@link LoggingEvent
+   LoggingEvents} for immediate or differed display.
+   
+   &lt;p&gt;This buffer gives read access to any element in the buffer not
+   just the first or last element.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since 0.9.0
+
+ */
+public class CyclicBuffer {
+  
+  LoggingEvent[] ea;
+  int first; 
+  int last; 
+  int numElems;
+  int maxSize;
+
+  /**
+     Instantiate a new CyclicBuffer of at most &lt;code&gt;maxSize&lt;/code&gt; events.
+
+     The &lt;code&gt;maxSize&lt;/code&gt; argument must a positive integer.
+
+     @param maxSize The maximum number of elements in the buffer.
+  */
+<span class="fc" id="L49">  public CyclicBuffer(int maxSize) throws IllegalArgumentException {</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if(maxSize &lt; 1) {</span>
+<span class="nc" id="L51">      throw new IllegalArgumentException(&quot;The maxSize argument (&quot;+maxSize+</span>
+			    &quot;) is not a positive integer.&quot;);
+    }
+<span class="fc" id="L54">    this.maxSize = maxSize;</span>
+<span class="fc" id="L55">    ea = new LoggingEvent[maxSize];</span>
+<span class="fc" id="L56">    first = 0;</span>
+<span class="fc" id="L57">    last = 0;</span>
+<span class="fc" id="L58">    numElems = 0;</span>
+<span class="fc" id="L59">  }</span>
+    
+  /**
+     Add an &lt;code&gt;event&lt;/code&gt; as the last event in the buffer.
+
+   */
+  public
+  void add(LoggingEvent event) {    
+<span class="fc" id="L67">    ea[last] = event;    </span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">    if(++last == maxSize) {</span>
+<span class="fc" id="L69">        last = 0;</span>
+    }
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">    if(numElems &lt; maxSize) {</span>
+<span class="fc" id="L73">        numElems++;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    } else if(++first == maxSize) {</span>
+<span class="fc" id="L75">        first = 0;</span>
+    }
+<span class="fc" id="L77">  }</span>
+
+
+  /**
+     Get the &lt;i&gt;i&lt;/i&gt;th oldest event currently in the buffer. If
+     &lt;em&gt;i&lt;/em&gt; is outside the range 0 to the number of elements
+     currently in the buffer, then &lt;code&gt;null&lt;/code&gt; is returned.
+
+
+  */
+  public
+  LoggingEvent get(int i) {
+<span class="fc bfc" id="L89" title="All 4 branches covered.">    if(i &lt; 0 || i &gt;= numElems) {</span>
+<span class="fc" id="L90">        return null;</span>
+    }
+
+<span class="fc" id="L93">    return ea[(first + i) % maxSize];</span>
+  }
+
+  public 
+  int getMaxSize() {
+<span class="fc" id="L98">    return maxSize;</span>
+  }
+
+  /**
+     Get the oldest (first) element in the buffer. The oldest element
+     is removed from the buffer.
+  */
+  public
+  LoggingEvent get() {
+<span class="fc" id="L107">    LoggingEvent r = null;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if(numElems &gt; 0) {</span>
+<span class="fc" id="L109">      numElems--;</span>
+<span class="fc" id="L110">      r = ea[first];</span>
+<span class="fc" id="L111">      ea[first] = null;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">      if(++first == maxSize) {</span>
+<span class="fc" id="L113">        first = 0;</span>
+    }
+    } 
+<span class="fc" id="L116">    return r;</span>
+  }
+  
+  /**
+     Get the number of elements in the buffer. This number is
+     guaranteed to be in the range 0 to &lt;code&gt;maxSize&lt;/code&gt;
+     (inclusive).
+  */
+  public
+  int length() {
+<span class="fc" id="L126">    return numElems;</span>
+  } 
+
+  /**
+     Resize the cyclic buffer to &lt;code&gt;newSize&lt;/code&gt;.
+
+     @throws IllegalArgumentException if &lt;code&gt;newSize&lt;/code&gt; is negative.
+   */
+  public 
+  void resize(int newSize) {
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    if(newSize &lt; 0) {</span>
+<span class="nc" id="L137">      throw new IllegalArgumentException(&quot;Negative array size [&quot;+newSize+</span>
+					 &quot;] not allowed.&quot;);
+    }
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    if(newSize == numElems)</span>
+     {
+<span class="fc" id="L142">        return; // nothing to do</span>
+    }
+    
+<span class="fc" id="L145">    LoggingEvent[] temp = new  LoggingEvent[newSize];</span>
+
+<span class="fc bfc" id="L147" title="All 2 branches covered.">    int loopLen = newSize &lt; numElems ? newSize : numElems;</span>
+    
+<span class="fc bfc" id="L149" title="All 2 branches covered.">    for(int i = 0; i &lt; loopLen; i++) {</span>
+<span class="fc" id="L150">      temp[i] = ea[first];</span>
+<span class="fc" id="L151">      ea[first] = null;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">      if(++first == numElems) {</span>
+<span class="fc" id="L153">        first = 0;</span>
+    }
+    }
+<span class="fc" id="L156">    ea = temp;</span>
+<span class="fc" id="L157">    first = 0;</span>
+<span class="fc" id="L158">    numElems = loopLen;</span>
+<span class="fc" id="L159">    maxSize = newSize;</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (loopLen == newSize) {</span>
+<span class="fc" id="L161">      last = 0;</span>
+    } else {
+<span class="fc" id="L163">      last = loopLen;</span>
+    }
+<span class="fc" id="L165">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NOPLogger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.spi</a> &gt; <span class="el_source">NOPLogger.java</span></div><h1>NOPLogger.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.spi;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
+import java.util.Enumeration;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
+/**
+ * No-operation implementation of Logger used by NOPLoggerRepository.
+ * @since 1.2.15
+ */
+public final class NOPLogger extends Logger {
+    /**
+     * Create instance of Logger.
+     * @param repo repository, may not be null.
+     * @param name name, may not be null, use &quot;root&quot; for root logger.
+     */
+    public NOPLogger(NOPLoggerRepository repo, final String name) {
+<span class="nc" id="L39">        super(name);</span>
+<span class="nc" id="L40">        this.repository = repo;</span>
+<span class="nc" id="L41">        this.level = Level.OFF;</span>
+<span class="nc" id="L42">        this.parent = this;</span>
+<span class="nc" id="L43">    }</span>
+
+    /** {@inheritDoc} */
+    public void addAppender(final Appender newAppender) {
+<span class="nc" id="L47">    }</span>
+
+    /** {@inheritDoc} */
+    public void assertLog(final boolean assertion, final String msg) {
+<span class="nc" id="L51">    }</span>
+
+
+    /** {@inheritDoc} */
+    public void callAppenders(final LoggingEvent event) {
+<span class="nc" id="L56">    }</span>
+
+    /** {@inheritDoc} */
+    void closeNestedAppenders() {
+<span class="nc" id="L60">    }</span>
+
+    /** {@inheritDoc} */
+    public void debug(final Object message) {
+<span class="nc" id="L64">    }</span>
+
+
+    /** {@inheritDoc} */
+    public void debug(final Object message, final Throwable t) {
+<span class="nc" id="L69">    }</span>
+
+    /** {@inheritDoc} */
+    public void error(final Object message) {
+<span class="nc" id="L73">    }</span>
+
+    /** {@inheritDoc} */
+    public void error(final Object message, final Throwable t) {
+<span class="nc" id="L77">    }</span>
+
+
+    /** {@inheritDoc} */
+    public void fatal(final Object message) {
+<span class="nc" id="L82">    }</span>
+
+    /** {@inheritDoc} */
+    public void fatal(final Object message, final Throwable t) {
+<span class="nc" id="L86">    }</span>
+
+
+    /** {@inheritDoc} */
+    public Enumeration getAllAppenders() {
+<span class="nc" id="L91">      return new Vector().elements();</span>
+    }
+
+    /** {@inheritDoc} */
+    public Appender getAppender(final String name) {
+<span class="nc" id="L96">       return null;</span>
+    }
+
+    /** {@inheritDoc} */
+    public Level getEffectiveLevel() {
+<span class="nc" id="L101">      return Level.OFF;</span>
+    }
+
+    /** {@inheritDoc} */
+    public Priority getChainedPriority() {
+<span class="nc" id="L106">      return getEffectiveLevel();</span>
+    }
+
+    /** {@inheritDoc} */
+    public ResourceBundle getResourceBundle() {
+<span class="nc" id="L111">      return null;</span>
+    }
+
+
+    /** {@inheritDoc} */
+    public void info(final Object message) {
+<span class="nc" id="L117">    }</span>
+
+    /** {@inheritDoc} */
+    public void info(final Object message, final Throwable t) {
+<span class="nc" id="L121">    }</span>
+
+    /** {@inheritDoc} */
+    public boolean isAttached(Appender appender) {
+<span class="nc" id="L125">      return false;</span>
+    }
+
+    /** {@inheritDoc} */
+    public boolean isDebugEnabled() {
+<span class="nc" id="L130">      return false;</span>
+    }
+
+    /** {@inheritDoc} */
+    public boolean isEnabledFor(final Priority level) {
+<span class="nc" id="L135">      return false;</span>
+    }
+
+    /** {@inheritDoc} */
+    public boolean isInfoEnabled() {
+<span class="nc" id="L140">      return false;</span>
+    }
+
+
+    /** {@inheritDoc} */
+    public void l7dlog(final Priority priority, final String key, final Throwable t) {
+<span class="nc" id="L146">    }</span>
+
+    /** {@inheritDoc} */
+    public void l7dlog(final Priority priority, final String key,  final Object[] params, final Throwable t) {
+<span class="nc" id="L150">    }</span>
+
+    /** {@inheritDoc} */
+    public void log(final Priority priority, final Object message, final Throwable t) {
+<span class="nc" id="L154">    }</span>
+
+    /** {@inheritDoc} */
+    public void log(final Priority priority, final Object message) {
+<span class="nc" id="L158">    }</span>
+
+    /** {@inheritDoc} */
+    public void log(final String callerFQCN, final Priority level, final Object message, final Throwable t) {
+<span class="nc" id="L162">    }</span>
+
+    /** {@inheritDoc} */
+    public void removeAllAppenders() {
+<span class="nc" id="L166">    }</span>
+
+
+    /** {@inheritDoc} */
+    public void removeAppender(Appender appender) {
+<span class="nc" id="L171">    }</span>
+
+    /** {@inheritDoc} */
+    public void removeAppender(final String name) {
+<span class="nc" id="L175">    }</span>
+
+    /** {@inheritDoc} */
+    public void setLevel(final Level level) {
+<span class="nc" id="L179">    }</span>
+
+
+    /** {@inheritDoc} */
+    public void setPriority(final Priority priority) {
+<span class="nc" id="L184">    }</span>
+
+    /** {@inheritDoc} */
+    public void setResourceBundle(final ResourceBundle bundle) {
+<span class="nc" id="L188">    }</span>
+
+    /** {@inheritDoc} */
+    public void warn(final Object message) {
+<span class="nc" id="L192">    }</span>
+
+    /** {@inheritDoc} */
+    public void warn(final Object message, final Throwable t) {
+<span class="nc" id="L196">    }</span>
+
+    /** {@inheritDoc} */
+    public void trace(Object message) {
+<span class="nc" id="L200">    }</span>
+
+    /** {@inheritDoc} */
+    public void trace(Object message, Throwable t) {
+<span class="nc" id="L204">    }</span>
+
+    /** {@inheritDoc} */
+    public boolean isTraceEnabled() {
+<span class="nc" id="L208">        return false;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

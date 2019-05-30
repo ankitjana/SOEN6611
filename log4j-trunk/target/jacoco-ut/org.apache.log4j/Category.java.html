@@ -1,0 +1,1097 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Category.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">Category.java</span></div><h1>Category.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contibutors: Alex Blewitt &lt;Alex.Blewitt@ioshq.com&gt;
+//              Markus Oestreicher &lt;oes@zurich.ibm.com&gt;
+//              Frank Hoering &lt;fhr@zurich.ibm.com&gt;
+//              Nelson Minar &lt;nelson@media.mit.edu&gt;
+//              Jim Cakalic &lt;jim_cakalic@na.biomerieux.com&gt;
+//              Avy Sharell &lt;asharell@club-internet.fr&gt;
+//              Ciaran Treanor &lt;ciaran@xelector.com&gt;
+//              Jeff Turner &lt;jeff@socialchange.net.au&gt;
+//              Michael Horwitz &lt;MHorwitz@siemens.co.za&gt;
+//              Calvin Chan &lt;calvin.chan@hic.gov.au&gt;
+//              Aaron Greenhouse &lt;aarong@cs.cmu.edu&gt;
+//              Beat Meier &lt;bmeier@infovia.com.ar&gt;
+//              Colin Sampaleanu &lt;colinml1@exis.com&gt;
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.AppenderAttachable;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.HierarchyEventListener;
+import org.apache.log4j.helpers.NullEnumeration;
+import org.apache.log4j.helpers.AppenderAttachableImpl;
+
+import java.util.Enumeration;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
+
+/**
+  * &lt;font color=&quot;#AA2222&quot;&gt;&lt;b&gt;This class has been deprecated and
+  * replaced by the {@link Logger} &lt;em&gt;subclass&lt;/em&gt;&lt;/b&gt;&lt;/font&gt;. It
+  * will be kept around to preserve backward compatibility until mid
+  * 2003.
+  * 
+  * &lt;p&gt;&lt;code&gt;Logger&lt;/code&gt; is a subclass of Category, i.e. it extends
+  * Category. In other words, a logger &lt;em&gt;is&lt;/em&gt; a category. Thus,
+  * all operations that can be performed on a category can be
+  * performed on a logger. Internally, whenever log4j is asked to
+  * produce a Category object, it will instead produce a Logger
+  * object. Log4j 1.2 will &lt;em&gt;never&lt;/em&gt; produce Category objects but
+  * only &lt;code&gt;Logger&lt;/code&gt; instances. In order to preserve backward
+  * compatibility, methods that previously accepted category objects
+  * still continue to accept category objects.
+  * 
+  * &lt;p&gt;For example, the following are all legal and will work as
+  * expected.
+  * 
+   &lt;pre&gt;
+    &amp;nbsp;&amp;nbsp;&amp;nbsp;// Deprecated form:
+    &amp;nbsp;&amp;nbsp;&amp;nbsp;Category cat = Category.getInstance(&quot;foo.bar&quot;)
+   
+    &amp;nbsp;&amp;nbsp;&amp;nbsp;// Preferred form for retrieving loggers:
+    &amp;nbsp;&amp;nbsp;&amp;nbsp;Logger logger = Logger.getLogger(&quot;foo.bar&quot;)
+   &lt;/pre&gt;
+   
+  *  &lt;p&gt;The first form is deprecated and should be avoided.
+  * 
+  *  &lt;p&gt;&lt;b&gt;There is absolutely no need for new client code to use or
+  *  refer to the &lt;code&gt;Category&lt;/code&gt; class.&lt;/b&gt; Whenever possible,
+  *  please avoid referring to it or using it.
+  * 
+  * &lt;p&gt;See the &lt;a href=&quot;../../../../manual.html&quot;&gt;short manual&lt;/a&gt; for an
+  * introduction on this class.
+  * &lt;p&gt;
+  * See the document entitled &lt;a href=&quot;http://www.qos.ch/logging/preparingFor13.html&quot;&gt;preparing
+  *  for log4j 1.3&lt;/a&gt; for a more detailed discussion.
+  *
+  * @author Ceki G&amp;uuml;lc&amp;uuml;
+  * @author Anders Kristensen 
+  */
+public class Category implements AppenderAttachable {
+
+  /**
+     The hierarchy where categories are attached to by default.
+  */
+  //static
+  //public
+  //final Hierarchy defaultHierarchy = new Hierarchy(new
+  //					   RootCategory(Level.DEBUG));
+
+  /**
+     The name of this category.
+  */
+  protected String   name;
+
+  /**
+     The assigned level of this category.  The
+     &lt;code&gt;level&lt;/code&gt; variable need not be assigned a value in
+     which case it is inherited form the hierarchy.  */
+  volatile protected Level level;
+
+  /**
+     The parent of this category. All categories have at least one
+     ancestor which is the root category. */
+  volatile protected Category parent;
+
+  /**
+     The fully qualified name of the Category class. See also the
+     getFQCN method. */
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">  private static final String FQCN = Category.class.getName();</span>
+
+  protected ResourceBundle resourceBundle;
+
+  // Categories need to know what Hierarchy they are in
+  protected LoggerRepository repository;
+
+
+  AppenderAttachableImpl aai;
+
+  /** Additivity is set to true by default, that is children inherit
+      the appenders of their ancestors by default. If this variable is
+      set to &lt;code&gt;false&lt;/code&gt; then the appenders found in the
+      ancestors of this category are not used. However, the children
+      of this category will inherit its appenders, unless the children
+      have their additivity flag set to &lt;code&gt;false&lt;/code&gt; too. See
+      the user manual for more details. */
+<span class="fc" id="L135">  protected boolean additive = true;</span>
+
+  /**
+     This constructor created a new &lt;code&gt;Category&lt;/code&gt; instance and
+     sets its name.
+
+     &lt;p&gt;It is intended to be used by sub-classes only. You should not
+     create categories directly.
+
+     @param name The name of the category.
+  */
+  protected
+<span class="fc" id="L147">  Category(String name) {</span>
+<span class="fc" id="L148">    this.name = name;</span>
+<span class="fc" id="L149">  }</span>
+
+  /**
+     Add &lt;code&gt;newAppender&lt;/code&gt; to the list of appenders of this
+     Category instance.
+
+     &lt;p&gt;If &lt;code&gt;newAppender&lt;/code&gt; is already in the list of
+     appenders, then it won't be added again.
+  */
+  synchronized
+  public
+  void addAppender(Appender newAppender) {
+<span class="fc bfc" id="L161" title="All 2 branches covered.">    if(aai == null) {</span>
+<span class="fc" id="L162">      aai = new AppenderAttachableImpl();</span>
+    }
+<span class="fc" id="L164">    aai.addAppender(newAppender);</span>
+<span class="fc" id="L165">    repository.fireAddAppenderEvent(this, newAppender);</span>
+<span class="fc" id="L166">  }</span>
+
+  /**
+     If &lt;code&gt;assertion&lt;/code&gt; parameter is &lt;code&gt;false&lt;/code&gt;, then
+     logs &lt;code&gt;msg&lt;/code&gt; as an {@link #error(Object) error} statement.
+
+     &lt;p&gt;The &lt;code&gt;assert&lt;/code&gt; method has been renamed to
+     &lt;code&gt;assertLog&lt;/code&gt; because &lt;code&gt;assert&lt;/code&gt; is a language
+     reserved word in JDK 1.4.
+
+     @param assertion
+     @param msg The message to print if &lt;code&gt;assertion&lt;/code&gt; is
+     false.
+
+     @since 1.2 */
+  public
+  void assertLog(boolean assertion, String msg) {
+<span class="nc bnc" id="L183" title="All 2 branches missed.">    if(!assertion) {</span>
+<span class="nc" id="L184">        this.error(msg);</span>
+    }
+<span class="nc" id="L186">  }</span>
+
+
+  /**
+     Call the appenders in the hierrachy starting at
+     &lt;code&gt;this&lt;/code&gt;.  If no appenders could be found, emit a
+     warning.
+
+     &lt;p&gt;This method calls all the appenders inherited from the
+     hierarchy circumventing any evaluation of whether to log or not
+     to log the particular log request.
+
+     @param event the event to log.  */
+  public
+  void callAppenders(LoggingEvent event) {
+<span class="fc" id="L201">    int writes = 0;</span>
+
+<span class="fc bfc" id="L203" title="All 2 branches covered.">    for(Category c = this; c != null; c=c.parent) {</span>
+      // Protected against simultaneous call to addAppender, removeAppender,...
+<span class="fc" id="L205">      synchronized(c) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">	if(c.aai != null) {</span>
+<span class="fc" id="L207">	  writes += c.aai.appendLoopOnAppenders(event);</span>
+	}
+<span class="fc bfc" id="L209" title="All 2 branches covered.">	if(!c.additive) {</span>
+<span class="fc" id="L210">	  break;</span>
+	}
+<span class="fc" id="L212">      }</span>
+    }
+
+<span class="fc bfc" id="L215" title="All 2 branches covered.">    if(writes == 0) {</span>
+<span class="fc" id="L216">      repository.emitNoAppenderWarning(this);</span>
+    }
+<span class="fc" id="L218">  }</span>
+
+  /**
+     Close all attached appenders implementing the AppenderAttachable
+     interface.
+     @since 1.0
+  */
+  synchronized
+  void closeNestedAppenders() {
+<span class="fc" id="L227">    Enumeration enumeration = this.getAllAppenders();</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">    if(enumeration != null) {</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">      while(enumeration.hasMoreElements()) {</span>
+<span class="fc" id="L230">	Appender a = (Appender) enumeration.nextElement();</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">	if(a instanceof AppenderAttachable) {</span>
+<span class="nc" id="L232">	  a.close();</span>
+	}
+<span class="fc" id="L234">      }</span>
+    }
+<span class="fc" id="L236">  }</span>
+
+  /**
+    Log a message object with the {@link Level#DEBUG DEBUG} level.
+
+    &lt;p&gt;This method first checks if this category is &lt;code&gt;DEBUG&lt;/code&gt;
+    enabled by comparing the level of this category with the {@link
+    Level#DEBUG DEBUG} level. If this category is
+    &lt;code&gt;DEBUG&lt;/code&gt; enabled, then it converts the message object
+    (passed as parameter) to a string by invoking the appropriate
+    {@link org.apache.log4j.or.ObjectRenderer}. It then proceeds to call all the
+    registered appenders in this category and also higher in the
+    hierarchy depending on the value of the additivity flag.
+
+    &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Note that passing a {@link Throwable} to this
+    method will print the name of the &lt;code&gt;Throwable&lt;/code&gt; but no
+    stack trace. To print a stack trace use the {@link #debug(Object,
+    Throwable)} form instead.
+
+    @param message the message object to log. */
+  public
+  void debug(Object message) {
+<span class="fc bfc" id="L258" title="All 2 branches covered.">    if(repository.isDisabled(Level.DEBUG_INT)) {</span>
+<span class="fc" id="L259">        return;</span>
+    }
+<span class="fc bfc" id="L261" title="All 2 branches covered.">    if(Level.DEBUG.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L262">      forcedLog(FQCN, Level.DEBUG, message, null);</span>
+    }
+<span class="fc" id="L264">  }</span>
+
+
+  /**
+   Log a message object with the &lt;code&gt;DEBUG&lt;/code&gt; level including
+   the stack trace of the {@link Throwable} &lt;code&gt;t&lt;/code&gt; passed as
+   parameter.
+
+   &lt;p&gt;See {@link #debug(Object)} form for more detailed information.
+
+   @param message the message object to log.
+   @param t the exception to log, including its stack trace.  */
+  public
+  void debug(Object message, Throwable t) {
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">    if(repository.isDisabled(Level.DEBUG_INT)) {</span>
+<span class="nc" id="L279">        return;</span>
+    }
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">    if(Level.DEBUG.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L282">        forcedLog(FQCN, Level.DEBUG, message, t);</span>
+    }
+<span class="fc" id="L284">  }</span>
+
+  /**
+    Log a message object with the {@link Level#ERROR ERROR} Level.
+
+    &lt;p&gt;This method first checks if this category is &lt;code&gt;ERROR&lt;/code&gt;
+    enabled by comparing the level of this category with {@link
+    Level#ERROR ERROR} Level. If this category is &lt;code&gt;ERROR&lt;/code&gt;
+    enabled, then it converts the message object passed as parameter
+    to a string by invoking the appropriate {@link
+    org.apache.log4j.or.ObjectRenderer}. It proceeds to call all the
+    registered appenders in this category and also higher in the
+    hierarchy depending on the value of the additivity flag.
+
+    &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Note that passing a {@link Throwable} to this
+    method will print the name of the &lt;code&gt;Throwable&lt;/code&gt; but no
+    stack trace. To print a stack trace use the {@link #error(Object,
+    Throwable)} form instead.
+
+    @param message the message object to log */
+  public
+  void error(Object message) {
+<span class="fc bfc" id="L306" title="All 2 branches covered.">    if(repository.isDisabled(Level.ERROR_INT)) {</span>
+<span class="fc" id="L307">        return;</span>
+    }
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">    if(Level.ERROR.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L310">        forcedLog(FQCN, Level.ERROR, message, null);</span>
+    }
+<span class="fc" id="L312">  }</span>
+
+  /**
+   Log a message object with the &lt;code&gt;ERROR&lt;/code&gt; level including
+   the stack trace of the {@link Throwable} &lt;code&gt;t&lt;/code&gt; passed as
+   parameter.
+
+   &lt;p&gt;See {@link #error(Object)} form for more detailed information.
+
+   @param message the message object to log.
+   @param t the exception to log, including its stack trace.  */
+  public
+  void error(Object message, Throwable t) {
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">    if(repository.isDisabled(Level.ERROR_INT)) {</span>
+<span class="nc" id="L326">        return;</span>
+    }
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">    if(Level.ERROR.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L329">        forcedLog(FQCN, Level.ERROR, message, t);</span>
+    }
+
+<span class="fc" id="L332">  }</span>
+
+
+  /**
+     If the named category exists (in the default hierarchy) then it
+     returns a reference to the category, otherwise it returns
+     &lt;code&gt;null&lt;/code&gt;.
+
+     @deprecated Please use {@link LogManager#exists} instead.
+
+     @since 0.8.5 */
+  public
+  static
+  Logger exists(String name) {
+<span class="nc" id="L346">    return LogManager.exists(name);</span>
+  }
+
+  /**
+    Log a message object with the {@link Level#FATAL FATAL} Level.
+
+    &lt;p&gt;This method first checks if this category is &lt;code&gt;FATAL&lt;/code&gt;
+    enabled by comparing the level of this category with {@link
+    Level#FATAL FATAL} Level. If the category is &lt;code&gt;FATAL&lt;/code&gt;
+    enabled, then it converts the message object passed as parameter
+    to a string by invoking the appropriate
+    {@link org.apache.log4j.or.ObjectRenderer}. It
+    proceeds to call all the registered appenders in this category and
+    also higher in the hierarchy depending on the value of the
+    additivity flag.
+
+    &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Note that passing a {@link Throwable} to this
+    method will print the name of the Throwable but no stack trace. To
+    print a stack trace use the {@link #fatal(Object, Throwable)} form
+    instead.
+
+    @param message the message object to log */
+  public
+  void fatal(Object message) {
+<span class="fc bfc" id="L370" title="All 2 branches covered.">    if(repository.isDisabled(Level.FATAL_INT)) {</span>
+<span class="fc" id="L371">        return;</span>
+    }
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">    if(Level.FATAL.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L374">        forcedLog(FQCN, Level.FATAL, message, null);</span>
+    }
+<span class="fc" id="L376">  }</span>
+
+  /**
+   Log a message object with the &lt;code&gt;FATAL&lt;/code&gt; level including
+   the stack trace of the {@link Throwable} &lt;code&gt;t&lt;/code&gt; passed as
+   parameter.
+
+   &lt;p&gt;See {@link #fatal(Object)} for more detailed information.
+
+   @param message the message object to log.
+   @param t the exception to log, including its stack trace.  */
+  public
+  void fatal(Object message, Throwable t) {
+<span class="nc bnc" id="L389" title="All 2 branches missed.">    if(repository.isDisabled(Level.FATAL_INT)) {</span>
+<span class="nc" id="L390">        return;</span>
+    }
+<span class="nc bnc" id="L392" title="All 2 branches missed.">    if(Level.FATAL.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="nc" id="L393">        forcedLog(FQCN, Level.FATAL, message, t);</span>
+    }
+<span class="nc" id="L395">  }</span>
+
+
+  /**
+     This method creates a new logging event and logs the event
+     without further checks.  */
+  protected
+  void forcedLog(String fqcn, Priority level, Object message, Throwable t) {
+<span class="fc" id="L403">    callAppenders(new LoggingEvent(fqcn, this, level, message, t));</span>
+<span class="fc" id="L404">  }</span>
+
+
+  /**
+     Get the additivity flag for this Category instance.
+  */
+  public
+  boolean getAdditivity() {
+<span class="nc" id="L412">    return additive;</span>
+  }
+
+  /**
+     Get the appenders contained in this category as an {@link
+     Enumeration}. If no appenders can be found, then a {@link NullEnumeration}
+     is returned.
+
+     @return Enumeration An enumeration of the appenders in this category.  */
+  synchronized
+  public
+  Enumeration getAllAppenders() {
+<span class="fc bfc" id="L424" title="All 2 branches covered.">    if(aai == null) {</span>
+<span class="fc" id="L425">        return NullEnumeration.getInstance();</span>
+    } else {
+<span class="fc" id="L427">        return aai.getAllAppenders();</span>
+    }
+  }
+
+  /**
+     Look for the appender named as &lt;code&gt;name&lt;/code&gt;.
+
+     &lt;p&gt;Return the appender with that name if in the list. Return
+     &lt;code&gt;null&lt;/code&gt; otherwise.  */
+  synchronized
+  public
+  Appender getAppender(String name) {
+<span class="pc bpc" id="L439" title="1 of 4 branches missed.">     if(aai == null || name == null) {</span>
+<span class="fc" id="L440">        return null;</span>
+    }
+
+<span class="fc" id="L443">     return aai.getAppender(name);</span>
+  }
+
+  /**
+     Starting from this category, search the category hierarchy for a
+     non-null level and return it. Otherwise, return the level of the
+     root category.
+
+     &lt;p&gt;The Category class is designed so that this method executes as
+     quickly as possible.
+   */
+  public
+  Level getEffectiveLevel() {
+<span class="pc bpc" id="L456" title="1 of 2 branches missed.">    for(Category c = this; c != null; c=c.parent) {</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">      if(c.level != null) {</span>
+<span class="fc" id="L458">        return c.level;</span>
+    }
+    }
+<span class="nc" id="L461">    return null; // If reached will cause an NullPointerException.</span>
+  }
+
+  /**
+    *
+    * @deprecated Please use the the {@link #getEffectiveLevel} method
+    * instead.  
+    * */
+  public
+  Priority getChainedPriority() {
+<span class="nc bnc" id="L471" title="All 2 branches missed.">    for(Category c = this; c != null; c=c.parent) {</span>
+<span class="nc bnc" id="L472" title="All 2 branches missed.">      if(c.level != null) {</span>
+<span class="nc" id="L473">        return c.level;</span>
+    }
+    }
+<span class="nc" id="L476">    return null; // If reached will cause an NullPointerException.</span>
+  }
+
+
+  /**
+     Returns all the currently defined categories in the default
+     hierarchy as an {@link java.util.Enumeration Enumeration}.
+
+     &lt;p&gt;The root category is &lt;em&gt;not&lt;/em&gt; included in the returned
+     {@link Enumeration}.
+
+     @deprecated Please use {@link LogManager#getCurrentLoggers()} instead.
+  */
+  public
+  static
+  Enumeration getCurrentCategories() {
+<span class="nc" id="L492">    return LogManager.getCurrentLoggers();</span>
+  }
+
+
+  /**
+     Return the default Hierarchy instance.
+
+     @deprecated Please use {@link LogManager#getLoggerRepository()} instead.
+
+     @since 1.0
+   */
+  public
+  static
+  LoggerRepository getDefaultHierarchy() {
+<span class="nc" id="L506">    return LogManager.getLoggerRepository();</span>
+  }
+
+  /**
+     Return the the {@link Hierarchy} where this &lt;code&gt;Category&lt;/code&gt;
+     instance is attached.
+
+     @deprecated Please use {@link #getLoggerRepository} instead.
+
+     @since 1.1 */
+  public
+  LoggerRepository  getHierarchy() {
+<span class="nc" id="L518">    return repository;</span>
+  }
+
+  /**
+     Return the the {@link LoggerRepository} where this
+     &lt;code&gt;Category&lt;/code&gt; is attached.
+
+     @since 1.2 */
+  public
+  LoggerRepository  getLoggerRepository() {
+<span class="fc" id="L528">    return repository;</span>
+  }
+
+
+ /**
+  * @deprecated Make sure to use {@link Logger#getLogger(String)} instead.
+  */
+  public
+  static
+  Category getInstance(String name) {
+<span class="nc" id="L538">    return LogManager.getLogger(name);</span>
+  }
+
+ /**
+  * @deprecated Please make sure to use {@link Logger#getLogger(Class)} instead.
+  */ 
+  public
+  static
+  Category getInstance(Class clazz) {
+<span class="nc" id="L547">    return LogManager.getLogger(clazz);</span>
+  }
+
+
+  /**
+     Return the category name.  */
+  public
+  final
+  String getName() {
+<span class="fc" id="L556">    return name;</span>
+  }
+
+
+  /**
+     Returns the parent of this category. Note that the parent of a
+     given category may change during the lifetime of the category.
+
+     &lt;p&gt;The root category will return &lt;code&gt;null&lt;/code&gt;.
+
+     @since 1.2
+  */
+  final
+  public
+  Category getParent() {
+<span class="nc" id="L571">    return this.parent;</span>
+  }
+
+
+  /**
+     Returns the assigned {@link Level}, if any, for this Category.
+
+     @return Level - the assigned Level, can be &lt;code&gt;null&lt;/code&gt;.
+  */
+  final
+  public
+  Level getLevel() {
+<span class="fc" id="L583">    return this.level;</span>
+  }
+
+  /**
+     @deprecated Please use {@link #getLevel} instead.
+  */
+  final
+  public
+  Level getPriority() {
+<span class="nc" id="L592">    return this.level;</span>
+  }
+
+
+  /**
+   *  @deprecated Please use {@link Logger#getRootLogger()} instead.
+   */
+  final
+  public
+  static
+  Category getRoot() {
+<span class="nc" id="L603">    return LogManager.getRootLogger();</span>
+  }
+
+  /**
+     Return the &lt;em&gt;inherited&lt;/em&gt; {@link ResourceBundle} for this
+     category.
+
+     &lt;p&gt;This method walks the hierarchy to find the appropriate
+     resource bundle. It will return the resource bundle attached to
+     the closest ancestor of this category, much like the way
+     priorities are searched. In case there is no bundle in the
+     hierarchy then &lt;code&gt;null&lt;/code&gt; is returned.
+
+     @since 0.9.0 */
+  public
+  ResourceBundle getResourceBundle() {
+<span class="pc bpc" id="L619" title="1 of 2 branches missed.">    for(Category c = this; c != null; c=c.parent) {</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">      if(c.resourceBundle != null) {</span>
+<span class="fc" id="L621">        return c.resourceBundle;</span>
+    }
+    }
+    // It might be the case that there is no resource bundle
+<span class="nc" id="L625">    return null;</span>
+  }
+
+  /**
+     Returns the string resource coresponding to &lt;code&gt;key&lt;/code&gt; in
+     this category's inherited resource bundle. See also {@link
+     #getResourceBundle}.
+
+     &lt;p&gt;If the resource cannot be found, then an {@link #error error}
+     message will be logged complaining about the missing resource.
+  */
+  protected
+  String getResourceBundleString(String key) {
+<span class="nc" id="L638">    ResourceBundle rb = getResourceBundle();</span>
+    // This is one of the rare cases where we can use logging in order
+    // to report errors from within log4j.
+<span class="nc bnc" id="L641" title="All 2 branches missed.">    if(rb == null) {</span>
+      //if(!hierarchy.emittedNoResourceBundleWarning) {
+      //error(&quot;No resource bundle has been set for category &quot;+name);
+      //hierarchy.emittedNoResourceBundleWarning = true;
+      //}
+<span class="nc" id="L646">      return null;</span>
+    }
+    else {
+      try {
+<span class="nc" id="L650">	return rb.getString(key);</span>
+      }
+<span class="nc" id="L652">      catch(MissingResourceException mre) {</span>
+<span class="nc" id="L653">	error(&quot;No resource is associated with key \&quot;&quot;+key+&quot;\&quot;.&quot;);</span>
+<span class="nc" id="L654">	return null;</span>
+      }
+    }
+  }
+
+  /**
+    Log a message object with the {@link Level#INFO INFO} Level.
+
+    &lt;p&gt;This method first checks if this category is &lt;code&gt;INFO&lt;/code&gt;
+    enabled by comparing the level of this category with {@link
+    Level#INFO INFO} Level. If the category is &lt;code&gt;INFO&lt;/code&gt;
+    enabled, then it converts the message object passed as parameter
+    to a string by invoking the appropriate
+    {@link org.apache.log4j.or.ObjectRenderer}. It
+    proceeds to call all the registered appenders in this category and
+    also higher in the hierarchy depending on the value of the
+    additivity flag.
+
+    &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Note that passing a {@link Throwable} to this
+    method will print the name of the Throwable but no stack trace. To
+    print a stack trace use the {@link #info(Object, Throwable)} form
+    instead.
+
+    @param message the message object to log */
+  public
+  void info(Object message) {
+<span class="fc bfc" id="L680" title="All 2 branches covered.">    if(repository.isDisabled(Level.INFO_INT)) {</span>
+<span class="fc" id="L681">        return;</span>
+    }
+<span class="fc bfc" id="L683" title="All 2 branches covered.">    if(Level.INFO.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L684">        forcedLog(FQCN, Level.INFO, message, null);</span>
+    }
+<span class="fc" id="L686">  }</span>
+
+  /**
+   Log a message object with the &lt;code&gt;INFO&lt;/code&gt; level including
+   the stack trace of the {@link Throwable} &lt;code&gt;t&lt;/code&gt; passed as
+   parameter.
+
+   &lt;p&gt;See {@link #info(Object)} for more detailed information.
+
+   @param message the message object to log.
+   @param t the exception to log, including its stack trace.  */
+  public
+  void info(Object message, Throwable t) {
+<span class="pc bpc" id="L699" title="1 of 2 branches missed.">    if(repository.isDisabled(Level.INFO_INT)) {</span>
+<span class="nc" id="L700">        return;</span>
+    }
+<span class="pc bpc" id="L702" title="1 of 2 branches missed.">    if(Level.INFO.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L703">        forcedLog(FQCN, Level.INFO, message, t);</span>
+    }
+<span class="fc" id="L705">  }</span>
+
+  /**
+     Is the appender passed as parameter attached to this category?
+   */
+  public
+  boolean isAttached(Appender appender) {
+<span class="nc bnc" id="L712" title="All 4 branches missed.">    if(appender == null || aai == null) {</span>
+<span class="nc" id="L713">        return false;</span>
+    } else {
+<span class="nc" id="L715">      return aai.isAttached(appender);</span>
+    }
+  }
+
+  /**
+    *  Check whether this category is enabled for the &lt;code&gt;DEBUG&lt;/code&gt;
+    *  Level.
+    *
+    *  &lt;p&gt; This function is intended to lessen the computational cost of
+    *  disabled log debug statements.
+    *
+    *  &lt;p&gt; For some &lt;code&gt;cat&lt;/code&gt; Category object, when you write,
+    *  &lt;pre&gt;
+    *      cat.debug(&quot;This is entry number: &quot; + i );
+    *  &lt;/pre&gt;
+    *
+    *  &lt;p&gt;You incur the cost constructing the message, concatenatiion in
+    *  this case, regardless of whether the message is logged or not.
+    *
+    *  &lt;p&gt;If you are worried about speed, then you should write
+    *  &lt;pre&gt;
+    * 	 if(cat.isDebugEnabled()) {
+    * 	   cat.debug(&quot;This is entry number: &quot; + i );
+    * 	 }
+    *  &lt;/pre&gt;
+    *
+    *  &lt;p&gt;This way you will not incur the cost of parameter
+    *  construction if debugging is disabled for &lt;code&gt;cat&lt;/code&gt;. On
+    *  the other hand, if the &lt;code&gt;cat&lt;/code&gt; is debug enabled, you
+    *  will incur the cost of evaluating whether the category is debug
+    *  enabled twice. Once in &lt;code&gt;isDebugEnabled&lt;/code&gt; and once in
+    *  the &lt;code&gt;debug&lt;/code&gt;.  This is an insignificant overhead
+    *  since evaluating a category takes about 1%% of the time it
+    *  takes to actually log.
+    *
+    *  @return boolean - &lt;code&gt;true&lt;/code&gt; if this category is debug
+    *  enabled, &lt;code&gt;false&lt;/code&gt; otherwise.
+    *   */
+  public
+  boolean isDebugEnabled() {
+<span class="nc bnc" id="L755" title="All 2 branches missed.">    if(repository.isDisabled( Level.DEBUG_INT)) {</span>
+<span class="nc" id="L756">        return false;</span>
+    }
+<span class="nc" id="L758">    return Level.DEBUG.isGreaterOrEqual(this.getEffectiveLevel());</span>
+  }
+
+  /**
+     Check whether this category is enabled for a given {@link
+     Level} passed as parameter.
+
+     See also {@link #isDebugEnabled}.
+
+     @return boolean True if this category is enabled for &lt;code&gt;level&lt;/code&gt;.
+  */
+  public
+  boolean isEnabledFor(Priority level) {
+<span class="nc bnc" id="L771" title="All 2 branches missed.">    if(repository.isDisabled(level.level)) {</span>
+<span class="nc" id="L772">        return false;</span>
+    }
+<span class="nc" id="L774">    return level.isGreaterOrEqual(this.getEffectiveLevel());</span>
+  }
+
+  /**
+    Check whether this category is enabled for the info Level.
+    See also {@link #isDebugEnabled}.
+
+    @return boolean - &lt;code&gt;true&lt;/code&gt; if this category is enabled
+    for level info, &lt;code&gt;false&lt;/code&gt; otherwise.
+  */
+  public
+  boolean isInfoEnabled() {
+<span class="nc bnc" id="L786" title="All 2 branches missed.">    if(repository.isDisabled(Level.INFO_INT)) {</span>
+<span class="nc" id="L787">        return false;</span>
+    }
+<span class="nc" id="L789">    return Level.INFO.isGreaterOrEqual(this.getEffectiveLevel());</span>
+  }
+
+
+  /**
+     Log a localized message. The user supplied parameter
+     &lt;code&gt;key&lt;/code&gt; is replaced by its localized version from the
+     resource bundle.
+
+     @see #setResourceBundle
+
+     @since 0.8.4 */
+  public
+  void l7dlog(Priority priority, String key, Throwable t) {
+<span class="pc bpc" id="L803" title="1 of 2 branches missed.">    if(repository.isDisabled(priority.level)) {</span>
+<span class="nc" id="L804">      return;</span>
+    }
+<span class="pc bpc" id="L806" title="1 of 2 branches missed.">    if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="nc" id="L807">      String msg = getResourceBundleString(key);</span>
+      // if message corresponding to 'key' could not be found in the
+      // resource bundle, then default to 'key'.
+<span class="nc bnc" id="L810" title="All 2 branches missed.">      if(msg == null) {</span>
+<span class="nc" id="L811">	msg = key;</span>
+      }
+<span class="nc" id="L813">      forcedLog(FQCN, priority, msg, t);</span>
+    }
+<span class="fc" id="L815">  }</span>
+  /**
+     Log a localized and parameterized message. First, the user
+     supplied &lt;code&gt;key&lt;/code&gt; is searched in the resource
+     bundle. Next, the resulting pattern is formatted using
+     {@link java.text.MessageFormat#format(String,Object[])} method with the
+     user supplied object array &lt;code&gt;params&lt;/code&gt;.
+
+     @since 0.8.4
+  */
+  public
+  void l7dlog(Priority priority, String key,  Object[] params, Throwable t) {
+<span class="pc bpc" id="L827" title="1 of 2 branches missed.">    if(repository.isDisabled(priority.level)) {</span>
+<span class="nc" id="L828">      return;</span>
+    }
+<span class="pc bpc" id="L830" title="1 of 2 branches missed.">    if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="nc" id="L831">      String pattern = getResourceBundleString(key);</span>
+      String msg;
+<span class="nc bnc" id="L833" title="All 2 branches missed.">      if(pattern == null) {</span>
+<span class="nc" id="L834">        msg = key;</span>
+    } else {
+<span class="nc" id="L836">        msg = java.text.MessageFormat.format(pattern, params);</span>
+    }
+<span class="nc" id="L838">      forcedLog(FQCN, priority, msg, t);</span>
+    }
+<span class="fc" id="L840">  }</span>
+
+  /**
+     This generic form is intended to be used by wrappers.
+   */
+  public
+  void log(Priority priority, Object message, Throwable t) {
+<span class="pc bpc" id="L847" title="1 of 2 branches missed.">    if(repository.isDisabled(priority.level)) {</span>
+<span class="nc" id="L848">      return;</span>
+    }
+<span class="pc bpc" id="L850" title="1 of 2 branches missed.">    if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L851">        forcedLog(FQCN, priority, message, t);</span>
+    }
+<span class="fc" id="L853">  }</span>
+
+ /**
+    This generic form is intended to be used by wrappers.
+ */
+  public
+  void log(Priority priority, Object message) {
+<span class="fc bfc" id="L860" title="All 2 branches covered.">    if(repository.isDisabled(priority.level)) {</span>
+<span class="fc" id="L861">      return;</span>
+    }
+<span class="pc bpc" id="L863" title="1 of 2 branches missed.">    if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L864">        forcedLog(FQCN, priority, message, null);</span>
+    }
+<span class="fc" id="L866">  }</span>
+
+  /**
+
+     This is the most generic printing method. It is intended to be
+     invoked by &lt;b&gt;wrapper&lt;/b&gt; classes.
+
+     @param callerFQCN The wrapper class' fully qualified class name.
+     @param level The level of the logging request.
+     @param message The message of the logging request.
+     @param t The throwable of the logging request, may be null.  */
+  public
+  void log(String callerFQCN, Priority level, Object message, Throwable t) {
+<span class="pc bpc" id="L879" title="1 of 2 branches missed.">    if(repository.isDisabled(level.level)) {</span>
+<span class="nc" id="L880">      return;</span>
+    }
+<span class="pc bpc" id="L882" title="1 of 2 branches missed.">    if(level.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L883">      forcedLog(callerFQCN, level, message, t);</span>
+    }
+<span class="fc" id="L885">  }</span>
+
+    /**
+      *  LoggerRepository forgot the fireRemoveAppenderEvent method,
+      *     if using the stock Hierarchy implementation, then call its fireRemove.
+      *     Custom repositories can implement HierarchyEventListener if they
+      *     want remove notifications.
+     * @param appender appender, may be null.
+     */
+   private void fireRemoveAppenderEvent(final Appender appender) {
+<span class="pc bpc" id="L895" title="1 of 2 branches missed.">       if (appender != null) {</span>
+<span class="pc bpc" id="L896" title="1 of 2 branches missed.">         if (repository instanceof Hierarchy) {</span>
+<span class="fc" id="L897">           ((Hierarchy) repository).fireRemoveAppenderEvent(this, appender);</span>
+<span class="nc bnc" id="L898" title="All 2 branches missed.">         } else if (repository instanceof HierarchyEventListener) {</span>
+<span class="nc" id="L899">             ((HierarchyEventListener) repository).removeAppenderEvent(this, appender);</span>
+         }
+       }
+<span class="fc" id="L902">   }</span>
+
+  /**
+     Remove all previously added appenders from this Category
+     instance.
+
+     &lt;p&gt;This is useful when re-reading configuration information.
+  */
+  synchronized
+  public
+  void removeAllAppenders() {
+<span class="fc bfc" id="L913" title="All 2 branches covered.">    if(aai != null) {</span>
+<span class="fc" id="L914">      Vector appenders = new Vector();</span>
+<span class="pc bpc" id="L915" title="1 of 4 branches missed.">      for (Enumeration iter = aai.getAllAppenders(); iter != null &amp;&amp; iter.hasMoreElements();) {</span>
+<span class="fc" id="L916">          appenders.add(iter.nextElement());</span>
+      }
+<span class="fc" id="L918">      aai.removeAllAppenders();</span>
+<span class="fc bfc" id="L919" title="All 2 branches covered.">      for(Enumeration iter = appenders.elements(); iter.hasMoreElements();) {</span>
+<span class="fc" id="L920">          fireRemoveAppenderEvent((Appender) iter.nextElement());</span>
+      }
+<span class="fc" id="L922">      aai = null;</span>
+    }
+<span class="fc" id="L924">  }</span>
+
+
+  /**
+     Remove the appender passed as parameter form the list of appenders.
+
+     @since 0.8.2
+  */
+  synchronized
+  public
+  void removeAppender(Appender appender) {
+<span class="pc bpc" id="L935" title="2 of 4 branches missed.">    if(appender == null || aai == null) {</span>
+<span class="nc" id="L936">        return;</span>
+    }
+<span class="fc" id="L938">    boolean wasAttached = aai.isAttached(appender);</span>
+<span class="fc" id="L939">    aai.removeAppender(appender);</span>
+<span class="pc bpc" id="L940" title="1 of 2 branches missed.">    if (wasAttached) {</span>
+<span class="fc" id="L941">        fireRemoveAppenderEvent(appender);</span>
+    }
+<span class="fc" id="L943">  }</span>
+
+  /**
+     Remove the appender with the name passed as parameter form the
+     list of appenders.
+
+     @since 0.8.2 */
+  synchronized
+  public
+  void removeAppender(String name) {
+<span class="pc bpc" id="L953" title="2 of 4 branches missed.">    if(name == null || aai == null) {</span>
+<span class="nc" id="L954">        return;</span>
+    }
+<span class="fc" id="L956">    Appender appender = aai.getAppender(name);</span>
+<span class="fc" id="L957">    aai.removeAppender(name);</span>
+<span class="pc bpc" id="L958" title="1 of 2 branches missed.">    if (appender != null) {</span>
+<span class="fc" id="L959">        fireRemoveAppenderEvent(appender);</span>
+    }
+<span class="fc" id="L961">  }</span>
+
+  /**
+     Set the additivity flag for this Category instance.
+     @since 0.8.1
+   */
+  public
+  void setAdditivity(boolean additive) {
+<span class="fc" id="L969">    this.additive = additive;</span>
+<span class="fc" id="L970">  }</span>
+
+  /**
+     Only the Hiearchy class can set the hiearchy of a
+     category. Default package access is MANDATORY here.  */
+  final
+  void setHierarchy(LoggerRepository repository) {
+<span class="fc" id="L977">    this.repository = repository;</span>
+<span class="fc" id="L978">  }</span>
+
+  /**
+     Set the level of this Category. If you are passing any of
+     &lt;code&gt;Level.DEBUG&lt;/code&gt;, &lt;code&gt;Level.INFO&lt;/code&gt;,
+     &lt;code&gt;Level.WARN&lt;/code&gt;, &lt;code&gt;Level.ERROR&lt;/code&gt;,
+     &lt;code&gt;Level.FATAL&lt;/code&gt; as a parameter, you need to case them as
+     Level.
+
+     &lt;p&gt;As in &lt;pre&gt; &amp;nbsp;&amp;nbsp;&amp;nbsp;logger.setLevel((Level) Level.DEBUG); &lt;/pre&gt;
+
+
+     &lt;p&gt;Null values are admitted.  */
+  public
+  void setLevel(Level level) {
+<span class="fc" id="L993">    this.level = level;</span>
+<span class="fc" id="L994">  }</span>
+
+
+  /**
+     Set the level of this Category.
+
+     &lt;p&gt;Null values are admitted.
+
+     @deprecated Please use {@link #setLevel} instead.
+  */
+  public
+  void setPriority(Priority priority) {
+<span class="fc" id="L1006">    this.level = (Level) priority;</span>
+<span class="fc" id="L1007">  }</span>
+
+
+  /**
+     Set the resource bundle to be used with localized logging
+     methods {@link #l7dlog(Priority,String,Throwable)} and {@link
+     #l7dlog(Priority,String,Object[],Throwable)}.
+
+     @since 0.8.4
+   */
+  public
+  void setResourceBundle(ResourceBundle bundle) {
+<span class="fc" id="L1019">    resourceBundle = bundle;</span>
+<span class="fc" id="L1020">  }</span>
+
+  /**
+     Calling this method will &lt;em&gt;safely&lt;/em&gt; close and remove all
+     appenders in all the categories including root contained in the
+     default hierachy.
+
+     &lt;p&gt;Some appenders such as {@link org.apache.log4j.net.SocketAppender}
+     and {@link AsyncAppender} need to be closed before the
+     application exists. Otherwise, pending logging events might be
+     lost.
+
+     &lt;p&gt;The &lt;code&gt;shutdown&lt;/code&gt; method is careful to close nested
+     appenders before closing regular appenders. This is allows
+     configurations where a regular appender is attached to a category
+     and again to a nested appender.
+
+     @deprecated Please use {@link LogManager#shutdown()} instead.
+
+     @since 1.0
+  */
+  public
+  static
+  void shutdown() {
+<span class="nc" id="L1044">    LogManager.shutdown();</span>
+<span class="nc" id="L1045">  }</span>
+
+
+  /**
+    Log a message object with the {@link Level#WARN WARN} Level.
+
+    &lt;p&gt;This method first checks if this category is &lt;code&gt;WARN&lt;/code&gt;
+    enabled by comparing the level of this category with {@link
+    Level#WARN WARN} Level. If the category is &lt;code&gt;WARN&lt;/code&gt;
+    enabled, then it converts the message object passed as parameter
+    to a string by invoking the appropriate
+    {@link org.apache.log4j.or.ObjectRenderer}. It
+    proceeds to call all the registered appenders in this category and
+    also higher in the hieararchy depending on the value of the
+    additivity flag.
+
+    &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Note that passing a {@link Throwable} to this
+    method will print the name of the Throwable but no stack trace. To
+    print a stack trace use the {@link #warn(Object, Throwable)} form
+    instead.  &lt;p&gt;
+
+    @param message the message object to log.  */
+  public
+  void warn(Object message) {
+<span class="fc bfc" id="L1069" title="All 2 branches covered.">    if(repository.isDisabled( Level.WARN_INT)) {</span>
+<span class="fc" id="L1070">        return;</span>
+    }
+
+<span class="fc bfc" id="L1073" title="All 2 branches covered.">    if(Level.WARN.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L1074">        forcedLog(FQCN, Level.WARN, message, null);</span>
+    }
+<span class="fc" id="L1076">  }</span>
+
+  /**
+   Log a message with the &lt;code&gt;WARN&lt;/code&gt; level including the
+   stack trace of the {@link Throwable} &lt;code&gt;t&lt;/code&gt; passed as
+   parameter.
+
+   &lt;p&gt;See {@link #warn(Object)} for more detailed information.
+
+   @param message the message object to log.
+   @param t the exception to log, including its stack trace.  */
+  public
+  void warn(Object message, Throwable t) {
+<span class="pc bpc" id="L1089" title="1 of 2 branches missed.">    if(repository.isDisabled(Level.WARN_INT)) {</span>
+<span class="nc" id="L1090">        return;</span>
+    }
+<span class="pc bpc" id="L1092" title="1 of 2 branches missed.">    if(Level.WARN.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L1093">        forcedLog(FQCN, Level.WARN, message, t);</span>
+    }
+<span class="fc" id="L1095">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

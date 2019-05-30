@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DatePatternConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">DatePatternConverter.java</span></div><h1>DatePatternConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.util.Date;
+import java.util.TimeZone;
+
+
+/**
+ * Convert and format the event's date in a StringBuffer.
+ *
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+public final class DatePatternConverter extends LoggingEventPatternConverter {
+    /**
+     * ABSOLUTE string literal.
+     */
+  private static final String ABSOLUTE_FORMAT = &quot;ABSOLUTE&quot;;
+    /**
+     * SimpleTimePattern for ABSOLUTE.
+     */
+  private static final String ABSOLUTE_TIME_PATTERN = &quot;HH:mm:ss,SSS&quot;;
+
+
+    /**
+     * DATE string literal.
+     */
+  private static final String DATE_AND_TIME_FORMAT = &quot;DATE&quot;;
+    /**
+     * SimpleTimePattern for DATE.
+     */
+  private static final String DATE_AND_TIME_PATTERN = &quot;dd MMM yyyy HH:mm:ss,SSS&quot;;
+
+    /**
+     * ISO8601 string literal.
+     */
+  private static final String ISO8601_FORMAT = &quot;ISO8601&quot;;
+    /**
+     * SimpleTimePattern for ISO8601.
+     */
+  private static final String ISO8601_PATTERN = &quot;yyyy-MM-dd HH:mm:ss,SSS&quot;;
+  /**
+   * Date format.
+   */
+  private final CachedDateFormat df;
+
+    /**
+     * This class wraps a DateFormat and forces the time zone to the
+     *   default time zone before each format and parse request.
+     */
+  private static class DefaultZoneDateFormat extends DateFormat {
+     /**
+      * Serialization version ID.
+      */
+     private static final long serialVersionUID = 1;
+     /**
+         * Wrapped instance of DateFormat.
+         */
+    private final DateFormat dateFormat;
+
+        /**
+         * Construct new instance.
+         * @param format format, may not be null.
+         */
+<span class="nc" id="L87">    public DefaultZoneDateFormat(final DateFormat format) {</span>
+<span class="nc" id="L88">        dateFormat = format;</span>
+<span class="nc" id="L89">    }</span>
+
+        /**
+         * @{inheritDoc}
+         */
+    public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+<span class="nc" id="L95">        dateFormat.setTimeZone(TimeZone.getDefault());</span>
+<span class="nc" id="L96">        return dateFormat.format(date, toAppendTo, fieldPosition);</span>
+    }
+
+        /**
+         * @{inheritDoc}
+         */
+    public Date parse(String source, ParsePosition pos) {
+<span class="nc" id="L103">        dateFormat.setTimeZone(TimeZone.getDefault());</span>
+<span class="nc" id="L104">        return dateFormat.parse(source, pos);</span>
+    }
+  }
+  
+  /**
+   * Private constructor.
+   * @param options options, may be null.
+   */
+  private DatePatternConverter(final String[] options) {
+<span class="nc" id="L113">    super(&quot;Date&quot;, &quot;date&quot;);</span>
+
+    String patternOption;
+
+<span class="nc bnc" id="L117" title="All 4 branches missed.">    if ((options == null) || (options.length == 0)) {</span>
+      // the branch could be optimized, but here we are making explicit
+      // that null values for patternOption are allowed.
+<span class="nc" id="L120">      patternOption = null;</span>
+    } else {
+<span class="nc" id="L122">      patternOption = options[0];</span>
+    }
+
+    String pattern;
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">    if (</span>
+      (patternOption == null)
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        || patternOption.equalsIgnoreCase(ISO8601_FORMAT)) {</span>
+<span class="nc" id="L130">      pattern = ISO8601_PATTERN;</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">    } else if (patternOption.equalsIgnoreCase(ABSOLUTE_FORMAT)) {</span>
+<span class="nc" id="L132">      pattern = ABSOLUTE_TIME_PATTERN;</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">    } else if (patternOption.equalsIgnoreCase(DATE_AND_TIME_FORMAT)) {</span>
+<span class="nc" id="L134">      pattern = DATE_AND_TIME_PATTERN;</span>
+    } else {
+<span class="nc" id="L136">      pattern = patternOption;</span>
+    }
+
+<span class="nc" id="L139">    int maximumCacheValidity = 1000;</span>
+<span class="nc" id="L140">    DateFormat simpleFormat = null;</span>
+
+    try {
+<span class="nc" id="L143">      simpleFormat = new SimpleDateFormat(pattern);</span>
+<span class="nc" id="L144">      maximumCacheValidity = CachedDateFormat.getMaximumCacheValidity(pattern);</span>
+<span class="nc" id="L145">    } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L146">        LogLog.warn(</span>
+          &quot;Could not instantiate SimpleDateFormat with pattern &quot;
+          + patternOption, e);
+
+      // default to the ISO8601 format
+<span class="nc" id="L151">      simpleFormat = new SimpleDateFormat(ISO8601_PATTERN);</span>
+<span class="nc" id="L152">    }</span>
+
+    // if the option list contains a TZ option, then set it.
+<span class="nc bnc" id="L155" title="All 4 branches missed.">    if ((options != null) &amp;&amp; (options.length &gt; 1)) {</span>
+<span class="nc" id="L156">      TimeZone tz = TimeZone.getTimeZone(options[1]);</span>
+<span class="nc" id="L157">      simpleFormat.setTimeZone(tz);</span>
+<span class="nc" id="L158">    } else {</span>
+<span class="nc" id="L159">      simpleFormat = new DefaultZoneDateFormat(simpleFormat);</span>
+    }
+
+<span class="nc" id="L162">    df = new CachedDateFormat(simpleFormat, maximumCacheValidity);</span>
+<span class="nc" id="L163">  }</span>
+
+  /**
+   * Obtains an instance of pattern converter.
+   * @param options options, may be null.
+   * @return instance of pattern converter.
+   */
+  public static DatePatternConverter newInstance(
+    final String[] options) {
+<span class="nc" id="L172">    return new DatePatternConverter(options);</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void format(final LoggingEvent event, final StringBuffer output) {
+<span class="nc" id="L179">    synchronized(this) {</span>
+<span class="nc" id="L180">    	df.format(event.timeStamp, output);</span>
+<span class="nc" id="L181">    }</span>
+<span class="nc" id="L182">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  public void format(final Object obj, final StringBuffer output) {
+<span class="nc bnc" id="L188" title="All 2 branches missed.">    if (obj instanceof Date) {</span>
+<span class="nc" id="L189">      format((Date) obj, output);</span>
+    }
+
+<span class="nc" id="L192">    super.format(obj, output);</span>
+<span class="nc" id="L193">  }</span>
+
+  /**
+   * Append formatted date to string buffer.
+   * @param date date
+   * @param toAppendTo buffer to which formatted date is appended.
+   */
+  public void format(final Date date, final StringBuffer toAppendTo) {
+<span class="nc" id="L201">    synchronized(this) {</span>
+<span class="nc" id="L202">    	df.format(date.getTime(), toAppendTo);</span>
+<span class="nc" id="L203">    }</span>
+<span class="nc" id="L204">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

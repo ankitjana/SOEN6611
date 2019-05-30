@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LevelPatternConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">LevelPatternConverter.java</span></div><h1>LevelPatternConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.spi.LoggingEvent;
+
+
+/**
+ * Return the event's level in a StringBuffer.
+ *
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+public final class LevelPatternConverter extends LoggingEventPatternConverter {
+
+  /**
+   *   Integer severity for Level.TRACE.
+   */
+  private static final int TRACE_INT = 5000;
+  /**
+   * Singleton.
+   */
+<span class="nc" id="L38">  private static final LevelPatternConverter INSTANCE =</span>
+    new LevelPatternConverter();
+
+  /**
+   * Private constructor.
+   */
+  private LevelPatternConverter() {
+<span class="nc" id="L45">    super(&quot;Level&quot;, &quot;level&quot;);</span>
+<span class="nc" id="L46">  }</span>
+
+  /**
+   * Obtains an instance of pattern converter.
+   * @param options options, may be null.
+   * @return instance of pattern converter.
+   */
+  public static LevelPatternConverter newInstance(
+    final String[] options) {
+<span class="nc" id="L55">    return INSTANCE;</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void format(final LoggingEvent event, final StringBuffer output) {
+<span class="nc" id="L62">    output.append(event.getLevel().toString());</span>
+<span class="nc" id="L63">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  public String getStyleClass(Object e) {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    if (e instanceof LoggingEvent) {</span>
+<span class="nc" id="L70">      int lint = ((LoggingEvent) e).getLevel().toInt();</span>
+
+<span class="nc bnc" id="L72" title="All 7 branches missed.">      switch (lint) {</span>
+      case TRACE_INT:
+<span class="nc" id="L74">        return &quot;level trace&quot;;</span>
+
+      case Level.DEBUG_INT:
+<span class="nc" id="L77">        return &quot;level debug&quot;;</span>
+
+      case Level.INFO_INT:
+<span class="nc" id="L80">        return &quot;level info&quot;;</span>
+
+      case Level.WARN_INT:
+<span class="nc" id="L83">        return &quot;level warn&quot;;</span>
+
+      case Level.ERROR_INT:
+<span class="nc" id="L86">        return &quot;level error&quot;;</span>
+
+      case Level.FATAL_INT:
+<span class="nc" id="L89">        return &quot;level fatal&quot;;</span>
+
+      default:
+<span class="nc" id="L92">        return &quot;level &quot; + ((LoggingEvent) e).getLevel().toString();</span>
+      }
+    }
+
+<span class="nc" id="L96">    return &quot;level&quot;;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

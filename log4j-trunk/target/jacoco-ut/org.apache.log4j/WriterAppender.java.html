@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriterAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">WriterAppender.java</span></div><h1>WriterAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.QuietWriter;
+import org.apache.log4j.spi.ErrorHandler;
+import org.apache.log4j.spi.LoggingEvent;
+
+// Contibutors: Jens Uwe Pipka &lt;jens.pipka@gmx.de&gt;
+//              Ben Sandee
+
+/**
+   WriterAppender appends log events to a {@link java.io.Writer} or an
+   {@link java.io.OutputStream} depending on the user's choice.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since 1.1 */
+public class WriterAppender extends AppenderSkeleton {
+
+
+  /**
+     Immediate flush means that the underlying writer or output stream
+     will be flushed at the end of each append operation unless shouldFlush()
+     is overridden. Immediate
+     flush is slower but ensures that each append request is actually
+     written. If &lt;code&gt;immediateFlush&lt;/code&gt; is set to
+     &lt;code&gt;false&lt;/code&gt;, then there is a good chance that the last few
+     logs events are not actually written to persistent media if and
+     when the application crashes.
+
+     &lt;p&gt;The &lt;code&gt;immediateFlush&lt;/code&gt; variable is set to
+     &lt;code&gt;true&lt;/code&gt; by default.
+
+  */
+<span class="pc" id="L57">  protected boolean immediateFlush = true;</span>
+
+  /**
+     The encoding to use when writing.  &lt;p&gt;The
+     &lt;code&gt;encoding&lt;/code&gt; variable is set to &lt;code&gt;null&lt;/null&gt; by
+     default which results in the utilization of the system's default
+     encoding.  */
+  protected String encoding;
+
+  /**
+     This is the {@link QuietWriter quietWriter} where we will write
+     to.
+  */
+  protected QuietWriter qw;
+
+
+  /**
+     This default constructor does nothing.  */
+  public
+<span class="fc" id="L76">  WriterAppender() {</span>
+<span class="fc" id="L77">  }</span>
+
+  /**
+     Instantiate a WriterAppender and set the output destination to a
+     new {@link OutputStreamWriter} initialized with &lt;code&gt;os&lt;/code&gt;
+     as its {@link OutputStream}.  */
+  public
+  WriterAppender(Layout layout, OutputStream os) {
+<span class="nc" id="L85">    this(layout, new OutputStreamWriter(os));</span>
+<span class="nc" id="L86">  }</span>
+
+  /**
+     Instantiate a WriterAppender and set the output destination to
+     &lt;code&gt;writer&lt;/code&gt;.
+
+     &lt;p&gt;The &lt;code&gt;writer&lt;/code&gt; must have been previously opened by
+     the user.  */
+  public
+<span class="nc" id="L95">  WriterAppender(Layout layout, Writer writer) {</span>
+<span class="nc" id="L96">    this.layout = layout;</span>
+<span class="nc" id="L97">    this.setWriter(writer);</span>
+<span class="nc" id="L98">  }</span>
+
+  /**
+     If the &lt;b&gt;ImmediateFlush&lt;/b&gt; option is set to
+     &lt;code&gt;true&lt;/code&gt;, the appender will flush at the end of each
+     write. This is the default behavior. If the option is set to
+     &lt;code&gt;false&lt;/code&gt;, then the underlying stream can defer writing
+     to physical medium to a later time.
+
+     &lt;p&gt;Avoiding the flush operation at the end of each append results in
+     a performance gain of 10 to 20 percent. However, there is safety
+     tradeoff involved in skipping flushing. Indeed, when flushing is
+     skipped, then it is likely that the last few log events will not
+     be recorded on disk when the application exits. This is a high
+     price to pay even for a 20% performance gain.
+   */
+  public
+  void setImmediateFlush(boolean value) {
+<span class="nc" id="L116">    immediateFlush = value;</span>
+<span class="nc" id="L117">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;ImmediateFlush&lt;/b&gt; option.
+   */
+  public
+  boolean getImmediateFlush() {
+<span class="nc" id="L124">    return immediateFlush;</span>
+  }
+
+  /**
+     Does nothing.
+  */
+  public
+  void activateOptions() {
+<span class="fc" id="L132">  }</span>
+
+
+  /**
+     This method is called by the {@link AppenderSkeleton#doAppend}
+     method.
+
+     &lt;p&gt;If the output stream exists and is writable then write a log
+     statement to the output stream. Otherwise, write a single warning
+     message to &lt;code&gt;System.err&lt;/code&gt;.
+
+     &lt;p&gt;The format of the output will depend on this appender's
+     layout.
+
+  */
+  public
+  void append(LoggingEvent event) {
+
+    // Reminder: the nesting of calls is:
+    //
+    //    doAppend()
+    //      - check threshold
+    //      - filter
+    //      - append();
+    //        - checkEntryConditions();
+    //        - subAppend();
+
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">    if(!checkEntryConditions()) {</span>
+<span class="nc" id="L160">      return;</span>
+    }
+<span class="fc" id="L162">    subAppend(event);</span>
+<span class="fc" id="L163">   }</span>
+
+  /**
+     This method determines if there is a sense in attempting to append.
+
+     &lt;p&gt;It checks whether there is a set output target and also if
+     there is a set layout. If these checks fail, then the boolean
+     value &lt;code&gt;false&lt;/code&gt; is returned. */
+  protected
+  boolean checkEntryConditions() {
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">    if(this.closed) {</span>
+<span class="nc" id="L174">      LogLog.warn(&quot;Not allowed to write to a closed appender.&quot;);</span>
+<span class="nc" id="L175">      return false;</span>
+    }
+
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    if(this.qw == null) {</span>
+<span class="nc" id="L179">      errorHandler.error(&quot;No output stream or file set for the appender named [&quot;+</span>
+			name+&quot;].&quot;);
+<span class="nc" id="L181">      return false;</span>
+    }
+
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">    if(this.layout == null) {</span>
+<span class="nc" id="L185">      errorHandler.error(&quot;No layout set for the appender named [&quot;+ name+&quot;].&quot;);</span>
+<span class="nc" id="L186">      return false;</span>
+    }
+<span class="fc" id="L188">    return true;</span>
+  }
+
+
+  /**
+     Close this appender instance. The underlying stream or writer is
+     also closed.
+
+     &lt;p&gt;Closed appenders cannot be reused.
+
+     @see #setWriter
+     @since 0.8.4 */
+  public
+  synchronized
+  void close() {
+<span class="fc bfc" id="L203" title="All 2 branches covered.">    if(this.closed) {</span>
+<span class="fc" id="L204">        return;</span>
+    }
+<span class="fc" id="L206">    this.closed = true;</span>
+<span class="fc" id="L207">    writeFooter();</span>
+<span class="fc" id="L208">    reset();</span>
+<span class="fc" id="L209">  }</span>
+
+  /**
+   * Close the underlying {@link java.io.Writer}.
+   * */
+  protected void closeWriter() {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">    if(qw != null) {</span>
+      try {
+<span class="fc" id="L217">	qw.close();</span>
+<span class="nc" id="L218">      } catch(IOException e) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">          if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L220">              Thread.currentThread().interrupt();</span>
+          }
+	// There is do need to invoke an error handler at this late
+	// stage.
+<span class="nc" id="L224">	LogLog.error(&quot;Could not close &quot; + qw, e);</span>
+<span class="fc" id="L225">      }</span>
+    }
+<span class="fc" id="L227">  }</span>
+
+  /**
+     Returns an OutputStreamWriter when passed an OutputStream.  The
+     encoding used will depend on the value of the
+     &lt;code&gt;encoding&lt;/code&gt; property.  If the encoding value is
+     specified incorrectly the writer will be opened using the default
+     system encoding (an error message will be printed to the loglog.  */
+  protected
+  OutputStreamWriter createWriter(OutputStream os) {
+<span class="fc" id="L237">    OutputStreamWriter retval = null;</span>
+
+<span class="fc" id="L239">    String enc = getEncoding();</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">    if(enc != null) {</span>
+      try {
+<span class="nc" id="L242">	retval = new OutputStreamWriter(os, enc);</span>
+<span class="nc" id="L243">      } catch(IOException e) {</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">          if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L245">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L247">	      LogLog.warn(&quot;Error initializing output writer.&quot;);</span>
+<span class="nc" id="L248">	      LogLog.warn(&quot;Unsupported encoding?&quot;);</span>
+<span class="nc" id="L249">      }</span>
+    }
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">    if(retval == null) {</span>
+<span class="fc" id="L252">      retval = new OutputStreamWriter(os);</span>
+    }
+<span class="fc" id="L254">    return retval;</span>
+  }
+
+  public String getEncoding() {
+<span class="fc" id="L258">    return encoding;</span>
+  }
+
+  public void setEncoding(String value) {
+<span class="nc" id="L262">    encoding = value;</span>
+<span class="nc" id="L263">  }</span>
+
+
+
+
+  /**
+     Set the {@link ErrorHandler} for this WriterAppender and also the
+     underlying {@link QuietWriter} if any. */
+  public synchronized void setErrorHandler(ErrorHandler eh) {
+<span class="pc bpc" id="L272" title="1 of 2 branches missed.">    if(eh == null) {</span>
+<span class="nc" id="L273">      LogLog.warn(&quot;You have tried to set a null error-handler.&quot;);</span>
+    } else {
+<span class="fc" id="L275">      this.errorHandler = eh;</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">      if(this.qw != null) {</span>
+<span class="fc" id="L277">	this.qw.setErrorHandler(eh);</span>
+      }
+    }
+<span class="fc" id="L280">  }</span>
+
+  /**
+    &lt;p&gt;Sets the Writer where the log output will go. The
+    specified Writer must be opened by the user and be
+    writable.
+
+    &lt;p&gt;The &lt;code&gt;java.io.Writer&lt;/code&gt; will be closed when the
+    appender instance is closed.
+
+
+    &lt;p&gt;&lt;b&gt;WARNING:&lt;/b&gt; Logging to an unopened Writer will fail.
+    &lt;p&gt;
+    @param writer An already opened Writer.  */
+  public synchronized void setWriter(Writer writer) {
+<span class="fc" id="L295">    reset();</span>
+<span class="fc" id="L296">    this.qw = new QuietWriter(writer, errorHandler);</span>
+    //this.tp = new TracerPrintWriter(qw);
+<span class="fc" id="L298">    writeHeader();</span>
+<span class="fc" id="L299">  }</span>
+
+
+  /**
+     Actual writing occurs here.
+
+     &lt;p&gt;Most subclasses of &lt;code&gt;WriterAppender&lt;/code&gt; will need to
+     override this method.
+
+     @since 0.9.0 */
+  protected
+  void subAppend(LoggingEvent event) {
+<span class="fc" id="L311">    this.qw.write(this.layout.format(event));</span>
+
+<span class="fc bfc" id="L313" title="All 2 branches covered.">    if(layout.ignoresThrowable()) {</span>
+<span class="fc" id="L314">      String[] s = event.getThrowableStrRep();</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">      if (s != null) {</span>
+<span class="fc" id="L316">	int len = s.length;</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">	for(int i = 0; i &lt; len; i++) {</span>
+<span class="fc" id="L318">	  this.qw.write(s[i]);</span>
+<span class="fc" id="L319">	  this.qw.write(Layout.LINE_SEP);</span>
+	}
+      }
+    }
+
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">    if(shouldFlush(event)) {</span>
+<span class="fc" id="L325">      this.qw.flush();</span>
+    }
+<span class="fc" id="L327">  }</span>
+
+
+
+  /**
+     The WriterAppender requires a layout. Hence, this method returns
+     &lt;code&gt;true&lt;/code&gt;.
+  */
+  public
+  boolean requiresLayout() {
+<span class="fc" id="L337">    return true;</span>
+  }
+
+  /**
+     Clear internal references to the writer and other variables.
+
+     Subclasses can override this method for an alternate closing
+     behavior.  */
+  protected
+  void reset() {
+<span class="fc" id="L347">    closeWriter();</span>
+<span class="fc" id="L348">    this.qw = null;</span>
+    //this.tp = null;
+<span class="fc" id="L350">  }</span>
+
+
+  /**
+     Write a footer as produced by the embedded layout's {@link
+     Layout#getFooter} method.  */
+  protected
+  void writeFooter() {
+<span class="fc bfc" id="L358" title="All 2 branches covered.">    if(layout != null) {</span>
+<span class="fc" id="L359">      String f = layout.getFooter();</span>
+<span class="pc bpc" id="L360" title="3 of 4 branches missed.">      if(f != null &amp;&amp; this.qw != null) {</span>
+<span class="nc" id="L361">	this.qw.write(f);</span>
+<span class="nc" id="L362">	this.qw.flush();</span>
+      }
+    }
+<span class="fc" id="L365">  }</span>
+
+  /**
+     Write a header as produced by the embedded layout's {@link
+     Layout#getHeader} method.  */
+  protected
+  void writeHeader() {
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">    if(layout != null) {</span>
+<span class="fc" id="L373">      String h = layout.getHeader();</span>
+<span class="pc bpc" id="L374" title="3 of 4 branches missed.">      if(h != null &amp;&amp; this.qw != null) {</span>
+<span class="nc" id="L375">        this.qw.write(h);</span>
+    }
+    }
+<span class="fc" id="L378">  }</span>
+  
+  /**
+   * Determines whether the writer should be flushed after
+   * this event is written.
+   * 
+   * @since 1.2.16
+   */
+  protected boolean shouldFlush(final LoggingEvent event) {
+<span class="fc" id="L387">     return immediateFlush;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

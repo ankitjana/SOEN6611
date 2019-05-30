@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TelnetAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">TelnetAppender.java</span></div><h1>TelnetAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.InterruptedIOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
+
+/**
+  &lt;p&gt;The TelnetAppender is a log4j appender that specializes in
+  writing to a read-only socket.  The output is provided in a
+  telnet-friendly way so that a log can be monitored over TCP/IP.
+  Clients using telnet connect to the socket and receive log data.
+  This is handy for remote monitoring, especially when monitoring a
+  servlet.
+
+  &lt;p&gt;Here is a list of the available configuration options:
+
+  &lt;table border=1&gt;
+   &lt;tr&gt;
+   &lt;th&gt;Name&lt;/th&gt;
+   &lt;th&gt;Requirement&lt;/th&gt;
+   &lt;th&gt;Description&lt;/th&gt;
+   &lt;th&gt;Sample Value&lt;/th&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+   &lt;td&gt;Port&lt;/td&gt;
+   &lt;td&gt;optional&lt;/td&gt;
+   &lt;td&gt;This parameter determines the port to use for announcing log events.  The default port is 23 (telnet).&lt;/td&gt;
+   &lt;td&gt;5875&lt;/td&gt;
+   &lt;/table&gt;
+
+   @author &lt;a HREF=&quot;mailto:jay@v-wave.com&quot;&gt;Jay Funnell&lt;/a&gt;
+*/
+
+<span class="nc" id="L61">public class TelnetAppender extends AppenderSkeleton {</span>
+
+  private static final String EOL = &quot;\r\n&quot;;
+  private SocketHandler sh;
+<span class="nc" id="L65">  private int port = 23;</span>
+
+  /** 
+      This appender requires a layout to format the text to the
+      attached client(s). */
+  public boolean requiresLayout() {
+<span class="nc" id="L71">    return true;</span>
+  }
+
+  /** all of the options have been set, create the socket handler and
+      wait for connections. */
+  public void activateOptions() {
+    try {
+<span class="nc" id="L78">      sh = new SocketHandler(port);</span>
+<span class="nc" id="L79">      sh.start();</span>
+    }
+<span class="nc" id="L81">    catch(InterruptedIOException e) {</span>
+<span class="nc" id="L82">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L83">      e.printStackTrace();</span>
+<span class="nc" id="L84">    } catch(IOException e) {</span>
+<span class="nc" id="L85">      e.printStackTrace();</span>
+<span class="nc" id="L86">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L87">      e.printStackTrace();</span>
+<span class="nc" id="L88">    }</span>
+<span class="nc" id="L89">    super.activateOptions();</span>
+<span class="nc" id="L90">  }</span>
+
+  public
+  int getPort() {
+<span class="nc" id="L94">    return port;</span>
+  }
+
+  public
+  void setPort(int port) {
+<span class="nc" id="L99">    this.port = port;</span>
+<span class="nc" id="L100">  }</span>
+
+
+  /** shuts down the appender. */
+  public void close() {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">    if (sh != null) {</span>
+<span class="nc" id="L106">        sh.close();</span>
+        try {
+<span class="nc" id="L108">            sh.join();</span>
+<span class="nc" id="L109">        } catch(InterruptedException ex) {</span>
+<span class="nc" id="L110">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L111">        }</span>
+    }
+<span class="nc" id="L113">  }</span>
+
+  /** Handles a log event.  For this appender, that means writing the
+    message to each connected client.  */
+  protected void append(LoggingEvent event) {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">      if(sh != null) {</span>
+<span class="nc" id="L119">        sh.send(layout.format(event));</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if(layout.ignoresThrowable()) {</span>
+<span class="nc" id="L121">            String[] s = event.getThrowableStrRep();</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            if (s != null) {</span>
+<span class="nc" id="L123">                StringBuffer buf = new StringBuffer();</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                for(int i = 0; i &lt; s.length; i++) {</span>
+<span class="nc" id="L125">                    buf.append(s[i]);</span>
+<span class="nc" id="L126">                    buf.append(EOL);</span>
+                }
+<span class="nc" id="L128">                sh.send(buf.toString());</span>
+            }
+        }
+      }
+<span class="nc" id="L132">  }</span>
+
+  //---------------------------------------------------------- SocketHandler:
+
+  /** The SocketHandler class is used to accept connections from
+      clients.  It is threaded so that clients can connect/disconnect
+      asynchronously. */
+  protected class SocketHandler extends Thread {
+
+<span class="nc" id="L141">    private Vector writers = new Vector();</span>
+<span class="nc" id="L142">    private Vector connections = new Vector();</span>
+    private ServerSocket serverSocket;
+<span class="nc" id="L144">    private int MAX_CONNECTIONS = 20;</span>
+
+    public void finalize() {
+<span class="nc" id="L147">        close();</span>
+<span class="nc" id="L148">    }</span>
+      
+    /** 
+    * make sure we close all network connections when this handler is destroyed.
+    * @since 1.2.15 
+    */
+    public void close() {
+<span class="nc" id="L155">      synchronized(this) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for(Enumeration e = connections.elements();e.hasMoreElements();) {</span>
+            try {
+<span class="nc" id="L158">                ((Socket)e.nextElement()).close();</span>
+<span class="nc" id="L159">            } catch(InterruptedIOException ex) {</span>
+<span class="nc" id="L160">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L161">            } catch(IOException ex) {</span>
+<span class="nc" id="L162">            } catch(RuntimeException ex) {</span>
+<span class="nc" id="L163">            }</span>
+        }
+<span class="nc" id="L165">      }</span>
+
+      try {
+<span class="nc" id="L168">        serverSocket.close();</span>
+<span class="nc" id="L169">      } catch(InterruptedIOException ex) {</span>
+<span class="nc" id="L170">          Thread.currentThread().interrupt();</span>
+<span class="nc" id="L171">      } catch(IOException ex) {</span>
+<span class="nc" id="L172">      } catch(RuntimeException ex) {</span>
+<span class="nc" id="L173">      }</span>
+<span class="nc" id="L174">    }</span>
+
+    /** sends a message to each of the clients in telnet-friendly output. */
+    public synchronized void send(final String message) {
+<span class="nc" id="L178">      Iterator ce = connections.iterator();</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">      for(Iterator e = writers.iterator();e.hasNext();) {</span>
+<span class="nc" id="L180">        ce.next();</span>
+<span class="nc" id="L181">        PrintWriter writer = (PrintWriter)e.next();</span>
+<span class="nc" id="L182">        writer.print(message);</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if(writer.checkError()) {</span>
+<span class="nc" id="L184">          ce.remove();</span>
+<span class="nc" id="L185">          e.remove();</span>
+        }
+<span class="nc" id="L187">      }</span>
+<span class="nc" id="L188">    }</span>
+
+    /** 
+	Continually accepts client connections.  Client connections
+        are refused when MAX_CONNECTIONS is reached. 
+    */
+    public void run() {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">      while(!serverSocket.isClosed()) {</span>
+        try {
+<span class="nc" id="L197">          Socket newClient = serverSocket.accept();</span>
+<span class="nc" id="L198">          PrintWriter pw = new PrintWriter(newClient.getOutputStream());</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">          if(connections.size() &lt; MAX_CONNECTIONS) {</span>
+<span class="nc" id="L200">            synchronized(this) {</span>
+<span class="nc" id="L201">                connections.addElement(newClient);</span>
+<span class="nc" id="L202">                writers.addElement(pw);</span>
+<span class="nc" id="L203">                pw.print(&quot;TelnetAppender v1.0 (&quot; + connections.size()</span>
+		            + &quot; active connections)&quot; + EOL + EOL);
+<span class="nc" id="L205">                pw.flush();</span>
+<span class="nc" id="L206">            }</span>
+          } else {
+<span class="nc" id="L208">            pw.print(&quot;Too many connections.&quot; + EOL);</span>
+<span class="nc" id="L209">            pw.flush();</span>
+<span class="nc" id="L210">            newClient.close();</span>
+          }
+<span class="nc" id="L212">        } catch(Exception e) {</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">          if (e instanceof InterruptedIOException || e instanceof InterruptedException) {</span>
+<span class="nc" id="L214">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc bnc" id="L216" title="All 2 branches missed.">          if (!serverSocket.isClosed()) {</span>
+<span class="nc" id="L217">            LogLog.error(&quot;Encountered error while in SocketHandler loop.&quot;, e);</span>
+          }
+<span class="nc" id="L219">          break;</span>
+<span class="nc" id="L220">        }</span>
+      }
+
+      try {
+<span class="nc" id="L224">          serverSocket.close();</span>
+<span class="nc" id="L225">      } catch(InterruptedIOException ex) {</span>
+<span class="nc" id="L226">          Thread.currentThread().interrupt();</span>
+<span class="nc" id="L227">      } catch(IOException ex) {</span>
+<span class="nc" id="L228">      }</span>
+<span class="nc" id="L229">    }</span>
+
+<span class="nc" id="L231">    public SocketHandler(int port) throws IOException {</span>
+<span class="nc" id="L232">      serverSocket = new ServerSocket(port);</span>
+<span class="nc" id="L233">      setName(&quot;TelnetAppender-&quot; + getName() + &quot;-&quot; + port);</span>
+<span class="nc" id="L234">    }</span>
+
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsoleAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">ConsoleAppender.java</span></div><h1>ConsoleAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import org.apache.log4j.helpers.LogLog;
+
+/**
+  * ConsoleAppender appends log events to &lt;code&gt;System.out&lt;/code&gt; or
+  * &lt;code&gt;System.err&lt;/code&gt; using a layout specified by the user. The
+  * default target is &lt;code&gt;System.out&lt;/code&gt;.
+  *
+  * @author Ceki G&amp;uuml;lc&amp;uuml; 
+  * @author Curt Arnold
+  * @since 1.1 */
+public class ConsoleAppender extends WriterAppender {
+
+  public static final String SYSTEM_OUT = &quot;System.out&quot;;
+  public static final String SYSTEM_ERR = &quot;System.err&quot;;
+
+<span class="pc" id="L37">  protected String target = SYSTEM_OUT;</span>
+
+  /**
+   *  Determines if the appender honors reassignments of System.out
+   *  or System.err made after configuration.
+   */
+<span class="pc" id="L43">  private boolean follow = false;</span>
+
+  /**
+    * Constructs an unconfigured appender.
+    */
+<span class="fc" id="L48">  public ConsoleAppender() {</span>
+<span class="fc" id="L49">  }</span>
+
+    /**
+     * Creates a configured appender.
+     *
+     * @param layout layout, may not be null.
+     */
+  public ConsoleAppender(Layout layout) {
+<span class="nc" id="L57">    this(layout, SYSTEM_OUT);</span>
+<span class="nc" id="L58">  }</span>
+
+    /**
+     *   Creates a configured appender.
+     * @param layout layout, may not be null.
+     * @param target target, either &quot;System.err&quot; or &quot;System.out&quot;.
+     */
+<span class="nc" id="L65">  public ConsoleAppender(Layout layout, String target) {</span>
+<span class="nc" id="L66">    setLayout(layout);</span>
+<span class="nc" id="L67">    setTarget(target);</span>
+<span class="nc" id="L68">    activateOptions();</span>
+<span class="nc" id="L69">  }</span>
+
+  /**
+   *  Sets the value of the &lt;b&gt;Target&lt;/b&gt; option. Recognized values
+   *  are &quot;System.out&quot; and &quot;System.err&quot;. Any other value will be
+   *  ignored.  
+   * */
+  public
+  void setTarget(String value) {
+<span class="nc" id="L78">    String v = value.trim();</span>
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">    if (SYSTEM_OUT.equalsIgnoreCase(v)) {</span>
+<span class="nc" id="L81">      target = SYSTEM_OUT;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">    } else if (SYSTEM_ERR.equalsIgnoreCase(v)) {</span>
+<span class="nc" id="L83">      target = SYSTEM_ERR;</span>
+    } else {
+<span class="nc" id="L85">      targetWarn(value);</span>
+    }
+<span class="nc" id="L87">  }</span>
+
+  /**
+   * Returns the current value of the &lt;b&gt;Target&lt;/b&gt; property. The
+   * default value of the option is &quot;System.out&quot;.
+   *
+   * See also {@link #setTarget}.
+   * */
+  public
+  String getTarget() {
+<span class="nc" id="L97">    return target;</span>
+  }
+  
+  /**
+   *  Sets whether the appender honors reassignments of System.out
+   *  or System.err made after configuration.
+   *  @param newValue if true, appender will use value of System.out or
+   *  System.err in force at the time when logging events are appended.
+   *  @since 1.2.13
+   */
+  public final void setFollow(final boolean newValue) {
+<span class="nc" id="L108">     follow = newValue;</span>
+<span class="nc" id="L109">  }</span>
+  
+  /**
+   *  Gets whether the appender honors reassignments of System.out
+   *  or System.err made after configuration.
+   *  @return true if appender will use value of System.out or
+   *  System.err in force at the time when logging events are appended.
+   *  @since 1.2.13
+   */
+  public final boolean getFollow() {
+<span class="nc" id="L119">      return follow;</span>
+  }
+
+  void targetWarn(String val) {
+<span class="nc" id="L123">    LogLog.warn(&quot;[&quot;+val+&quot;] should be System.out or System.err.&quot;);</span>
+<span class="nc" id="L124">    LogLog.warn(&quot;Using previously set target, System.out by default.&quot;);</span>
+<span class="nc" id="L125">  }</span>
+
+  /**
+    *   Prepares the appender for use.
+    */
+   public void activateOptions() {
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (follow) {</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            if (target.equals(SYSTEM_ERR)) {</span>
+<span class="nc" id="L133">               setWriter(createWriter(new SystemErrStream()));</span>
+            } else {
+<span class="nc" id="L135">               setWriter(createWriter(new SystemOutStream()));</span>
+            }
+        } else {
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">            if (target.equals(SYSTEM_ERR)) {</span>
+<span class="nc" id="L139">               setWriter(createWriter(System.err));</span>
+            } else {
+<span class="fc" id="L141">               setWriter(createWriter(System.out));</span>
+            }
+        }
+
+<span class="fc" id="L145">        super.activateOptions();</span>
+<span class="fc" id="L146">  }</span>
+  
+  /**
+   *  {@inheritDoc}
+   */
+  protected
+  final
+  void closeWriter() {
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">     if (follow) {</span>
+<span class="nc" id="L155">        super.closeWriter();</span>
+     }
+<span class="fc" id="L157">  }</span>
+  
+
+    /**
+     * An implementation of OutputStream that redirects to the
+     * current System.err.
+     *
+     */
+    private static class SystemErrStream extends OutputStream {
+<span class="nc" id="L166">        public SystemErrStream() {</span>
+<span class="nc" id="L167">        }</span>
+
+        public void close() {
+<span class="nc" id="L170">        }</span>
+
+        public void flush() {
+<span class="nc" id="L173">            System.err.flush();</span>
+<span class="nc" id="L174">        }</span>
+
+        public void write(final byte[] b) throws IOException {
+<span class="nc" id="L177">            System.err.write(b);</span>
+<span class="nc" id="L178">        }</span>
+
+        public void write(final byte[] b, final int off, final int len)
+            throws IOException {
+<span class="nc" id="L182">            System.err.write(b, off, len);</span>
+<span class="nc" id="L183">        }</span>
+
+        public void write(final int b) throws IOException {
+<span class="nc" id="L186">            System.err.write(b);</span>
+<span class="nc" id="L187">        }</span>
+    }
+
+    /**
+     * An implementation of OutputStream that redirects to the
+     * current System.out.
+     *
+     */
+    private static class SystemOutStream extends OutputStream {
+<span class="nc" id="L196">        public SystemOutStream() {</span>
+<span class="nc" id="L197">        }</span>
+
+        public void close() {
+<span class="nc" id="L200">        }</span>
+
+        public void flush() {
+<span class="nc" id="L203">            System.out.flush();</span>
+<span class="nc" id="L204">        }</span>
+
+        public void write(final byte[] b) throws IOException {
+<span class="nc" id="L207">            System.out.write(b);</span>
+<span class="nc" id="L208">        }</span>
+
+        public void write(final byte[] b, final int off, final int len)
+            throws IOException {
+<span class="nc" id="L212">            System.out.write(b, off, len);</span>
+<span class="nc" id="L213">        }</span>
+
+        public void write(final int b) throws IOException {
+<span class="nc" id="L216">            System.out.write(b);</span>
+<span class="nc" id="L217">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

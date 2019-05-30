@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatternLayout.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">PatternLayout.java</span></div><h1>PatternLayout.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.helpers.PatternParser;
+import org.apache.log4j.helpers.PatternConverter;
+
+
+// Contributors:   Nelson Minar &lt;nelson@monkey.org&gt;
+//                 Anders Kristensen &lt;akristensen@dynamicsoft.com&gt;
+
+/**
+
+   A flexible layout configurable with pattern string.
+   
+   This code is known to have synchronization and other issues
+   which are not present in org.apache.log4j.EnhancedPatternLayout.
+   EnhancedPatternLayout should be used in preference to PatternLayout.
+   EnhancedPatternLayout is distributed in the log4j extras companion.
+
+   &lt;p&gt;The goal of this class is to {@link #format format} a {@link
+   LoggingEvent} and return the results as a String. The results
+   depend on the &lt;em&gt;conversion pattern&lt;/em&gt;.
+
+   &lt;p&gt;The conversion pattern is closely related to the conversion
+   pattern of the printf function in C. A conversion pattern is
+   composed of literal text and format control expressions called
+   &lt;em&gt;conversion specifiers&lt;/em&gt;.
+
+   &lt;p&gt;&lt;i&gt;You are free to insert any literal text within the conversion
+   pattern.&lt;/i&gt;
+
+   &lt;p&gt;Each conversion specifier starts with a percent sign (%) and is
+   followed by optional &lt;em&gt;format modifiers&lt;/em&gt; and a &lt;em&gt;conversion
+   character&lt;/em&gt;. The conversion character specifies the type of
+   data, e.g. category, priority, date, thread name. The format
+   modifiers control such things as field width, padding, left and
+   right justification. The following is a simple example.
+
+   &lt;p&gt;Let the conversion pattern be &lt;b&gt;&quot;%-5p [%t]: %m%n&quot;&lt;/b&gt; and assume
+   that the log4j environment was set to use a PatternLayout. Then the
+   statements
+   &lt;pre&gt;
+   Category root = Category.getRoot();
+   root.debug(&quot;Message 1&quot;);
+   root.warn(&quot;Message 2&quot;);
+   &lt;/pre&gt;
+   would yield the output
+   &lt;pre&gt;
+   DEBUG [main]: Message 1
+   WARN  [main]: Message 2
+   &lt;/pre&gt;
+
+   &lt;p&gt;Note that there is no explicit separator between text and
+   conversion specifiers. The pattern parser knows when it has reached
+   the end of a conversion specifier when it reads a conversion
+   character. In the example above the conversion specifier
+   &lt;b&gt;%-5p&lt;/b&gt; means the priority of the logging event should be left
+   justified to a width of five characters.
+
+   The recognized conversion characters are
+
+   &lt;p&gt;
+   &lt;table border=&quot;1&quot; CELLPADDING=&quot;8&quot;&gt;
+   &lt;th&gt;Conversion Character&lt;/th&gt;
+   &lt;th&gt;Effect&lt;/th&gt;
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;c&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output the category of the logging event. The
+     category conversion specifier can be optionally followed by
+     &lt;em&gt;precision specifier&lt;/em&gt;, that is a decimal constant in
+     brackets.
+
+     &lt;p&gt;If a precision specifier is given, then only the corresponding
+     number of right most components of the category name will be
+     printed. By default the category name is printed in full.
+
+     &lt;p&gt;For example, for the category name &quot;a.b.c&quot; the pattern
+     &lt;b&gt;%c{2}&lt;/b&gt; will output &quot;b.c&quot;.
+
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;C&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output the fully qualified class name of the caller
+     issuing the logging request. This conversion specifier
+     can be optionally followed by &lt;em&gt;precision specifier&lt;/em&gt;, that
+     is a decimal constant in brackets.
+
+     &lt;p&gt;If a precision specifier is given, then only the corresponding
+     number of right most components of the class name will be
+     printed. By default the class name is output in fully qualified form.
+
+     &lt;p&gt;For example, for the class name &quot;org.apache.xyz.SomeClass&quot;, the
+     pattern &lt;b&gt;%C{1}&lt;/b&gt; will output &quot;SomeClass&quot;.
+
+     &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Generating the caller class information is
+     slow. Thus, use should be avoided unless execution speed is
+     not an issue.
+
+     &lt;/td&gt;
+     &lt;/tr&gt;
+
+   &lt;tr&gt; &lt;td align=center&gt;&lt;b&gt;d&lt;/b&gt;&lt;/td&gt; &lt;td&gt;Used to output the date of
+	 the logging event. The date conversion specifier may be
+	 followed by a &lt;em&gt;date format specifier&lt;/em&gt; enclosed between
+	 braces. For example, &lt;b&gt;%d{HH:mm:ss,SSS}&lt;/b&gt; or
+	 &lt;b&gt;%d{dd&amp;nbsp;MMM&amp;nbsp;yyyy&amp;nbsp;HH:mm:ss,SSS}&lt;/b&gt;.  If no
+	 date format specifier is given then ISO8601 format is
+	 assumed.
+
+	 &lt;p&gt;The date format specifier admits the same syntax as the
+	 time pattern string of the {@link
+	 java.text.SimpleDateFormat}. Although part of the standard
+	 JDK, the performance of &lt;code&gt;SimpleDateFormat&lt;/code&gt; is
+	 quite poor.
+
+	 &lt;p&gt;For better results it is recommended to use the log4j date
+	 formatters. These can be specified using one of the strings
+	 &quot;ABSOLUTE&quot;, &quot;DATE&quot; and &quot;ISO8601&quot; for specifying {@link
+	 org.apache.log4j.helpers.AbsoluteTimeDateFormat
+	 AbsoluteTimeDateFormat}, {@link
+	 org.apache.log4j.helpers.DateTimeDateFormat DateTimeDateFormat}
+	 and respectively {@link
+	 org.apache.log4j.helpers.ISO8601DateFormat
+	 ISO8601DateFormat}. For example, &lt;b&gt;%d{ISO8601}&lt;/b&gt; or
+	 &lt;b&gt;%d{ABSOLUTE}&lt;/b&gt;.
+
+	 &lt;p&gt;These dedicated date formatters perform significantly
+	 better than {@link java.text.SimpleDateFormat}.
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;&lt;b&gt;F&lt;/b&gt;&lt;/td&gt;
+
+   &lt;td&gt;Used to output the file name where the logging request was
+   issued.
+
+   &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Generating caller location information is
+   extremely slow and should be avoided unless execution speed
+   is not an issue.
+
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;&lt;b&gt;l&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output location information of the caller which generated
+     the logging event.
+
+     &lt;p&gt;The location information depends on the JVM implementation but
+     usually consists of the fully qualified name of the calling
+     method followed by the callers source the file name and line
+     number between parentheses.
+
+     &lt;p&gt;The location information can be very useful. However, its
+     generation is &lt;em&gt;extremely&lt;/em&gt; slow and should be avoided
+     unless execution speed is not an issue.
+
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;&lt;b&gt;L&lt;/b&gt;&lt;/td&gt;
+
+   &lt;td&gt;Used to output the line number from where the logging request
+   was issued.
+
+   &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Generating caller location information is
+   extremely slow and should be avoided unless execution speed
+   is not an issue.
+
+   &lt;/tr&gt;
+
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;m&lt;/b&gt;&lt;/td&gt;
+     &lt;td&gt;Used to output the application supplied message associated with
+     the logging event.&lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;&lt;b&gt;M&lt;/b&gt;&lt;/td&gt;
+
+   &lt;td&gt;Used to output the method name where the logging request was
+   issued.
+
+   &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; Generating caller location information is
+   extremely slow and should be avoided unless execution speed
+   is not an issue.
+
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;n&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Outputs the platform dependent line separator character or
+     characters.
+
+     &lt;p&gt;This conversion character offers practically the same
+     performance as using non-portable line separator strings such as
+     &quot;\n&quot;, or &quot;\r\n&quot;. Thus, it is the preferred way of specifying a
+     line separator.
+
+
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;p&lt;/b&gt;&lt;/td&gt;
+     &lt;td&gt;Used to output the priority of the logging event.&lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+
+     &lt;td align=center&gt;&lt;b&gt;r&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output the number of milliseconds elapsed from the construction 
+     of the layout until the creation of the logging event.&lt;/td&gt;
+   &lt;/tr&gt;
+
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;t&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output the name of the thread that generated the
+     logging event.&lt;/td&gt;
+
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+
+     &lt;td align=center&gt;&lt;b&gt;x&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;Used to output the NDC (nested diagnostic context) associated
+     with the thread that generated the logging event.
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+
+   &lt;tr&gt;
+     &lt;td align=center&gt;&lt;b&gt;X&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt; 
+     
+     &lt;p&gt;Used to output the MDC (mapped diagnostic context) associated
+     with the thread that generated the logging event. The &lt;b&gt;X&lt;/b&gt;
+     conversion character &lt;em&gt;must&lt;/em&gt; be followed by the key for the
+     map placed between braces, as in &lt;b&gt;%X{clientNumber}&lt;/b&gt; where
+     &lt;code&gt;clientNumber&lt;/code&gt; is the key. The value in the MDC
+     corresponding to the key will be output.&lt;/p&gt;
+     
+     &lt;p&gt;See {@link MDC} class for more details.
+     &lt;/p&gt;
+     
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;tr&gt;
+
+     &lt;td align=center&gt;&lt;b&gt;%&lt;/b&gt;&lt;/td&gt;
+
+     &lt;td&gt;The sequence %% outputs a single percent sign.
+     &lt;/td&gt;
+   &lt;/tr&gt;
+
+   &lt;/table&gt;
+
+   &lt;p&gt;By default the relevant information is output as is. However,
+   with the aid of format modifiers it is possible to change the
+   minimum field width, the maximum field width and justification.
+
+   &lt;p&gt;The optional format modifier is placed between the percent sign
+   and the conversion character.
+
+   &lt;p&gt;The first optional format modifier is the &lt;em&gt;left justification
+   flag&lt;/em&gt; which is just the minus (-) character. Then comes the
+   optional &lt;em&gt;minimum field width&lt;/em&gt; modifier. This is a decimal
+   constant that represents the minimum number of characters to
+   output. If the data item requires fewer characters, it is padded on
+   either the left or the right until the minimum width is
+   reached. The default is to pad on the left (right justify) but you
+   can specify right padding with the left justification flag. The
+   padding character is space. If the data item is larger than the
+   minimum field width, the field is expanded to accommodate the
+   data. The value is never truncated.
+
+   &lt;p&gt;This behavior can be changed using the &lt;em&gt;maximum field
+   width&lt;/em&gt; modifier which is designated by a period followed by a
+   decimal constant. If the data item is longer than the maximum
+   field, then the extra characters are removed from the
+   &lt;em&gt;beginning&lt;/em&gt; of the data item and not from the end. For
+   example, it the maximum field width is eight and the data item is
+   ten characters long, then the first two characters of the data item
+   are dropped. This behavior deviates from the printf function in C
+   where truncation is done from the end.
+
+   &lt;p&gt;Below are various format modifier examples for the category
+   conversion specifier.
+
+   &lt;p&gt;
+   &lt;TABLE BORDER=1 CELLPADDING=8&gt;
+   &lt;th&gt;Format modifier
+   &lt;th&gt;left justify
+   &lt;th&gt;minimum width
+   &lt;th&gt;maximum width
+   &lt;th&gt;comment
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;%20c&lt;/td&gt;
+   &lt;td align=center&gt;false&lt;/td&gt;
+   &lt;td align=center&gt;20&lt;/td&gt;
+   &lt;td align=center&gt;none&lt;/td&gt;
+
+   &lt;td&gt;Left pad with spaces if the category name is less than 20
+   characters long.
+
+   &lt;tr&gt; &lt;td align=center&gt;%-20c&lt;/td&gt; &lt;td align=center&gt;true&lt;/td&gt; &lt;td
+   align=center&gt;20&lt;/td&gt; &lt;td align=center&gt;none&lt;/td&gt; &lt;td&gt;Right pad with
+   spaces if the category name is less than 20 characters long.
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;%.30c&lt;/td&gt;
+   &lt;td align=center&gt;NA&lt;/td&gt;
+   &lt;td align=center&gt;none&lt;/td&gt;
+   &lt;td align=center&gt;30&lt;/td&gt;
+
+   &lt;td&gt;Truncate from the beginning if the category name is longer than 30
+   characters.
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;%20.30c&lt;/td&gt;
+   &lt;td align=center&gt;false&lt;/td&gt;
+   &lt;td align=center&gt;20&lt;/td&gt;
+   &lt;td align=center&gt;30&lt;/td&gt;
+
+   &lt;td&gt;Left pad with spaces if the category name is shorter than 20
+   characters. However, if category name is longer than 30 characters,
+   then truncate from the beginning.
+
+   &lt;tr&gt;
+   &lt;td align=center&gt;%-20.30c&lt;/td&gt;
+   &lt;td align=center&gt;true&lt;/td&gt;
+   &lt;td align=center&gt;20&lt;/td&gt;
+   &lt;td align=center&gt;30&lt;/td&gt;
+
+   &lt;td&gt;Right pad with spaces if the category name is shorter than 20
+   characters. However, if category name is longer than 30 characters,
+   then truncate from the beginning.
+
+   &lt;/table&gt;
+
+   &lt;p&gt;Below are some examples of conversion patterns.
+
+   &lt;dl&gt;
+
+   &lt;p&gt;&lt;dt&gt;&lt;b&gt;%r [%t] %-5p %c %x - %m%n&lt;/b&gt;
+   &lt;p&gt;&lt;dd&gt;This is essentially the TTCC layout.
+
+   &lt;p&gt;&lt;dt&gt;&lt;b&gt;%-6r [%15.15t] %-5p %30.30c %x - %m%n&lt;/b&gt;
+
+   &lt;p&gt;&lt;dd&gt;Similar to the TTCC layout except that the relative time is
+   right padded if less than 6 digits, thread name is right padded if
+   less than 15 characters and truncated if longer and the category
+   name is left padded if shorter than 30 characters and truncated if
+   longer.
+
+  &lt;/dl&gt;
+
+   &lt;p&gt;The above text is largely inspired from Peter A. Darnell and
+   Philip E. Margolis' highly recommended book &quot;C -- a Software
+   Engineering Approach&quot;, ISBN 0-387-97389-3.
+
+   @author &lt;a href=&quot;mailto:cakalijp@Maritz.com&quot;&gt;James P. Cakalic&lt;/a&gt;
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+
+
+   @since 0.8.2 */
+public class PatternLayout extends Layout {
+
+
+  /** Default pattern string for log output. Currently set to the
+      string &lt;b&gt;&quot;%m%n&quot;&lt;/b&gt; which just prints the application supplied
+      message. */
+  public final static String DEFAULT_CONVERSION_PATTERN =&quot;%m%n&quot;;
+
+  /** A conversion pattern equivalent to the TTCCCLayout.
+      Current value is &lt;b&gt;%r [%t] %p %c %x - %m%n&lt;/b&gt;. */
+  public final static String TTCC_CONVERSION_PATTERN
+                                             = &quot;%r [%t] %p %c %x - %m%n&quot;;
+
+
+<span class="fc" id="L413">  protected final int BUF_SIZE = 256;</span>
+<span class="fc" id="L414">  protected final int MAX_CAPACITY = 1024;</span>
+
+
+  // output buffer appended to when format() is invoked
+<span class="fc" id="L418">  private StringBuffer sbuf = new StringBuffer(BUF_SIZE);</span>
+
+  private String pattern;
+
+  private PatternConverter head;
+
+  /**
+     Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.
+
+     The default pattern just produces the application supplied message.
+  */
+  public PatternLayout() {
+<span class="fc" id="L430">    this(DEFAULT_CONVERSION_PATTERN);</span>
+<span class="fc" id="L431">  }</span>
+
+  /**
+     Constructs a PatternLayout using the supplied conversion pattern.
+  */
+<span class="fc" id="L436">  public PatternLayout(String pattern) {</span>
+<span class="fc" id="L437">    this.pattern = pattern;</span>
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">    head = createPatternParser((pattern == null) ? DEFAULT_CONVERSION_PATTERN :</span>
+<span class="fc" id="L439">			     pattern).parse();</span>
+<span class="fc" id="L440">  }</span>
+
+   /**
+     Set the &lt;b&gt;ConversionPattern&lt;/b&gt; option. This is the string which
+     controls formatting and consists of a mix of literal content and
+     conversion specifiers.
+   */
+  public
+  void setConversionPattern(String conversionPattern) {
+<span class="fc" id="L449">    pattern = conversionPattern;</span>
+<span class="fc" id="L450">    head = createPatternParser(conversionPattern).parse();</span>
+<span class="fc" id="L451">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;ConversionPattern&lt;/b&gt; option.
+   */
+  public
+  String getConversionPattern() {
+<span class="fc" id="L458">    return pattern;</span>
+  }
+
+  /**
+     Does not do anything as options become effective
+  */
+  public
+  void activateOptions() {
+    // nothing to do.
+<span class="fc" id="L467">  }</span>
+
+ /**
+     The PatternLayout does not handle the throwable contained within
+     {@link LoggingEvent LoggingEvents}. Thus, it returns
+     &lt;code&gt;true&lt;/code&gt;.
+
+     @since 0.8.4 */
+  public
+  boolean ignoresThrowable() {
+<span class="fc" id="L477">    return true;</span>
+  }
+
+  /**
+    Returns PatternParser used to parse the conversion string. Subclasses
+    may override this to return a subclass of PatternParser which recognize
+    custom conversion characters.
+
+    @since 0.9.0
+  */
+  protected PatternParser createPatternParser(String pattern) {
+<span class="fc" id="L488">    return new PatternParser(pattern);</span>
+  }
+
+
+  /**
+     Produces a formatted string as specified by the conversion pattern.
+  */
+  public String format(LoggingEvent event) {
+    // Reset working stringbuffer
+<span class="fc bfc" id="L497" title="All 2 branches covered.">    if(sbuf.capacity() &gt; MAX_CAPACITY) {</span>
+<span class="fc" id="L498">      sbuf = new StringBuffer(BUF_SIZE);</span>
+    } else {
+<span class="fc" id="L500">      sbuf.setLength(0);</span>
+    }
+
+<span class="fc" id="L503">    PatternConverter c = head;</span>
+
+<span class="fc bfc" id="L505" title="All 2 branches covered.">    while(c != null) {</span>
+<span class="fc" id="L506">      c.format(sbuf, event);</span>
+<span class="fc" id="L507">      c = c.next;</span>
+    }
+<span class="fc" id="L509">    return sbuf.toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

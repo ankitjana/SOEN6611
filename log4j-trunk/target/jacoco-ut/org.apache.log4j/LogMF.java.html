@@ -1,0 +1,1678 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogMF.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">LogMF.java</span></div><h1>LogMF.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
+import java.util.Locale;
+
+
+/**
+ * This class provides parameterized logging services
+ * using the pattern syntax of java.text.MessageFormat.
+ * Message formatting is only performed when the 
+ * request exceeds the threshold level of the logger.
+ * When the pattern only contains literal text and
+ * default conversion patterns (that is &quot;{0}&quot; and similar)
+ * a simple fast compatible formatter is used.  
+ * If the pattern contains more complex conversion patterns,
+ * formatting will be delegated to java.text.MessageFormatter
+ * which can be substantially slower.
+ *
+ * @see org.apache.log4j.LogSF
+ * @since 1.2.16
+ *
+ */
+public final class LogMF extends LogXF {
+    /**
+     * private constructor.
+     *
+     */
+    private LogMF() {
+    }
+
+    /**
+     * Number format.
+     */
+<span class="nc" id="L56">    private static NumberFormat numberFormat = null;</span>
+    /**
+     * Locale at time of last number format request.
+     */
+<span class="nc" id="L60">    private static Locale numberLocale = null;</span>
+    /**
+     * Date format.
+     */
+<span class="nc" id="L64">    private static DateFormat dateFormat = null;</span>
+    /**
+     * Locale at time of last date format request.
+     */
+<span class="nc" id="L68">    private static Locale dateLocale = null;</span>
+
+    /**
+     * Format number.
+     * @param n number to format, may not be null.
+     * @return formatted value.
+     */
+    private static synchronized String formatNumber(final Object n) {
+<span class="nc" id="L76">        Locale currentLocale = Locale.getDefault();</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">        if (currentLocale != numberLocale || numberFormat == null) {</span>
+<span class="nc" id="L78">            numberLocale = currentLocale;</span>
+<span class="nc" id="L79">            numberFormat = NumberFormat.getInstance(currentLocale);</span>
+        }
+<span class="nc" id="L81">        return numberFormat.format(n);</span>
+    }
+
+
+    /**
+     * Format date.
+     * @param d date, may not be null.
+     * @return formatted value.
+     */
+    private static synchronized String formatDate(final Object d) {
+<span class="nc" id="L91">        Locale currentLocale = Locale.getDefault();</span>
+<span class="nc bnc" id="L92" title="All 4 branches missed.">        if (currentLocale != dateLocale || dateFormat == null) {</span>
+<span class="nc" id="L93">            dateLocale = currentLocale;</span>
+<span class="nc" id="L94">            dateFormat = DateFormat.getDateTimeInstance(</span>
+                                DateFormat.SHORT,
+                                DateFormat.SHORT,
+                                currentLocale);
+        }
+<span class="nc" id="L99">        return dateFormat.format(d);</span>
+    }
+
+    /**
+     * Format a single parameter like a &quot;{0}&quot; formatting specifier.
+     *
+     * @param arg0 parameter, may be null.
+     * @return string representation of arg0.
+     */
+    private static String formatObject(final Object arg0) {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (arg0 instanceof String) {</span>
+<span class="nc" id="L110">            return arg0.toString();</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">        } else if (arg0 instanceof Double ||</span>
+                   arg0 instanceof Float) {
+<span class="nc" id="L113">           return formatNumber(arg0);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        } else if (arg0 instanceof Date) {</span>
+<span class="nc" id="L115">            return formatDate(arg0);</span>
+        }
+<span class="nc" id="L117">        return String.valueOf(arg0);</span>
+    }
+
+
+    /**
+     * Determines if pattern contains only {n} format elements
+     * and not apostrophes.
+     *
+     * @param pattern pattern, may not be null.
+     * @return true if pattern only contains {n} format elements.
+     */
+    private static boolean isSimple(final String pattern) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (pattern.indexOf('\'') != -1) {</span>
+<span class="nc" id="L130">            return false;</span>
+        }
+<span class="nc" id="L132">        for(int pos = pattern.indexOf('{');</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            pos != -1;</span>
+<span class="nc" id="L134">            pos = pattern.indexOf('{', pos + 1)) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (pos + 2 &gt;= pattern.length() ||</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                    pattern.charAt(pos+2) != '}' ||</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                    pattern.charAt(pos+1) &lt; '0' ||</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                    pattern.charAt(pos+1) &gt; '9') {</span>
+<span class="nc" id="L139">                return false;</span>
+            }
+        }
+<span class="nc" id="L142">        return true;</span>
+
+    }
+
+    /**
+     * Formats arguments using MessageFormat.
+     * @param pattern pattern, may be malformed or null.
+     * @param arguments arguments, may be null or mismatched.
+     * @return Message string or null
+     */
+    private static String format(final String pattern,
+                                 final Object[] arguments) {
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (pattern == null) {</span>
+<span class="nc" id="L155">            return null;</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        } else if(isSimple(pattern)) {</span>
+<span class="nc" id="L157">            String formatted[] = new String[10];</span>
+<span class="nc" id="L158">            int prev = 0;</span>
+<span class="nc" id="L159">            String retval = &quot;&quot;;</span>
+<span class="nc" id="L160">            int pos = pattern.indexOf('{');</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            while(pos &gt;= 0) {</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                if(pos + 2 &lt; pattern.length() &amp;&amp; </span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                      pattern.charAt(pos+2) == '}' &amp;&amp;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                      pattern.charAt(pos+1) &gt;= '0' &amp;&amp;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                      pattern.charAt(pos+1) &lt;= '9') {</span>
+<span class="nc" id="L166">                    int index = pattern.charAt(pos+1) - '0';</span>
+<span class="nc" id="L167">                    retval += pattern.substring(prev, pos);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                    if (formatted[index] == null) {</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">                         if (arguments == null || index &gt;= arguments.length) {</span>
+<span class="nc" id="L170">                            formatted[index] = pattern.substring(pos, pos+3);</span>
+                         } else {
+<span class="nc" id="L172">                            formatted[index] = formatObject(arguments[index]);</span>
+                         }
+                    }
+<span class="nc" id="L175">                    retval += formatted[index];</span>
+<span class="nc" id="L176">                    prev = pos + 3;</span>
+<span class="nc" id="L177">                    pos = pattern.indexOf('{', prev);</span>
+<span class="nc" id="L178">                } else {</span>
+<span class="nc" id="L179">                    pos = pattern.indexOf('{', pos + 1);</span>
+                }
+            }
+<span class="nc" id="L182">            retval += pattern.substring(prev);</span>
+<span class="nc" id="L183">            return retval;</span>
+        }
+        try {
+<span class="nc" id="L186">            return MessageFormat.format(pattern, arguments);</span>
+<span class="nc" id="L187">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L188">            return pattern;</span>
+        }
+    }
+
+    /**
+     * Formats a single argument using MessageFormat.
+     * @param pattern pattern, may be malformed or null.
+     * @param arguments arguments, may be null or mismatched.
+     * @return Message string or null
+     */
+    private static String format(final String pattern,
+                                 final Object arg0) {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (pattern == null) {</span>
+<span class="nc" id="L201">            return null;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        } else if(isSimple(pattern)) {</span>
+<span class="nc" id="L203">            String formatted = null;</span>
+<span class="nc" id="L204">            int prev = 0;</span>
+<span class="nc" id="L205">            String retval = &quot;&quot;;</span>
+<span class="nc" id="L206">            int pos = pattern.indexOf('{');</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            while(pos &gt;= 0) {</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                if(pos + 2 &lt; pattern.length() &amp;&amp;</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                      pattern.charAt(pos+2) == '}' &amp;&amp;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                      pattern.charAt(pos+1) &gt;= '0' &amp;&amp;</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                      pattern.charAt(pos+1) &lt;= '9') {</span>
+<span class="nc" id="L212">                    int index = pattern.charAt(pos+1) - '0';</span>
+<span class="nc" id="L213">                    retval += pattern.substring(prev, pos);</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">                    if (index != 0) {</span>
+<span class="nc" id="L215">                        retval += pattern.substring(pos, pos+3);</span>
+                    } else {
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                        if (formatted == null) {</span>
+<span class="nc" id="L218">                            formatted = formatObject(arg0);</span>
+                        }
+<span class="nc" id="L220">                        retval += formatted;</span>
+                    }
+<span class="nc" id="L222">                    prev = pos + 3;</span>
+<span class="nc" id="L223">                    pos = pattern.indexOf('{', prev);</span>
+<span class="nc" id="L224">                } else {</span>
+<span class="nc" id="L225">                    pos = pattern.indexOf('{', pos + 1);</span>
+                }
+            }
+<span class="nc" id="L228">            retval += pattern.substring(prev);</span>
+<span class="nc" id="L229">            return retval;</span>
+        }
+        try {
+<span class="nc" id="L232">            return MessageFormat.format(pattern, new Object[] { arg0 });</span>
+<span class="nc" id="L233">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L234">            return pattern;</span>
+        }
+    }
+
+
+    /**
+     * Formats arguments using MessageFormat using a pattern from
+     * a resource bundle.
+     * @param resourceBundleName name of resource bundle, may be null.
+     * @param key key for pattern in resource bundle, may be null.
+     * @param arguments arguments, may be null or mismatched.
+     * @return Message string or null
+     */
+    private static String format(
+            final String resourceBundleName,
+            final String key,
+            final Object[] arguments) {
+        String pattern;
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (resourceBundleName != null) {</span>
+            try {
+<span class="nc" id="L254">                ResourceBundle bundle =</span>
+<span class="nc" id="L255">                        ResourceBundle.getBundle(resourceBundleName);</span>
+<span class="nc" id="L256">                pattern = bundle.getString(key);</span>
+<span class="nc" id="L257">            } catch (Exception ex) {</span>
+<span class="nc" id="L258">                pattern = key;</span>
+<span class="nc" id="L259">            }</span>
+        } else {
+<span class="nc" id="L261">            pattern = key;</span>
+        }
+<span class="nc" id="L263">        return format(pattern, arguments);</span>
+    }
+
+
+    /**
+     * Fully Qualified Class Name of this class.
+     */
+<span class="nc bnc" id="L270" title="All 2 branches missed.">    private static final String FQCN = LogMF.class.getName();</span>
+
+    /**
+     * Equivalent of Logger.forcedLog.
+     *
+     * @param logger logger, may not be null.
+     * @param level level, may not be null.
+     * @param msg message, may be null.
+     */
+    private static void forcedLog(final Logger logger,
+                                  final Level level,
+                                  final String msg) {
+<span class="nc" id="L282">        logger.callAppenders(new LoggingEvent(FQCN, logger, level, msg, null));</span>
+<span class="nc" id="L283">    }</span>
+
+    /**
+     * Equivalent of Logger.forcedLog.
+     *
+     * @param logger logger, may not be null.
+     * @param level level, may not be null.
+     * @param msg message, may be null.
+     * @param t throwable.
+     */
+    private static void forcedLog(final Logger logger,
+                                  final Level level,
+                                  final String msg,
+                                  final Throwable t) {
+<span class="nc" id="L297">        logger.callAppenders(new LoggingEvent(FQCN, logger, level, msg, t));</span>
+<span class="nc" id="L298">    }</span>
+    /**
+         * Log a parameterized message at trace level.
+         * @param logger logger, may not be null.
+         * @param pattern pattern, may be null.
+         * @param arguments an array of arguments to be
+         *          formatted and substituted.
+         */
+    public static void trace(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L308" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L309">            forcedLog(logger, TRACE, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L311">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L321" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L322">            forcedLog(logger, Level.DEBUG, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L324">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L335">            forcedLog(logger, Level.INFO, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L337">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L348">            forcedLog(logger, Level.WARN, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L350">    }</span>
+
+    /**
+     * Log a parameterized message at error level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void error(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L360" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.ERROR)) {</span>
+<span class="nc" id="L361">            forcedLog(logger, Level.ERROR, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L363">    }</span>
+
+    /**
+     * Log a parameterized message at fatal level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void fatal(final Logger logger, final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.FATAL)) {</span>
+<span class="nc" id="L374">            forcedLog(logger, Level.FATAL, format(pattern, arguments));</span>
+        }
+<span class="nc" id="L376">    }</span>
+
+    /**
+         * Log a parameterized message at trace level.
+         * @param logger logger, may not be null.
+         * @param t throwable, may be null.
+         * @param pattern pattern, may be null.
+         * @param arguments an array of arguments to be
+         *          formatted and substituted.
+         */
+    public static void trace(final Logger logger,
+                             final Throwable t,
+                             final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L390" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L391">            forcedLog(logger, TRACE, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L393">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param t throwable, may be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void debug(final Logger logger,
+                             final Throwable t,
+                             final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L407">            forcedLog(logger, Level.DEBUG, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L409">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param t throwable, may be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void info(final Logger logger,
+                            final Throwable t,
+                            final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L422" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L423">            forcedLog(logger, Level.INFO, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L425">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param t throwable, may be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void warn(final Logger logger,
+                            final Throwable t,
+                            final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L439">            forcedLog(logger, Level.WARN, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L441">    }</span>
+
+    /**
+     * Log a parameterized message at error level.
+     * @param logger logger, may not be null.
+     * @param t throwable, may be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void error(final Logger logger,
+                             final Throwable t,
+                             final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L454" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.ERROR)) {</span>
+<span class="nc" id="L455">            forcedLog(logger, Level.ERROR, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L457">    }</span>
+
+    /**
+     * Log a parameterized message at fatal level.
+     * @param logger logger, may not be null.
+     * @param t throwable, may be null.
+     * @param pattern pattern, may be null.
+     * @param arguments an array of arguments to be formatted and substituted.
+     */
+    public static void fatal(final Logger logger,
+                             final Throwable t,
+                             final String pattern,
+        final Object[] arguments) {
+<span class="nc bnc" id="L470" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.FATAL)) {</span>
+<span class="nc" id="L471">            forcedLog(logger, Level.FATAL, format(pattern, arguments), t);</span>
+        }
+<span class="nc" id="L473">    }</span>
+
+
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final boolean argument) {
+<span class="nc bnc" id="L485" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L486">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L488">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final char argument) {
+<span class="nc bnc" id="L498" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L499">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L501">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final byte argument) {
+<span class="nc bnc" id="L511" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L512">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L514">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final short argument) {
+<span class="nc bnc" id="L524" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L525">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L527">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final int argument) {
+<span class="nc bnc" id="L537" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L538">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L540">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final long argument) {
+<span class="nc bnc" id="L550" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L551">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L553">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final float argument) {
+<span class="nc bnc" id="L563" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L564">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L566">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final double argument) {
+<span class="nc bnc" id="L576" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L577">            forcedLog(logger, TRACE, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L579">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final Object argument) {
+<span class="nc bnc" id="L589" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L590">            forcedLog(logger, TRACE, format(pattern, argument));</span>
+        }
+<span class="nc" id="L592">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1) {
+<span class="nc bnc" id="L603" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L604">            forcedLog(logger, TRACE,</span>
+<span class="nc" id="L605">                    format(pattern, toArray(arg0, arg1)));</span>
+        }
+<span class="nc" id="L607">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2) {
+<span class="nc bnc" id="L619" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L620">            forcedLog(logger, TRACE,</span>
+<span class="nc" id="L621">                    format(pattern, toArray(arg0, arg1, arg2)));</span>
+        }
+<span class="nc" id="L623">    }</span>
+
+    /**
+     * Log a parameterized message at trace level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     * @param arg3 a value to be formatted and substituted.
+     */
+    public static void trace(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2,
+        final Object arg3) {
+<span class="nc bnc" id="L637" title="All 2 branches missed.">        if (logger.isEnabledFor(TRACE)) {</span>
+<span class="nc" id="L638">            forcedLog(logger, TRACE,</span>
+<span class="nc" id="L639">                    format(pattern, toArray(arg0, arg1, arg2, arg3)));</span>
+        }
+<span class="nc" id="L641">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final boolean argument) {
+<span class="nc bnc" id="L651" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L652">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L654">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final char argument) {
+<span class="nc bnc" id="L664" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L665">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L667">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final byte argument) {
+<span class="nc bnc" id="L677" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L678">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L680">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final short argument) {
+<span class="nc bnc" id="L690" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L691">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L693">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final int argument) {
+<span class="nc bnc" id="L703" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L704">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L706">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final long argument) {
+<span class="nc bnc" id="L716" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L717">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L719">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final float argument) {
+<span class="nc bnc" id="L729" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L730">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L732">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final double argument) {
+<span class="nc bnc" id="L742" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L743">            forcedLog(logger, Level.DEBUG, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L745">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final Object argument) {
+<span class="nc bnc" id="L755" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L756">            forcedLog(logger, Level.DEBUG, format(pattern, argument));</span>
+        }
+<span class="nc" id="L758">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1) {
+<span class="nc bnc" id="L769" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L770">            forcedLog(logger, Level.DEBUG,</span>
+<span class="nc" id="L771">                    format(pattern, toArray(arg0, arg1)));</span>
+        }
+<span class="nc" id="L773">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2) {
+<span class="nc bnc" id="L785" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L786">            forcedLog(logger, Level.DEBUG,</span>
+<span class="nc" id="L787">                    format(pattern, toArray(arg0, arg1, arg2)));</span>
+        }
+<span class="nc" id="L789">    }</span>
+
+    /**
+     * Log a parameterized message at debug level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     * @param arg3 a value to be formatted and substituted.
+     */
+    public static void debug(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2,
+        final Object arg3) {
+<span class="nc bnc" id="L803" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L804">            forcedLog(logger, Level.DEBUG,</span>
+<span class="nc" id="L805">                    format(pattern, toArray(arg0, arg1, arg2, arg3)));</span>
+        }
+<span class="nc" id="L807">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final boolean argument) {
+<span class="nc bnc" id="L817" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L818">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L820">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final char argument) {
+<span class="nc bnc" id="L830" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L831">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L833">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final byte argument) {
+<span class="nc bnc" id="L843" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L844">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L846">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final short argument) {
+<span class="nc bnc" id="L856" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L857">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L859">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final int argument) {
+<span class="nc bnc" id="L869" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L870">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L872">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final long argument) {
+<span class="nc bnc" id="L882" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L883">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L885">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final float argument) {
+<span class="nc bnc" id="L895" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L896">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L898">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final double argument) {
+<span class="nc bnc" id="L908" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L909">            forcedLog(logger, Level.INFO, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L911">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final Object argument) {
+<span class="nc bnc" id="L921" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L922">            forcedLog(logger, Level.INFO, format(pattern, argument));</span>
+        }
+<span class="nc" id="L924">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1) {
+<span class="nc bnc" id="L935" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L936">            forcedLog(logger, Level.INFO, format(pattern, toArray(arg0, arg1)));</span>
+        }
+<span class="nc" id="L938">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2) {
+<span class="nc bnc" id="L950" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L951">            forcedLog(logger, Level.INFO, format(pattern,</span>
+<span class="nc" id="L952">                    toArray(arg0, arg1, arg2)));</span>
+        }
+<span class="nc" id="L954">    }</span>
+
+    /**
+     * Log a parameterized message at info level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     * @param arg3 a value to be formatted and substituted.
+     */
+    public static void info(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2,
+        final Object arg3) {
+<span class="nc bnc" id="L968" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L969">            forcedLog(logger, Level.INFO, format(pattern,</span>
+<span class="nc" id="L970">                    toArray(arg0, arg1, arg2, arg3)));</span>
+        }
+<span class="nc" id="L972">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final boolean argument) {
+<span class="nc bnc" id="L982" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L983">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L985">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final char argument) {
+<span class="nc bnc" id="L995" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L996">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L998">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final byte argument) {
+<span class="nc bnc" id="L1008" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1009">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1011">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final short argument) {
+<span class="nc bnc" id="L1021" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1022">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1024">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final int argument) {
+<span class="nc bnc" id="L1034" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1035">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1037">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final long argument) {
+<span class="nc bnc" id="L1047" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1048">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1050">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final float argument) {
+<span class="nc bnc" id="L1060" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1061">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1063">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final double argument) {
+<span class="nc bnc" id="L1073" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1074">            forcedLog(logger, Level.WARN, format(pattern, valueOf(argument)));</span>
+        }
+<span class="nc" id="L1076">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param argument a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final Object argument) {
+<span class="nc bnc" id="L1086" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1087">            forcedLog(logger, Level.WARN, format(pattern, argument));</span>
+        }
+<span class="nc" id="L1089">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1) {
+<span class="nc bnc" id="L1100" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1101">            forcedLog(logger, Level.WARN,</span>
+<span class="nc" id="L1102">                    format(pattern, toArray(arg0, arg1)));</span>
+        }
+<span class="nc" id="L1104">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2) {
+<span class="nc bnc" id="L1116" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1117">            forcedLog(logger, Level.WARN,</span>
+<span class="nc" id="L1118">                    format(pattern, toArray(arg0, arg1, arg2)));</span>
+        }
+<span class="nc" id="L1120">    }</span>
+
+    /**
+     * Log a parameterized message at warn level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     * @param arg3 a value to be formatted and substituted.
+     */
+    public static void warn(final Logger logger, final String pattern,
+        final Object arg0, final Object arg1, final Object arg2,
+        final Object arg3) {
+<span class="nc bnc" id="L1134" title="All 2 branches missed.">        if (logger.isEnabledFor(Level.WARN)) {</span>
+<span class="nc" id="L1135">            forcedLog(logger, Level.WARN, format(pattern,</span>
+<span class="nc" id="L1136">                    toArray(arg0, arg1, arg2, arg3)));</span>
+        }
+<span class="nc" id="L1138">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param parameters parameters to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final Object[] parameters) {
+<span class="nc bnc" id="L1151" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1152">            forcedLog(logger, level,</span>
+<span class="nc" id="L1153">                    format(pattern, parameters));</span>
+        }
+<span class="nc" id="L1155">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+     * @param t throwable, may be null.
+      * @param pattern pattern, may be null.
+     * @param parameters parameters to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final Throwable t,
+                             final String pattern,
+                             final Object[] parameters) {
+<span class="nc bnc" id="L1170" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1171">            forcedLog(logger, level,</span>
+<span class="nc" id="L1172">                    format(pattern, parameters), t);</span>
+        }
+<span class="nc" id="L1174">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final Object param1) {
+<span class="nc bnc" id="L1187" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1188">            forcedLog(logger, level,</span>
+<span class="nc" id="L1189">                    format(pattern, toArray(param1)));</span>
+        }
+<span class="nc" id="L1191">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final boolean param1) {
+<span class="nc bnc" id="L1204" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1205">            forcedLog(logger, level,</span>
+<span class="nc" id="L1206">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1208">    }</span>
+
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final byte param1) {
+<span class="nc bnc" id="L1222" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1223">            forcedLog(logger, level,</span>
+<span class="nc" id="L1224">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1226">    }</span>
+
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final char param1) {
+<span class="nc bnc" id="L1240" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1241">            forcedLog(logger, level,</span>
+<span class="nc" id="L1242">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1244">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final short param1) {
+<span class="nc bnc" id="L1257" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1258">            forcedLog(logger, level,</span>
+<span class="nc" id="L1259">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1261">    }</span>
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final int param1) {
+<span class="nc bnc" id="L1274" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1275">            forcedLog(logger, level,</span>
+<span class="nc" id="L1276">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1278">    }</span>
+
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final long param1) {
+<span class="nc bnc" id="L1292" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1293">            forcedLog(logger, level,</span>
+<span class="nc" id="L1294">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1296">    }</span>
+
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final float param1) {
+<span class="nc bnc" id="L1310" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1311">            forcedLog(logger, level,</span>
+<span class="nc" id="L1312">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1314">    }</span>
+
+
+    /**
+      * Log a parameterized message at specified level.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param pattern pattern, may be null.
+     * @param param1 parameter to the log message.
+      */
+    public static void log(final Logger logger,
+                             final Level level,
+                             final String pattern,
+                             final double param1) {
+<span class="nc bnc" id="L1328" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1329">            forcedLog(logger, level,</span>
+<span class="nc" id="L1330">                    format(pattern, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1332">    }</span>
+
+
+    /**
+     * Log a parameterized message at specified level.
+     * @param logger logger, may not be null.
+     * @param level level, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     */
+    public static void log(final Logger logger,
+                            final Level level,
+                            final String pattern,
+        final Object arg0, final Object arg1) {
+<span class="nc bnc" id="L1347" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1348">            forcedLog(logger, level,</span>
+<span class="nc" id="L1349">                    format(pattern, toArray(arg0, arg1)));</span>
+        }
+<span class="nc" id="L1351">    }</span>
+
+    /**
+     * Log a parameterized message at specifed level.
+     * @param logger logger, may not be null.
+     * @param level level, may not be null.
+     * @param pattern pattern, may be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     */
+    public static void log(final Logger logger,
+                           final Level level,
+                           final String pattern,
+        final Object arg0, final Object arg1, final Object arg2) {
+<span class="nc bnc" id="L1366" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1367">            forcedLog(logger, level,</span>
+<span class="nc" id="L1368">                    format(pattern, toArray(arg0, arg1, arg2)));</span>
+        }
+<span class="nc" id="L1370">    }</span>
+
+    /**
+     * Log a parameterized message at specified level.
+     * @param logger logger, may not be null.
+     * @param pattern pattern, may be null.
+     * @param level level, may not be null.
+     * @param arg0 a value to be formatted and substituted.
+     * @param arg1 a value to be formatted and substituted.
+     * @param arg2 a value to be formatted and substituted.
+     * @param arg3 a value to be formatted and substituted.
+     */
+    public static void log(final Logger logger,
+                           final Level level,
+                           final String pattern,
+        final Object arg0, final Object arg1, final Object arg2,
+        final Object arg3) {
+<span class="nc bnc" id="L1387" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1388">            forcedLog(logger, level, format(pattern,</span>
+<span class="nc" id="L1389">                    toArray(arg0, arg1, arg2, arg3)));</span>
+        }
+<span class="nc" id="L1391">    }</span>
+
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param parameters parameters to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final Object[] parameters) {
+<span class="nc bnc" id="L1407" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1408">            forcedLog(logger, level,</span>
+<span class="nc" id="L1409">                    format(bundleName, key, parameters));</span>
+        }
+<span class="nc" id="L1411">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+     * @param t throwable, may be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param parameters parameters to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final Throwable t,
+                             final String bundleName,
+                             final String key,
+                             final Object[] parameters) {
+<span class="nc bnc" id="L1428" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1429">            forcedLog(logger, level,</span>
+<span class="nc" id="L1430">                    format(bundleName, key, parameters), t);</span>
+        }
+<span class="nc" id="L1432">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final Object param1) {
+<span class="nc bnc" id="L1447" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1448">            forcedLog(logger, level,</span>
+<span class="nc" id="L1449">                    format(bundleName, key, toArray(param1)));</span>
+        }
+<span class="nc" id="L1451">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final boolean param1) {
+<span class="nc bnc" id="L1466" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1467">            forcedLog(logger, level,</span>
+<span class="nc" id="L1468">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1470">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final char param1) {
+<span class="nc bnc" id="L1485" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1486">            forcedLog(logger, level,</span>
+<span class="nc" id="L1487">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1489">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final byte param1) {
+<span class="nc bnc" id="L1504" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1505">            forcedLog(logger, level,</span>
+<span class="nc" id="L1506">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1508">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final short param1) {
+<span class="nc bnc" id="L1523" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1524">            forcedLog(logger, level,</span>
+<span class="nc" id="L1525">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1527">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final int param1) {
+<span class="nc bnc" id="L1542" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1543">            forcedLog(logger, level,</span>
+<span class="nc" id="L1544">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1546">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final long param1) {
+<span class="nc bnc" id="L1561" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1562">            forcedLog(logger, level,</span>
+<span class="nc" id="L1563">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1565">    }</span>
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final float param1) {
+<span class="nc bnc" id="L1579" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1580">            forcedLog(logger, level,</span>
+<span class="nc" id="L1581">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1583">    }</span>
+
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final double param1) {
+<span class="nc bnc" id="L1599" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1600">            forcedLog(logger, level,</span>
+<span class="nc" id="L1601">                    format(bundleName, key, toArray(valueOf(param1))));</span>
+        }
+<span class="nc" id="L1603">    }</span>
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param0 Parameter to the log message.
+     * @param param1 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final Object param0,
+                             final Object param1) {
+<span class="nc bnc" id="L1620" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1621">            forcedLog(logger, level,</span>
+<span class="nc" id="L1622">                    format(bundleName, key, toArray(param0, param1)));</span>
+        }
+<span class="nc" id="L1624">    }</span>
+
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param0 Parameter to the log message.
+     * @param param1 Parameter to the log message.
+     * @param param2 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final Object param0,
+                             final Object param1,
+                             final Object param2) {
+<span class="nc bnc" id="L1644" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1645">            forcedLog(logger, level,</span>
+<span class="nc" id="L1646">                    format(bundleName, key, toArray(param0, param1, param2)));</span>
+        }
+<span class="nc" id="L1648">    }</span>
+
+
+    /**
+      * Log a parameterized message using a pattern from a resource bundle.
+      * @param logger logger, may not be null.
+      * @param level level, may not be null.
+      * @param bundleName resource bundle name, may be null.
+     * @param key key, may be null.
+     * @param param0 Parameter to the log message.
+     * @param param1 Parameter to the log message.
+     * @param param2 Parameter to the log message.
+     * @param param3 Parameter to the log message.
+      */
+    public static void logrb(final Logger logger,
+                             final Level level,
+                             final String bundleName,
+                             final String key,
+                             final Object param0,
+                             final Object param1,
+                             final Object param2,
+                             final Object param3) {
+<span class="nc bnc" id="L1670" title="All 2 branches missed.">        if (logger.isEnabledFor(level)) {</span>
+<span class="nc" id="L1671">            forcedLog(logger, level,</span>
+<span class="nc" id="L1672">                    format(bundleName, key,</span>
+<span class="nc" id="L1673">                            toArray(param0, param1, param2, param3)));</span>
+        }
+<span class="nc" id="L1675">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

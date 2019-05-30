@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LayoutDynamicMBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.jmx</a> &gt; <span class="el_source">LayoutDynamicMBean.java</span></div><h1>LayoutDynamicMBean.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.jmx;
+
+import java.lang.reflect.Constructor;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import org.apache.log4j.Layout;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.spi.OptionHandler;
+
+import java.util.Vector;
+import java.util.Hashtable;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanInfo;
+import javax.management.Attribute;
+
+import javax.management.MBeanException;
+import javax.management.AttributeNotFoundException;
+import javax.management.RuntimeOperationsException;
+import javax.management.ReflectionException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+
+import java.beans.Introspector;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
+import java.beans.IntrospectionException;
+import java.io.InterruptedIOException;
+
+public class LayoutDynamicMBean extends AbstractDynamicMBean {
+
+<span class="nc" id="L53">  private MBeanConstructorInfo[] dConstructors = new MBeanConstructorInfo[1];</span>
+<span class="nc" id="L54">  private Vector dAttributes = new Vector();</span>
+<span class="nc" id="L55">  private String dClassName = this.getClass().getName();</span>
+
+<span class="nc" id="L57">  private Hashtable dynamicProps = new Hashtable(5);</span>
+<span class="nc" id="L58">  private MBeanOperationInfo[] dOperations = new MBeanOperationInfo[1];</span>
+<span class="nc" id="L59">  private String dDescription =</span>
+     &quot;This MBean acts as a management facade for log4j layouts.&quot;;
+
+  // This category instance is for logging.
+<span class="nc bnc" id="L63" title="All 2 branches missed.">  private static Logger cat = Logger.getLogger(LayoutDynamicMBean.class);</span>
+
+  // We wrap this layout instance.
+  private Layout layout;
+
+<span class="nc" id="L68">  public  LayoutDynamicMBean(Layout layout) throws IntrospectionException {</span>
+<span class="nc" id="L69">    this.layout = layout;</span>
+<span class="nc" id="L70">    buildDynamicMBeanInfo();</span>
+<span class="nc" id="L71">  }</span>
+
+  private
+  void buildDynamicMBeanInfo() throws IntrospectionException {
+<span class="nc" id="L75">    Constructor[] constructors = this.getClass().getConstructors();</span>
+<span class="nc" id="L76">    dConstructors[0] = new MBeanConstructorInfo(</span>
+             &quot;LayoutDynamicMBean(): Constructs a LayoutDynamicMBean instance&quot;,
+	     constructors[0]);
+
+
+<span class="nc" id="L81">    BeanInfo bi = Introspector.getBeanInfo(layout.getClass());</span>
+<span class="nc" id="L82">    PropertyDescriptor[] pd = bi.getPropertyDescriptors();</span>
+
+<span class="nc" id="L84">    int size = pd.length;</span>
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">    for(int i = 0; i &lt; size; i++) {</span>
+<span class="nc" id="L87">      String name = pd[i].getName();</span>
+<span class="nc" id="L88">      Method readMethod =  pd[i].getReadMethod();</span>
+<span class="nc" id="L89">      Method writeMethod =  pd[i].getWriteMethod();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">      if(readMethod != null) {</span>
+<span class="nc" id="L91">	Class returnClass = readMethod.getReturnType();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">	if(isSupportedType(returnClass)) {</span>
+	  String returnClassName;
+<span class="nc bnc" id="L94" title="All 4 branches missed.">	  if(returnClass.isAssignableFrom(Level.class)) {</span>
+<span class="nc" id="L95">	    returnClassName = &quot;java.lang.String&quot;;</span>
+	  } else {
+<span class="nc" id="L97">	    returnClassName = returnClass.getName();</span>
+	  }
+
+<span class="nc bnc" id="L100" title="All 2 branches missed.">	  dAttributes.add(new MBeanAttributeInfo(name,</span>
+						 returnClassName,
+						 &quot;Dynamic&quot;,
+						 true,
+						 writeMethod != null,
+						 false));
+<span class="nc" id="L106">	  dynamicProps.put(name, new MethodUnion(readMethod, writeMethod));</span>
+	}
+      }
+    }
+
+<span class="nc" id="L111">    MBeanParameterInfo[] params = new MBeanParameterInfo[0];</span>
+
+<span class="nc" id="L113">    dOperations[0] = new MBeanOperationInfo(&quot;activateOptions&quot;,</span>
+					    &quot;activateOptions(): add an layout&quot;,
+					    params,
+					    &quot;void&quot;,
+					    MBeanOperationInfo.ACTION);
+<span class="nc" id="L118">  }</span>
+
+  private
+  boolean isSupportedType(Class clazz) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">    if(clazz.isPrimitive()) {</span>
+<span class="nc" id="L123">      return true;</span>
+    }
+
+<span class="nc bnc" id="L126" title="All 4 branches missed.">    if(clazz == String.class) {</span>
+<span class="nc" id="L127">      return true;</span>
+    }
+<span class="nc bnc" id="L129" title="All 4 branches missed.">    if(clazz.isAssignableFrom(Level.class)) {</span>
+<span class="nc" id="L130">      return true;</span>
+    }
+
+<span class="nc" id="L133">    return false;</span>
+  }
+
+
+
+  public
+  MBeanInfo getMBeanInfo() {
+<span class="nc" id="L140">    cat.debug(&quot;getMBeanInfo called.&quot;);</span>
+
+<span class="nc" id="L142">    MBeanAttributeInfo[] attribs = new MBeanAttributeInfo[dAttributes.size()];</span>
+<span class="nc" id="L143">    dAttributes.toArray(attribs);</span>
+
+<span class="nc" id="L145">    return new MBeanInfo(dClassName,</span>
+			 dDescription,
+			 attribs,
+			 dConstructors,
+			 dOperations,
+			 new MBeanNotificationInfo[0]);
+  }
+
+  public
+  Object invoke(String operationName, Object params[], String signature[])
+    throws MBeanException,
+    ReflectionException {
+
+<span class="nc bnc" id="L158" title="All 4 branches missed.">    if(operationName.equals(&quot;activateOptions&quot;) &amp;&amp;</span>
+                     layout instanceof OptionHandler) {
+<span class="nc" id="L160">      OptionHandler oh = layout;</span>
+<span class="nc" id="L161">      oh.activateOptions();</span>
+<span class="nc" id="L162">      return &quot;Options activated.&quot;;</span>
+    }
+<span class="nc" id="L164">    return null;</span>
+  }
+
+  protected
+  Logger  getLogger() {
+<span class="nc" id="L169">    return cat;</span>
+  }
+
+
+  public
+  Object getAttribute(String attributeName) throws AttributeNotFoundException,
+                                                   MBeanException,
+                                                   ReflectionException {
+
+       // Check attributeName is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L179" title="All 2 branches missed.">    if (attributeName == null) {</span>
+<span class="nc" id="L180">      throw new RuntimeOperationsException(new IllegalArgumentException(</span>
+			&quot;Attribute name cannot be null&quot;),
+       &quot;Cannot invoke a getter of &quot; + dClassName + &quot; with null attribute name&quot;);
+    }
+
+
+<span class="nc" id="L186">    MethodUnion mu = (MethodUnion) dynamicProps.get(attributeName);</span>
+
+<span class="nc" id="L188">    cat.debug(&quot;----name=&quot;+attributeName+&quot;, mu=&quot;+mu);</span>
+
+<span class="nc bnc" id="L190" title="All 4 branches missed.">    if(mu != null &amp;&amp; mu.readMethod != null) {</span>
+      try {
+<span class="nc" id="L192">	return mu.readMethod.invoke(layout, null);</span>
+<span class="nc" id="L193">      } catch(InvocationTargetException e) {</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">          if (e.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                  || e.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L196">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L198">	    return null;</span>
+<span class="nc" id="L199">      } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L200">	    return null;</span>
+<span class="nc" id="L201">      } catch(RuntimeException e) {</span>
+<span class="nc" id="L202">	    return null;</span>
+      }
+    }
+
+
+
+    // If attributeName has not been recognized throw an AttributeNotFoundException
+<span class="nc" id="L209">    throw(new AttributeNotFoundException(&quot;Cannot find &quot; + attributeName +</span>
+					 &quot; attribute in &quot; + dClassName));
+
+  }
+
+
+  public
+  void setAttribute(Attribute attribute) throws AttributeNotFoundException,
+                                                InvalidAttributeValueException,
+                                                MBeanException,
+                                                ReflectionException {
+
+    // Check attribute is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L222" title="All 2 branches missed.">    if (attribute == null) {</span>
+<span class="nc" id="L223">      throw new RuntimeOperationsException(</span>
+                  new IllegalArgumentException(&quot;Attribute cannot be null&quot;),
+		  &quot;Cannot invoke a setter of &quot; + dClassName +
+		  &quot; with null attribute&quot;);
+    }
+<span class="nc" id="L228">    String name = attribute.getName();</span>
+<span class="nc" id="L229">    Object value = attribute.getValue();</span>
+
+<span class="nc bnc" id="L231" title="All 2 branches missed.">    if (name == null) {</span>
+<span class="nc" id="L232">      throw new RuntimeOperationsException(</span>
+                    new IllegalArgumentException(&quot;Attribute name cannot be null&quot;),
+		    &quot;Cannot invoke the setter of &quot;+dClassName+
+		    &quot; with null attribute name&quot;);
+    }
+
+
+
+<span class="nc" id="L240">    MethodUnion mu = (MethodUnion) dynamicProps.get(name);</span>
+
+<span class="nc bnc" id="L242" title="All 4 branches missed.">    if(mu != null &amp;&amp; mu.writeMethod != null) {</span>
+<span class="nc" id="L243">      Object[] o = new Object[1];</span>
+
+<span class="nc" id="L245">      Class[] params = mu.writeMethod.getParameterTypes();</span>
+<span class="nc bnc" id="L246" title="All 4 branches missed.">      if(params[0] == org.apache.log4j.Priority.class) {</span>
+<span class="nc" id="L247">	value = OptionConverter.toLevel((String) value,</span>
+<span class="nc" id="L248">					(Level) getAttribute(name));</span>
+      }
+<span class="nc" id="L250">      o[0] = value;</span>
+
+      try {
+<span class="nc" id="L253">	mu.writeMethod.invoke(layout,  o);</span>
+
+<span class="nc" id="L255">      } catch(InvocationTargetException e) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">          if (e.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                  || e.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L258">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L260">	    cat.error(&quot;FIXME&quot;, e);</span>
+<span class="nc" id="L261">      } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L262">	    cat.error(&quot;FIXME&quot;, e);</span>
+<span class="nc" id="L263">      } catch(RuntimeException e) {</span>
+<span class="nc" id="L264">	    cat.error(&quot;FIXME&quot;, e);</span>
+<span class="nc" id="L265">      }</span>
+<span class="nc" id="L266">    } else {</span>
+<span class="nc" id="L267">      throw(new AttributeNotFoundException(&quot;Attribute &quot; + name +</span>
+					   &quot; not found in &quot; +
+<span class="nc" id="L269">					   this.getClass().getName()));</span>
+    }
+<span class="nc" id="L271">  }</span>
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

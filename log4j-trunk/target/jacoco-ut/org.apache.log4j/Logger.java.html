@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Logger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">Logger.java</span></div><h1>Logger.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggerFactory;
+
+
+/**
+  This is the central class in the log4j package. Most logging
+  operations, except configuration, are done through this class.
+
+  @since log4j 1.2
+
+  @author Ceki G&amp;uuml;lc&amp;uuml; */
+public class Logger extends Category {
+
+  /**
+     The fully qualified name of the Logger class. See also the
+     getFQCN method. */
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">  private static final String FQCN = Logger.class.getName();</span>
+
+
+  protected
+  Logger(String name) {
+<span class="fc" id="L40">    super(name);</span>
+<span class="fc" id="L41">  }</span>
+
+  /**
+   * Retrieve a logger named according to the value of the
+   * &lt;code&gt;name&lt;/code&gt; parameter. If the named logger already exists,
+   * then the existing instance will be returned. Otherwise, a new
+   * instance is created.  
+   *
+   * &lt;p&gt;By default, loggers do not have a set level but inherit it
+   * from their neareast ancestor with a set level. This is one of the
+   * central features of log4j.
+   *
+   * @param name The name of the logger to retrieve.  
+  */
+  static
+  public
+  Logger getLogger(String name) {
+<span class="fc" id="L58">    return LogManager.getLogger(name);</span>
+  }
+
+  /**
+   * Shorthand for &lt;code&gt;getLogger(clazz.getName())&lt;/code&gt;.
+   *
+   * @param clazz The name of &lt;code&gt;clazz&lt;/code&gt; will be used as the
+   * name of the logger to retrieve.  See {@link #getLogger(String)}
+   * for more detailed information.
+   */
+  static
+  public
+  Logger getLogger(Class clazz) {
+<span class="fc" id="L71">    return LogManager.getLogger(clazz.getName());</span>
+  }
+
+
+  /**
+   * Return the root logger for the current logger repository.
+   * &lt;p&gt;
+   * The {@link #getName Logger.getName()} method for the root logger always returns
+   * string value: &quot;root&quot;. However, calling
+   * &lt;code&gt;Logger.getLogger(&quot;root&quot;)&lt;/code&gt; does not retrieve the root
+   * logger but a logger just under root named &quot;root&quot;.
+   * &lt;p&gt;
+   * In other words, calling this method is the only way to retrieve the 
+   * root logger.
+   */
+  public
+  static
+  Logger getRootLogger() {
+<span class="fc" id="L89">    return LogManager.getRootLogger();</span>
+  }
+
+  /**
+     Like {@link #getLogger(String)} except that the type of logger
+     instantiated depends on the type returned by the {@link
+     LoggerFactory#makeNewLoggerInstance} method of the
+     &lt;code&gt;factory&lt;/code&gt; parameter.
+
+     &lt;p&gt;This method is intended to be used by sub-classes.
+
+     @param name The name of the logger to retrieve.
+
+     @param factory A {@link LoggerFactory} implementation that will
+     actually create a new Instance.
+
+     @since 0.8.5 */
+  public
+  static
+  Logger getLogger(String name, LoggerFactory factory) {
+<span class="nc" id="L109">    return LogManager.getLogger(name, factory);</span>
+  }
+
+    /**
+     * Log a message object with the {@link org.apache.log4j.Level#TRACE TRACE} level.
+     *
+     * @param message the message object to log.
+     * @see #debug(Object) for an explanation of the logic applied.
+     * @since 1.2.12
+     */
+    public void trace(Object message) {
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">      if (repository.isDisabled(Level.TRACE_INT)) {</span>
+<span class="nc" id="L121">        return;</span>
+      }
+
+<span class="fc bfc" id="L124" title="All 2 branches covered.">      if (Level.TRACE.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L125">        forcedLog(FQCN, Level.TRACE, message, null);</span>
+      }
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Log a message object with the &lt;code&gt;TRACE&lt;/code&gt; level including the
+     * stack trace of the {@link Throwable}&lt;code&gt;t&lt;/code&gt; passed as parameter.
+     *
+     * &lt;p&gt;
+     * See {@link #debug(Object)} form for more detailed information.
+     * &lt;/p&gt;
+     *
+     * @param message the message object to log.
+     * @param t the exception to log, including its stack trace.
+     * @since 1.2.12
+     */
+    public void trace(Object message, Throwable t) {
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">      if (repository.isDisabled(Level.TRACE_INT)) {</span>
+<span class="nc" id="L143">        return;</span>
+      }
+
+<span class="fc bfc" id="L146" title="All 2 branches covered.">      if (Level.TRACE.isGreaterOrEqual(this.getEffectiveLevel())) {</span>
+<span class="fc" id="L147">        forcedLog(FQCN, Level.TRACE, message, t);</span>
+      }
+<span class="fc" id="L149">    }</span>
+
+    /**
+     * Check whether this category is enabled for the TRACE  Level.
+     * @since 1.2.12
+     *
+     * @return boolean - &lt;code&gt;true&lt;/code&gt; if this category is enabled for level
+     *         TRACE, &lt;code&gt;false&lt;/code&gt; otherwise.
+     */
+    public boolean isTraceEnabled() {
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (repository.isDisabled(Level.TRACE_INT)) {</span>
+<span class="nc" id="L160">            return false;</span>
+          }
+
+<span class="fc" id="L163">          return Level.TRACE.isGreaterOrEqual(this.getEffectiveLevel());</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

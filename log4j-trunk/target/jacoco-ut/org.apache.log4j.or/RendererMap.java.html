@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RendererMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.or</a> &gt; <span class="el_source">RendererMap.java</span></div><h1>RendererMap.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.or;
+
+import org.apache.log4j.spi.RendererSupport;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.OptionConverter;
+import java.util.Hashtable;
+
+/**
+   Map class objects to an {@link ObjectRenderer}.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since version 1.0 */
+public class RendererMap {
+
+  Hashtable map;
+
+<span class="fc" id="L35">  static ObjectRenderer defaultRenderer = new DefaultRenderer();</span>
+
+  public
+<span class="fc" id="L38">  RendererMap() {</span>
+<span class="fc" id="L39">    map = new Hashtable();</span>
+<span class="fc" id="L40">  }</span>
+
+  /**
+     Add a renderer to a hierarchy passed as parameter.
+  */
+  static
+  public
+  void addRenderer(RendererSupport repository, String renderedClassName,
+		   String renderingClassName) {
+<span class="nc" id="L49">    LogLog.debug(&quot;Rendering class: [&quot;+renderingClassName+&quot;], Rendered class: [&quot;+</span>
+		 renderedClassName+&quot;].&quot;);
+<span class="nc bnc" id="L51" title="All 2 branches missed.">    ObjectRenderer renderer = (ObjectRenderer)</span>
+<span class="nc" id="L52">             OptionConverter.instantiateByClassName(renderingClassName,</span>
+<span class="nc" id="L53">						    ObjectRenderer.class,</span>
+						    null);
+<span class="nc bnc" id="L55" title="All 2 branches missed.">    if(renderer == null) {</span>
+<span class="nc" id="L56">      LogLog.error(&quot;Could not instantiate renderer [&quot;+renderingClassName+&quot;].&quot;);</span>
+<span class="nc" id="L57">      return;</span>
+    } else {
+      try {
+<span class="nc" id="L60">	Class renderedClass = Loader.loadClass(renderedClassName);</span>
+<span class="nc" id="L61">	repository.setRenderer(renderedClass, renderer);</span>
+<span class="nc" id="L62">      } catch(ClassNotFoundException e) {</span>
+<span class="nc" id="L63">	LogLog.error(&quot;Could not find class [&quot;+renderedClassName+&quot;].&quot;, e);</span>
+<span class="nc" id="L64">      }</span>
+    }
+<span class="nc" id="L66">  }</span>
+
+
+  /**
+     Find the appropriate renderer for the class type of the
+     &lt;code&gt;o&lt;/code&gt; parameter. This is accomplished by calling the
+     {@link #get(Class)} method. Once a renderer is found, it is
+     applied on the object &lt;code&gt;o&lt;/code&gt; and the result is returned
+     as a {@link String}. */
+  public
+  String findAndRender(Object o) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">    if(o == null) {</span>
+<span class="nc" id="L78">        return null;</span>
+    } else {
+<span class="nc" id="L80">        return get(o.getClass()).doRender(o);</span>
+    }
+  }
+
+
+  /**
+     Syntactic sugar method that calls {@link #get(Class)} with the
+     class of the object parameter. */
+  public
+  ObjectRenderer get(Object o) {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">    if(o == null) {</span>
+<span class="nc" id="L91">        return null;</span>
+    } else {
+<span class="nc" id="L93">        return get(o.getClass());</span>
+    }
+  }
+
+
+  /**
+     Search the parents of &lt;code&gt;clazz&lt;/code&gt; for a renderer. The
+     renderer closest in the hierarchy will be returned. If no
+     renderers could be found, then the default renderer is returned.
+
+     &lt;p&gt;The search first looks for a renderer configured for
+     &lt;code&gt;clazz&lt;/code&gt;. If a renderer could not be found, then the
+     search continues by looking at all the interfaces implemented by
+     &lt;code&gt;clazz&lt;/code&gt; including the super-interfaces of each
+     interface.  If a renderer cannot be found, then the search looks
+     for a renderer defined for the parent (superclass) of
+     &lt;code&gt;clazz&lt;/code&gt;. If that fails, then all the interfaces
+     implemented by the parent of &lt;code&gt;clazz&lt;/code&gt; are searched and
+     so on.
+
+     &lt;p&gt;For example, if A0, A1, A2 are classes and X0, X1, X2, Y0, Y1
+     are interfaces where A2 extends A1 which in turn extends A0 and
+     similarly X2 extends X1 which extends X0 and Y1 extends Y0. Let
+     us also assume that A1 implements the Y0 interface and that A2
+     implements the X2 interface.
+
+     &lt;p&gt;The table below shows the results returned by the
+     &lt;code&gt;get(A2.class)&lt;/code&gt; method depending on the renderers
+     added to the map.
+
+     &lt;p&gt;&lt;table border=&quot;1&quot;&gt;
+     &lt;tr&gt;&lt;th&gt;Added renderers&lt;/th&gt;&lt;th&gt;Value returned by &lt;code&gt;get(A2.class)&lt;/code&gt;&lt;/th&gt;
+
+     &lt;tr&gt;&lt;td&gt;&lt;code&gt;A0Renderer&lt;/code&gt;
+         &lt;td align=&quot;center&quot;&gt;&lt;code&gt;A0Renderer&lt;/code&gt;
+
+     &lt;tr&gt;&lt;td&gt;&lt;code&gt;A0Renderer, A1Renderer&lt;/code&gt;
+         &lt;td align=&quot;center&quot;&gt;&lt;code&gt;A1Renderer&lt;/code&gt;
+
+     &lt;tr&gt;&lt;td&gt;&lt;code&gt;X0Renderer&lt;/code&gt;
+         &lt;td align=&quot;center&quot;&gt;&lt;code&gt;X0Renderer&lt;/code&gt;
+
+     &lt;tr&gt;&lt;td&gt;&lt;code&gt;A1Renderer, X0Renderer&lt;/code&gt;
+         &lt;td align=&quot;center&quot;&gt;&lt;code&gt;X0Renderer&lt;/code&gt;
+
+     &lt;/table&gt;
+
+     &lt;p&gt;This search algorithm is not the most natural, although it is
+     particularly easy to implement. Future log4j versions
+     &lt;em&gt;may&lt;/em&gt; implement a more intuitive search
+     algorithm. However, the present algorithm should be acceptable in
+     the vast majority of circumstances.
+
+ */
+  public
+  ObjectRenderer get(Class clazz) {
+    //System.out.println(&quot;\nget: &quot;+clazz);
+<span class="fc" id="L150">    ObjectRenderer r = null;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    for(Class c = clazz; c != null; c = c.getSuperclass()) {</span>
+      //System.out.println(&quot;Searching for class: &quot;+c);
+<span class="fc" id="L153">      r = (ObjectRenderer) map.get(c);</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">      if(r != null) {</span>
+<span class="fc" id="L155">	return r;</span>
+      }
+<span class="fc" id="L157">      r = searchInterfaces(c);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">      if(r != null) {</span>
+<span class="fc" id="L159">        return r;</span>
+    }
+    }
+<span class="fc" id="L162">    return defaultRenderer;</span>
+  }
+
+  ObjectRenderer searchInterfaces(Class c) {
+    //System.out.println(&quot;Searching interfaces of class: &quot;+c);
+
+<span class="fc" id="L168">    ObjectRenderer r = (ObjectRenderer) map.get(c);</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">    if(r != null) {</span>
+<span class="fc" id="L170">      return r;</span>
+    } else {
+<span class="fc" id="L172">      Class[] ia = c.getInterfaces();</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">      for(int i = 0; i &lt; ia.length; i++) {</span>
+<span class="fc" id="L174">	r = searchInterfaces(ia[i]);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">	if(r != null) {</span>
+<span class="fc" id="L176">        return r;</span>
+    }
+      }
+    }
+<span class="fc" id="L180">    return null;</span>
+  }
+
+
+  public
+  ObjectRenderer getDefaultRenderer() {
+<span class="fc" id="L186">    return defaultRenderer;</span>
+  }
+
+
+  public
+  void clear() {
+<span class="fc" id="L192">    map.clear();</span>
+<span class="fc" id="L193">  }</span>
+
+  /**
+     Register an {@link ObjectRenderer} for &lt;code&gt;clazz&lt;/code&gt;.
+  */
+  public
+  void put(Class clazz, ObjectRenderer or) {
+<span class="fc" id="L200">    map.put(clazz, or);</span>
+<span class="fc" id="L201">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

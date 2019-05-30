@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExternallyRolledFileAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.varia</a> &gt; <span class="el_source">ExternallyRolledFileAppender.java</span></div><h1>ExternallyRolledFileAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.varia;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import org.apache.log4j.RollingFileAppender;
+import org.apache.log4j.helpers.LogLog;
+
+/**
+   This appender listens on a socket on the port specified by the
+   &lt;b&gt;Port&lt;/b&gt; property for a &quot;RollOver&quot; message. When such a message
+   is received, the underlying log file is rolled over and an
+   acknowledgment message is sent back to the process initiating the
+   roll over.
+
+   &lt;p&gt;This method of triggering roll over has the advantage of being
+   operating system independent, fast and reliable.
+
+   &lt;p&gt;A simple application {@link Roller} is provided to initiate the
+   roll over.
+
+   &lt;p&gt;Note that the initiator is not authenticated. Anyone can trigger
+   a rollover. In production environments, it is recommended that you
+   add some form of protection to prevent undesired rollovers.
+
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since version 0.9.0 */
+public class ExternallyRolledFileAppender extends RollingFileAppender {
+
+  /**
+     The string constant sent to initiate a roll over.   Current value of
+     this string constant is &lt;b&gt;RollOver&lt;/b&gt;.
+  */
+  static final public String ROLL_OVER = &quot;RollOver&quot;;
+
+  /**
+     The string constant sent to acknowledge a roll over.   Current value of
+      this string constant is &lt;b&gt;OK&lt;/b&gt;.
+  */
+  static final public String OK = &quot;OK&quot;;
+
+<span class="fc" id="L64">  int port = 0;</span>
+  HUP hup;
+
+  /**
+     The default constructor does nothing but calls its super-class
+     constructor.  */
+  public
+<span class="fc" id="L71">  ExternallyRolledFileAppender() {</span>
+<span class="fc" id="L72">  }</span>
+
+  /**
+     The &lt;b&gt;Port&lt;/b&gt; [roperty is used for setting the port for
+     listening to external roll over messages.
+  */
+  public
+  void setPort(int port) {
+<span class="fc" id="L80">    this.port = port;</span>
+<span class="fc" id="L81">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;Port&lt;/b&gt; option.
+   */
+  public
+  int getPort() {
+<span class="fc" id="L88">    return port;</span>
+  }
+
+  /**
+     Start listening on the port specified by a preceding call to
+     {@link #setPort}.  */
+  public
+  void activateOptions() {
+<span class="fc" id="L96">    super.activateOptions();</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if(port != 0) {</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">      if(hup != null) {</span>
+<span class="nc" id="L99">	hup.interrupt();</span>
+      }
+<span class="fc" id="L101">      hup = new HUP(this, port);</span>
+<span class="fc" id="L102">      hup.setDaemon(true);</span>
+<span class="fc" id="L103">      hup.start();</span>
+    }
+<span class="fc" id="L105">  }</span>
+}
+
+
+class HUP extends Thread {
+
+  int port;
+  ExternallyRolledFileAppender er;
+
+<span class="fc" id="L114">  HUP(ExternallyRolledFileAppender er, int port) {</span>
+<span class="fc" id="L115">    this.er = er;</span>
+<span class="fc" id="L116">    this.port = port;</span>
+<span class="fc" id="L117">  }</span>
+
+  public
+  void run() {
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">    while(!isInterrupted()) {</span>
+      try {
+<span class="fc" id="L123">	ServerSocket serverSocket = new ServerSocket(port);</span>
+	while(true) {
+<span class="fc" id="L125">	  Socket socket = serverSocket.accept();</span>
+<span class="fc" id="L126">	  LogLog.debug(&quot;Connected to client at &quot; + socket.getInetAddress());</span>
+<span class="fc" id="L127">	  new Thread(new HUPNode(socket, er), &quot;ExternallyRolledFileAppender-HUP&quot;).start();</span>
+<span class="fc" id="L128">	}</span>
+<span class="nc" id="L129">      } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L130">        Thread.currentThread().interrupt();</span>
+<span class="nc" id="L131">	    e.printStackTrace();</span>
+<span class="nc" id="L132">      } catch(IOException e) {</span>
+<span class="nc" id="L133">	    e.printStackTrace();</span>
+<span class="nc" id="L134">      } catch(RuntimeException e) {</span>
+<span class="nc" id="L135">	    e.printStackTrace();</span>
+<span class="nc" id="L136">      }</span>
+    }
+<span class="nc" id="L138">  }</span>
+}
+
+class HUPNode implements Runnable {
+
+  Socket socket;
+  DataInputStream dis;
+  DataOutputStream dos;
+  ExternallyRolledFileAppender er;
+
+  public
+<span class="fc" id="L149">  HUPNode(Socket socket, ExternallyRolledFileAppender er) {</span>
+<span class="fc" id="L150">    this.socket = socket;</span>
+<span class="fc" id="L151">    this.er = er;</span>
+    try {
+<span class="fc" id="L153">      dis = new DataInputStream(socket.getInputStream());</span>
+<span class="fc" id="L154">      dos = new DataOutputStream(socket.getOutputStream());</span>
+<span class="nc" id="L155">    } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L156">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L157">      e.printStackTrace();</span>
+<span class="nc" id="L158">    } catch(IOException e) {</span>
+<span class="nc" id="L159">      e.printStackTrace();</span>
+<span class="nc" id="L160">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L161">      e.printStackTrace();</span>
+<span class="pc" id="L162">    }</span>
+<span class="fc" id="L163">  }</span>
+
+  public void run() {
+    try {
+<span class="fc" id="L167">      String line = dis.readUTF();</span>
+<span class="fc" id="L168">      LogLog.debug(&quot;Got external roll over signal.&quot;);</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">      if(ExternallyRolledFileAppender.ROLL_OVER.equals(line)) {</span>
+<span class="fc" id="L170">	synchronized(er) {</span>
+<span class="fc" id="L171">	  er.rollOver();</span>
+<span class="fc" id="L172">	}</span>
+<span class="fc" id="L173">	dos.writeUTF(ExternallyRolledFileAppender.OK);</span>
+      }
+      else {
+<span class="fc" id="L176">	dos.writeUTF(&quot;Expecting [RollOver] string.&quot;);</span>
+      }
+<span class="fc" id="L178">      dos.close();</span>
+<span class="nc" id="L179">    } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L180">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L181">      LogLog.error(&quot;Unexpected exception. Exiting HUPNode.&quot;, e);</span>
+<span class="nc" id="L182">    } catch(IOException e) {</span>
+<span class="nc" id="L183">      LogLog.error(&quot;Unexpected exception. Exiting HUPNode.&quot;, e);</span>
+<span class="nc" id="L184">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L185">      LogLog.error(&quot;Unexpected exception. Exiting HUPNode.&quot;, e);</span>
+<span class="pc" id="L186">    }</span>
+<span class="fc" id="L187">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

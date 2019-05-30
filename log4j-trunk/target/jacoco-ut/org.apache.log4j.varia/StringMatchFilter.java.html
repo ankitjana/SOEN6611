@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringMatchFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.varia</a> &gt; <span class="el_source">StringMatchFilter.java</span></div><h1>StringMatchFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.varia;
+
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.helpers.OptionConverter;
+
+/**
+ * This is a very simple filter based on string matching.
+ *
+ * &lt;p&gt;The filter admits two options &lt;b&gt;StringToMatch&lt;/b&gt; and
+ * &lt;b&gt;AcceptOnMatch&lt;/b&gt;. If there is a match between the value of the
+ * StringToMatch option and the message of the {@link org.apache.log4j.spi.LoggingEvent},
+ * then the {@link #decide(LoggingEvent)} method returns {@link org.apache.log4j.spi.Filter#ACCEPT} if
+ * the &lt;b&gt;AcceptOnMatch&lt;/b&gt; option value is true, if it is false then
+ * {@link org.apache.log4j.spi.Filter#DENY} is returned. If there is no match, {@link
+ * org.apache.log4j.spi.Filter#NEUTRAL} is returned.
+ *
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ * @since 0.9.0 
+ */
+<span class="nc" id="L38">public class StringMatchFilter extends Filter {</span>
+  
+  /**
+     @deprecated Options are now handled using the JavaBeans paradigm.
+     This constant is not longer needed and will be removed in the
+     &lt;em&gt;near&lt;/em&gt; term.
+   */
+  public static final String STRING_TO_MATCH_OPTION = &quot;StringToMatch&quot;;
+
+  /**
+     @deprecated Options are now handled using the JavaBeans paradigm.
+     This constant is not longer needed and will be removed in the
+     &lt;em&gt;near&lt;/em&gt; term.
+   */
+  public static final String ACCEPT_ON_MATCH_OPTION = &quot;AcceptOnMatch&quot;;
+  
+<span class="nc" id="L54">  boolean acceptOnMatch = true;</span>
+  String stringToMatch;
+  
+  /**
+     @deprecated We now use JavaBeans introspection to configure
+     components. Options strings are no longer needed.
+  */
+  public
+  String[] getOptionStrings() {
+<span class="nc" id="L63">    return new String[] {STRING_TO_MATCH_OPTION, ACCEPT_ON_MATCH_OPTION};</span>
+  }
+
+  /**
+     @deprecated Use the setter method for the option directly instead
+     of the generic &lt;code&gt;setOption&lt;/code&gt; method. 
+  */
+  public
+  void setOption(String key, String value) { 
+    
+<span class="nc bnc" id="L73" title="All 2 branches missed.">    if(key.equalsIgnoreCase(STRING_TO_MATCH_OPTION)) {</span>
+<span class="nc" id="L74">      stringToMatch = value;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">    } else if (key.equalsIgnoreCase(ACCEPT_ON_MATCH_OPTION)) {</span>
+<span class="nc" id="L76">      acceptOnMatch = OptionConverter.toBoolean(value, acceptOnMatch);</span>
+    }
+<span class="nc" id="L78">  }</span>
+  
+  public
+  void setStringToMatch(String s) {
+<span class="nc" id="L82">    stringToMatch = s;</span>
+<span class="nc" id="L83">  }</span>
+  
+  public
+  String getStringToMatch() {
+<span class="nc" id="L87">    return stringToMatch;</span>
+  }
+  
+  public
+  void setAcceptOnMatch(boolean acceptOnMatch) {
+<span class="nc" id="L92">    this.acceptOnMatch = acceptOnMatch;</span>
+<span class="nc" id="L93">  }</span>
+  
+  public
+  boolean getAcceptOnMatch() {
+<span class="nc" id="L97">    return acceptOnMatch;</span>
+  }
+
+  /**
+     Returns {@link Filter#NEUTRAL} is there is no string match.
+   */
+  public
+  int decide(LoggingEvent event) {
+<span class="nc" id="L105">    String msg = event.getRenderedMessage();</span>
+
+<span class="nc bnc" id="L107" title="All 4 branches missed.">    if(msg == null ||  stringToMatch == null) {</span>
+<span class="nc" id="L108">        return Filter.NEUTRAL;</span>
+    }
+    
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">    if( msg.indexOf(stringToMatch) == -1 ) {</span>
+<span class="nc" id="L113">      return Filter.NEUTRAL;</span>
+    } else { // we've got a match
+<span class="nc bnc" id="L115" title="All 2 branches missed.">      if(acceptOnMatch) {</span>
+<span class="nc" id="L116">	return Filter.ACCEPT;</span>
+      } else {
+<span class="nc" id="L118">	return Filter.DENY;</span>
+      }
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

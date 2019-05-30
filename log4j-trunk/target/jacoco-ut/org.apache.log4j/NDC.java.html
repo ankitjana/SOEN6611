@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NDC.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">NDC.java</span></div><h1>NDC.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+//      Contributors:      Dan Milstein 
+//                         Ray Millard
+
+package org.apache.log4j;
+
+import java.util.Hashtable;
+import java.util.Stack;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import org.apache.log4j.helpers.LogLog;
+
+/**
+   The NDC class implements &lt;i&gt;nested diagnostic contexts&lt;/i&gt; as
+   defined by Neil Harrison in the article &quot;Patterns for Logging
+   Diagnostic Messages&quot; part of the book &quot;&lt;i&gt;Pattern Languages of
+   Program Design 3&lt;/i&gt;&quot; edited by Martin et al.
+
+   &lt;p&gt;A Nested Diagnostic Context, or NDC in short, is an instrument
+   to distinguish interleaved log output from different sources. Log
+   output is typically interleaved when a server handles multiple
+   clients near-simultaneously.
+
+   &lt;p&gt;Interleaved log output can still be meaningful if each log entry
+   from different contexts had a distinctive stamp. This is where NDCs
+   come into play.
+
+   &lt;p&gt;&lt;em&gt;&lt;b&gt;Note that NDCs are managed on a per thread
+   basis&lt;/b&gt;&lt;/em&gt;. NDC operations such as {@link #push push}, {@link
+   #pop}, {@link #clear}, {@link #getDepth} and {@link #setMaxDepth}
+   affect the NDC of the &lt;em&gt;current&lt;/em&gt; thread only. NDCs of other
+   threads remain unaffected.
+
+   &lt;p&gt;For example, a servlet can build a per client request NDC
+   consisting the clients host name and other information contained in
+   the the request. &lt;em&gt;Cookies&lt;/em&gt; are another source of distinctive
+   information. To build an NDC one uses the {@link #push push}
+   operation. Simply put,
+
+   &lt;p&gt;&lt;ul&gt;
+     &lt;li&gt;Contexts can be nested.
+
+     &lt;p&gt;&lt;li&gt;When entering a context, call &lt;code&gt;NDC.push&lt;/code&gt;. As a
+     side effect, if there is no nested diagnostic context for the
+     current thread, this method will create it.
+
+     &lt;p&gt;&lt;li&gt;When leaving a context, call &lt;code&gt;NDC.pop&lt;/code&gt;.
+
+     &lt;p&gt;&lt;li&gt;&lt;b&gt;When exiting a thread make sure to call {@link #remove
+     NDC.remove()}&lt;/b&gt;.  
+   &lt;/ul&gt;
+   
+   &lt;p&gt;There is no penalty for forgetting to match each
+   &lt;code&gt;push&lt;/code&gt; operation with a corresponding &lt;code&gt;pop&lt;/code&gt;,
+   except the obvious mismatch between the real application context
+   and the context set in the NDC.
+
+   &lt;p&gt;If configured to do so, {@link PatternLayout} and {@link
+   TTCCLayout} instances automatically retrieve the nested diagnostic
+   context for the current thread without any user intervention.
+   Hence, even if a servlet is serving multiple clients
+   simultaneously, the logs emanating from the same code (belonging to
+   the same category) can still be distinguished because each client
+   request will have a different NDC tag.
+
+   &lt;p&gt;Heavy duty systems should call the {@link #remove} method when
+   leaving the run method of a thread. This ensures that the memory
+   used by the thread can be freed by the Java garbage
+   collector. There is a mechanism to lazily remove references to dead
+   threads. In practice, this means that you can be a little sloppy
+   and sometimes forget to call {@link #remove} before exiting a
+   thread.
+   
+   &lt;p&gt;A thread may inherit the nested diagnostic context of another
+   (possibly parent) thread using the {@link #inherit inherit}
+   method. A thread may obtain a copy of its NDC with the {@link
+   #cloneStack cloneStack} method and pass the reference to any other
+   thread, in particular to a child.
+   
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since 0.7.0
+  
+*/
+ 
+public class NDC {
+
+  // The synchronized keyword is not used in this class. This may seem
+  // dangerous, especially since the class will be used by
+  // multiple-threads. In particular, all threads share the same
+  // hashtable (the &quot;ht&quot; variable). This is OK since java hashtables
+  // are thread safe. Same goes for Stacks.
+
+  // More importantly, when inheriting diagnostic contexts the child
+  // thread is handed a clone of the parent's NDC.  It follows that
+  // each thread has its own NDC (i.e. stack).
+
+<span class="fc" id="L114">  static Hashtable ht = new Hashtable();</span>
+
+<span class="fc" id="L116">  static int pushCounter = 0; // the number of times push has been called</span>
+                              // after the latest call to lazyRemove
+
+  // The number of times we allow push to be called before we call lazyRemove
+  // 5 is a relatively small number. As such, lazyRemove is not called too
+  // frequently. We thus avoid the cost of creating an Enumeration too often.
+  // The higher this number, the longer is the avarage period for which all
+  // logging calls in all threads are blocked.
+  static final int REAP_THRESHOLD = 5;
+  
+  // No instances allowed.
+  private NDC() {}
+  
+  /**
+   *   Get NDC stack for current thread.
+   *   @return NDC stack for current thread.
+   */
+  private static Stack getCurrentStack() {
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">      if (ht != null) {</span>
+<span class="fc" id="L135">          return (Stack) ht.get(Thread.currentThread());</span>
+      }
+<span class="nc" id="L137">      return null;</span>
+  }
+
+
+  /**
+     Clear any nested diagnostic information if any. This method is
+     useful in cases where the same thread can be potentially used
+     over and over in different unrelated contexts.
+
+     &lt;p&gt;This method is equivalent to calling the {@link #setMaxDepth}
+     method with a zero &lt;code&gt;maxDepth&lt;/code&gt; argument.
+     
+     @since 0.8.4c */
+  public
+  static
+  void clear() {
+<span class="fc" id="L153">    Stack stack = getCurrentStack();    </span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if(stack != null) {</span>
+<span class="fc" id="L155">        stack.setSize(0);</span>
+    }    
+<span class="fc" id="L157">  }</span>
+
+  
+  /**
+     Clone the diagnostic context for the current thread.
+
+     &lt;p&gt;Internally a diagnostic context is represented as a stack.  A
+     given thread can supply the stack (i.e. diagnostic context) to a
+     child thread so that the child can inherit the parent thread's
+     diagnostic context.
+
+     &lt;p&gt;The child thread uses the {@link #inherit inherit} method to
+     inherit the parent's diagnostic context.
+     
+     @return Stack A clone of the current thread's  diagnostic context.
+
+  */
+  public
+  static
+  Stack cloneStack() {
+<span class="nc" id="L177">    Stack stack = getCurrentStack();</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">    if(stack == null) {</span>
+<span class="nc" id="L179">        return null;</span>
+    } else {
+<span class="nc" id="L181">      return (Stack) stack.clone();</span>
+    }
+  }
+
+  
+  /**
+     Inherit the diagnostic context of another thread.
+
+     &lt;p&gt;The parent thread can obtain a reference to its diagnostic
+     context using the {@link #cloneStack} method.  It should
+     communicate this information to its child so that it may inherit
+     the parent's diagnostic context.
+
+     &lt;p&gt;The parent's diagnostic context is cloned before being
+     inherited. In other words, once inherited, the two diagnostic
+     contexts can be managed independently.
+     
+     &lt;p&gt;In java, a child thread cannot obtain a reference to its
+     parent, unless it is directly handed the reference. Consequently,
+     there is no client-transparent way of inheriting diagnostic
+     contexts. Do you know any solution to this problem?
+
+     @param stack The diagnostic context of the parent thread.
+
+  */
+  public
+  static
+  void inherit(Stack stack) {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">    if(stack != null) {</span>
+<span class="nc" id="L210">        ht.put(Thread.currentThread(), stack);</span>
+    }
+<span class="nc" id="L212">  }</span>
+
+
+  /**
+     &lt;font color=&quot;#FF4040&quot;&gt;&lt;b&gt;Never use this method directly, use the {@link
+     org.apache.log4j.spi.LoggingEvent#getNDC} method instead&lt;/b&gt;&lt;/font&gt;.
+  */
+  static
+  public
+  String get() {
+<span class="fc" id="L222">    Stack s = getCurrentStack();</span>
+<span class="fc bfc" id="L223" title="All 4 branches covered.">    if(s != null &amp;&amp; !s.isEmpty()) {</span>
+<span class="fc" id="L224">        return ((DiagnosticContext) s.peek()).fullMessage;</span>
+    } else {
+<span class="fc" id="L226">        return null;</span>
+    }
+  }
+  
+  /**
+   * Get the current nesting depth of this diagnostic context.
+   *
+   * @see #setMaxDepth
+   * @since 0.7.5
+   */
+  public
+  static
+  int getDepth() {
+<span class="nc" id="L239">    Stack stack = getCurrentStack();          </span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">    if(stack == null) {</span>
+<span class="nc" id="L241">        return 0;</span>
+    } else {
+<span class="nc" id="L243">        return stack.size();</span>
+    }      
+  }
+
+  private
+  static
+  void lazyRemove() {
+<span class="nc bnc" id="L250" title="All 2 branches missed.">    if (ht == null) {</span>
+<span class="nc" id="L251">        return;</span>
+    }
+     
+    // The synchronization on ht is necessary to prevent JDK 1.2.x from
+    // throwing ConcurrentModificationExceptions at us. This sucks BIG-TIME.
+    // One solution is to write our own hashtable implementation.
+    Vector v;
+    
+<span class="nc" id="L259">    synchronized(ht) {</span>
+      // Avoid calling clean-up too often.
+<span class="nc bnc" id="L261" title="All 2 branches missed.">      if(++pushCounter &lt;= REAP_THRESHOLD) {</span>
+<span class="nc" id="L262">	return; // We release the lock ASAP.</span>
+      } else {
+<span class="nc" id="L264">	pushCounter = 0; // OK let's do some work.</span>
+      }
+
+<span class="nc" id="L267">      int misses = 0;</span>
+<span class="nc" id="L268">      v = new Vector(); </span>
+<span class="nc" id="L269">      Enumeration enumeration = ht.keys();</span>
+      // We give up after 4 straigt missses. That is 4 consecutive
+      // inspected threads in 'ht' that turn out to be alive.
+      // The higher the proportion on dead threads in ht, the higher the
+      // chances of removal.
+<span class="nc bnc" id="L274" title="All 4 branches missed.">      while(enumeration.hasMoreElements() &amp;&amp; (misses &lt;= 4)) {</span>
+<span class="nc" id="L275">	Thread t = (Thread) enumeration.nextElement();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">	if(t.isAlive()) {</span>
+<span class="nc" id="L277">	  misses++;</span>
+	} else {
+<span class="nc" id="L279">	  misses = 0;</span>
+<span class="nc" id="L280">	  v.addElement(t);</span>
+	}
+<span class="nc" id="L282">      }</span>
+<span class="nc" id="L283">    } // synchronized</span>
+
+<span class="nc" id="L285">    int size = v.size();</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">    for(int i = 0; i &lt; size; i++) {</span>
+<span class="nc" id="L287">      Thread t = (Thread) v.elementAt(i);</span>
+<span class="nc" id="L288">      LogLog.debug(&quot;Lazy NDC removal for thread [&quot; + t.getName() + &quot;] (&quot;+ </span>
+<span class="nc" id="L289">		   ht.size() + &quot;).&quot;);</span>
+<span class="nc" id="L290">      ht.remove(t);</span>
+    }
+<span class="nc" id="L292">  }</span>
+
+  /**
+     Clients should call this method before leaving a diagnostic
+     context.
+
+     &lt;p&gt;The returned value is the value that was pushed last. If no
+     context is available, then the empty string &quot;&quot; is returned.
+     
+     @return String The innermost diagnostic context.
+     
+     */
+  public
+  static
+  String pop() {
+<span class="fc" id="L307">    Stack stack = getCurrentStack();</span>
+<span class="pc bpc" id="L308" title="2 of 4 branches missed.">    if(stack != null &amp;&amp; !stack.isEmpty()) {</span>
+<span class="fc" id="L309">        return ((DiagnosticContext) stack.pop()).message;</span>
+    } else {
+<span class="nc" id="L311">        return &quot;&quot;;</span>
+    }
+  }
+
+  /**
+     Looks at the last diagnostic context at the top of this NDC
+     without removing it.
+
+     &lt;p&gt;The returned value is the value that was pushed last. If no
+     context is available, then the empty string &quot;&quot; is returned.
+     
+     @return String The innermost diagnostic context.
+     
+     */
+  public
+  static
+  String peek() {
+<span class="nc" id="L328">    Stack stack = getCurrentStack();</span>
+<span class="nc bnc" id="L329" title="All 4 branches missed.">    if(stack != null &amp;&amp; !stack.isEmpty()) {</span>
+<span class="nc" id="L330">        return ((DiagnosticContext) stack.peek()).message;</span>
+    } else {
+<span class="nc" id="L332">        return &quot;&quot;;</span>
+    }
+  }
+  
+  /**
+     Push new diagnostic context information for the current thread.
+
+     &lt;p&gt;The contents of the &lt;code&gt;message&lt;/code&gt; parameter is
+     determined solely by the client.  
+     
+     @param message The new diagnostic context information.  */
+  public
+  static
+  void push(String message) {
+<span class="fc" id="L346">    Stack stack = getCurrentStack();</span>
+      
+<span class="fc bfc" id="L348" title="All 2 branches covered.">    if(stack == null) {</span>
+<span class="fc" id="L349">      DiagnosticContext dc = new DiagnosticContext(message, null);      </span>
+<span class="fc" id="L350">      stack = new Stack();</span>
+<span class="fc" id="L351">      Thread key = Thread.currentThread();</span>
+<span class="fc" id="L352">      ht.put(key, stack);</span>
+<span class="fc" id="L353">      stack.push(dc);</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">    } else if (stack.isEmpty()) {</span>
+<span class="nc" id="L355">      DiagnosticContext dc = new DiagnosticContext(message, null);            </span>
+<span class="nc" id="L356">      stack.push(dc);</span>
+<span class="nc" id="L357">    } else {</span>
+<span class="fc" id="L358">      DiagnosticContext parent = (DiagnosticContext) stack.peek();</span>
+<span class="fc" id="L359">      stack.push(new DiagnosticContext(message, parent));</span>
+    }    
+<span class="fc" id="L361">  }</span>
+
+  /**
+     Remove the diagnostic context for this thread.
+
+     &lt;p&gt;Each thread that created a diagnostic context by calling
+     {@link #push} should call this method before exiting. Otherwise,
+     the memory used by the &lt;b&gt;thread&lt;/b&gt; cannot be reclaimed by the
+     VM.
+
+     &lt;p&gt;As this is such an important problem in heavy duty systems and
+     because it is difficult to always guarantee that the remove
+     method is called before exiting a thread, this method has been
+     augmented to lazily remove references to dead threads. In
+     practice, this means that you can be a little sloppy and
+     occasionally forget to call {@link #remove} before exiting a
+     thread. However, you must call &lt;code&gt;remove&lt;/code&gt; sometime. If
+     you never call it, then your application is sure to run out of
+     memory.
+     
+  */
+  static
+  public
+  void remove() {
+<span class="nc bnc" id="L385" title="All 2 branches missed.">    if (ht != null) {</span>
+<span class="nc" id="L386">        ht.remove(Thread.currentThread());</span>
+    
+        // Lazily remove dead-thread references in ht.
+<span class="nc" id="L389">        lazyRemove();</span>
+    }
+<span class="nc" id="L391">  }</span>
+
+  /**
+     Set maximum depth of this diagnostic context. If the current
+     depth is smaller or equal to &lt;code&gt;maxDepth&lt;/code&gt;, then no
+     action is taken.
+
+     &lt;p&gt;This method is a convenient alternative to multiple {@link
+     #pop} calls. Moreover, it is often the case that at the end of
+     complex call sequences, the depth of the NDC is
+     unpredictable. The &lt;code&gt;setMaxDepth&lt;/code&gt; method circumvents
+     this problem.
+
+     &lt;p&gt;For example, the combination
+     &lt;pre&gt;
+       void foo() {
+       &amp;nbsp;  int depth = NDC.getDepth();
+
+       &amp;nbsp;  ... complex sequence of calls
+
+       &amp;nbsp;  NDC.setMaxDepth(depth);
+       }
+     &lt;/pre&gt;
+
+     ensures that between the entry and exit of foo the depth of the
+     diagnostic stack is conserved.
+     
+     @see #getDepth
+     @since 0.7.5 */
+  static
+  public
+  void setMaxDepth(int maxDepth) {
+<span class="nc" id="L423">    Stack stack = getCurrentStack();    </span>
+<span class="nc bnc" id="L424" title="All 4 branches missed.">    if(stack != null &amp;&amp; maxDepth &lt; stack.size()) {</span>
+<span class="nc" id="L425">        stack.setSize(maxDepth);</span>
+    }
+<span class="nc" id="L427">  }</span>
+  
+  // =====================================================================
+   private static class DiagnosticContext {
+
+    String fullMessage;
+    String message;
+    
+<span class="fc" id="L435">    DiagnosticContext(String message, DiagnosticContext parent) {</span>
+<span class="fc" id="L436">      this.message = message;</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">      if(parent != null) {</span>
+<span class="fc" id="L438">	fullMessage = parent.fullMessage + ' ' + message;</span>
+      } else {
+<span class="fc" id="L440">	fullMessage = message;</span>
+      }
+<span class="fc" id="L442">    }</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

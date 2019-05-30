@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocketHubAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SocketHubAppender.java</span></div><h1>SocketHubAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Vector;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.helpers.CyclicBuffer;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+  Sends {@link LoggingEvent} objects to a set of remote log servers,
+  usually a {@link SocketNode SocketNodes}.
+    
+  &lt;p&gt;Acts just like {@link SocketAppender} except that instead of
+  connecting to a given remote log server,
+  &lt;code&gt;SocketHubAppender&lt;/code&gt; accepts connections from the remote
+  log servers as clients.  It can accept more than one connection.
+  When a log event is received, the event is sent to the set of
+  currently connected remote log servers. Implemented this way it does
+  not require any update to the configuration file to send data to
+  another remote log server. The remote log server simply connects to
+  the host and port the &lt;code&gt;SocketHubAppender&lt;/code&gt; is running on.
+  
+  &lt;p&gt;The &lt;code&gt;SocketHubAppender&lt;/code&gt; does not store events such
+  that the remote side will events that arrived after the
+  establishment of its connection. Once connected, events arrive in
+  order as guaranteed by the TCP protocol.
+
+  &lt;p&gt;This implementation borrows heavily from the {@link
+  SocketAppender}.
+
+  &lt;p&gt;The SocketHubAppender has the following characteristics:
+  
+  &lt;ul&gt;
+  
+  &lt;p&gt;&lt;li&gt;If sent to a {@link SocketNode}, logging is non-intrusive as
+  far as the log event is concerned. In other words, the event will be
+  logged with the same time stamp, {@link org.apache.log4j.NDC},
+  location info as if it were logged locally.
+  
+  &lt;p&gt;&lt;li&gt;&lt;code&gt;SocketHubAppender&lt;/code&gt; does not use a layout. It
+  ships a serialized {@link LoggingEvent} object to the remote side.
+  
+  &lt;p&gt;&lt;li&gt;&lt;code&gt;SocketHubAppender&lt;/code&gt; relies on the TCP
+  protocol. Consequently, if the remote side is reachable, then log
+  events will eventually arrive at remote client.
+  
+  &lt;p&gt;&lt;li&gt;If no remote clients are attached, the logging requests are
+  simply dropped.
+  
+  &lt;p&gt;&lt;li&gt;Logging events are automatically &lt;em&gt;buffered&lt;/em&gt; by the
+  native TCP implementation. This means that if the link to remote
+  client is slow but still faster than the rate of (log) event
+  production, the application will not be affected by the slow network
+  connection. However, if the network connection is slower then the
+  rate of event production, then the local application can only
+  progress at the network rate. In particular, if the network link to
+  the the remote client is down, the application will be blocked.
+  
+  &lt;p&gt;On the other hand, if the network link is up, but the remote
+  client is down, the client will not be blocked when making log
+  requests but the log events will be lost due to client
+  unavailability. 
+
+  &lt;p&gt;The single remote client case extends to multiple clients
+  connections. The rate of logging will be determined by the slowest
+  link.
+    
+  &lt;p&gt;&lt;li&gt;If the JVM hosting the &lt;code&gt;SocketHubAppender&lt;/code&gt; exits
+  before the &lt;code&gt;SocketHubAppender&lt;/code&gt; is closed either
+  explicitly or subsequent to garbage collection, then there might
+  be untransmitted data in the pipe which might be lost. This is a
+  common problem on Windows based systems.
+  
+  &lt;p&gt;To avoid lost data, it is usually sufficient to {@link #close}
+  the &lt;code&gt;SocketHubAppender&lt;/code&gt; either explicitly or by calling
+  the {@link org.apache.log4j.LogManager#shutdown} method before
+  exiting the application.
+  
+  &lt;/ul&gt;
+     
+  @author Mark Womack */
+
+public class SocketHubAppender extends AppenderSkeleton {
+
+  /**
+     The default port number of the ServerSocket will be created on. */
+  static final int DEFAULT_PORT = 4560;
+  
+<span class="nc" id="L114">  private int port = DEFAULT_PORT;</span>
+<span class="nc" id="L115">  private Vector oosList = new Vector();</span>
+<span class="nc" id="L116">  private ServerMonitor serverMonitor = null;</span>
+<span class="nc" id="L117">  private boolean locationInfo = false;</span>
+<span class="nc" id="L118">  private CyclicBuffer buffer = null;</span>
+  private String application;
+  private boolean advertiseViaMulticastDNS;
+  private ZeroConfSupport zeroConf;
+
+  /**
+   * The MulticastDNS zone advertised by a SocketHubAppender
+   */
+  public static final String ZONE = &quot;_log4j_obj_tcpaccept_appender.local.&quot;;
+  private ServerSocket serverSocket;
+
+
+<span class="nc" id="L130">    public SocketHubAppender() { }</span>
+
+  /**
+     Connects to remote server at &lt;code&gt;address&lt;/code&gt; and &lt;code&gt;port&lt;/code&gt;. */
+  public
+<span class="nc" id="L135">  SocketHubAppender(int _port) {</span>
+<span class="nc" id="L136">    port = _port;</span>
+<span class="nc" id="L137">    startServer();</span>
+<span class="nc" id="L138">  }</span>
+
+  /**
+     Set up the socket server on the specified port.  */
+  public
+  void activateOptions() {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">    if (advertiseViaMulticastDNS) {</span>
+<span class="nc" id="L145">      zeroConf = new ZeroConfSupport(ZONE, port, getName());</span>
+<span class="nc" id="L146">      zeroConf.advertise();</span>
+    }
+<span class="nc" id="L148">    startServer();</span>
+<span class="nc" id="L149">  }</span>
+
+  /**
+     Close this appender. 
+     &lt;p&gt;This will mark the appender as closed and
+     call then {@link #cleanUp} method. */
+  synchronized
+  public
+  void close() {
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    if(closed) {</span>
+<span class="nc" id="L159">        return;</span>
+    }
+
+<span class="nc" id="L162">	LogLog.debug(&quot;closing SocketHubAppender &quot; + getName());</span>
+<span class="nc" id="L163">    this.closed = true;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">    if (advertiseViaMulticastDNS) {</span>
+<span class="nc" id="L165">      zeroConf.unadvertise();</span>
+    }
+<span class="nc" id="L167">    cleanUp();</span>
+
+<span class="nc" id="L169">	LogLog.debug(&quot;SocketHubAppender &quot; + getName() + &quot; closed&quot;);</span>
+<span class="nc" id="L170">  }</span>
+
+  /**
+     Release the underlying ServerMonitor thread, and drop the connections
+     to all connected remote servers. */
+  public 
+  void cleanUp() {
+    // stop the monitor thread
+<span class="nc" id="L178">	LogLog.debug(&quot;stopping ServerSocket&quot;);</span>
+<span class="nc" id="L179">    serverMonitor.stopMonitor();</span>
+<span class="nc" id="L180">    serverMonitor = null;</span>
+
+    // close all of the connections
+<span class="nc" id="L183">	LogLog.debug(&quot;closing client connections&quot;);</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">    while (oosList.size() != 0) {</span>
+<span class="nc" id="L185">      ObjectOutputStream oos = (ObjectOutputStream)oosList.elementAt(0);</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">      if(oos != null) {</span>
+        try {
+<span class="nc" id="L188">        	oos.close();</span>
+<span class="nc" id="L189">        } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L190">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L191">            LogLog.error(&quot;could not close oos.&quot;, e);</span>
+<span class="nc" id="L192">        } catch(IOException e) {</span>
+<span class="nc" id="L193">            LogLog.error(&quot;could not close oos.&quot;, e);</span>
+<span class="nc" id="L194">        }</span>
+        
+<span class="nc" id="L196">        oosList.removeElementAt(0);     </span>
+      }
+<span class="nc" id="L198">    }</span>
+<span class="nc" id="L199">  }</span>
+
+  /**
+    Append an event to all of current connections. */
+  public
+  void append(LoggingEvent event) {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">    if (event != null) {</span>
+      // set up location info if requested
+<span class="nc bnc" id="L207" title="All 2 branches missed.">      if (locationInfo) {</span>
+<span class="nc" id="L208">        event.getLocationInformation();</span>
+      }
+<span class="nc bnc" id="L210" title="All 2 branches missed.">      if (application != null) {</span>
+<span class="nc" id="L211">          event.setProperty(&quot;application&quot;, application);</span>
+        } 
+<span class="nc" id="L213">        event.getNDC();</span>
+<span class="nc" id="L214">        event.getThreadName();</span>
+<span class="nc" id="L215">        event.getMDCCopy();</span>
+<span class="nc" id="L216">        event.getRenderedMessage();</span>
+<span class="nc" id="L217">        event.getThrowableStrRep();</span>
+        
+<span class="nc bnc" id="L219" title="All 2 branches missed.">      if (buffer != null) {</span>
+<span class="nc" id="L220">        buffer.add(event);</span>
+      }
+    }
+
+    // if no event or no open connections, exit now
+<span class="nc bnc" id="L225" title="All 4 branches missed.">    if ((event == null) || (oosList.size() == 0)) {</span>
+<span class="nc" id="L226">      return;</span>
+    }
+
+	// loop through the current set of open connections, appending the event to each
+<span class="nc bnc" id="L230" title="All 2 branches missed.">    for (int streamCount = 0; streamCount &lt; oosList.size(); streamCount++) {    	</span>
+
+<span class="nc" id="L232">      ObjectOutputStream oos = null;</span>
+      try {
+<span class="nc" id="L234">        oos = (ObjectOutputStream)oosList.elementAt(streamCount);</span>
+      }
+<span class="nc" id="L236">      catch (ArrayIndexOutOfBoundsException e) {</span>
+        // catch this, but just don't assign a value
+        // this should not really occur as this method is
+        // the only one that can remove oos's (besides cleanUp).
+<span class="nc" id="L240">      }</span>
+      
+      // list size changed unexpectedly? Just exit the append.
+<span class="nc bnc" id="L243" title="All 2 branches missed.">      if (oos == null) {</span>
+<span class="nc" id="L244">        break;</span>
+    }
+        
+      try {
+<span class="nc" id="L248">      	oos.writeObject(event);</span>
+<span class="nc" id="L249">      	oos.flush();</span>
+    	// Failing to reset the object output stream every now and
+    	// then creates a serious memory leak.
+    	// right now we always reset. TODO - set up frequency counter per oos?
+<span class="nc" id="L253">    	oos.reset();</span>
+      }
+<span class="nc" id="L255">      catch(IOException e) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L257">            Thread.currentThread().interrupt();</span>
+        }
+          // there was an io exception so just drop the connection
+<span class="nc" id="L260">      	oosList.removeElementAt(streamCount);</span>
+<span class="nc" id="L261">      	LogLog.debug(&quot;dropped connection&quot;);</span>
+      	
+      	// decrement to keep the counter in place (for loop always increments)
+<span class="nc" id="L264">      	streamCount--;</span>
+<span class="nc" id="L265">      }</span>
+    }
+<span class="nc" id="L267">  }</span>
+  
+  /**
+     The SocketHubAppender does not use a layout. Hence, this method returns
+     &lt;code&gt;false&lt;/code&gt;. */
+  public
+  boolean requiresLayout() {
+<span class="nc" id="L274">    return false;</span>
+  }
+  
+  /**
+     The &lt;b&gt;Port&lt;/b&gt; option takes a positive integer representing
+     the port where the server is waiting for connections. */
+  public
+  void setPort(int _port) {
+<span class="nc" id="L282">    port = _port;</span>
+<span class="nc" id="L283">	}</span>
+
+  /**
+   * The &lt;b&gt;App&lt;/b&gt; option takes a string value which should be the name of the application getting logged. If property was already set (via system
+   * property), don't set here.
+   */
+  public 
+  void setApplication(String lapp) {
+<span class="nc" id="L291">    this.application = lapp;</span>
+<span class="nc" id="L292">  }</span>
+
+  /**
+   * Returns value of the &lt;b&gt;Application&lt;/b&gt; option.
+   */
+  public 
+  String getApplication() {
+<span class="nc" id="L299">    return application;</span>
+  }
+  
+  /**
+     Returns value of the &lt;b&gt;Port&lt;/b&gt; option. */
+  public
+  int getPort() {
+<span class="nc" id="L306">    return port;</span>
+  }
+
+  /**
+   * The &lt;b&gt;BufferSize&lt;/b&gt; option takes a positive integer representing the number of events this appender will buffer and send to newly connected
+   * clients.
+   */
+  public 
+  void setBufferSize(int _bufferSize) {
+<span class="nc" id="L315">    buffer = new CyclicBuffer(_bufferSize);</span>
+<span class="nc" id="L316">  }</span>
+
+  /**
+   * Returns value of the &lt;b&gt;bufferSize&lt;/b&gt; option.
+   */
+  public 
+  int getBufferSize() {
+<span class="nc bnc" id="L323" title="All 2 branches missed.">    if (buffer == null) {</span>
+<span class="nc" id="L324">      return 0;</span>
+    } else {
+<span class="nc" id="L326">      return buffer.getMaxSize();</span>
+    }
+  }
+  
+  /**
+     The &lt;b&gt;LocationInfo&lt;/b&gt; option takes a boolean value. If true,
+     the information sent to the remote host will include location
+     information. By default no location information is sent to the server. */
+  public
+  void setLocationInfo(boolean _locationInfo) {
+<span class="nc" id="L336">    locationInfo = _locationInfo;</span>
+<span class="nc" id="L337">  }</span>
+  
+  /**
+     Returns value of the &lt;b&gt;LocationInfo&lt;/b&gt; option. */
+  public
+  boolean getLocationInfo() {
+<span class="nc" id="L343">    return locationInfo;</span>
+  }
+
+  public void setAdvertiseViaMulticastDNS(boolean advertiseViaMulticastDNS) {
+<span class="nc" id="L347">    this.advertiseViaMulticastDNS = advertiseViaMulticastDNS;</span>
+<span class="nc" id="L348">  }</span>
+
+  public boolean isAdvertiseViaMulticastDNS() {
+<span class="nc" id="L351">    return advertiseViaMulticastDNS;</span>
+  }
+
+  /**
+    Start the ServerMonitor thread. */
+  private
+  void startServer() {
+<span class="nc" id="L358">    serverMonitor = new ServerMonitor(port, oosList);</span>
+<span class="nc" id="L359">  }</span>
+  
+  /**
+   * Creates a server socket to accept connections.
+   * @param socketPort port on which the socket should listen, may be zero.
+   * @return new socket.
+   * @throws IOException IO error when opening the socket. 
+   */
+  protected ServerSocket createServerSocket(final int socketPort) throws IOException {
+<span class="nc" id="L368">      return new ServerSocket(socketPort);</span>
+  }
+
+  /**
+    This class is used internally to monitor a ServerSocket
+    and register new connections in a vector passed in the
+    constructor. */
+  private class ServerMonitor implements Runnable {
+    private int port;
+    private Vector oosList;
+    private boolean keepRunning;
+    private Thread monitorThread;
+    
+    /**
+      Create a thread and start the monitor. */
+    public
+<span class="nc" id="L384">    ServerMonitor(int _port, Vector _oosList) {</span>
+<span class="nc" id="L385">      port = _port;</span>
+<span class="nc" id="L386">      oosList = _oosList;</span>
+<span class="nc" id="L387">      keepRunning = true;</span>
+<span class="nc" id="L388">      monitorThread = new Thread(this);</span>
+<span class="nc" id="L389">      monitorThread.setDaemon(true);</span>
+<span class="nc" id="L390">      monitorThread.setName(&quot;SocketHubAppender-Monitor-&quot; + port);</span>
+<span class="nc" id="L391">      monitorThread.start();</span>
+<span class="nc" id="L392">    }</span>
+    
+    /**
+      Stops the monitor. This method will not return until
+      the thread has finished executing. */
+    public synchronized void stopMonitor() {
+<span class="nc bnc" id="L398" title="All 2 branches missed.">      if (keepRunning) {</span>
+<span class="nc" id="L399">    	LogLog.debug(&quot;server monitor thread shutting down&quot;);</span>
+<span class="nc" id="L400">        keepRunning = false;</span>
+        try {
+<span class="nc bnc" id="L402" title="All 2 branches missed.">            if (serverSocket != null) {</span>
+<span class="nc" id="L403">                serverSocket.close();</span>
+<span class="nc" id="L404">                serverSocket = null;</span>
+            }
+<span class="nc" id="L406">        } catch (IOException ioe) {}</span>
+
+        try {
+<span class="nc" id="L409">          monitorThread.join();</span>
+        }
+<span class="nc" id="L411">        catch (InterruptedException e) {</span>
+<span class="nc" id="L412">            Thread.currentThread().interrupt();</span>
+          // do nothing?
+<span class="nc" id="L414">        }</span>
+        
+        // release the thread
+<span class="nc" id="L417">        monitorThread = null;</span>
+<span class="nc" id="L418">    	LogLog.debug(&quot;server monitor thread shut down&quot;);</span>
+      }
+<span class="nc" id="L420">    }</span>
+    
+    private 
+    void sendCachedEvents(ObjectOutputStream stream) throws IOException {
+<span class="nc bnc" id="L424" title="All 2 branches missed.">      if (buffer != null) {</span>
+<span class="nc bnc" id="L425" title="All 2 branches missed.">        for (int i = 0; i &lt; buffer.length(); i++) {</span>
+<span class="nc" id="L426">          stream.writeObject(buffer.get(i));</span>
+        }
+<span class="nc" id="L428">        stream.flush();</span>
+<span class="nc" id="L429">        stream.reset();</span>
+      }
+<span class="nc" id="L431">    }</span>
+
+    /**
+      Method that runs, monitoring the ServerSocket and adding connections as
+      they connect to the socket. */
+    public
+    void run() {
+<span class="nc" id="L438">      serverSocket = null;</span>
+      try {
+<span class="nc" id="L440">        serverSocket = createServerSocket(port);</span>
+<span class="nc" id="L441">        serverSocket.setSoTimeout(1000);</span>
+      }
+<span class="nc" id="L443">      catch (Exception e) {</span>
+<span class="nc bnc" id="L444" title="All 4 branches missed.">        if (e instanceof InterruptedIOException || e instanceof InterruptedException) {</span>
+<span class="nc" id="L445">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L447">        LogLog.error(&quot;exception setting timeout, shutting down server socket.&quot;, e);</span>
+<span class="nc" id="L448">        keepRunning = false;</span>
+<span class="nc" id="L449">        return;</span>
+<span class="nc" id="L450">      }</span>
+
+      try {
+    	try {
+<span class="nc" id="L454">        	serverSocket.setSoTimeout(1000);</span>
+    	}
+<span class="nc" id="L456">    	catch (SocketException e) {</span>
+<span class="nc" id="L457">          LogLog.error(&quot;exception setting timeout, shutting down server socket.&quot;, e);</span>
+<span class="nc" id="L458">          return;</span>
+<span class="nc" id="L459">    	}</span>
+      
+<span class="nc bnc" id="L461" title="All 2 branches missed.">    	while (keepRunning) {</span>
+<span class="nc" id="L462">          Socket socket = null;</span>
+          try {
+<span class="nc" id="L464">            socket = serverSocket.accept();</span>
+          }
+<span class="nc" id="L466">          catch (InterruptedIOException e) {</span>
+            // timeout occurred, so just loop
+          }
+<span class="nc" id="L469">          catch (SocketException e) {</span>
+<span class="nc" id="L470">            LogLog.error(&quot;exception accepting socket, shutting down server socket.&quot;, e);</span>
+<span class="nc" id="L471">            keepRunning = false;</span>
+          }
+<span class="nc" id="L473">          catch (IOException e) {</span>
+<span class="nc" id="L474">            LogLog.error(&quot;exception accepting socket.&quot;, e);</span>
+<span class="nc" id="L475">          }</span>
+	        
+          // if there was a socket accepted
+<span class="nc bnc" id="L478" title="All 2 branches missed.">          if (socket != null) {</span>
+            try {
+<span class="nc" id="L480">              InetAddress remoteAddress = socket.getInetAddress();</span>
+<span class="nc" id="L481">              LogLog.debug(&quot;accepting connection from &quot; + remoteAddress.getHostName() </span>
+<span class="nc" id="L482">			   + &quot; (&quot; + remoteAddress.getHostAddress() + &quot;)&quot;);</span>
+	        	
+              // create an ObjectOutputStream
+<span class="nc" id="L485">              ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());</span>
+<span class="nc bnc" id="L486" title="All 4 branches missed.">              if (buffer != null &amp;&amp; buffer.length() &gt; 0) {</span>
+<span class="nc" id="L487">                sendCachedEvents(oos);</span>
+              }
+	            
+              // add it to the oosList.  OK since Vector is synchronized.
+<span class="nc" id="L491">              oosList.addElement(oos);</span>
+<span class="nc" id="L492">            } catch (IOException e) {</span>
+<span class="nc bnc" id="L493" title="All 2 branches missed.">              if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L494">                    Thread.currentThread().interrupt();</span>
+              }
+<span class="nc" id="L496">              LogLog.error(&quot;exception creating output stream on socket.&quot;, e);</span>
+<span class="nc" id="L497">            }</span>
+          }
+<span class="nc" id="L499">        }</span>
+      }
+      finally {
+    	// close the socket
+    	try {
+<span class="nc" id="L504">    		serverSocket.close();</span>
+<span class="nc" id="L505">    	} catch(InterruptedIOException e) {</span>
+<span class="nc" id="L506">            Thread.currentThread().interrupt();  </span>
+<span class="nc" id="L507">        } catch (IOException e) {</span>
+    		// do nothing with it?
+<span class="nc" id="L509">    	}</span>
+      }
+<span class="nc" id="L511">    }</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

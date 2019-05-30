@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MDCKeySetExtractor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">MDCKeySetExtractor.java</span></div><h1>MDCKeySetExtractor.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.pattern.LogEvent;
+
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+
+
+public final class MDCKeySetExtractor {
+    private final Method getKeySetMethod;
+<span class="nc" id="L32">    public static final MDCKeySetExtractor INSTANCE =</span>
+            new MDCKeySetExtractor();
+
+
+<span class="nc" id="L36">    private MDCKeySetExtractor() {</span>
+        //
+        //  log4j 1.2.15 and later will have method to get names
+        //     of all keys in MDC
+        //
+<span class="nc" id="L41">      Method getMethod = null;</span>
+
+        try {
+<span class="nc bnc" id="L44" title="All 2 branches missed.">           getMethod = LoggingEvent.class.getMethod(</span>
+                      &quot;getPropertyKeySet&quot;, null);
+<span class="nc" id="L46">        } catch(Exception ex) {</span>
+<span class="nc" id="L47">            getMethod = null;</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">      getKeySetMethod = getMethod;</span>
+
+<span class="nc" id="L51">    }</span>
+
+    public Set getPropertyKeySet(final LoggingEvent event) throws Exception {
+        //
+        //  MDC keys are not visible prior to log4j 1.2.15
+        //
+<span class="nc" id="L57">        Set keySet = null;</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (getKeySetMethod != null) {</span>
+<span class="nc" id="L59">              keySet = (Set) getKeySetMethod.invoke(event, null);</span>
+        } else {
+            //
+            //  for 1.2.14 and earlier could serialize and
+            //    extract MDC content
+<span class="nc" id="L64">              ByteArrayOutputStream outBytes = new ByteArrayOutputStream();</span>
+<span class="nc" id="L65">              ObjectOutputStream os = new ObjectOutputStream(outBytes);</span>
+<span class="nc" id="L66">              os.writeObject(event);</span>
+<span class="nc" id="L67">              os.close();</span>
+
+<span class="nc" id="L69">              byte[] raw = outBytes.toByteArray();</span>
+              //
+              //   bytes 6 and 7 should be the length of the original classname
+              //     should be the same as our substitute class name
+<span class="nc bnc" id="L73" title="All 2 branches missed.">              final String subClassName = LogEvent.class.getName();</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">              if (raw[6] == 0 || raw[7] == subClassName.length()) {</span>
+                  //
+                  //  manipulate stream to use our class name
+                  //
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                  for (int i = 0; i &lt; subClassName.length(); i++) {</span>
+<span class="nc" id="L79">                      raw[8 + i] = (byte) subClassName.charAt(i);</span>
+                  }
+<span class="nc" id="L81">                  ByteArrayInputStream inBytes = new ByteArrayInputStream(raw);</span>
+<span class="nc" id="L82">                  ObjectInputStream is = new ObjectInputStream(inBytes);</span>
+<span class="nc" id="L83">                  Object cracked = is.readObject();</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                  if (cracked instanceof LogEvent) {</span>
+<span class="nc" id="L85">                      keySet = ((LogEvent) cracked).getPropertyKeySet();</span>
+                  }
+<span class="nc" id="L87">                  is.close();</span>
+              }
+        }
+<span class="nc" id="L90">        return keySet;        </span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

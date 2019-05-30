@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NTEventLogAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.nt</a> &gt; <span class="el_source">NTEventLogAppender.java</span></div><h1>NTEventLogAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.nt;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
+import org.apache.log4j.TTCCLayout;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+
+/**
+   Append to the NT event log system.
+
+   &lt;p&gt;&lt;b&gt;WARNING&lt;/b&gt; This appender can only be installed and used on a
+   Windows system.
+
+   &lt;p&gt;Do not forget to place NTEventLogAppender.dll,
+   NTEventLogAppender.amd64.dll, NTEventLogAppender.ia64.dll
+   or NTEventLogAppender.x86.dll as appropriate in a
+   directory that is on the PATH of the Windows system. Otherwise, you
+   will get a java.lang.UnsatisfiedLinkError.
+
+   @author &lt;a href=&quot;mailto:cstaylor@pacbell.net&quot;&gt;Chris Taylor&lt;/a&gt;
+   @author &lt;a href=&quot;mailto:jim_cakalic@na.biomerieux.com&quot;&gt;Jim Cakalic&lt;/a&gt; */
+public class NTEventLogAppender extends AppenderSkeleton {
+<span class="nc" id="L42">  private int _handle = 0;</span>
+
+<span class="nc" id="L44">  private String source = null;</span>
+<span class="nc" id="L45">  private String server = null;</span>
+
+
+  public NTEventLogAppender() {
+<span class="nc" id="L49">    this(null, null, null);</span>
+<span class="nc" id="L50">  }</span>
+
+  public NTEventLogAppender(String source) {
+<span class="nc" id="L53">    this(null, source, null);</span>
+<span class="nc" id="L54">  }</span>
+
+  public NTEventLogAppender(String server, String source) {
+<span class="nc" id="L57">    this(server, source, null);</span>
+<span class="nc" id="L58">  }</span>
+
+  public NTEventLogAppender(Layout layout) {
+<span class="nc" id="L61">    this(null, null, layout);</span>
+<span class="nc" id="L62">  }</span>
+
+  public NTEventLogAppender(String source, Layout layout) {
+<span class="nc" id="L65">    this(null, source, layout);</span>
+<span class="nc" id="L66">  }</span>
+
+<span class="nc" id="L68">  public NTEventLogAppender(String server, String source, Layout layout) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    if (source == null) {</span>
+<span class="nc" id="L70">      source = &quot;Log4j&quot;;</span>
+    }
+<span class="nc bnc" id="L72" title="All 2 branches missed.">    if (layout == null) {</span>
+<span class="nc" id="L73">      this.layout = new TTCCLayout();</span>
+    } else {
+<span class="nc" id="L75">      this.layout = layout;</span>
+    }
+
+    try {
+<span class="nc" id="L79">      _handle = registerEventSource(server, source);</span>
+<span class="nc" id="L80">    } catch (Exception e) {</span>
+<span class="nc" id="L81">      e.printStackTrace();</span>
+<span class="nc" id="L82">      _handle = 0;</span>
+<span class="nc" id="L83">    }</span>
+<span class="nc" id="L84">  }</span>
+
+  public
+  void close() {
+    // unregister ...
+<span class="nc" id="L89">  }</span>
+
+  public
+  void activateOptions() {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">    if (source != null) {</span>
+      try {
+<span class="nc" id="L95">   _handle = registerEventSource(server, source);</span>
+<span class="nc" id="L96">      } catch (Exception e) {</span>
+<span class="nc" id="L97">   LogLog.error(&quot;Could not register event source.&quot;, e);</span>
+<span class="nc" id="L98">   _handle = 0;</span>
+<span class="nc" id="L99">      }</span>
+    }
+<span class="nc" id="L101">  }</span>
+
+
+  public void append(LoggingEvent event) {
+
+<span class="nc" id="L106">    StringBuffer sbuf = new StringBuffer();</span>
+
+<span class="nc" id="L108">    sbuf.append(layout.format(event));</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    if(layout.ignoresThrowable()) {</span>
+<span class="nc" id="L110">      String[] s = event.getThrowableStrRep();</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">      if (s != null) {</span>
+<span class="nc" id="L112">   int len = s.length;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">   for(int i = 0; i &lt; len; i++) {</span>
+<span class="nc" id="L114">     sbuf.append(s[i]);</span>
+   }
+      }
+    }
+    // Normalize the log message level into the supported categories
+<span class="nc" id="L119">    int nt_category = event.getLevel().toInt();</span>
+
+    // Anything above FATAL or below DEBUG is labeled as INFO.
+    //if (nt_category &gt; FATAL || nt_category &lt; DEBUG) {
+    //  nt_category = INFO;
+    //}
+<span class="nc" id="L125">    reportEvent(_handle, sbuf.toString(), nt_category);</span>
+<span class="nc" id="L126">  }</span>
+
+
+  public
+  void finalize() {
+<span class="nc" id="L131">    deregisterEventSource(_handle);</span>
+<span class="nc" id="L132">    _handle = 0;</span>
+<span class="nc" id="L133">  }</span>
+
+  /**
+     The &lt;b&gt;Source&lt;/b&gt; option which names the source of the event. The
+     current value of this constant is &lt;b&gt;Source&lt;/b&gt;.
+   */
+  public
+  void setSource(String source) {
+<span class="nc" id="L141">    this.source = source.trim();</span>
+<span class="nc" id="L142">  }</span>
+
+  public
+  String getSource() {
+<span class="nc" id="L146">    return source;</span>
+  }
+
+/**
+     The &lt;code&gt;NTEventLogAppender&lt;/code&gt; requires a layout. Hence,
+     this method always returns &lt;code&gt;true&lt;/code&gt;. */
+  public
+  boolean requiresLayout() {
+<span class="nc" id="L154">    return true;</span>
+  }
+
+  native private int registerEventSource(String server, String source);
+  native private void reportEvent(int handle, String message, int level);
+  native private void deregisterEventSource(int handle);
+
+  static {
+    String[] archs;
+    try {
+<span class="nc" id="L164">        archs = new String[] { System.getProperty(&quot;os.arch&quot;)};</span>
+<span class="nc" id="L165">    } catch(SecurityException e) {</span>
+<span class="nc" id="L166">        archs = new String[] { &quot;amd64&quot;, &quot;ia64&quot;, &quot;x86&quot;};</span>
+<span class="nc" id="L167">    }</span>
+<span class="nc" id="L168">    boolean loaded = false;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">    for(int i = 0; i &lt; archs.length; i++) {</span>
+        try {
+<span class="nc" id="L171">            System.loadLibrary(&quot;NTEventLogAppender.&quot; + archs[i]);</span>
+<span class="nc" id="L172">            loaded = true;</span>
+<span class="nc" id="L173">            break;</span>
+<span class="nc" id="L174">        } catch(java.lang.UnsatisfiedLinkError e) {</span>
+<span class="nc" id="L175">            loaded = false;</span>
+        }
+    }
+<span class="nc bnc" id="L178" title="All 2 branches missed.">    if (!loaded) {</span>
+<span class="nc" id="L179">        System.loadLibrary(&quot;NTEventLogAppender&quot;);</span>
+    }
+<span class="nc" id="L181">}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

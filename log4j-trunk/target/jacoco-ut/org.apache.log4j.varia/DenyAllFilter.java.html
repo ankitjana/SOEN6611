@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DenyAllFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.varia</a> &gt; <span class="el_source">DenyAllFilter.java</span></div><h1>DenyAllFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.varia;
+
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggingEvent;
+
+
+/**
+   This filter drops all logging events. 
+
+   &lt;p&gt;You can add this filter to the end of a filter chain to
+   switch from the default &quot;accept all unless instructed otherwise&quot;
+   filtering behaviour to a &quot;deny all unless instructed otherwise&quot;
+   behaviour.
+
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+
+   @since 0.9.0 */
+<span class="fc" id="L36">public class DenyAllFilter extends Filter {</span>
+
+  /**
+     Returns &lt;code&gt;null&lt;/code&gt; as there are no options.
+     
+     @deprecated We now use JavaBeans introspection to configure
+     components. Options strings are no longer needed.
+  */
+  public
+  String[] getOptionStrings() {
+<span class="nc" id="L46">    return null;</span>
+  }
+
+  
+  /**
+     No options to set.
+     
+     @deprecated Use the setter method for the option directly instead
+     of the generic &lt;code&gt;setOption&lt;/code&gt; method. 
+  */
+  public
+  void setOption(String key, String value) {
+<span class="nc" id="L58">  }</span>
+  
+  /**
+     Always returns the integer constant {@link Filter#DENY}
+     regardless of the {@link LoggingEvent} parameter.
+
+     @param event The LoggingEvent to filter.
+     @return Always returns {@link Filter#DENY}.
+  */
+  public
+  int decide(LoggingEvent event) {
+<span class="fc" id="L69">    return Filter.DENY;</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

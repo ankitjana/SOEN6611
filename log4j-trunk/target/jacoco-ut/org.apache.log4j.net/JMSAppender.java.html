@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JMSAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">JMSAppender.java</span></div><h1>JMSAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.ErrorCode;
+import org.apache.log4j.spi.LoggingEvent;
+
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import java.util.Properties;
+
+/**
+ * A simple appender that publishes events to a JMS Topic. The events
+ * are serialized and transmitted as JMS message type {@link
+ * ObjectMessage}.
+
+ * &lt;p&gt;JMS {@link Topic topics} and {@link TopicConnectionFactory topic
+ * connection factories} are administered objects that are retrieved
+ * using JNDI messaging which in turn requires the retrieval of a JNDI
+ * {@link Context}.
+
+ * &lt;p&gt;There are two common methods for retrieving a JNDI {@link
+ * Context}. If a file resource named &lt;em&gt;jndi.properties&lt;/em&gt; is
+ * available to the JNDI API, it will use the information found
+ * therein to retrieve an initial JNDI context. To obtain an initial
+ * context, your code will simply call:
+
+   &lt;pre&gt;
+   InitialContext jndiContext = new InitialContext();
+   &lt;/pre&gt;
+  
+ * &lt;p&gt;Calling the no-argument &lt;code&gt;InitialContext()&lt;/code&gt; method
+ * will also work from within Enterprise Java Beans (EJBs) because it
+ * is part of the EJB contract for application servers to provide each
+ * bean an environment naming context (ENC).
+    
+ * &lt;p&gt;In the second approach, several predetermined properties are set
+ * and these properties are passed to the &lt;code&gt;InitialContext&lt;/code&gt;
+ * constructor to connect to the naming service provider. For example,
+ * to connect to JBoss naming service one would write:
+
+&lt;pre&gt;
+   Properties env = new Properties( );
+   env.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.jnp.interfaces.NamingContextFactory&quot;);
+   env.put(Context.PROVIDER_URL, &quot;jnp://hostname:1099&quot;);
+   env.put(Context.URL_PKG_PREFIXES, &quot;org.jboss.naming:org.jnp.interfaces&quot;);
+   InitialContext jndiContext = new InitialContext(env);
+&lt;/pre&gt;
+
+   * where &lt;em&gt;hostname&lt;/em&gt; is the host where the JBoss application
+   * server is running.
+   *
+   * &lt;p&gt;To connect to the the naming service of Weblogic application
+   * server one would write:
+
+&lt;pre&gt;
+   Properties env = new Properties( );
+   env.put(Context.INITIAL_CONTEXT_FACTORY, &quot;weblogic.jndi.WLInitialContextFactory&quot;);
+   env.put(Context.PROVIDER_URL, &quot;t3://localhost:7001&quot;);
+   InitialContext jndiContext = new InitialContext(env);
+&lt;/pre&gt;
+
+  * &lt;p&gt;Other JMS providers will obviously require different values.
+  * 
+  * The initial JNDI context can be obtained by calling the
+  * no-argument &lt;code&gt;InitialContext()&lt;/code&gt; method in EJBs. Only
+  * clients running in a separate JVM need to be concerned about the
+  * &lt;em&gt;jndi.properties&lt;/em&gt; file and calling {@link
+  * InitialContext#InitialContext()} or alternatively correctly
+  * setting the different properties before calling {@link
+  * InitialContext#InitialContext(java.util.Hashtable)} method.
+
+
+   @author Ceki G&amp;uuml;lc&amp;uuml; */
+public class JMSAppender extends AppenderSkeleton {
+
+  String securityPrincipalName;
+  String securityCredentials;
+  String initialContextFactoryName;
+  String urlPkgPrefixes;
+  String providerURL;
+  String topicBindingName;
+  String tcfBindingName;
+  String userName;
+  String password;
+  boolean locationInfo;
+
+  TopicConnection  topicConnection;
+  TopicSession topicSession;
+  TopicPublisher  topicPublisher;
+
+  public
+<span class="nc" id="L120">  JMSAppender() {</span>
+<span class="nc" id="L121">  }</span>
+
+  /**
+     The &lt;b&gt;TopicConnectionFactoryBindingName&lt;/b&gt; option takes a
+     string value. Its value will be used to lookup the appropriate
+     &lt;code&gt;TopicConnectionFactory&lt;/code&gt; from the JNDI context.
+   */
+  public
+  void setTopicConnectionFactoryBindingName(String tcfBindingName) {
+<span class="nc" id="L130">    this.tcfBindingName = tcfBindingName;</span>
+<span class="nc" id="L131">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;TopicConnectionFactoryBindingName&lt;/b&gt; option.
+   */
+  public
+  String getTopicConnectionFactoryBindingName() {
+<span class="nc" id="L138">    return tcfBindingName;</span>
+  }
+
+  /**
+     The &lt;b&gt;TopicBindingName&lt;/b&gt; option takes a
+     string value. Its value will be used to lookup the appropriate
+     &lt;code&gt;Topic&lt;/code&gt; from the JNDI context.
+   */
+  public
+  void setTopicBindingName(String topicBindingName) {
+<span class="nc" id="L148">    this.topicBindingName = topicBindingName;</span>
+<span class="nc" id="L149">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;TopicBindingName&lt;/b&gt; option.
+   */
+  public
+  String getTopicBindingName() {
+<span class="nc" id="L156">    return topicBindingName;</span>
+  }
+
+
+  /**
+     Returns value of the &lt;b&gt;LocationInfo&lt;/b&gt; property which
+     determines whether location (stack) info is sent to the remote
+     subscriber. */
+  public
+  boolean getLocationInfo() {
+<span class="nc" id="L166">    return locationInfo;</span>
+  }
+
+  /**
+   *  Options are activated and become effective only after calling
+   *  this method.*/
+  public void activateOptions() {
+    TopicConnectionFactory  topicConnectionFactory;
+
+    try {
+      Context jndi;
+
+<span class="nc" id="L178">      LogLog.debug(&quot;Getting initial context.&quot;);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">      if(initialContextFactoryName != null) {</span>
+<span class="nc" id="L180">	Properties env = new Properties( );</span>
+<span class="nc" id="L181">	env.put(Context.INITIAL_CONTEXT_FACTORY, initialContextFactoryName);</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">	if(providerURL != null) {</span>
+<span class="nc" id="L183">	  env.put(Context.PROVIDER_URL, providerURL);</span>
+	} else {
+<span class="nc" id="L185">	  LogLog.warn(&quot;You have set InitialContextFactoryName option but not the &quot;</span>
+		     +&quot;ProviderURL. This is likely to cause problems.&quot;);
+	}
+<span class="nc bnc" id="L188" title="All 2 branches missed.">	if(urlPkgPrefixes != null) {</span>
+<span class="nc" id="L189">	  env.put(Context.URL_PKG_PREFIXES, urlPkgPrefixes);</span>
+	}
+	
+<span class="nc bnc" id="L192" title="All 2 branches missed.">	if(securityPrincipalName != null) {</span>
+<span class="nc" id="L193">	  env.put(Context.SECURITY_PRINCIPAL, securityPrincipalName);</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">	  if(securityCredentials != null) {</span>
+<span class="nc" id="L195">	    env.put(Context.SECURITY_CREDENTIALS, securityCredentials);</span>
+	  } else {
+<span class="nc" id="L197">	    LogLog.warn(&quot;You have set SecurityPrincipalName option but not the &quot;</span>
+			+&quot;SecurityCredentials. This is likely to cause problems.&quot;);
+	  }
+	}	
+<span class="nc" id="L201">	jndi = new InitialContext(env);</span>
+<span class="nc" id="L202">      } else {</span>
+<span class="nc" id="L203">	jndi = new InitialContext();</span>
+      }
+
+<span class="nc" id="L206">      LogLog.debug(&quot;Looking up [&quot;+tcfBindingName+&quot;]&quot;);</span>
+<span class="nc" id="L207">      topicConnectionFactory = (TopicConnectionFactory) lookup(jndi, tcfBindingName);</span>
+<span class="nc" id="L208">      LogLog.debug(&quot;About to create TopicConnection.&quot;);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">      if(userName != null) {</span>
+<span class="nc" id="L210">	topicConnection = topicConnectionFactory.createTopicConnection(userName, </span>
+								       password); 
+      } else {
+<span class="nc" id="L213">	topicConnection = topicConnectionFactory.createTopicConnection();</span>
+      }
+
+<span class="nc" id="L216">      LogLog.debug(&quot;Creating TopicSession, non-transactional, &quot;</span>
+		   +&quot;in AUTO_ACKNOWLEDGE mode.&quot;);
+<span class="nc" id="L218">      topicSession = topicConnection.createTopicSession(false,</span>
+							Session.AUTO_ACKNOWLEDGE);
+
+<span class="nc" id="L221">      LogLog.debug(&quot;Looking up topic name [&quot;+topicBindingName+&quot;].&quot;);</span>
+<span class="nc" id="L222">      Topic topic = (Topic) lookup(jndi, topicBindingName);</span>
+
+<span class="nc" id="L224">      LogLog.debug(&quot;Creating TopicPublisher.&quot;);</span>
+<span class="nc" id="L225">      topicPublisher = topicSession.createPublisher(topic);</span>
+      
+<span class="nc" id="L227">      LogLog.debug(&quot;Starting TopicConnection.&quot;);</span>
+<span class="nc" id="L228">      topicConnection.start();</span>
+
+<span class="nc" id="L230">      jndi.close();</span>
+<span class="nc" id="L231">    } catch(JMSException e) {</span>
+<span class="nc" id="L232">      errorHandler.error(&quot;Error while activating options for appender named [&quot;+name+</span>
+			 &quot;].&quot;, e, ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L234">    } catch(NamingException e) {</span>
+<span class="nc" id="L235">      errorHandler.error(&quot;Error while activating options for appender named [&quot;+name+</span>
+			 &quot;].&quot;, e, ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L237">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L238">      errorHandler.error(&quot;Error while activating options for appender named [&quot;+name+</span>
+			 &quot;].&quot;, e, ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L240">    }</span>
+<span class="nc" id="L241">  }</span>
+
+  protected Object lookup(Context ctx, String name) throws NamingException {
+    try {
+<span class="nc" id="L245">      return ctx.lookup(name);</span>
+<span class="nc" id="L246">    } catch(NameNotFoundException e) {</span>
+<span class="nc" id="L247">      LogLog.error(&quot;Could not find name [&quot;+name+&quot;].&quot;);</span>
+<span class="nc" id="L248">      throw e;</span>
+    }
+  }
+
+  protected boolean checkEntryConditions() {
+<span class="nc" id="L253">    String fail = null;</span>
+
+<span class="nc bnc" id="L255" title="All 2 branches missed.">    if(this.topicConnection == null) {</span>
+<span class="nc" id="L256">      fail = &quot;No TopicConnection&quot;;</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">    } else if(this.topicSession == null) {</span>
+<span class="nc" id="L258">      fail = &quot;No TopicSession&quot;;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">    } else if(this.topicPublisher == null) {</span>
+<span class="nc" id="L260">      fail = &quot;No TopicPublisher&quot;;</span>
+    }
+
+<span class="nc bnc" id="L263" title="All 2 branches missed.">    if(fail != null) {</span>
+<span class="nc" id="L264">      errorHandler.error(fail +&quot; for JMSAppender named [&quot;+name+&quot;].&quot;);</span>
+<span class="nc" id="L265">      return false;</span>
+    } else {
+<span class="nc" id="L267">      return true;</span>
+    }
+  }
+
+  /**
+     Close this JMSAppender. Closing releases all resources used by the
+     appender. A closed appender cannot be re-opened. */
+  public synchronized void close() {
+    // The synchronized modifier avoids concurrent append and close operations
+
+<span class="nc bnc" id="L277" title="All 2 branches missed.">    if(this.closed) {</span>
+<span class="nc" id="L278">        return;</span>
+    }
+
+<span class="nc" id="L281">    LogLog.debug(&quot;Closing appender [&quot;+name+&quot;].&quot;);</span>
+<span class="nc" id="L282">    this.closed = true;</span>
+
+    try {
+<span class="nc bnc" id="L285" title="All 2 branches missed.">      if(topicSession != null) {</span>
+<span class="nc" id="L286">        topicSession.close();</span>
+    }
+<span class="nc bnc" id="L288" title="All 2 branches missed.">      if(topicConnection != null) {</span>
+<span class="nc" id="L289">        topicConnection.close();</span>
+    }
+<span class="nc" id="L291">    } catch(JMSException e) {</span>
+<span class="nc" id="L292">      LogLog.error(&quot;Error while closing JMSAppender [&quot;+name+&quot;].&quot;, e);</span>
+<span class="nc" id="L293">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L294">      LogLog.error(&quot;Error while closing JMSAppender [&quot;+name+&quot;].&quot;, e);</span>
+<span class="nc" id="L295">    }</span>
+    // Help garbage collection
+<span class="nc" id="L297">    topicPublisher = null;</span>
+<span class="nc" id="L298">    topicSession = null;</span>
+<span class="nc" id="L299">    topicConnection = null;</span>
+<span class="nc" id="L300">  }</span>
+
+  /**
+     This method called by {@link AppenderSkeleton#doAppend} method to
+     do most of the real appending work.  */
+  public void append(LoggingEvent event) {
+<span class="nc bnc" id="L306" title="All 2 branches missed.">    if(!checkEntryConditions()) {</span>
+<span class="nc" id="L307">      return;</span>
+    }
+
+    try {
+<span class="nc" id="L311">      ObjectMessage msg = topicSession.createObjectMessage();</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">      if(locationInfo) {</span>
+<span class="nc" id="L313">	event.getLocationInformation();</span>
+      }
+<span class="nc" id="L315">      msg.setObject(event);</span>
+<span class="nc" id="L316">      topicPublisher.publish(msg);</span>
+<span class="nc" id="L317">    } catch(JMSException e) {</span>
+<span class="nc" id="L318">      errorHandler.error(&quot;Could not publish message in JMSAppender [&quot;+name+&quot;].&quot;, e,</span>
+			 ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L320">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L321">      errorHandler.error(&quot;Could not publish message in JMSAppender [&quot;+name+&quot;].&quot;, e,</span>
+			 ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L323">    }</span>
+<span class="nc" id="L324">  }</span>
+
+  /**
+   * Returns the value of the &lt;b&gt;InitialContextFactoryName&lt;/b&gt; option.
+   * See {@link #setInitialContextFactoryName} for more details on the
+   * meaning of this option.
+   * */
+  public String getInitialContextFactoryName() {
+<span class="nc" id="L332">    return initialContextFactoryName;    </span>
+  }
+  
+  /**
+   * Setting the &lt;b&gt;InitialContextFactoryName&lt;/b&gt; method will cause
+   * this &lt;code&gt;JMSAppender&lt;/code&gt; instance to use the {@link
+   * InitialContext#InitialContext(Hashtable)} method instead of the
+   * no-argument constructor. If you set this option, you should also
+   * at least set the &lt;b&gt;ProviderURL&lt;/b&gt; option.
+   * 
+   * @see #setProviderURL(String)
+   * */
+  public void setInitialContextFactoryName(String initialContextFactoryName) {
+<span class="nc" id="L345">    this.initialContextFactoryName = initialContextFactoryName;</span>
+<span class="nc" id="L346">  }</span>
+
+  public String getProviderURL() {
+<span class="nc" id="L349">    return providerURL;    </span>
+  }
+
+  public void setProviderURL(String providerURL) {
+<span class="nc" id="L353">    this.providerURL = providerURL;</span>
+<span class="nc" id="L354">  }</span>
+
+  String getURLPkgPrefixes( ) {
+<span class="nc" id="L357">    return urlPkgPrefixes;</span>
+  }
+
+  public void setURLPkgPrefixes(String urlPkgPrefixes ) {
+<span class="nc" id="L361">    this.urlPkgPrefixes = urlPkgPrefixes;</span>
+<span class="nc" id="L362">  }</span>
+  
+  public String getSecurityCredentials() {
+<span class="nc" id="L365">    return securityCredentials;    </span>
+  }
+
+  public void setSecurityCredentials(String securityCredentials) {
+<span class="nc" id="L369">    this.securityCredentials = securityCredentials;</span>
+<span class="nc" id="L370">  }</span>
+  
+  
+  public String getSecurityPrincipalName() {
+<span class="nc" id="L374">    return securityPrincipalName;    </span>
+  }
+
+  public void setSecurityPrincipalName(String securityPrincipalName) {
+<span class="nc" id="L378">    this.securityPrincipalName = securityPrincipalName;</span>
+<span class="nc" id="L379">  }</span>
+
+  public String getUserName() {
+<span class="nc" id="L382">    return userName;    </span>
+  }
+
+  /**
+   * The user name to use when {@link
+   * TopicConnectionFactory#createTopicConnection(String, String)
+   * creating a topic session}.  If you set this option, you should
+   * also set the &lt;b&gt;Password&lt;/b&gt; option. See {@link
+   * #setPassword(String)}.
+   * */
+  public void setUserName(String userName) {
+<span class="nc" id="L393">    this.userName = userName;</span>
+<span class="nc" id="L394">  }</span>
+
+  public String getPassword() {
+<span class="nc" id="L397">    return password;    </span>
+  }
+
+  /**
+   * The paswword to use when creating a topic session.  
+   */
+  public void setPassword(String password) {
+<span class="nc" id="L404">    this.password = password;</span>
+<span class="nc" id="L405">  }</span>
+
+
+  /**
+      If true, the information sent to the remote subscriber will
+      include caller's location information. By default no location
+      information is sent to the subscriber.  */
+  public void setLocationInfo(boolean locationInfo) {
+<span class="nc" id="L413">    this.locationInfo = locationInfo;</span>
+<span class="nc" id="L414">  }</span>
+
+  /**
+   * Returns the TopicConnection used for this appender.  Only valid after
+   * activateOptions() method has been invoked.
+   */
+  protected TopicConnection  getTopicConnection() {
+<span class="nc" id="L421">    return topicConnection;</span>
+  }
+
+  /**
+   * Returns the TopicSession used for this appender.  Only valid after
+   * activateOptions() method has been invoked.
+   */
+  protected TopicSession  getTopicSession() {
+<span class="nc" id="L429">    return topicSession;</span>
+  }
+
+  /**
+   * Returns the TopicPublisher used for this appender.  Only valid after
+   * activateOptions() method has been invoked.
+   */
+  protected TopicPublisher  getTopicPublisher() {
+<span class="nc" id="L437">    return topicPublisher;</span>
+  }
+  
+  /** 
+   * The JMSAppender sends serialized events and consequently does not
+   * require a layout.
+   */
+  public boolean requiresLayout() {
+<span class="nc" id="L445">    return false;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

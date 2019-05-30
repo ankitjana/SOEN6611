@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReflectionRewritePolicy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.rewrite</a> &gt; <span class="el_source">ReflectionRewritePolicy.java</span></div><h1>ReflectionRewritePolicy.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.rewrite;
+
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+ * This policy rewrites events by evaluating any
+ * JavaBean properties on the message object and adding them
+ * to the event properties.  If the message object has a
+ * message property, the value of that property will be
+ * used as the message for the rewritten event and will
+ * not be added to the event properties.  Values from the
+ * JavaBean properties will replace any existing property
+ * with the same name.
+ *
+ * The combination of the RewriteAppender and this policy
+ * performs the same actions as the ReflectionFilter from log4j 1.3. 
+ */
+<span class="nc" id="L41">public class ReflectionRewritePolicy implements RewritePolicy {</span>
+    /**
+     * {@inheritDoc}
+     */
+    public LoggingEvent rewrite(final LoggingEvent source) {
+<span class="nc" id="L46">        Object msg = source.getMessage();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!(msg instanceof String)) {</span>
+<span class="nc" id="L48">            Object newMsg = msg;</span>
+<span class="nc" id="L49">            Map rewriteProps = new HashMap(source.getProperties());</span>
+
+            try {
+<span class="nc" id="L52">                PropertyDescriptor[] props = Introspector.getBeanInfo(</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                        msg.getClass(), Object.class).getPropertyDescriptors();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">                if (props.length &gt; 0) {</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                    for (int i=0;i&lt;props.length;i++) {</span>
+                        try {
+<span class="nc" id="L57">                            Object propertyValue =</span>
+<span class="nc" id="L58">                                props[i].getReadMethod().invoke(msg,</span>
+                                        (Object[]) null);
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                            if (&quot;message&quot;.equalsIgnoreCase(props[i].getName())) {</span>
+<span class="nc" id="L61">                                newMsg = propertyValue;</span>
+                            } else {
+<span class="nc" id="L63">                                rewriteProps.put(props[i].getName(), propertyValue);</span>
+                            }
+<span class="nc" id="L65">                        } catch (Exception e) {</span>
+<span class="nc" id="L66">                            LogLog.warn(&quot;Unable to evaluate property &quot; +</span>
+<span class="nc" id="L67">                                    props[i].getName(), e);</span>
+<span class="nc" id="L68">                        }</span>
+                    }
+<span class="nc" id="L70">                    return new LoggingEvent(</span>
+<span class="nc" id="L71">                            source.getFQNOfLoggerClass(),</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                            source.getLogger() != null ? source.getLogger(): Logger.getLogger(source.getLoggerName()),</span>
+<span class="nc" id="L73">                            source.getTimeStamp(),</span>
+<span class="nc" id="L74">                            source.getLevel(),</span>
+                            newMsg,
+<span class="nc" id="L76">                            source.getThreadName(),</span>
+<span class="nc" id="L77">                            source.getThrowableInformation(),</span>
+<span class="nc" id="L78">                            source.getNDC(),</span>
+<span class="nc" id="L79">                            source.getLocationInformation(),</span>
+                            rewriteProps);
+                }
+<span class="nc" id="L82">            } catch (Exception e) {</span>
+<span class="nc" id="L83">                LogLog.warn(&quot;Unable to get property descriptors&quot;, e);</span>
+<span class="nc" id="L84">            }</span>
+
+        }
+<span class="nc" id="L87">        return source;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

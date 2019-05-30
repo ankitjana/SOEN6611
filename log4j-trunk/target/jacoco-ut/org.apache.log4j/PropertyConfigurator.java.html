@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyConfigurator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">PropertyConfigurator.java</span></div><h1>PropertyConfigurator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+// Contributors: &quot;Luke Blanshard&quot; &lt;Luke@quiq.com&gt;
+//              &quot;Mark DONSZELMANN&quot; &lt;Mark.Donszelmann@cern.ch&gt;
+//               Anders Kristensen &lt;akristensen@dynamicsoft.com&gt;
+
+package org.apache.log4j;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.net.URLConnection;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.log4j.config.PropertySetter;
+import org.apache.log4j.helpers.FileWatchdog;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.or.RendererMap;
+import org.apache.log4j.spi.Configurator;
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggerFactory;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.OptionHandler;
+import org.apache.log4j.spi.RendererSupport;
+import org.apache.log4j.spi.ThrowableRenderer;
+import org.apache.log4j.spi.ThrowableRendererSupport;
+import org.apache.log4j.spi.ErrorHandler;
+
+/**
+   Allows the configuration of log4j from an external file.  See
+   &lt;b&gt;{@link #doConfigure(String, LoggerRepository)}&lt;/b&gt; for the
+   expected format.
+
+   &lt;p&gt;It is sometimes useful to see how log4j is reading configuration
+   files. You can enable log4j internal logging by defining the
+   &lt;b&gt;log4j.debug&lt;/b&gt; variable.
+
+   &lt;P&gt;As of log4j version 0.8.5, at class initialization time class,
+   the file &lt;b&gt;log4j.properties&lt;/b&gt; will be searched from the search
+   path used to load classes. If the file can be found, then it will
+   be fed to the {@link PropertyConfigurator#configure(java.net.URL)}
+   method.
+
+   &lt;p&gt;The &lt;code&gt;PropertyConfigurator&lt;/code&gt; does not handle the
+   advanced configuration features supported by the {@link
+   org.apache.log4j.xml.DOMConfigurator DOMConfigurator} such as
+   support custom {@link org.apache.log4j.spi.ErrorHandler ErrorHandlers},
+   nested appenders such as the {@link org.apache.log4j.AsyncAppender
+   AsyncAppender}, etc.
+
+   &lt;p&gt;All option &lt;em&gt;values&lt;/em&gt; admit variable substitution. The
+   syntax of variable substitution is similar to that of Unix
+   shells. The string between an opening &lt;b&gt;&amp;quot;${&amp;quot;&lt;/b&gt; and
+   closing &lt;b&gt;&amp;quot;}&amp;quot;&lt;/b&gt; is interpreted as a key. The value of
+   the substituted variable can be defined as a system property or in
+   the configuration file itself. The value of the key is first
+   searched in the system properties, and if not found there, it is
+   then searched in the configuration file being parsed.  The
+   corresponding value replaces the ${variableName} sequence. For
+   example, if &lt;code&gt;java.home&lt;/code&gt; system property is set to
+   &lt;code&gt;/home/xyz&lt;/code&gt;, then every occurrence of the sequence
+   &lt;code&gt;${java.home}&lt;/code&gt; will be interpreted as
+   &lt;code&gt;/home/xyz&lt;/code&gt;.
+
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Anders Kristensen
+   @since 0.8.1 */
+<span class="fc" id="L93">public class PropertyConfigurator implements Configurator {</span>
+
+  /**
+     Used internally to keep track of configured appenders.
+   */
+<span class="fc" id="L98">  protected Hashtable registry = new Hashtable(11);  </span>
+  private LoggerRepository repository;
+<span class="fc" id="L100">  protected LoggerFactory loggerFactory = new DefaultCategoryFactory();</span>
+
+  static final String      CATEGORY_PREFIX = &quot;log4j.category.&quot;;
+  static final String      LOGGER_PREFIX   = &quot;log4j.logger.&quot;;
+  static final String       FACTORY_PREFIX = &quot;log4j.factory&quot;;
+  static final String    ADDITIVITY_PREFIX = &quot;log4j.additivity.&quot;;
+  static final String ROOT_CATEGORY_PREFIX = &quot;log4j.rootCategory&quot;;
+  static final String ROOT_LOGGER_PREFIX   = &quot;log4j.rootLogger&quot;;
+  static final String      APPENDER_PREFIX = &quot;log4j.appender.&quot;;
+  static final String      RENDERER_PREFIX = &quot;log4j.renderer.&quot;;
+  static final String      THRESHOLD_PREFIX = &quot;log4j.threshold&quot;;
+  private static final String      THROWABLE_RENDERER_PREFIX = &quot;log4j.throwableRenderer&quot;;
+  private static final String LOGGER_REF	= &quot;logger-ref&quot;;
+  private static final String ROOT_REF		= &quot;root-ref&quot;;
+  private static final String APPENDER_REF_TAG 	= &quot;appender-ref&quot;;  
+  
+
+  /** Key for specifying the {@link org.apache.log4j.spi.LoggerFactory
+      LoggerFactory}.  Currently set to &quot;&lt;code&gt;log4j.loggerFactory&lt;/code&gt;&quot;.  */
+  public static final String LOGGER_FACTORY_KEY = &quot;log4j.loggerFactory&quot;;
+
+    /**
+     * If property set to true, then hierarchy will be reset before configuration.
+     */
+  private static final String RESET_KEY = &quot;log4j.reset&quot;;
+
+  static final private String INTERNAL_ROOT_NAME = &quot;root&quot;;
+
+  /**
+    Read configuration from a file. &lt;b&gt;The existing configuration is
+    not cleared nor reset.&lt;/b&gt; If you require a different behavior,
+    then call {@link  LogManager#resetConfiguration
+    resetConfiguration} method before calling
+    &lt;code&gt;doConfigure&lt;/code&gt;.
+
+    &lt;p&gt;The configuration file consists of statements in the format
+    &lt;code&gt;key=value&lt;/code&gt;. The syntax of different configuration
+    elements are discussed below.
+
+    &lt;h3&gt;Repository-wide threshold&lt;/h3&gt;
+
+    &lt;p&gt;The repository-wide threshold filters logging requests by level
+    regardless of logger. The syntax is:
+
+    &lt;pre&gt;
+    log4j.threshold=[level]
+    &lt;/pre&gt;
+
+    &lt;p&gt;The level value can consist of the string values OFF, FATAL,
+    ERROR, WARN, INFO, DEBUG, ALL or a &lt;em&gt;custom level&lt;/em&gt; value. A
+    custom level value can be specified in the form
+    level#classname. By default the repository-wide threshold is set
+    to the lowest possible value, namely the level &lt;code&gt;ALL&lt;/code&gt;.
+    &lt;/p&gt;
+
+
+    &lt;h3&gt;Appender configuration&lt;/h3&gt;
+
+    &lt;p&gt;Appender configuration syntax is:
+    &lt;pre&gt;
+    # For appender named &lt;i&gt;appenderName&lt;/i&gt;, set its class.
+    # Note: The appender name can contain dots.
+    log4j.appender.appenderName=fully.qualified.name.of.appender.class
+
+    # Set appender specific options.
+    log4j.appender.appenderName.option1=value1
+    ...
+    log4j.appender.appenderName.optionN=valueN
+    &lt;/pre&gt;
+
+    For each named appender you can configure its {@link Layout}. The
+    syntax for configuring an appender's layout is:
+    &lt;pre&gt;
+    log4j.appender.appenderName.layout=fully.qualified.name.of.layout.class
+    log4j.appender.appenderName.layout.option1=value1
+    ....
+    log4j.appender.appenderName.layout.optionN=valueN
+    &lt;/pre&gt;
+
+    The syntax for adding {@link Filter}s to an appender is:
+    &lt;pre&gt;
+    log4j.appender.appenderName.filter.ID=fully.qualified.name.of.filter.class
+    log4j.appender.appenderName.filter.ID.option1=value1
+    ...
+    log4j.appender.appenderName.filter.ID.optionN=valueN
+    &lt;/pre&gt;
+    The first line defines the class name of the filter identified by ID;
+    subsequent lines with the same ID specify filter option - value
+    pairs. Multiple filters are added to the appender in the lexicographic
+    order of IDs.
+
+    The syntax for adding an {@link ErrorHandler} to an appender is:
+    &lt;pre&gt;
+    log4j.appender.appenderName.errorhandler=fully.qualified.name.of.filter.class
+    log4j.appender.appenderName.errorhandler.root-ref={true|false}
+    log4j.appender.appenderName.errorhandler.logger-ref=loggerName
+    log4j.appender.appenderName.errorhandler.appender-ref=appenderName
+    log4j.appender.appenderName.errorhandler.option1=value1
+    ...
+    log4j.appender.appenderName.errorhandler.optionN=valueN
+    &lt;/pre&gt;
+
+    &lt;h3&gt;Configuring loggers&lt;/h3&gt;
+
+    &lt;p&gt;The syntax for configuring the root logger is:
+    &lt;pre&gt;
+      log4j.rootLogger=[level], appenderName, appenderName, ...
+    &lt;/pre&gt;
+
+    &lt;p&gt;This syntax means that an optional &lt;em&gt;level&lt;/em&gt; can be
+    supplied followed by appender names separated by commas.
+
+    &lt;p&gt;The level value can consist of the string values OFF, FATAL,
+    ERROR, WARN, INFO, DEBUG, ALL or a &lt;em&gt;custom level&lt;/em&gt; value. A
+    custom level value can be specified in the form
+    &lt;code&gt;level#classname&lt;/code&gt;.
+
+    &lt;p&gt;If a level value is specified, then the root level is set
+    to the corresponding level.  If no level value is specified,
+    then the root level remains untouched.
+
+    &lt;p&gt;The root logger can be assigned multiple appenders.
+
+    &lt;p&gt;Each &lt;i&gt;appenderName&lt;/i&gt; (separated by commas) will be added to
+    the root logger. The named appender is defined using the
+    appender syntax defined above.
+
+    &lt;p&gt;For non-root categories the syntax is almost the same:
+    &lt;pre&gt;
+    log4j.logger.logger_name=[level|INHERITED|NULL], appenderName, appenderName, ...
+    &lt;/pre&gt;
+
+    &lt;p&gt;The meaning of the optional level value is discussed above
+    in relation to the root logger. In addition however, the value
+    INHERITED can be specified meaning that the named logger should
+    inherit its level from the logger hierarchy.
+
+    &lt;p&gt;If no level value is supplied, then the level of the
+    named logger remains untouched.
+
+    &lt;p&gt;By default categories inherit their level from the
+    hierarchy. However, if you set the level of a logger and later
+    decide that that logger should inherit its level, then you should
+    specify INHERITED as the value for the level value. NULL is a
+    synonym for INHERITED.
+
+    &lt;p&gt;Similar to the root logger syntax, each &lt;i&gt;appenderName&lt;/i&gt;
+    (separated by commas) will be attached to the named logger.
+
+    &lt;p&gt;See the &lt;a href=&quot;../../../../manual.html#additivity&quot;&gt;appender
+    additivity rule&lt;/a&gt; in the user manual for the meaning of the
+    &lt;code&gt;additivity&lt;/code&gt; flag.
+
+    &lt;h3&gt;ObjectRenderers&lt;/h3&gt;
+
+    You can customize the way message objects of a given type are
+    converted to String before being logged. This is done by
+    specifying an {@link org.apache.log4j.or.ObjectRenderer ObjectRenderer}
+    for the object type would like to customize.
+
+    &lt;p&gt;The syntax is:
+
+    &lt;pre&gt;
+    log4j.renderer.fully.qualified.name.of.rendered.class=fully.qualified.name.of.rendering.class
+    &lt;/pre&gt;
+
+    As in,
+    &lt;pre&gt;
+    log4j.renderer.my.Fruit=my.FruitRenderer
+    &lt;/pre&gt;
+
+   &lt;h3&gt;ThrowableRenderer&lt;/h3&gt;
+
+   You can customize the way an instance of Throwable is
+   converted to String before being logged. This is done by
+   specifying an {@link org.apache.log4j.spi.ThrowableRenderer ThrowableRenderer}.
+
+   &lt;p&gt;The syntax is:
+
+   &lt;pre&gt;
+   log4j.throwableRenderer=fully.qualified.name.of.rendering.class
+   log4j.throwableRenderer.paramName=paramValue
+   &lt;/pre&gt;
+
+   As in,
+   &lt;pre&gt;
+   log4j.throwableRenderer=org.apache.log4j.EnhancedThrowableRenderer
+   &lt;/pre&gt;
+
+    &lt;h3&gt;Logger Factories&lt;/h3&gt;
+
+    The usage of custom logger factories is discouraged and no longer
+    documented.
+
+    &lt;h3&gt;Resetting Hierarchy&lt;/h3&gt;
+
+    The hierarchy will be reset before configuration when
+    log4j.reset=true is present in the properties file.
+
+    &lt;h3&gt;Example&lt;/h3&gt;
+
+    &lt;p&gt;An example configuration is given below. Other configuration
+    file examples are given in the &lt;code&gt;examples&lt;/code&gt; folder.
+
+    &lt;pre&gt;
+
+    # Set options for appender named &quot;A1&quot;.
+    # Appender &quot;A1&quot; will be a SyslogAppender
+    log4j.appender.A1=org.apache.log4j.net.SyslogAppender
+
+    # The syslog daemon resides on www.abc.net
+    log4j.appender.A1.SyslogHost=www.abc.net
+
+    # A1's layout is a PatternLayout, using the conversion pattern
+    # &lt;b&gt;%r %-5p %c{2} %M.%L %x - %m\n&lt;/b&gt;. Thus, the log output will
+    # include # the relative time since the start of the application in
+    # milliseconds, followed by the level of the log request,
+    # followed by the two rightmost components of the logger name,
+    # followed by the callers method name, followed by the line number,
+    # the nested diagnostic context and finally the message itself.
+    # Refer to the documentation of {@link PatternLayout} for further information
+    # on the syntax of the ConversionPattern key.
+    log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+    log4j.appender.A1.layout.ConversionPattern=%-4r %-5p %c{2} %M.%L %x - %m\n
+
+    # Set options for appender named &quot;A2&quot;
+    # A2 should be a RollingFileAppender, with maximum file size of 10 MB
+    # using at most one backup file. A2's layout is TTCC, using the
+    # ISO8061 date format with context printing enabled.
+    log4j.appender.A2=org.apache.log4j.RollingFileAppender
+    log4j.appender.A2.MaxFileSize=10MB
+    log4j.appender.A2.MaxBackupIndex=1
+    log4j.appender.A2.layout=org.apache.log4j.TTCCLayout
+    log4j.appender.A2.layout.ContextPrinting=enabled
+    log4j.appender.A2.layout.DateFormat=ISO8601
+
+    # Root logger set to DEBUG using the A2 appender defined above.
+    log4j.rootLogger=DEBUG, A2
+
+    # Logger definitions:
+    # The SECURITY logger inherits is level from root. However, it's output
+    # will go to A1 appender defined above. It's additivity is non-cumulative.
+    log4j.logger.SECURITY=INHERIT, A1
+    log4j.additivity.SECURITY=false
+
+    # Only warnings or above will be logged for the logger &quot;SECURITY.access&quot;.
+    # Output will go to A1.
+    log4j.logger.SECURITY.access=WARN
+
+
+    # The logger &quot;class.of.the.day&quot; inherits its level from the
+    # logger hierarchy.  Output will go to the appender's of the root
+    # logger, A2 in this case.
+    log4j.logger.class.of.the.day=INHERIT
+    &lt;/pre&gt;
+
+    &lt;p&gt;Refer to the &lt;b&gt;setOption&lt;/b&gt; method in each Appender and
+    Layout for class specific options.
+
+    &lt;p&gt;Use the &lt;code&gt;#&lt;/code&gt; or &lt;code&gt;!&lt;/code&gt; characters at the
+    beginning of a line for comments.
+
+   &lt;p&gt;
+   @param configFileName The name of the configuration file where the
+   configuration information is stored.
+
+  */
+  public
+  void doConfigure(String configFileName, LoggerRepository hierarchy) {
+<span class="fc" id="L369">    Properties props = new Properties();</span>
+<span class="fc" id="L370">    FileInputStream istream = null;</span>
+    try {
+<span class="fc" id="L372">      istream = new FileInputStream(configFileName);</span>
+<span class="fc" id="L373">      props.load(istream);</span>
+<span class="fc" id="L374">      istream.close();</span>
+    }
+<span class="fc" id="L376">    catch (Exception e) {</span>
+<span class="pc bpc" id="L377" title="2 of 4 branches missed.">      if (e instanceof InterruptedIOException || e instanceof InterruptedException) {</span>
+<span class="nc" id="L378">          Thread.currentThread().interrupt();</span>
+      }
+<span class="fc" id="L380">      LogLog.error(&quot;Could not read configuration file [&quot;+configFileName+&quot;].&quot;, e);</span>
+<span class="fc" id="L381">      LogLog.error(&quot;Ignoring configuration file [&quot; + configFileName+&quot;].&quot;);</span>
+<span class="fc" id="L382">      return;</span>
+    } finally {
+<span class="pc bpc" id="L384" title="1 of 2 branches missed.">        if(istream != null) {</span>
+            try {
+<span class="fc" id="L386">                istream.close();</span>
+<span class="nc" id="L387">            } catch(InterruptedIOException ignore) {</span>
+<span class="nc" id="L388">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L389">            } catch(Throwable ignore) {</span>
+<span class="pc" id="L390">            }</span>
+
+        }
+    }
+    // If we reach here, then the config file is alright.
+<span class="fc" id="L395">    doConfigure(props, hierarchy);</span>
+<span class="fc" id="L396">  }</span>
+
+  /**
+   */
+  static
+  public
+  void configure(String configFilename) {
+<span class="fc" id="L403">    new PropertyConfigurator().doConfigure(configFilename,</span>
+<span class="fc" id="L404">					   LogManager.getLoggerRepository());</span>
+<span class="fc" id="L405">  }</span>
+
+  /**
+  Read configuration options from url &lt;code&gt;configURL&lt;/code&gt;.
+
+  @since 0.8.2
+*/
+public
+static
+void configure(java.net.URL configURL) {
+<span class="fc" id="L415"> new PropertyConfigurator().doConfigure(configURL,</span>
+<span class="fc" id="L416">                    LogManager.getLoggerRepository());</span>
+<span class="fc" id="L417">}</span>
+
+/**
+Reads configuration options from an InputStream.
+
+@since 1.2.17
+*/
+public
+static
+void configure(InputStream inputStream) {
+<span class="fc" id="L427">new PropertyConfigurator().doConfigure(inputStream,</span>
+<span class="fc" id="L428">                  LogManager.getLoggerRepository());</span>
+<span class="fc" id="L429">}</span>
+
+
+  /**
+     Read configuration options from &lt;code&gt;properties&lt;/code&gt;.
+
+     See {@link #doConfigure(String, LoggerRepository)} for the expected format.
+  */
+  static
+  public
+  void configure(Properties properties) {
+<span class="fc" id="L440">    new PropertyConfigurator().doConfigure(properties,</span>
+<span class="fc" id="L441">					   LogManager.getLoggerRepository());</span>
+<span class="fc" id="L442">  }</span>
+
+  /**
+     Like {@link #configureAndWatch(String, long)} except that the
+     default delay as defined by {@link FileWatchdog#DEFAULT_DELAY} is
+     used.
+
+     @param configFilename A file in key=value format.
+
+  */
+  static
+  public
+  void configureAndWatch(String configFilename) {
+<span class="nc" id="L455">    configureAndWatch(configFilename, FileWatchdog.DEFAULT_DELAY);</span>
+<span class="nc" id="L456">  }</span>
+
+
+  /**
+     Read the configuration file &lt;code&gt;configFilename&lt;/code&gt; if it
+     exists. Moreover, a thread will be created that will periodically
+     check if &lt;code&gt;configFilename&lt;/code&gt; has been created or
+     modified. The period is determined by the &lt;code&gt;delay&lt;/code&gt;
+     argument. If a change or file creation is detected, then
+     &lt;code&gt;configFilename&lt;/code&gt; is read to configure log4j.
+
+      @param configFilename A file in key=value format.
+      @param delay The delay in milliseconds to wait between each check.
+  */
+  static
+  public
+  void configureAndWatch(String configFilename, long delay) {
+<span class="nc" id="L473">    PropertyWatchdog pdog = new PropertyWatchdog(configFilename);</span>
+<span class="nc" id="L474">    pdog.setDelay(delay);</span>
+<span class="nc" id="L475">    pdog.start();</span>
+<span class="nc" id="L476">  }</span>
+
+
+  /**
+     Read configuration options from &lt;code&gt;properties&lt;/code&gt;.
+
+     See {@link #doConfigure(String, LoggerRepository)} for the expected format.
+  */
+  public
+  void doConfigure(Properties properties, LoggerRepository hierarchy) {
+<span class="fc" id="L486">	repository = hierarchy;</span>
+<span class="fc" id="L487">    String value = properties.getProperty(LogLog.DEBUG_KEY);</span>
+<span class="pc bpc" id="L488" title="1 of 2 branches missed.">    if(value == null) {</span>
+<span class="fc" id="L489">      value = properties.getProperty(&quot;log4j.configDebug&quot;);</span>
+<span class="pc bpc" id="L490" title="1 of 2 branches missed.">      if(value != null) {</span>
+<span class="nc" id="L491">        LogLog.warn(&quot;[log4j.configDebug] is deprecated. Use [log4j.debug] instead.&quot;);</span>
+    }
+    }
+
+<span class="pc bpc" id="L495" title="1 of 2 branches missed.">    if(value != null) {</span>
+<span class="nc" id="L496">      LogLog.setInternalDebugging(OptionConverter.toBoolean(value, true));</span>
+    }
+
+      //
+      //   if log4j.reset=true then
+      //        reset hierarchy
+<span class="fc" id="L502">    String reset = properties.getProperty(RESET_KEY);</span>
+<span class="pc bpc" id="L503" title="1 of 4 branches missed.">    if (reset != null &amp;&amp; OptionConverter.toBoolean(reset, false)) {</span>
+<span class="fc" id="L504">          hierarchy.resetConfiguration();</span>
+    }
+
+<span class="fc" id="L507">    String thresholdStr = OptionConverter.findAndSubst(THRESHOLD_PREFIX,</span>
+						       properties);
+<span class="fc bfc" id="L509" title="All 2 branches covered.">    if(thresholdStr != null) {</span>
+<span class="fc" id="L510">      hierarchy.setThreshold(OptionConverter.toLevel(thresholdStr,</span>
+						     Level.ALL));
+<span class="fc" id="L512">      LogLog.debug(&quot;Hierarchy threshold set to [&quot;+hierarchy.getThreshold()+&quot;].&quot;);</span>
+    }
+    
+<span class="fc" id="L515">    configureRootCategory(properties, hierarchy);</span>
+<span class="fc" id="L516">    configureLoggerFactory(properties);</span>
+<span class="fc" id="L517">    parseCatsAndRenderers(properties, hierarchy);</span>
+
+<span class="fc" id="L519">    LogLog.debug(&quot;Finished configuring.&quot;);</span>
+    // We don't want to hold references to appenders preventing their
+    // garbage collection.
+<span class="fc" id="L522">    registry.clear();</span>
+<span class="fc" id="L523">  }</span>
+
+    /**
+     * Read configuration options from an InputStream.
+     * 
+     * @since 1.2.17
+     */
+    public void doConfigure(InputStream inputStream, LoggerRepository hierarchy) {
+<span class="fc" id="L531">        Properties props = new Properties();</span>
+        try {
+<span class="fc" id="L533">            props.load(inputStream);</span>
+<span class="nc" id="L534">        } catch (IOException e) {</span>
+<span class="nc bnc" id="L535" title="All 2 branches missed.">            if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L536">                Thread.currentThread().interrupt();</span>
+            }
+<span class="nc" id="L538">            LogLog.error(&quot;Could not read configuration file from InputStream [&quot; + inputStream</span>
+                 + &quot;].&quot;, e);
+<span class="nc" id="L540">            LogLog.error(&quot;Ignoring configuration InputStream [&quot; + inputStream +&quot;].&quot;);</span>
+<span class="nc" id="L541">            return;</span>
+<span class="fc" id="L542">          }</span>
+<span class="fc" id="L543">        this.doConfigure(props, hierarchy);</span>
+<span class="fc" id="L544">    }</span>
+
+  /**
+     Read configuration options from url &lt;code&gt;configURL&lt;/code&gt;.
+   */
+  public
+  void doConfigure(java.net.URL configURL, LoggerRepository hierarchy) {
+<span class="fc" id="L551">    Properties props = new Properties();</span>
+<span class="fc" id="L552">    LogLog.debug(&quot;Reading configuration from URL &quot; + configURL);</span>
+<span class="fc" id="L553">    InputStream istream = null;</span>
+<span class="fc" id="L554">    URLConnection uConn = null;</span>
+    try {
+<span class="fc" id="L556">      uConn = configURL.openConnection();</span>
+<span class="fc" id="L557">      uConn.setUseCaches(false);</span>
+<span class="fc" id="L558">      istream = uConn.getInputStream();</span>
+<span class="fc" id="L559">      props.load(istream);</span>
+    }
+<span class="fc" id="L561">    catch (Exception e) {</span>
+<span class="pc bpc" id="L562" title="2 of 4 branches missed.">      if (e instanceof InterruptedIOException || e instanceof InterruptedException) {</span>
+<span class="nc" id="L563">          Thread.currentThread().interrupt();</span>
+      }
+<span class="fc" id="L565">      LogLog.error(&quot;Could not read configuration file from URL [&quot; + configURL</span>
+		   + &quot;].&quot;, e);
+<span class="fc" id="L567">      LogLog.error(&quot;Ignoring configuration file [&quot; + configURL +&quot;].&quot;);</span>
+<span class="fc" id="L568">      return;</span>
+    }
+    finally {
+<span class="pc bpc" id="L571" title="1 of 2 branches missed.">        if (istream != null) {</span>
+            try {
+<span class="fc" id="L573">                istream.close();</span>
+<span class="nc" id="L574">            } catch(InterruptedIOException ignore) {</span>
+<span class="nc" id="L575">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L576">            } catch(IOException ignore) {</span>
+<span class="nc" id="L577">            } catch(RuntimeException ignore) {</span>
+<span class="pc" id="L578">            }</span>
+        }
+    }
+<span class="fc" id="L581">    doConfigure(props, hierarchy);</span>
+<span class="fc" id="L582">  }</span>
+
+
+  // --------------------------------------------------------------------------
+  // Internal stuff
+  // --------------------------------------------------------------------------
+
+  /**
+     Check the provided &lt;code&gt;Properties&lt;/code&gt; object for a
+     {@link org.apache.log4j.spi.LoggerFactory LoggerFactory}
+     entry specified by {@link #LOGGER_FACTORY_KEY}.  If such an entry
+     exists, an attempt is made to create an instance using the default
+     constructor.  This instance is used for subsequent Category creations
+     within this configurator.
+
+     @see #parseCatsAndRenderers
+   */
+  protected void configureLoggerFactory(Properties props) {
+<span class="fc" id="L600">    String factoryClassName = OptionConverter.findAndSubst(LOGGER_FACTORY_KEY,</span>
+							   props);
+<span class="pc bpc" id="L602" title="1 of 2 branches missed.">    if(factoryClassName != null) {</span>
+<span class="nc" id="L603">      LogLog.debug(&quot;Setting category factory to [&quot;+factoryClassName+&quot;].&quot;);</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">      loggerFactory = (LoggerFactory)</span>
+<span class="nc" id="L605">	          OptionConverter.instantiateByClassName(factoryClassName,</span>
+<span class="nc" id="L606">							 LoggerFactory.class,</span>
+							 loggerFactory);
+<span class="nc" id="L608">      PropertySetter.setProperties(loggerFactory, props, FACTORY_PREFIX + &quot;.&quot;);</span>
+    }
+<span class="fc" id="L610">  }</span>
+
+  /*
+  void configureOptionHandler(OptionHandler oh, String prefix,
+			      Properties props) {
+    String[] options = oh.getOptionStrings();
+    if(options == null)
+      return;
+
+    String value;
+    for(int i = 0; i &lt; options.length; i++) {
+      value =  OptionConverter.findAndSubst(prefix + options[i], props);
+      LogLog.debug(
+         &quot;Option &quot; + options[i] + &quot;=[&quot; + (value == null? &quot;N/A&quot; : value)+&quot;].&quot;);
+      // Some option handlers assume that null value are not passed to them.
+      // So don't remove this check
+      if(value != null) {
+	oh.setOption(options[i], value);
+      }
+    }
+    oh.activateOptions();
+  }
+  */
+
+
+  void configureRootCategory(Properties props, LoggerRepository hierarchy) {
+<span class="fc" id="L636">    String effectiveFrefix = ROOT_LOGGER_PREFIX;</span>
+<span class="fc" id="L637">    String value = OptionConverter.findAndSubst(ROOT_LOGGER_PREFIX, props);</span>
+
+<span class="fc bfc" id="L639" title="All 2 branches covered.">    if(value == null) {</span>
+<span class="fc" id="L640">      value = OptionConverter.findAndSubst(ROOT_CATEGORY_PREFIX, props);</span>
+<span class="fc" id="L641">      effectiveFrefix = ROOT_CATEGORY_PREFIX;</span>
+    }
+
+<span class="fc bfc" id="L644" title="All 2 branches covered.">    if(value == null) {</span>
+<span class="fc" id="L645">        LogLog.debug(&quot;Could not find root logger information. Is this OK?&quot;);</span>
+    } else {
+<span class="fc" id="L647">      Logger root = hierarchy.getRootLogger();</span>
+<span class="fc" id="L648">      synchronized(root) {</span>
+<span class="fc" id="L649">	parseCategory(props, root, effectiveFrefix, INTERNAL_ROOT_NAME, value);</span>
+<span class="fc" id="L650">      }</span>
+    }
+<span class="fc" id="L652">  }</span>
+
+
+  /**
+     Parse non-root elements, such non-root categories and renderers.
+  */
+  protected
+  void parseCatsAndRenderers(Properties props, LoggerRepository hierarchy) {
+<span class="fc" id="L660">    Enumeration enumeration = props.propertyNames();</span>
+<span class="fc bfc" id="L661" title="All 2 branches covered.">    while(enumeration.hasMoreElements()) {</span>
+<span class="fc" id="L662">      String key = (String) enumeration.nextElement();</span>
+<span class="pc bpc" id="L663" title="1 of 4 branches missed.">      if(key.startsWith(CATEGORY_PREFIX) || key.startsWith(LOGGER_PREFIX)) {</span>
+<span class="fc" id="L664">	String loggerName = null;</span>
+<span class="pc bpc" id="L665" title="1 of 2 branches missed.">	if(key.startsWith(CATEGORY_PREFIX)) {</span>
+<span class="nc" id="L666">	  loggerName = key.substring(CATEGORY_PREFIX.length());</span>
+<span class="pc bpc" id="L667" title="1 of 2 branches missed.">	} else if(key.startsWith(LOGGER_PREFIX)) {</span>
+<span class="fc" id="L668">	  loggerName = key.substring(LOGGER_PREFIX.length());</span>
+	}
+<span class="fc" id="L670">	String value =  OptionConverter.findAndSubst(key, props);</span>
+<span class="fc" id="L671">	Logger logger = hierarchy.getLogger(loggerName, loggerFactory);</span>
+<span class="fc" id="L672">	synchronized(logger) {</span>
+<span class="fc" id="L673">	  parseCategory(props, logger, key, loggerName, value);</span>
+<span class="fc" id="L674">	  parseAdditivityForLogger(props, logger, loggerName);</span>
+<span class="fc" id="L675">	}</span>
+<span class="pc bpc" id="L676" title="1 of 2 branches missed.">      } else if(key.startsWith(RENDERER_PREFIX)) {</span>
+<span class="nc" id="L677">	String renderedClass = key.substring(RENDERER_PREFIX.length());</span>
+<span class="nc" id="L678">	String renderingClass = OptionConverter.findAndSubst(key, props);</span>
+<span class="nc bnc" id="L679" title="All 2 branches missed.">	if(hierarchy instanceof RendererSupport) {</span>
+<span class="nc" id="L680">	  RendererMap.addRenderer((RendererSupport) hierarchy, renderedClass,</span>
+				  renderingClass);
+	}
+<span class="pc bfc" id="L683" title="All 2 branches covered.">      } else if (key.equals(THROWABLE_RENDERER_PREFIX)) {</span>
+<span class="pc bpc" id="L684" title="1 of 2 branches missed.">          if (hierarchy instanceof ThrowableRendererSupport) {</span>
+<span class="pc bpc" id="L685" title="1 of 2 branches missed.">            ThrowableRenderer tr = (ThrowableRenderer)</span>
+<span class="fc" id="L686">                  OptionConverter.instantiateByKey(props,</span>
+                          THROWABLE_RENDERER_PREFIX,
+<span class="pc" id="L688">                          org.apache.log4j.spi.ThrowableRenderer.class,</span>
+                          null);
+<span class="pc bpc" id="L690" title="1 of 2 branches missed.">            if(tr == null) {</span>
+<span class="nc" id="L691">                LogLog.error(</span>
+                    &quot;Could not instantiate throwableRenderer.&quot;);
+            } else {
+<span class="fc" id="L694">                PropertySetter setter = new PropertySetter(tr);</span>
+<span class="fc" id="L695">                setter.setProperties(props, THROWABLE_RENDERER_PREFIX + &quot;.&quot;);</span>
+<span class="fc" id="L696">                ((ThrowableRendererSupport) hierarchy).setThrowableRenderer(tr);</span>
+
+            }
+          }
+      }
+<span class="fc" id="L701">    }</span>
+<span class="fc" id="L702">  }</span>
+
+  /**
+     Parse the additivity option for a non-root category.
+   */
+  void parseAdditivityForLogger(Properties props, Logger cat,
+				  String loggerName) {
+<span class="fc" id="L709">    String value = OptionConverter.findAndSubst(ADDITIVITY_PREFIX + loggerName,</span>
+					     props);
+<span class="fc" id="L711">    LogLog.debug(&quot;Handling &quot;+ADDITIVITY_PREFIX + loggerName+&quot;=[&quot;+value+&quot;]&quot;);</span>
+    // touch additivity only if necessary
+<span class="pc bpc" id="L713" title="3 of 4 branches missed.">    if((value != null) &amp;&amp; (!value.equals(&quot;&quot;))) {</span>
+<span class="nc" id="L714">      boolean additivity = OptionConverter.toBoolean(value, true);</span>
+<span class="nc" id="L715">      LogLog.debug(&quot;Setting additivity for \&quot;&quot;+loggerName+&quot;\&quot; to &quot;+</span>
+		   additivity);
+<span class="nc" id="L717">      cat.setAdditivity(additivity);</span>
+    }
+<span class="fc" id="L719">  }</span>
+
+  /**
+     This method must work for the root category as well.
+   */
+  void parseCategory(Properties props, Logger logger, String optionKey,
+		     String loggerName, String value) {
+
+<span class="fc" id="L727">    LogLog.debug(&quot;Parsing for [&quot; +loggerName +&quot;] with value=[&quot; + value+&quot;].&quot;);</span>
+    // We must skip over ',' but not white space
+<span class="fc" id="L729">    StringTokenizer st = new StringTokenizer(value, &quot;,&quot;);</span>
+
+    // If value is not in the form &quot;, appender..&quot; or &quot;&quot;, then we should set
+    // the level of the loggeregory.
+
+<span class="pc bpc" id="L734" title="1 of 4 branches missed.">    if(!(value.startsWith(&quot;,&quot;) || value.equals(&quot;&quot;))) {</span>
+
+      // just to be on the safe side...
+<span class="pc bpc" id="L737" title="1 of 2 branches missed.">      if(!st.hasMoreTokens()) {</span>
+<span class="nc" id="L738">        return;</span>
+    }
+
+<span class="fc" id="L741">      String levelStr = st.nextToken();</span>
+<span class="fc" id="L742">      LogLog.debug(&quot;Level token is [&quot; + levelStr + &quot;].&quot;);</span>
+
+      // If the level value is inherited, set category level value to
+      // null. We also check that the user has not specified inherited for the
+      // root category.
+<span class="pc bpc" id="L747" title="1 of 2 branches missed.">      if(INHERITED.equalsIgnoreCase(levelStr) || </span>
+<span class="pc bpc" id="L748" title="1 of 2 branches missed."> 	                                  NULL.equalsIgnoreCase(levelStr)) {</span>
+<span class="nc bnc" id="L749" title="All 2 branches missed.">	if(loggerName.equals(INTERNAL_ROOT_NAME)) {</span>
+<span class="nc" id="L750">	  LogLog.warn(&quot;The root logger cannot be set to null.&quot;);</span>
+	} else {
+<span class="nc" id="L752">	  logger.setLevel(null);</span>
+	}
+      } else {
+<span class="fc" id="L755">	logger.setLevel(OptionConverter.toLevel(levelStr, Level.DEBUG));</span>
+      }
+<span class="fc" id="L757">      LogLog.debug(&quot;Category &quot; + loggerName + &quot; set to &quot; + logger.getLevel());</span>
+    }
+
+    // Begin by removing all existing appenders.
+<span class="fc" id="L761">    logger.removeAllAppenders();</span>
+
+    Appender appender;
+    String appenderName;
+<span class="fc bfc" id="L765" title="All 2 branches covered.">    while(st.hasMoreTokens()) {</span>
+<span class="fc" id="L766">      appenderName = st.nextToken().trim();</span>
+<span class="pc bpc" id="L767" title="2 of 4 branches missed.">      if(appenderName == null || appenderName.equals(&quot;,&quot;)) {</span>
+<span class="nc" id="L768">        continue;</span>
+    }
+<span class="fc" id="L770">      LogLog.debug(&quot;Parsing appender named \&quot;&quot; + appenderName +&quot;\&quot;.&quot;);</span>
+<span class="fc" id="L771">      appender = parseAppender(props, appenderName);</span>
+<span class="pc bpc" id="L772" title="1 of 2 branches missed.">      if(appender != null) {</span>
+<span class="fc" id="L773">	logger.addAppender(appender);</span>
+      }
+    }
+<span class="fc" id="L776">  }</span>
+
+  Appender parseAppender(Properties props, String appenderName) {
+<span class="fc" id="L779">    Appender appender = registryGet(appenderName);</span>
+<span class="pc bpc" id="L780" title="1 of 2 branches missed.">    if((appender != null)) {</span>
+<span class="nc" id="L781">      LogLog.debug(&quot;Appender \&quot;&quot; + appenderName + &quot;\&quot; was already parsed.&quot;);</span>
+<span class="nc" id="L782">      return appender;</span>
+    }
+    // Appender was not previously initialized.
+<span class="fc" id="L785">    String prefix = APPENDER_PREFIX + appenderName;</span>
+<span class="fc" id="L786">    String layoutPrefix = prefix + &quot;.layout&quot;;</span>
+
+<span class="fc bfc" id="L788" title="All 2 branches covered.">    appender = (Appender) OptionConverter.instantiateByKey(props, prefix,</span>
+<span class="fc" id="L789">					      org.apache.log4j.Appender.class,</span>
+					      null);
+<span class="pc bpc" id="L791" title="1 of 2 branches missed.">    if(appender == null) {</span>
+<span class="nc" id="L792">      LogLog.error(</span>
+              &quot;Could not instantiate appender named \&quot;&quot; + appenderName+&quot;\&quot;.&quot;);
+<span class="nc" id="L794">      return null;</span>
+    }
+<span class="fc" id="L796">    appender.setName(appenderName);</span>
+
+<span class="pc bpc" id="L798" title="1 of 2 branches missed.">    if(appender instanceof OptionHandler) {</span>
+<span class="pc bpc" id="L799" title="1 of 2 branches missed.">      if(appender.requiresLayout()) {</span>
+<span class="fc bfc" id="L800" title="All 2 branches covered.">	Layout layout = (Layout) OptionConverter.instantiateByKey(props,</span>
+								  layoutPrefix,
+<span class="fc" id="L802">								  Layout.class,</span>
+								  null);
+<span class="pc bpc" id="L804" title="1 of 2 branches missed.">	if(layout != null) {</span>
+<span class="fc" id="L805">	  appender.setLayout(layout);</span>
+<span class="fc" id="L806">	  LogLog.debug(&quot;Parsing layout options for \&quot;&quot; + appenderName +&quot;\&quot;.&quot;);</span>
+	  //configureOptionHandler(layout, layoutPrefix + &quot;.&quot;, props);
+<span class="fc" id="L808">          PropertySetter.setProperties(layout, props, layoutPrefix + &quot;.&quot;);</span>
+<span class="fc" id="L809">	  LogLog.debug(&quot;End of parsing for \&quot;&quot; + appenderName +&quot;\&quot;.&quot;);</span>
+	}
+      }
+<span class="fc" id="L812">      final String errorHandlerPrefix = prefix + &quot;.errorhandler&quot;;</span>
+<span class="fc" id="L813">      String errorHandlerClass = OptionConverter.findAndSubst(errorHandlerPrefix, props);</span>
+<span class="pc bpc" id="L814" title="1 of 2 branches missed.">      if (errorHandlerClass != null) {</span>
+<span class="nc bnc" id="L815" title="All 2 branches missed.">    		ErrorHandler eh = (ErrorHandler) OptionConverter.instantiateByKey(props,</span>
+					  errorHandlerPrefix,
+<span class="nc" id="L817">					  ErrorHandler.class,</span>
+					  null);
+<span class="nc bnc" id="L819" title="All 2 branches missed.">    		if (eh != null) {</span>
+<span class="nc" id="L820">    			  appender.setErrorHandler(eh);</span>
+<span class="nc" id="L821">    			  LogLog.debug(&quot;Parsing errorhandler options for \&quot;&quot; + appenderName +&quot;\&quot;.&quot;);</span>
+<span class="nc" id="L822">    			  parseErrorHandler(eh, errorHandlerPrefix, props, repository);</span>
+<span class="nc" id="L823">    			  final Properties edited = new Properties();</span>
+<span class="nc" id="L824">    			  final String[] keys = new String[] { </span>
+    					  errorHandlerPrefix + &quot;.&quot; + ROOT_REF,
+    					  errorHandlerPrefix + &quot;.&quot; + LOGGER_REF,
+    					  errorHandlerPrefix + &quot;.&quot; + APPENDER_REF_TAG
+    			  };
+<span class="nc bnc" id="L829" title="All 2 branches missed.">    			  for(Iterator iter = props.entrySet().iterator();iter.hasNext();) {</span>
+<span class="nc" id="L830">    				  Map.Entry entry = (Map.Entry) iter.next();</span>
+<span class="nc" id="L831">    				  int i = 0;</span>
+<span class="nc bnc" id="L832" title="All 2 branches missed.">    				  for(; i &lt; keys.length; i++) {</span>
+<span class="nc bnc" id="L833" title="All 2 branches missed.">    					  if(keys[i].equals(entry.getKey())) {</span>
+<span class="nc" id="L834">                            break;</span>
+                        }
+    				  }
+<span class="nc bnc" id="L837" title="All 2 branches missed.">    				  if (i == keys.length) {</span>
+<span class="nc" id="L838">    					  edited.put(entry.getKey(), entry.getValue());</span>
+    				  }
+<span class="nc" id="L840">    			  }</span>
+<span class="nc" id="L841">    		      PropertySetter.setProperties(eh, edited, errorHandlerPrefix + &quot;.&quot;);</span>
+<span class="nc" id="L842">    			  LogLog.debug(&quot;End of errorhandler parsing for \&quot;&quot; + appenderName +&quot;\&quot;.&quot;);</span>
+    		}
+    	  
+      }
+      //configureOptionHandler((OptionHandler) appender, prefix + &quot;.&quot;, props);
+<span class="fc" id="L847">      PropertySetter.setProperties(appender, props, prefix + &quot;.&quot;);</span>
+<span class="fc" id="L848">      LogLog.debug(&quot;Parsed \&quot;&quot; + appenderName +&quot;\&quot; options.&quot;);</span>
+    }
+<span class="fc" id="L850">    parseAppenderFilters(props, appenderName, appender);</span>
+<span class="fc" id="L851">    registryPut(appender);</span>
+<span class="fc" id="L852">    return appender;</span>
+  }
+  
+  private void parseErrorHandler(
+		  final ErrorHandler eh,
+		  final String errorHandlerPrefix,
+		  final Properties props, 
+		  final LoggerRepository hierarchy) {
+<span class="nc" id="L860">		boolean rootRef = OptionConverter.toBoolean(</span>
+<span class="nc" id="L861">					  OptionConverter.findAndSubst(errorHandlerPrefix + ROOT_REF, props), false);</span>
+<span class="nc bnc" id="L862" title="All 2 branches missed.">		if (rootRef) {</span>
+<span class="nc" id="L863">				  eh.setLogger(hierarchy.getRootLogger());</span>
+	    }
+<span class="nc" id="L865">		String loggerName = OptionConverter.findAndSubst(errorHandlerPrefix + LOGGER_REF , props);</span>
+<span class="nc bnc" id="L866" title="All 2 branches missed.">		if (loggerName != null) {</span>
+<span class="nc bnc" id="L867" title="All 2 branches missed.">			Logger logger = (loggerFactory == null) ? hierarchy.getLogger(loggerName)</span>
+<span class="nc" id="L868">			                : hierarchy.getLogger(loggerName, loggerFactory);</span>
+<span class="nc" id="L869">			eh.setLogger(logger);</span>
+		}
+<span class="nc" id="L871">		String appenderName = OptionConverter.findAndSubst(errorHandlerPrefix + APPENDER_REF_TAG, props);</span>
+<span class="nc bnc" id="L872" title="All 2 branches missed.">		if (appenderName != null) {</span>
+<span class="nc" id="L873">			Appender backup = parseAppender(props, appenderName);</span>
+<span class="nc bnc" id="L874" title="All 2 branches missed.">			if (backup != null) {</span>
+<span class="nc" id="L875">				eh.setBackupAppender(backup);</span>
+			}
+		}
+<span class="nc" id="L878">  }</span>
+				
+  
+  void parseAppenderFilters(Properties props, String appenderName, Appender appender) {
+    // extract filters and filter options from props into a hashtable mapping
+    // the property name defining the filter class to a list of pre-parsed
+    // name-value pairs associated to that filter
+<span class="fc" id="L885">    final String filterPrefix = APPENDER_PREFIX + appenderName + &quot;.filter.&quot;;</span>
+<span class="fc" id="L886">    int fIdx = filterPrefix.length();</span>
+<span class="fc" id="L887">    Hashtable filters = new Hashtable();</span>
+<span class="fc" id="L888">    Enumeration e = props.keys();</span>
+<span class="fc" id="L889">    String name = &quot;&quot;;</span>
+<span class="fc bfc" id="L890" title="All 2 branches covered.">    while (e.hasMoreElements()) {</span>
+<span class="fc" id="L891">      String key = (String) e.nextElement();</span>
+<span class="pc bpc" id="L892" title="1 of 2 branches missed.">      if (key.startsWith(filterPrefix)) {</span>
+<span class="nc" id="L893">        int dotIdx = key.indexOf('.', fIdx);</span>
+<span class="nc" id="L894">        String filterKey = key;</span>
+<span class="nc bnc" id="L895" title="All 2 branches missed.">        if (dotIdx != -1) {</span>
+<span class="nc" id="L896">          filterKey = key.substring(0, dotIdx);</span>
+<span class="nc" id="L897">          name = key.substring(dotIdx+1);</span>
+        }
+<span class="nc" id="L899">        Vector filterOpts = (Vector) filters.get(filterKey);</span>
+<span class="nc bnc" id="L900" title="All 2 branches missed.">        if (filterOpts == null) {</span>
+<span class="nc" id="L901">          filterOpts = new Vector();</span>
+<span class="nc" id="L902">          filters.put(filterKey, filterOpts);</span>
+        }
+<span class="nc bnc" id="L904" title="All 2 branches missed.">        if (dotIdx != -1) {</span>
+<span class="nc" id="L905">          String value = OptionConverter.findAndSubst(key, props);</span>
+<span class="nc" id="L906">          filterOpts.add(new NameValue(name, value));</span>
+        }
+      }
+<span class="fc" id="L909">    }</span>
+
+    // sort filters by IDs, insantiate filters, set filter options,
+    // add filters to the appender
+<span class="fc" id="L913">    Enumeration g = new SortedKeyEnumeration(filters);</span>
+<span class="pc bpc" id="L914" title="1 of 2 branches missed.">    while (g.hasMoreElements()) {</span>
+<span class="nc" id="L915">      String key = (String) g.nextElement();</span>
+<span class="nc" id="L916">      String clazz = props.getProperty(key);</span>
+<span class="nc bnc" id="L917" title="All 2 branches missed.">      if (clazz != null) {</span>
+<span class="nc" id="L918">        LogLog.debug(&quot;Filter key: [&quot;+key+&quot;] class: [&quot;+props.getProperty(key) +&quot;] props: &quot;+filters.get(key));</span>
+<span class="nc bnc" id="L919" title="All 2 branches missed.">        Filter filter = (Filter) OptionConverter.instantiateByClassName(clazz, Filter.class, null);</span>
+<span class="nc bnc" id="L920" title="All 2 branches missed.">        if (filter != null) {</span>
+<span class="nc" id="L921">          PropertySetter propSetter = new PropertySetter(filter);</span>
+<span class="nc" id="L922">          Vector v = (Vector)filters.get(key);</span>
+<span class="nc" id="L923">          Enumeration filterProps = v.elements();</span>
+<span class="nc bnc" id="L924" title="All 2 branches missed.">          while (filterProps.hasMoreElements()) {</span>
+<span class="nc" id="L925">            NameValue kv = (NameValue)filterProps.nextElement();</span>
+<span class="nc" id="L926">            propSetter.setProperty(kv.key, kv.value);</span>
+<span class="nc" id="L927">          }</span>
+<span class="nc" id="L928">          propSetter.activate();</span>
+<span class="nc" id="L929">          LogLog.debug(&quot;Adding filter of type [&quot;+filter.getClass()</span>
+<span class="nc" id="L930">           +&quot;] to appender named [&quot;+appender.getName()+&quot;].&quot;);</span>
+<span class="nc" id="L931">          appender.addFilter(filter);</span>
+        }
+<span class="nc" id="L933">      } else {</span>
+<span class="nc" id="L934">        LogLog.warn(&quot;Missing class definition for filter: [&quot;+key+&quot;]&quot;);</span>
+      }
+<span class="nc" id="L936">    }</span>
+<span class="fc" id="L937">  }</span>
+
+
+  void  registryPut(Appender appender) {
+<span class="fc" id="L941">    registry.put(appender.getName(), appender);</span>
+<span class="fc" id="L942">  }</span>
+
+  Appender registryGet(String name) {
+<span class="fc" id="L945">    return (Appender) registry.get(name);</span>
+  }
+}
+
+class PropertyWatchdog extends FileWatchdog {
+
+  PropertyWatchdog(String filename) {
+<span class="nc" id="L952">    super(filename);</span>
+<span class="nc" id="L953">  }</span>
+
+  /**
+     Call {@link PropertyConfigurator#configure(String)} with the
+     &lt;code&gt;filename&lt;/code&gt; to reconfigure log4j. */
+  public
+  void doOnChange() {
+<span class="nc" id="L960">    new PropertyConfigurator().doConfigure(filename,</span>
+<span class="nc" id="L961">					   LogManager.getLoggerRepository());</span>
+<span class="nc" id="L962">  }</span>
+}
+
+class NameValue {
+  String key, value;
+<span class="nc" id="L967">  public NameValue(String key, String value) {</span>
+<span class="nc" id="L968">    this.key = key;</span>
+<span class="nc" id="L969">    this.value = value;</span>
+<span class="nc" id="L970">  }</span>
+  public String toString() {
+<span class="nc" id="L972">    return key + &quot;=&quot; + value;</span>
+  }
+}
+
+class SortedKeyEnumeration implements Enumeration {
+
+  private Enumeration e;
+
+<span class="fc" id="L980">  public SortedKeyEnumeration(Hashtable ht) {</span>
+<span class="fc" id="L981">    Enumeration f = ht.keys();</span>
+<span class="fc" id="L982">    Vector keys = new Vector(ht.size());</span>
+<span class="pc bpc" id="L983" title="1 of 2 branches missed.">    for (int i, last = 0; f.hasMoreElements(); ++last) {</span>
+<span class="nc" id="L984">      String key = (String) f.nextElement();</span>
+<span class="nc bnc" id="L985" title="All 2 branches missed.">      for (i = 0; i &lt; last; ++i) {</span>
+<span class="nc" id="L986">        String s = (String) keys.get(i);</span>
+<span class="nc bnc" id="L987" title="All 2 branches missed.">        if (key.compareTo(s) &lt;= 0) {</span>
+<span class="nc" id="L988">            break;</span>
+        }
+      }
+<span class="nc" id="L991">      keys.add(i, key);</span>
+    }
+<span class="fc" id="L993">    e = keys.elements();</span>
+<span class="fc" id="L994">  }</span>
+
+  public boolean hasMoreElements() {
+<span class="fc" id="L997">    return e.hasMoreElements();</span>
+  }
+
+  public Object nextElement() {
+<span class="nc" id="L1001">    return e.nextElement();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

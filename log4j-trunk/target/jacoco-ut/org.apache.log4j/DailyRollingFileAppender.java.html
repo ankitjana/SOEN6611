@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DailyRollingFileAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">DailyRollingFileAppender.java</span></div><h1>DailyRollingFileAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+
+package org.apache.log4j;
+
+import java.io.IOException;
+import java.io.File;
+import java.io.InterruptedIOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.Locale;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+   DailyRollingFileAppender extends {@link FileAppender} so that the
+   underlying file is rolled over at a user chosen frequency.
+   
+   DailyRollingFileAppender has been observed to exhibit 
+   synchronization issues and data loss.  The log4j extras
+   companion includes alternatives which should be considered
+   for new deployments and which are discussed in the documentation
+   for org.apache.log4j.rolling.RollingFileAppender.
+
+   &lt;p&gt;The rolling schedule is specified by the &lt;b&gt;DatePattern&lt;/b&gt;
+   option. This pattern should follow the {@link SimpleDateFormat}
+   conventions. In particular, you &lt;em&gt;must&lt;/em&gt; escape literal text
+   within a pair of single quotes. A formatted version of the date
+   pattern is used as the suffix for the rolled file name.
+
+   &lt;p&gt;For example, if the &lt;b&gt;File&lt;/b&gt; option is set to
+   &lt;code&gt;/foo/bar.log&lt;/code&gt; and the &lt;b&gt;DatePattern&lt;/b&gt; set to
+   &lt;code&gt;'.'yyyy-MM-dd&lt;/code&gt;, on 2001-02-16 at midnight, the logging
+   file &lt;code&gt;/foo/bar.log&lt;/code&gt; will be copied to
+   &lt;code&gt;/foo/bar.log.2001-02-16&lt;/code&gt; and logging for 2001-02-17
+   will continue in &lt;code&gt;/foo/bar.log&lt;/code&gt; until it rolls over
+   the next day.
+
+   &lt;p&gt;Is is possible to specify monthly, weekly, half-daily, daily,
+   hourly, or minutely rollover schedules.
+
+   &lt;p&gt;&lt;table border=&quot;1&quot; cellpadding=&quot;2&quot;&gt;
+   &lt;tr&gt;
+   &lt;th&gt;DatePattern&lt;/th&gt;
+   &lt;th&gt;Rollover schedule&lt;/th&gt;
+   &lt;th&gt;Example&lt;/th&gt;
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-MM&lt;/code&gt;
+   &lt;td&gt;Rollover at the beginning of each month&lt;/td&gt;
+
+   &lt;td&gt;At midnight of May 31st, 2002 &lt;code&gt;/foo/bar.log&lt;/code&gt; will be
+   copied to &lt;code&gt;/foo/bar.log.2002-05&lt;/code&gt;. Logging for the month
+   of June will be output to &lt;code&gt;/foo/bar.log&lt;/code&gt; until it is
+   also rolled over the next month.
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-ww&lt;/code&gt;
+
+   &lt;td&gt;Rollover at the first day of each week. The first day of the
+   week depends on the locale.&lt;/td&gt;
+
+   &lt;td&gt;Assuming the first day of the week is Sunday, on Saturday
+   midnight, June 9th 2002, the file &lt;i&gt;/foo/bar.log&lt;/i&gt; will be
+   copied to &lt;i&gt;/foo/bar.log.2002-23&lt;/i&gt;.  Logging for the 24th week
+   of 2002 will be output to &lt;code&gt;/foo/bar.log&lt;/code&gt; until it is
+   rolled over the next week.
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-MM-dd&lt;/code&gt;
+
+   &lt;td&gt;Rollover at midnight each day.&lt;/td&gt;
+
+   &lt;td&gt;At midnight, on March 8th, 2002, &lt;code&gt;/foo/bar.log&lt;/code&gt; will
+   be copied to &lt;code&gt;/foo/bar.log.2002-03-08&lt;/code&gt;. Logging for the
+   9th day of March will be output to &lt;code&gt;/foo/bar.log&lt;/code&gt; until
+   it is rolled over the next day.
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-MM-dd-a&lt;/code&gt;
+
+   &lt;td&gt;Rollover at midnight and midday of each day.&lt;/td&gt;
+
+   &lt;td&gt;At noon, on March 9th, 2002, &lt;code&gt;/foo/bar.log&lt;/code&gt; will be
+   copied to &lt;code&gt;/foo/bar.log.2002-03-09-AM&lt;/code&gt;. Logging for the
+   afternoon of the 9th will be output to &lt;code&gt;/foo/bar.log&lt;/code&gt;
+   until it is rolled over at midnight.
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-MM-dd-HH&lt;/code&gt;
+
+   &lt;td&gt;Rollover at the top of every hour.&lt;/td&gt;
+
+   &lt;td&gt;At approximately 11:00.000 o'clock on March 9th, 2002,
+   &lt;code&gt;/foo/bar.log&lt;/code&gt; will be copied to
+   &lt;code&gt;/foo/bar.log.2002-03-09-10&lt;/code&gt;. Logging for the 11th hour
+   of the 9th of March will be output to &lt;code&gt;/foo/bar.log&lt;/code&gt;
+   until it is rolled over at the beginning of the next hour.
+
+
+   &lt;tr&gt;
+   &lt;td&gt;&lt;code&gt;'.'yyyy-MM-dd-HH-mm&lt;/code&gt;
+
+   &lt;td&gt;Rollover at the beginning of every minute.&lt;/td&gt;
+
+   &lt;td&gt;At approximately 11:23,000, on March 9th, 2001,
+   &lt;code&gt;/foo/bar.log&lt;/code&gt; will be copied to
+   &lt;code&gt;/foo/bar.log.2001-03-09-10-22&lt;/code&gt;. Logging for the minute
+   of 11:23 (9th of March) will be output to
+   &lt;code&gt;/foo/bar.log&lt;/code&gt; until it is rolled over the next minute.
+
+   &lt;/table&gt;
+
+   &lt;p&gt;Do not use the colon &quot;:&quot; character in anywhere in the
+   &lt;b&gt;DatePattern&lt;/b&gt; option. The text before the colon is interpeted
+   as the protocol specificaion of a URL which is probably not what
+   you want.
+
+
+   @author Eirik Lygre
+   @author Ceki G&amp;uuml;lc&amp;uuml;*/
+public class DailyRollingFileAppender extends FileAppender {
+
+
+  // The code assumes that the following constants are in a increasing
+  // sequence.
+  static final int TOP_OF_TROUBLE=-1;
+  static final int TOP_OF_MINUTE = 0;
+  static final int TOP_OF_HOUR   = 1;
+  static final int HALF_DAY      = 2;
+  static final int TOP_OF_DAY    = 3;
+  static final int TOP_OF_WEEK   = 4;
+  static final int TOP_OF_MONTH  = 5;
+
+
+  /**
+     The date pattern. By default, the pattern is set to
+     &quot;'.'yyyy-MM-dd&quot; meaning daily rollover.
+   */
+<span class="fc" id="L160">  private String datePattern = &quot;'.'yyyy-MM-dd&quot;;</span>
+
+  /**
+     The log file will be renamed to the value of the
+     scheduledFilename variable when the next interval is entered. For
+     example, if the rollover period is one hour, the log file will be
+     renamed to the value of &quot;scheduledFilename&quot; at the beginning of
+     the next hour. 
+
+     The precise time when a rollover occurs depends on logging
+     activity. 
+  */
+  private String scheduledFilename;
+
+  /**
+     The next time we estimate a rollover should occur. */
+<span class="fc" id="L176">  private long nextCheck = System.currentTimeMillis () - 1;</span>
+
+<span class="fc" id="L178">  Date now = new Date();</span>
+
+  SimpleDateFormat sdf;
+
+<span class="fc" id="L182">  RollingCalendar rc = new RollingCalendar();</span>
+
+<span class="fc" id="L184">  int checkPeriod = TOP_OF_TROUBLE;</span>
+
+  // The gmtTimeZone is used only in computeCheckPeriod() method.
+<span class="fc" id="L187">  static final TimeZone gmtTimeZone = TimeZone.getTimeZone(&quot;GMT&quot;);</span>
+
+
+  /**
+     The default constructor does nothing. */
+<span class="fc" id="L192">  public DailyRollingFileAppender() {</span>
+<span class="fc" id="L193">  }</span>
+
+  /**
+    Instantiate a &lt;code&gt;DailyRollingFileAppender&lt;/code&gt; and open the
+    file designated by &lt;code&gt;filename&lt;/code&gt;. The opened filename will
+    become the ouput destination for this appender.
+
+    */
+  public DailyRollingFileAppender (Layout layout, String filename,
+				   String datePattern) throws IOException {
+<span class="fc" id="L203">    super(layout, filename, true);</span>
+<span class="fc" id="L204">    this.datePattern = datePattern;</span>
+<span class="fc" id="L205">    activateOptions();</span>
+<span class="fc" id="L206">  }</span>
+
+  /**
+     The &lt;b&gt;DatePattern&lt;/b&gt; takes a string in the same format as
+     expected by {@link SimpleDateFormat}. This options determines the
+     rollover schedule.
+   */
+  public void setDatePattern(String pattern) {
+<span class="fc" id="L214">    datePattern = pattern;</span>
+<span class="fc" id="L215">  }</span>
+
+  /** Returns the value of the &lt;b&gt;DatePattern&lt;/b&gt; option. */
+  public String getDatePattern() {
+<span class="fc" id="L219">    return datePattern;</span>
+  }
+
+  public void activateOptions() {
+<span class="fc" id="L223">    super.activateOptions();</span>
+<span class="fc bfc" id="L224" title="All 4 branches covered.">    if(datePattern != null &amp;&amp; fileName != null) {</span>
+<span class="fc" id="L225">      now.setTime(System.currentTimeMillis());</span>
+<span class="fc" id="L226">      sdf = new SimpleDateFormat(datePattern);</span>
+<span class="fc" id="L227">      int type = computeCheckPeriod();</span>
+<span class="fc" id="L228">      printPeriodicity(type);</span>
+<span class="fc" id="L229">      rc.setType(type);</span>
+<span class="fc" id="L230">      File file = new File(fileName);</span>
+<span class="fc" id="L231">      scheduledFilename = fileName+sdf.format(new Date(file.lastModified()));</span>
+
+<span class="fc" id="L233">    } else {</span>
+<span class="fc" id="L234">      LogLog.error(&quot;Either File or DatePattern options are not set for appender [&quot;</span>
+		   +name+&quot;].&quot;);
+    }
+<span class="fc" id="L237">  }</span>
+
+  void printPeriodicity(int type) {
+<span class="fc bfc" id="L240" title="All 7 branches covered.">    switch(type) {</span>
+    case TOP_OF_MINUTE:
+<span class="fc" id="L242">      LogLog.debug(&quot;Appender [&quot;+name+&quot;] to be rolled every minute.&quot;);</span>
+<span class="fc" id="L243">      break;</span>
+    case TOP_OF_HOUR:
+<span class="fc" id="L245">      LogLog.debug(&quot;Appender [&quot;+name</span>
+		   +&quot;] to be rolled on top of every hour.&quot;);
+<span class="fc" id="L247">      break;</span>
+    case HALF_DAY:
+<span class="fc" id="L249">      LogLog.debug(&quot;Appender [&quot;+name</span>
+		   +&quot;] to be rolled at midday and midnight.&quot;);
+<span class="fc" id="L251">      break;</span>
+    case TOP_OF_DAY:
+<span class="fc" id="L253">      LogLog.debug(&quot;Appender [&quot;+name</span>
+		   +&quot;] to be rolled at midnight.&quot;);
+<span class="fc" id="L255">      break;</span>
+    case TOP_OF_WEEK:
+<span class="fc" id="L257">      LogLog.debug(&quot;Appender [&quot;+name</span>
+		   +&quot;] to be rolled at start of week.&quot;);
+<span class="fc" id="L259">      break;</span>
+    case TOP_OF_MONTH:
+<span class="fc" id="L261">      LogLog.debug(&quot;Appender [&quot;+name</span>
+		   +&quot;] to be rolled at start of every month.&quot;);
+<span class="fc" id="L263">      break;</span>
+    default:
+<span class="fc" id="L265">      LogLog.warn(&quot;Unknown periodicity for appender [&quot;+name+&quot;].&quot;);</span>
+    }
+<span class="fc" id="L267">  }</span>
+
+
+  // This method computes the roll over period by looping over the
+  // periods, starting with the shortest, and stopping when the r0 is
+  // different from from r1, where r0 is the epoch formatted according
+  // the datePattern (supplied by the user) and r1 is the
+  // epoch+nextMillis(i) formatted according to datePattern. All date
+  // formatting is done in GMT and not local format because the test
+  // logic is based on comparisons relative to 1970-01-01 00:00:00
+  // GMT (the epoch).
+
+  int computeCheckPeriod() {
+<span class="fc" id="L280">    RollingCalendar rollingCalendar = new RollingCalendar(gmtTimeZone, Locale.getDefault());</span>
+    // set sate to 1970-01-01 00:00:00 GMT
+<span class="fc" id="L282">    Date epoch = new Date(0);</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">    if(datePattern != null) {</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">      for(int i = TOP_OF_MINUTE; i &lt;= TOP_OF_MONTH; i++) {</span>
+<span class="fc" id="L285">	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);</span>
+<span class="fc" id="L286">	simpleDateFormat.setTimeZone(gmtTimeZone); // do all date formatting in GMT</span>
+<span class="fc" id="L287">	String r0 = simpleDateFormat.format(epoch);</span>
+<span class="fc" id="L288">	rollingCalendar.setType(i);</span>
+<span class="fc" id="L289">	Date next = new Date(rollingCalendar.getNextCheckMillis(epoch));</span>
+<span class="fc" id="L290">	String r1 =  simpleDateFormat.format(next);</span>
+	//System.out.println(&quot;Type = &quot;+i+&quot;, r0 = &quot;+r0+&quot;, r1 = &quot;+r1);
+<span class="pc bpc" id="L292" title="2 of 6 branches missed.">	if(r0 != null &amp;&amp; r1 != null &amp;&amp; !r0.equals(r1)) {</span>
+<span class="fc" id="L293">	  return i;</span>
+	}
+      }
+    }
+<span class="fc" id="L297">    return TOP_OF_TROUBLE; // Deliberately head for trouble...</span>
+  }
+
+  /**
+     Rollover the current file to a new file.
+  */
+  void rollOver() throws IOException {
+
+    /* Compute filename, but only if datePattern is specified */
+<span class="fc bfc" id="L306" title="All 2 branches covered.">    if (datePattern == null) {</span>
+<span class="fc" id="L307">      errorHandler.error(&quot;Missing DatePattern option in rollOver().&quot;);</span>
+<span class="fc" id="L308">      return;</span>
+    }
+
+<span class="fc" id="L311">    String datedFilename = fileName+sdf.format(now);</span>
+    // It is too early to roll over because we are still within the
+    // bounds of the current interval. Rollover will occur once the
+    // next interval is reached.
+<span class="fc bfc" id="L315" title="All 2 branches covered.">    if (scheduledFilename.equals(datedFilename)) {</span>
+<span class="fc" id="L316">      return;</span>
+    }
+
+    // close current file, and rename it to datedFilename
+<span class="fc" id="L320">    this.closeFile();</span>
+
+<span class="fc" id="L322">    File target  = new File(scheduledFilename);</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">    if (target.exists()) {</span>
+<span class="fc" id="L324">      target.delete();</span>
+    }
+
+<span class="fc" id="L327">    File file = new File(fileName);</span>
+<span class="fc" id="L328">    boolean result = file.renameTo(target);</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">    if(result) {</span>
+<span class="fc" id="L330">      LogLog.debug(fileName +&quot; -&gt; &quot;+ scheduledFilename);</span>
+    } else {
+<span class="fc" id="L332">      LogLog.error(&quot;Failed to rename [&quot;+fileName+&quot;] to [&quot;+scheduledFilename+&quot;].&quot;);</span>
+    }
+
+    try {
+      // This will also close the file. This is OK since multiple
+      // close operations are safe.
+<span class="fc" id="L338">      this.setFile(fileName, true, this.bufferedIO, this.bufferSize);</span>
+    }
+<span class="nc" id="L340">    catch(IOException e) {</span>
+<span class="nc" id="L341">      errorHandler.error(&quot;setFile(&quot;+fileName+&quot;, true) call failed.&quot;);</span>
+<span class="fc" id="L342">    }</span>
+<span class="fc" id="L343">    scheduledFilename = datedFilename;</span>
+<span class="fc" id="L344">  }</span>
+
+  /**
+   * This method differentiates DailyRollingFileAppender from its
+   * super class.
+   *
+   * &lt;p&gt;Before actually logging, this method will check whether it is
+   * time to do a rollover. If it is, it will schedule the next
+   * rollover time and then rollover.
+   * */
+  protected void subAppend(LoggingEvent event) {
+<span class="fc" id="L355">    long n = System.currentTimeMillis();</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">    if (n &gt;= nextCheck) {</span>
+<span class="fc" id="L357">      now.setTime(n);</span>
+<span class="fc" id="L358">      nextCheck = rc.getNextCheckMillis(now);</span>
+      try {
+<span class="fc" id="L360">	rollOver();</span>
+      }
+<span class="nc" id="L362">      catch(IOException ioe) {</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">          if (ioe instanceof InterruptedIOException) {</span>
+<span class="nc" id="L364">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L366">	      LogLog.error(&quot;rollOver() failed.&quot;, ioe);</span>
+<span class="fc" id="L367">      }</span>
+    }
+<span class="fc" id="L369">    super.subAppend(event);</span>
+<span class="fc" id="L370">   }</span>
+}
+
+/**
+ *  RollingCalendar is a helper class to DailyRollingFileAppender.
+ *  Given a periodicity type and the current time, it computes the
+ *  start of the next interval.  
+ * */
+class RollingCalendar extends GregorianCalendar {
+  private static final long serialVersionUID = -3560331770601814177L;
+
+<span class="fc" id="L381">  int type = DailyRollingFileAppender.TOP_OF_TROUBLE;</span>
+
+  RollingCalendar() {
+<span class="fc" id="L384">    super();</span>
+<span class="fc" id="L385">  }  </span>
+
+  RollingCalendar(TimeZone tz, Locale locale) {
+<span class="fc" id="L388">    super(tz, locale);</span>
+<span class="fc" id="L389">  }  </span>
+
+  void setType(int type) {
+<span class="fc" id="L392">    this.type = type;</span>
+<span class="fc" id="L393">  }</span>
+
+  public long getNextCheckMillis(Date now) {
+<span class="fc" id="L396">    return getNextCheckDate(now).getTime();</span>
+  }
+
+  public Date getNextCheckDate(Date now) {
+<span class="fc" id="L400">    this.setTime(now);</span>
+
+<span class="fc bfc" id="L402" title="All 7 branches covered.">    switch(type) {</span>
+    case DailyRollingFileAppender.TOP_OF_MINUTE:
+<span class="fc" id="L404">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L405">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L406">	this.add(Calendar.MINUTE, 1);</span>
+<span class="fc" id="L407">	break;</span>
+    case DailyRollingFileAppender.TOP_OF_HOUR:
+<span class="fc" id="L409">	this.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L410">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L411">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L412">	this.add(Calendar.HOUR_OF_DAY, 1);</span>
+<span class="fc" id="L413">	break;</span>
+    case DailyRollingFileAppender.HALF_DAY:
+<span class="fc" id="L415">	this.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L416">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L417">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L418">	int hour = get(Calendar.HOUR_OF_DAY);</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">	if(hour &lt; 12) {</span>
+<span class="fc" id="L420">	  this.set(Calendar.HOUR_OF_DAY, 12);</span>
+	} else {
+<span class="fc" id="L422">	  this.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L423">	  this.add(Calendar.DAY_OF_MONTH, 1);</span>
+	}
+<span class="fc" id="L425">	break;</span>
+    case DailyRollingFileAppender.TOP_OF_DAY:
+<span class="fc" id="L427">	this.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L428">	this.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L429">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L430">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L431">	this.add(Calendar.DATE, 1);</span>
+<span class="fc" id="L432">	break;</span>
+    case DailyRollingFileAppender.TOP_OF_WEEK:
+<span class="fc" id="L434">	this.set(Calendar.DAY_OF_WEEK, getFirstDayOfWeek());</span>
+<span class="fc" id="L435">	this.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L436">	this.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L437">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L438">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L439">	this.add(Calendar.WEEK_OF_YEAR, 1);</span>
+<span class="fc" id="L440">	break;</span>
+    case DailyRollingFileAppender.TOP_OF_MONTH:
+<span class="fc" id="L442">	this.set(Calendar.DATE, 1);</span>
+<span class="fc" id="L443">	this.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L444">	this.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L445">	this.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L446">	this.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L447">	this.add(Calendar.MONTH, 1);</span>
+<span class="fc" id="L448">	break;</span>
+    default:
+<span class="fc" id="L450">	throw new IllegalStateException(&quot;Unknown periodicity type.&quot;);</span>
+    }
+<span class="fc" id="L452">    return getTime();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

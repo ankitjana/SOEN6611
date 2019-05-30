@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoggerDynamicMBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.jmx</a> &gt; <span class="el_source">LoggerDynamicMBean.java</span></div><h1>LoggerDynamicMBean.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.jmx;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.OptionConverter;
+
+import javax.management.Attribute;
+import javax.management.AttributeNotFoundException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.JMException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MalformedObjectNameException;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import javax.management.RuntimeOperationsException;
+import java.lang.reflect.Constructor;
+import java.util.Enumeration;
+import java.util.Vector;
+
+public class LoggerDynamicMBean extends AbstractDynamicMBean
+                                  implements NotificationListener {
+
+<span class="nc" id="L49">  private MBeanConstructorInfo[] dConstructors = new MBeanConstructorInfo[1];</span>
+<span class="nc" id="L50">  private MBeanOperationInfo[] dOperations = new MBeanOperationInfo[1];</span>
+
+<span class="nc" id="L52">  private Vector dAttributes = new Vector();</span>
+<span class="nc" id="L53">  private String dClassName = this.getClass().getName();</span>
+
+<span class="nc" id="L55">  private String dDescription =</span>
+     &quot;This MBean acts as a management facade for a org.apache.log4j.Logger instance.&quot;;
+
+  // This Logger instance is for logging.
+<span class="nc bnc" id="L59" title="All 2 branches missed.">  private static Logger cat = Logger.getLogger(LoggerDynamicMBean.class);</span>
+
+  // We wrap this Logger instance.
+  private Logger logger;
+
+<span class="nc" id="L64">  public LoggerDynamicMBean(Logger logger) {</span>
+<span class="nc" id="L65">    this.logger = logger;</span>
+<span class="nc" id="L66">    buildDynamicMBeanInfo();</span>
+<span class="nc" id="L67">  }</span>
+
+  public
+  void handleNotification(Notification notification, Object handback) {
+<span class="nc" id="L71">    cat.debug(&quot;Received notification: &quot;+notification.getType());</span>
+<span class="nc" id="L72">    registerAppenderMBean((Appender) notification.getUserData() );</span>
+
+
+<span class="nc" id="L75">  }</span>
+
+  private
+  void buildDynamicMBeanInfo() {
+<span class="nc" id="L79">    Constructor[] constructors = this.getClass().getConstructors();</span>
+<span class="nc" id="L80">    dConstructors[0] = new MBeanConstructorInfo(</span>
+             &quot;HierarchyDynamicMBean(): Constructs a HierarchyDynamicMBean instance&quot;,
+	     constructors[0]);
+
+<span class="nc" id="L84">    dAttributes.add(new MBeanAttributeInfo(&quot;name&quot;,</span>
+					   &quot;java.lang.String&quot;,
+					   &quot;The name of this Logger.&quot;,
+					   true,
+					   false,
+					   false));
+
+<span class="nc" id="L91">    dAttributes.add(new MBeanAttributeInfo(&quot;priority&quot;,</span>
+					   &quot;java.lang.String&quot;,
+					   &quot;The priority of this logger.&quot;,
+					   true,
+					   true,
+					   false));
+
+
+
+
+
+<span class="nc" id="L102">    MBeanParameterInfo[] params = new MBeanParameterInfo[2];</span>
+<span class="nc" id="L103">    params[0] = new MBeanParameterInfo(&quot;class name&quot;, &quot;java.lang.String&quot;,</span>
+				       &quot;add an appender to this logger&quot;);
+<span class="nc" id="L105">    params[1] = new MBeanParameterInfo(&quot;appender name&quot;, &quot;java.lang.String&quot;,</span>
+				       &quot;name of the appender&quot;);
+
+<span class="nc" id="L108">    dOperations[0] = new MBeanOperationInfo(&quot;addAppender&quot;,</span>
+					    &quot;addAppender(): add an appender&quot;,
+					    params,
+					    &quot;void&quot;,
+					    MBeanOperationInfo.ACTION);
+<span class="nc" id="L113">  }</span>
+
+  protected
+  Logger getLogger() {
+<span class="nc" id="L117">    return logger;</span>
+  }
+
+
+  public
+  MBeanInfo getMBeanInfo() {
+    //cat.debug(&quot;getMBeanInfo called.&quot;);
+
+<span class="nc" id="L125">    MBeanAttributeInfo[] attribs = new MBeanAttributeInfo[dAttributes.size()];</span>
+<span class="nc" id="L126">    dAttributes.toArray(attribs);</span>
+
+<span class="nc" id="L128">    MBeanInfo mb = new MBeanInfo(dClassName,</span>
+			 dDescription,
+			 attribs,
+			 dConstructors,
+			 dOperations,
+			 new MBeanNotificationInfo[0]);
+    //cat.debug(&quot;getMBeanInfo exit.&quot;);
+<span class="nc" id="L135">    return mb;</span>
+  }
+
+  public
+  Object invoke(String operationName, Object params[], String signature[])
+    throws MBeanException,
+    ReflectionException {
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">    if(operationName.equals(&quot;addAppender&quot;)) {</span>
+<span class="nc" id="L144">      addAppender((String) params[0], (String) params[1]);</span>
+<span class="nc" id="L145">      return &quot;Hello world.&quot;;</span>
+    }
+
+<span class="nc" id="L148">    return null;</span>
+  }
+
+
+  public
+  Object getAttribute(String attributeName) throws AttributeNotFoundException,
+                                                   MBeanException,
+                                                   ReflectionException {
+
+       // Check attributeName is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    if (attributeName == null) {</span>
+<span class="nc" id="L159">      throw new RuntimeOperationsException(new IllegalArgumentException(</span>
+			&quot;Attribute name cannot be null&quot;),
+       &quot;Cannot invoke a getter of &quot; + dClassName + &quot; with null attribute name&quot;);
+    }
+
+    // Check for a recognized attributeName and call the corresponding getter
+<span class="nc bnc" id="L165" title="All 2 branches missed.">    if (attributeName.equals(&quot;name&quot;)) {</span>
+<span class="nc" id="L166">      return logger.getName();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">    }  else if(attributeName.equals(&quot;priority&quot;)) {</span>
+<span class="nc" id="L168">      Level l = logger.getLevel();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">      if(l == null) {</span>
+<span class="nc" id="L170">	return null;</span>
+      } else {
+<span class="nc" id="L172">	return l.toString();</span>
+      }
+<span class="nc bnc" id="L174" title="All 2 branches missed.">    } else if(attributeName.startsWith(&quot;appender=&quot;)) {</span>
+      try {
+<span class="nc" id="L176">	return new ObjectName(&quot;log4j:&quot;+attributeName );</span>
+<span class="nc" id="L177">      } catch(MalformedObjectNameException e) {</span>
+<span class="nc" id="L178">	    cat.error(&quot;Could not create ObjectName&quot; + attributeName);</span>
+<span class="nc" id="L179">      } catch(RuntimeException e) {</span>
+<span class="nc" id="L180">	    cat.error(&quot;Could not create ObjectName&quot; + attributeName);</span>
+<span class="nc" id="L181">      }</span>
+    }
+
+
+    // If attributeName has not been recognized throw an AttributeNotFoundException
+<span class="nc" id="L186">    throw(new AttributeNotFoundException(&quot;Cannot find &quot; + attributeName +</span>
+					 &quot; attribute in &quot; + dClassName));
+
+  }
+
+
+  void addAppender(String appenderClass, String appenderName) {
+<span class="nc" id="L193">    cat.debug(&quot;addAppender called with &quot;+appenderClass+&quot;, &quot;+appenderName);</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">    Appender appender = (Appender)</span>
+<span class="nc" id="L195">       OptionConverter.instantiateByClassName(appenderClass,</span>
+<span class="nc" id="L196">					      org.apache.log4j.Appender.class,</span>
+					      null);
+<span class="nc" id="L198">    appender.setName(appenderName);</span>
+<span class="nc" id="L199">    logger.addAppender(appender);</span>
+
+    //appenderMBeanRegistration();
+
+<span class="nc" id="L203">  }</span>
+
+
+  public
+  void setAttribute(Attribute attribute) throws AttributeNotFoundException,
+                                                InvalidAttributeValueException,
+                                                MBeanException,
+                                                ReflectionException {
+
+    // Check attribute is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L213" title="All 2 branches missed.">    if (attribute == null) {</span>
+<span class="nc" id="L214">      throw new RuntimeOperationsException(</span>
+                  new IllegalArgumentException(&quot;Attribute cannot be null&quot;),
+		  &quot;Cannot invoke a setter of &quot; + dClassName +
+		  &quot; with null attribute&quot;);
+    }
+<span class="nc" id="L219">    String name = attribute.getName();</span>
+<span class="nc" id="L220">    Object value = attribute.getValue();</span>
+
+<span class="nc bnc" id="L222" title="All 2 branches missed.">    if (name == null) {</span>
+<span class="nc" id="L223">      throw new RuntimeOperationsException(</span>
+                    new IllegalArgumentException(&quot;Attribute name cannot be null&quot;),
+		    &quot;Cannot invoke the setter of &quot;+dClassName+
+		    &quot; with null attribute name&quot;);
+    }
+
+
+<span class="nc bnc" id="L230" title="All 2 branches missed.">    if(name.equals(&quot;priority&quot;)) {</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">      if (value instanceof String) {</span>
+<span class="nc" id="L232">	String s = (String) value;</span>
+<span class="nc" id="L233">	Level p = logger.getLevel();</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">	if(s.equalsIgnoreCase(&quot;NULL&quot;)) {</span>
+<span class="nc" id="L235">	  p = null;</span>
+	} else {
+<span class="nc" id="L237">	  p = OptionConverter.toLevel(s, p);</span>
+	}
+<span class="nc" id="L239">	logger.setLevel(p);</span>
+<span class="nc" id="L240">      }</span>
+    } else {
+<span class="nc" id="L242">      throw(new AttributeNotFoundException(&quot;Attribute &quot; + name +</span>
+					   &quot; not found in &quot; +
+<span class="nc" id="L244">					   this.getClass().getName()));</span>
+    }
+<span class="nc" id="L246">  }</span>
+
+  void appenderMBeanRegistration() {
+<span class="nc" id="L249">    Enumeration enumeration = logger.getAllAppenders();</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">    while(enumeration.hasMoreElements()) {</span>
+<span class="nc" id="L251">      Appender appender = (Appender) enumeration.nextElement();</span>
+<span class="nc" id="L252">      registerAppenderMBean(appender);</span>
+<span class="nc" id="L253">    }</span>
+<span class="nc" id="L254">  }</span>
+
+  void registerAppenderMBean(Appender appender) {
+<span class="nc" id="L257">    String name = getAppenderName(appender);</span>
+<span class="nc" id="L258">    cat.debug(&quot;Adding AppenderMBean for appender named &quot;+name);</span>
+<span class="nc" id="L259">    ObjectName objectName = null;</span>
+    try {
+<span class="nc" id="L261">      AppenderDynamicMBean appenderMBean = new AppenderDynamicMBean(appender);</span>
+<span class="nc" id="L262">      objectName = new ObjectName(&quot;log4j&quot;, &quot;appender&quot;, name);</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">      if (!server.isRegistered(objectName)) {</span>
+<span class="nc" id="L264">        registerMBean(appenderMBean, objectName);</span>
+<span class="nc" id="L265">        dAttributes.add(new MBeanAttributeInfo(&quot;appender=&quot; + name, &quot;javax.management.ObjectName&quot;,</span>
+                &quot;The &quot; + name + &quot; appender.&quot;, true, true, false));
+      }
+
+<span class="nc" id="L269">    } catch(JMException e) {</span>
+<span class="nc" id="L270">      cat.error(&quot;Could not add appenderMBean for [&quot;+name+&quot;].&quot;, e);</span>
+<span class="nc" id="L271">    } catch(java.beans.IntrospectionException e) {</span>
+<span class="nc" id="L272">      cat.error(&quot;Could not add appenderMBean for [&quot;+name+&quot;].&quot;, e);</span>
+<span class="nc" id="L273">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L274">      cat.error(&quot;Could not add appenderMBean for [&quot;+name+&quot;].&quot;, e);</span>
+<span class="nc" id="L275">    }</span>
+<span class="nc" id="L276">  }</span>
+
+  public
+  void postRegister(java.lang.Boolean registrationDone) {
+<span class="nc" id="L280">    appenderMBeanRegistration();</span>
+<span class="nc" id="L281">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

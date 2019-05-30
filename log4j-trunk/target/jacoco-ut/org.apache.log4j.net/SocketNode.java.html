@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocketNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SocketNode.java</span></div><h1>SocketNode.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.LoggingEvent;
+
+// Contributors:  Moses Hohman &lt;mmhohman@rainbow.uchicago.edu&gt;
+
+/**
+   Read {@link LoggingEvent} objects sent from a remote client using
+   Sockets (TCP). These logging events are logged according to local
+   policy, as if they were generated locally.
+
+   &lt;p&gt;For example, the socket node might decide to log events to a
+   local file and also resent them to a second socket node.
+
+    @author  Ceki G&amp;uuml;lc&amp;uuml;
+
+    @since 0.8.4
+*/
+public class SocketNode implements Runnable {
+
+  Socket socket;
+  LoggerRepository hierarchy;
+  ObjectInputStream ois;
+
+<span class="nc bnc" id="L50" title="All 2 branches missed.">  static Logger logger = Logger.getLogger(SocketNode.class);</span>
+
+<span class="nc" id="L52">  public SocketNode(Socket socket, LoggerRepository hierarchy) {</span>
+<span class="nc" id="L53">    this.socket = socket;</span>
+<span class="nc" id="L54">    this.hierarchy = hierarchy;</span>
+    try {
+<span class="nc" id="L56">      ois = new ObjectInputStream(</span>
+<span class="nc" id="L57">                         new BufferedInputStream(socket.getInputStream()));</span>
+<span class="nc" id="L58">    } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L59">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L60">      logger.error(&quot;Could not open ObjectInputStream to &quot;+socket, e);</span>
+<span class="nc" id="L61">    } catch(IOException e) {</span>
+<span class="nc" id="L62">      logger.error(&quot;Could not open ObjectInputStream to &quot;+socket, e);</span>
+<span class="nc" id="L63">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L64">      logger.error(&quot;Could not open ObjectInputStream to &quot;+socket, e);</span>
+<span class="nc" id="L65">    }</span>
+<span class="nc" id="L66">  }</span>
+
+  //public
+  //void finalize() {
+  //System.err.println(&quot;-------------------------Finalize called&quot;);
+  // System.err.flush();
+  //}
+
+  public void run() {
+    LoggingEvent event;
+    Logger remoteLogger;
+
+    try {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">      if (ois != null) {</span>
+          while(true) {
+	        // read an event from the wire
+<span class="nc" id="L82">	        event = (LoggingEvent) ois.readObject();</span>
+	        // get a logger from the hierarchy. The name of the logger is taken to be the name contained in the event.
+<span class="nc" id="L84">	        remoteLogger = hierarchy.getLogger(event.getLoggerName());</span>
+	        //event.logger = remoteLogger;
+	        // apply the logger-level filter
+<span class="nc bnc" id="L87" title="All 2 branches missed.">	        if(event.getLevel().isGreaterOrEqual(remoteLogger.getEffectiveLevel())) {</span>
+	        // finally log the event as if was generated locally
+<span class="nc" id="L89">	        remoteLogger.callAppenders(event);</span>
+	      }
+        }
+      }
+<span class="nc" id="L93">    } catch(java.io.EOFException e) {</span>
+<span class="nc" id="L94">      logger.info(&quot;Caught java.io.EOFException closing conneciton.&quot;);</span>
+<span class="nc" id="L95">    } catch(java.net.SocketException e) {</span>
+<span class="nc" id="L96">      logger.info(&quot;Caught java.net.SocketException closing conneciton.&quot;);</span>
+<span class="nc" id="L97">    } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L98">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L99">      logger.info(&quot;Caught java.io.InterruptedIOException: &quot;+e);</span>
+<span class="nc" id="L100">      logger.info(&quot;Closing connection.&quot;);</span>
+<span class="nc" id="L101">    } catch(IOException e) {</span>
+<span class="nc" id="L102">      logger.info(&quot;Caught java.io.IOException: &quot;+e);</span>
+<span class="nc" id="L103">      logger.info(&quot;Closing connection.&quot;);</span>
+<span class="nc" id="L104">    } catch(Exception e) {</span>
+<span class="nc" id="L105">      logger.error(&quot;Unexpected exception. Closing conneciton.&quot;, e);</span>
+    } finally {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      if (ois != null) {</span>
+         try {
+<span class="nc" id="L109">            ois.close();</span>
+<span class="nc" id="L110">         } catch(Exception e) {</span>
+<span class="nc" id="L111">            logger.info(&quot;Could not close connection.&quot;, e);</span>
+<span class="nc" id="L112">         }</span>
+      }
+<span class="nc bnc" id="L114" title="All 2 branches missed.">      if (socket != null) {</span>
+        try {
+<span class="nc" id="L116">          socket.close();</span>
+<span class="nc" id="L117">        } catch(InterruptedIOException e) {</span>
+<span class="nc" id="L118">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L119">        } catch(IOException ex) {</span>
+<span class="nc" id="L120">        }</span>
+      }
+    }
+<span class="nc" id="L123">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

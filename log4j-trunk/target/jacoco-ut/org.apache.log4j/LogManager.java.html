@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">LogManager.java</span></div><h1>LogManager.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.LoggerFactory;
+import org.apache.log4j.spi.RepositorySelector;
+import org.apache.log4j.spi.DefaultRepositorySelector;
+import org.apache.log4j.spi.RootLogger;
+import org.apache.log4j.spi.NOPLoggerRepository;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.helpers.LogLog;
+
+import java.net.URL;
+import java.net.MalformedURLException;
+
+
+import java.util.Enumeration;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
+/**
+ * Gets {@link Logger} instances and operates on the current {@link LoggerRepository}.
+ * 
+ * &lt;p&gt;
+ * When the &lt;code&gt;LogManager&lt;/code&gt; class is loaded into memory the default initialization procedure runs. The default initialization
+ * procedure&lt;/a&gt; is described in the &lt;a href=&quot;../../../../manual.html#defaultInit&quot;&gt;short log4j manual&lt;/a&gt;.
+ * &lt;/p&gt;
+ * 
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+<span class="nc" id="L48">public class LogManager {</span>
+
+  /**
+   * @deprecated This variable is for internal use only. It will
+   * become package protected in future versions.
+   * */
+  static public final String DEFAULT_CONFIGURATION_FILE = &quot;log4j.properties&quot;;
+  
+  static final String DEFAULT_XML_CONFIGURATION_FILE = &quot;log4j.xml&quot;;  
+   
+  /**
+   * @deprecated This variable is for internal use only. It will
+   * become private in future versions.
+   * */
+  static final public String DEFAULT_CONFIGURATION_KEY=&quot;log4j.configuration&quot;;
+
+  /**
+   * @deprecated This variable is for internal use only. It will
+   * become private in future versions.
+   * */
+  static final public String CONFIGURATOR_CLASS_KEY=&quot;log4j.configuratorClass&quot;;
+
+  /**
+  * @deprecated This variable is for internal use only. It will
+  * become private in future versions.
+  */
+  public static final String DEFAULT_INIT_OVERRIDE_KEY = 
+                                                 &quot;log4j.defaultInitOverride&quot;;
+
+
+<span class="fc" id="L78">  static private Object guard = null;</span>
+  static private RepositorySelector repositorySelector;
+
+  static {
+    // By default we use a DefaultRepositorySelector which always returns 'h'.
+<span class="fc" id="L83">    Hierarchy h = new Hierarchy(new RootLogger(Level.DEBUG));</span>
+<span class="fc" id="L84">    repositorySelector = new DefaultRepositorySelector(h);</span>
+
+    /** Search for the properties file log4j.properties in the CLASSPATH.  */
+<span class="fc" id="L87">    String override =OptionConverter.getSystemProperty(DEFAULT_INIT_OVERRIDE_KEY,</span>
+						       null);
+
+    // if there is no default init override, then get the resource
+    // specified by the user or the default config file.
+<span class="pc bpc" id="L92" title="3 of 4 branches missed.">    if(override == null || &quot;false&quot;.equalsIgnoreCase(override)) {</span>
+
+<span class="fc" id="L94">      String configurationOptionStr = OptionConverter.getSystemProperty(</span>
+							  DEFAULT_CONFIGURATION_KEY, 
+							  null);
+
+<span class="fc" id="L98">      String configuratorClassName = OptionConverter.getSystemProperty(</span>
+                                                   CONFIGURATOR_CLASS_KEY, 
+						   null);
+
+<span class="fc" id="L102">      URL url = null;</span>
+
+      // if the user has not specified the log4j.configuration
+      // property, we search first for the file &quot;log4j.xml&quot; and then
+      // &quot;log4j.properties&quot;
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">      if(configurationOptionStr == null) {	</span>
+<span class="fc" id="L108">	url = Loader.getResource(DEFAULT_XML_CONFIGURATION_FILE);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">	if(url == null) {</span>
+<span class="fc" id="L110">	  url = Loader.getResource(DEFAULT_CONFIGURATION_FILE);</span>
+	}
+      } else {
+	try {
+<span class="nc" id="L114">	  url = new URL(configurationOptionStr);</span>
+<span class="nc" id="L115">	} catch (MalformedURLException ex) {</span>
+	  // so, resource is not a URL:
+	  // attempt to get the resource from the class path
+<span class="nc" id="L118">	  url = Loader.getResource(configurationOptionStr); </span>
+<span class="nc" id="L119">	}	</span>
+      }
+      
+      // If we have a non-null url, then delegate the rest of the
+      // configuration to the OptionConverter.selectAndConfigure
+      // method.
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">      if(url != null) {</span>
+<span class="nc" id="L126">	    LogLog.debug(&quot;Using URL [&quot;+url+&quot;] for automatic log4j configuration.&quot;);</span>
+        try {
+<span class="nc" id="L128">            OptionConverter.selectAndConfigure(url, configuratorClassName,</span>
+<span class="nc" id="L129">					   LogManager.getLoggerRepository());</span>
+<span class="nc" id="L130">        } catch (NoClassDefFoundError e) {</span>
+<span class="nc" id="L131">            LogLog.warn(&quot;Error during default initialization&quot;, e);</span>
+<span class="nc" id="L132">        }</span>
+      } else {
+<span class="fc" id="L134">	    LogLog.debug(&quot;Could not find resource: [&quot;+configurationOptionStr+&quot;].&quot;);</span>
+      }
+<span class="fc" id="L136">    } else {</span>
+<span class="nc" id="L137">        LogLog.debug(&quot;Default initialization of overridden by &quot; + </span>
+            DEFAULT_INIT_OVERRIDE_KEY + &quot;property.&quot;); 
+    }  
+<span class="fc" id="L140">  } </span>
+
+  /**
+     Sets &lt;code&gt;LoggerFactory&lt;/code&gt; but only if the correct
+     &lt;em&gt;guard&lt;/em&gt; is passed as parameter.
+     
+     &lt;p&gt;Initally the guard is null.  If the guard is
+     &lt;code&gt;null&lt;/code&gt;, then invoking this method sets the logger
+     factory and the guard. Following invocations will throw a {@link
+     IllegalArgumentException}, unless the previously set
+     &lt;code&gt;guard&lt;/code&gt; is passed as the second parameter.
+
+     &lt;p&gt;This allows a high-level component to set the {@link
+     RepositorySelector} used by the &lt;code&gt;LogManager&lt;/code&gt;.
+     
+     &lt;p&gt;For example, when tomcat starts it will be able to install its
+     own repository selector. However, if and when Tomcat is embedded
+     within JBoss, then JBoss will install its own repository selector
+     and Tomcat will use the repository selector set by its container,
+     JBoss.  */
+  static
+  public
+  void setRepositorySelector(RepositorySelector selector, Object guard) 
+                                                 throws IllegalArgumentException {
+<span class="nc bnc" id="L164" title="All 4 branches missed.">    if((LogManager.guard != null) &amp;&amp; (LogManager.guard != guard)) {</span>
+<span class="nc" id="L165">      throw new IllegalArgumentException(</span>
+           &quot;Attempted to reset the LoggerFactory without possessing the guard.&quot;);
+    }
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">    if(selector == null) {</span>
+<span class="nc" id="L170">      throw new IllegalArgumentException(&quot;RepositorySelector must be non-null.&quot;);</span>
+    }
+
+<span class="nc" id="L173">    LogManager.guard = guard;</span>
+<span class="nc" id="L174">    LogManager.repositorySelector = selector;</span>
+<span class="nc" id="L175">  }</span>
+
+
+    /**
+     * This method tests if called from a method that
+     * is known to result in class members being abnormally
+     * set to null but is assumed to be harmless since the
+     * all classes are in the process of being unloaded.
+     *
+     * @param ex exception used to determine calling stack.
+     * @return true if calling stack is recognized as likely safe.
+     */
+  private static boolean isLikelySafeScenario(final Exception ex) {
+<span class="nc" id="L188">      StringWriter stringWriter = new StringWriter();</span>
+<span class="nc" id="L189">      ex.printStackTrace(new PrintWriter(stringWriter));</span>
+<span class="nc" id="L190">      String msg = stringWriter.toString();</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">      return msg.indexOf(&quot;org.apache.catalina.loader.WebappClassLoader.stop&quot;) != -1;</span>
+  }
+
+  static
+  public
+  LoggerRepository getLoggerRepository() {
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">    if (repositorySelector == null) {</span>
+<span class="nc" id="L198">        repositorySelector = new DefaultRepositorySelector(new NOPLoggerRepository());</span>
+<span class="nc" id="L199">        guard = null;</span>
+<span class="nc" id="L200">        Exception ex = new IllegalStateException(&quot;Class invariant violation&quot;);</span>
+<span class="nc" id="L201">        String msg =</span>
+                &quot;log4j called after unloading, see http://logging.apache.org/log4j/1.2/faq.html#unload.&quot;;
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (isLikelySafeScenario(ex)) {</span>
+<span class="nc" id="L204">            LogLog.debug(msg, ex);</span>
+        } else {
+<span class="nc" id="L206">            LogLog.error(msg, ex);</span>
+        }
+    }
+<span class="fc" id="L209">    return repositorySelector.getLoggerRepository();</span>
+  }
+
+  /**
+     Retrieve the appropriate root logger.
+   */
+  public
+  static 
+  Logger getRootLogger() {
+     // Delegate the actual manufacturing of the logger to the logger repository.
+<span class="fc" id="L219">    return getLoggerRepository().getRootLogger();</span>
+  }
+
+  /**
+     Retrieve the appropriate {@link Logger} instance.  
+  */
+  public
+  static 
+  Logger getLogger(final String name) {
+     // Delegate the actual manufacturing of the logger to the logger repository.
+<span class="fc" id="L229">    return getLoggerRepository().getLogger(name);</span>
+  }
+
+ /**
+     Retrieve the appropriate {@link Logger} instance.  
+  */
+  public
+  static 
+  Logger getLogger(final Class clazz) {
+     // Delegate the actual manufacturing of the logger to the logger repository.
+<span class="nc" id="L239">    return getLoggerRepository().getLogger(clazz.getName());</span>
+  }
+
+
+  /**
+     Retrieve the appropriate {@link Logger} instance.  
+  */
+  public
+  static 
+  Logger getLogger(final String name, final LoggerFactory factory) {
+     // Delegate the actual manufacturing of the logger to the logger repository.
+<span class="fc" id="L250">    return getLoggerRepository().getLogger(name, factory);</span>
+  }  
+
+  public
+  static
+  Logger exists(final String name) {
+<span class="fc" id="L256">    return getLoggerRepository().exists(name);</span>
+  }
+
+  public
+  static
+  Enumeration getCurrentLoggers() {
+<span class="nc" id="L262">    return getLoggerRepository().getCurrentLoggers();</span>
+  }
+
+  public
+  static
+  void shutdown() {
+<span class="nc" id="L268">    getLoggerRepository().shutdown();</span>
+<span class="nc" id="L269">  }</span>
+
+  public
+  static
+  void resetConfiguration() {
+<span class="fc" id="L274">    getLoggerRepository().resetConfiguration();</span>
+<span class="fc" id="L275">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

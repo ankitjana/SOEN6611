@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HTMLLayout.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">HTMLLayout.java</span></div><h1>HTMLLayout.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.LocationInfo;
+import org.apache.log4j.helpers.Transform;
+
+/**
+ * This layout outputs events in a HTML table.
+ *
+ * Appenders using this layout should have their encoding
+ * set to UTF-8 or UTF-16, otherwise events containing
+ * non ASCII characters could result in corrupted
+ * log files.
+ *
+ *  @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+<span class="fc" id="L34">public class HTMLLayout extends Layout {</span>
+
+<span class="fc" id="L36">  protected final int BUF_SIZE = 256;</span>
+<span class="fc" id="L37">  protected final int MAX_CAPACITY = 1024;</span>
+
+<span class="fc" id="L39">  static String TRACE_PREFIX = &quot;&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;;</span>
+
+  // output buffer appended to when format() is invoked
+<span class="fc" id="L42">  private StringBuffer sbuf = new StringBuffer(BUF_SIZE);</span>
+
+  /**
+     A string constant used in naming the option for setting the the
+     location information flag.  Current value of this string
+     constant is &lt;b&gt;LocationInfo&lt;/b&gt;.
+
+     &lt;p&gt;Note that all option keys are case sensitive.
+
+     @deprecated Options are now handled using the JavaBeans paradigm.
+     This constant is not longer needed and will be removed in the
+     &lt;em&gt;near&lt;/em&gt; term.
+
+  */
+  public static final String LOCATION_INFO_OPTION = &quot;LocationInfo&quot;;
+
+  /**
+     A string constant used in naming the option for setting the the
+     HTML document title.  Current value of this string
+     constant is &lt;b&gt;Title&lt;/b&gt;.
+  */
+  public static final String TITLE_OPTION = &quot;Title&quot;;
+
+  // Print no location info by default
+<span class="fc" id="L66">  boolean locationInfo = false;</span>
+
+<span class="fc" id="L68">  String title = &quot;Log4J Log Messages&quot;;</span>
+
+  /**
+     The &lt;b&gt;LocationInfo&lt;/b&gt; option takes a boolean value. By
+     default, it is set to false which means there will be no location
+     information output by this layout. If the the option is set to
+     true, then the file name and line number of the statement
+     at the origin of the log statement will be output.
+
+     &lt;p&gt;If you are embedding this layout within an {@link
+     org.apache.log4j.net.SMTPAppender} then make sure to set the
+     &lt;b&gt;LocationInfo&lt;/b&gt; option of that appender as well.
+   */
+  public
+  void setLocationInfo(boolean flag) {
+<span class="fc" id="L83">    locationInfo = flag;</span>
+<span class="fc" id="L84">  }</span>
+
+  /**
+     Returns the current value of the &lt;b&gt;LocationInfo&lt;/b&gt; option.
+   */
+  public
+  boolean getLocationInfo() {
+<span class="fc" id="L91">    return locationInfo;</span>
+  }
+
+  /**
+    The &lt;b&gt;Title&lt;/b&gt; option takes a String value. This option sets the
+    document title of the generated HTML document.
+
+    &lt;p&gt;Defaults to 'Log4J Log Messages'.
+  */
+  public
+  void setTitle(String title) {
+<span class="fc" id="L102">    this.title = title;</span>
+<span class="fc" id="L103">  }</span>
+
+  /**
+     Returns the current value of the &lt;b&gt;Title&lt;/b&gt; option.
+  */
+  public
+  String getTitle() {
+<span class="fc" id="L110">    return title;</span>
+  }
+
+ /**
+     Returns the content type output by this layout, i.e &quot;text/html&quot;.
+  */
+  public
+  String getContentType() {
+<span class="fc" id="L118">    return &quot;text/html&quot;;</span>
+  }
+
+  /**
+     No options to activate.
+  */
+  public
+  void activateOptions() {
+<span class="fc" id="L126">  }</span>
+
+  public
+  String format(LoggingEvent event) {
+
+<span class="fc bfc" id="L131" title="All 2 branches covered.">    if(sbuf.capacity() &gt; MAX_CAPACITY) {</span>
+<span class="fc" id="L132">      sbuf = new StringBuffer(BUF_SIZE);</span>
+    } else {
+<span class="fc" id="L134">      sbuf.setLength(0);</span>
+    }
+
+<span class="fc" id="L137">    sbuf.append(Layout.LINE_SEP + &quot;&lt;tr&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc" id="L139">    sbuf.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L140">    sbuf.append(event.timeStamp - LoggingEvent.getStartTime());</span>
+<span class="fc" id="L141">    sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc" id="L143">    String escapedThread = Transform.escapeTags(event.getThreadName());</span>
+<span class="fc" id="L144">    sbuf.append(&quot;&lt;td title=\&quot;&quot; + escapedThread + &quot; thread\&quot;&gt;&quot;);</span>
+<span class="fc" id="L145">    sbuf.append(escapedThread);</span>
+<span class="fc" id="L146">    sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc" id="L148">    sbuf.append(&quot;&lt;td title=\&quot;Level\&quot;&gt;&quot;);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">    if (event.getLevel().equals(Level.DEBUG)) {</span>
+<span class="fc" id="L150">      sbuf.append(&quot;&lt;font color=\&quot;#339933\&quot;&gt;&quot;);</span>
+<span class="fc" id="L151">      sbuf.append(Transform.escapeTags(String.valueOf(event.getLevel())));</span>
+<span class="fc" id="L152">      sbuf.append(&quot;&lt;/font&gt;&quot;);</span>
+    }
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    else if(event.getLevel().isGreaterOrEqual(Level.WARN)) {</span>
+<span class="fc" id="L155">      sbuf.append(&quot;&lt;font color=\&quot;#993300\&quot;&gt;&lt;strong&gt;&quot;);</span>
+<span class="fc" id="L156">      sbuf.append(Transform.escapeTags(String.valueOf(event.getLevel())));</span>
+<span class="fc" id="L157">      sbuf.append(&quot;&lt;/strong&gt;&lt;/font&gt;&quot;);</span>
+    } else {
+<span class="fc" id="L159">      sbuf.append(Transform.escapeTags(String.valueOf(event.getLevel())));</span>
+    }
+<span class="fc" id="L161">    sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc" id="L163">    String escapedLogger = Transform.escapeTags(event.getLoggerName());</span>
+<span class="fc" id="L164">    sbuf.append(&quot;&lt;td title=\&quot;&quot; + escapedLogger + &quot; category\&quot;&gt;&quot;);</span>
+<span class="fc" id="L165">    sbuf.append(escapedLogger);</span>
+<span class="fc" id="L166">    sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc bfc" id="L168" title="All 2 branches covered.">    if(locationInfo) {</span>
+<span class="fc" id="L169">      LocationInfo locInfo = event.getLocationInformation();</span>
+<span class="fc" id="L170">      sbuf.append(&quot;&lt;td&gt;&quot;);</span>
+<span class="fc" id="L171">      sbuf.append(Transform.escapeTags(locInfo.getFileName()));</span>
+<span class="fc" id="L172">      sbuf.append(':');</span>
+<span class="fc" id="L173">      sbuf.append(locInfo.getLineNumber());</span>
+<span class="fc" id="L174">      sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+    }
+
+<span class="fc" id="L177">    sbuf.append(&quot;&lt;td title=\&quot;Message\&quot;&gt;&quot;);</span>
+<span class="fc" id="L178">    sbuf.append(Transform.escapeTags(event.getRenderedMessage()));</span>
+<span class="fc" id="L179">    sbuf.append(&quot;&lt;/td&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L180">    sbuf.append(&quot;&lt;/tr&gt;&quot; + Layout.LINE_SEP);</span>
+
+<span class="fc bfc" id="L182" title="All 2 branches covered.">    if (event.getNDC() != null) {</span>
+<span class="fc" id="L183">      sbuf.append(&quot;&lt;tr&gt;&lt;td bgcolor=\&quot;#EEEEEE\&quot; style=\&quot;font-size : xx-small;\&quot; colspan=\&quot;6\&quot; title=\&quot;Nested Diagnostic Context\&quot;&gt;&quot;);</span>
+<span class="fc" id="L184">      sbuf.append(&quot;NDC: &quot; + Transform.escapeTags(event.getNDC()));</span>
+<span class="fc" id="L185">      sbuf.append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot; + Layout.LINE_SEP);</span>
+    }
+
+<span class="fc" id="L188">    String[] s = event.getThrowableStrRep();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">    if(s != null) {</span>
+<span class="fc" id="L190">      sbuf.append(&quot;&lt;tr&gt;&lt;td bgcolor=\&quot;#993300\&quot; style=\&quot;color:White; font-size : xx-small;\&quot; colspan=\&quot;6\&quot;&gt;&quot;);</span>
+<span class="fc" id="L191">      appendThrowableAsHTML(s, sbuf);</span>
+<span class="fc" id="L192">      sbuf.append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot; + Layout.LINE_SEP);</span>
+    }
+
+<span class="fc" id="L195">    return sbuf.toString();</span>
+  }
+
+  void appendThrowableAsHTML(String[] s, StringBuffer sbuf) {
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if(s != null) {</span>
+<span class="fc" id="L200">      int len = s.length;</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">      if(len == 0) {</span>
+<span class="nc" id="L202">        return;</span>
+    }
+<span class="fc" id="L204">      sbuf.append(Transform.escapeTags(s[0]));</span>
+<span class="fc" id="L205">      sbuf.append(Layout.LINE_SEP);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">      for(int i = 1; i &lt; len; i++) {</span>
+<span class="fc" id="L207">	sbuf.append(TRACE_PREFIX);</span>
+<span class="fc" id="L208">	sbuf.append(Transform.escapeTags(s[i]));</span>
+<span class="fc" id="L209">	sbuf.append(Layout.LINE_SEP);</span>
+      }
+    }
+<span class="fc" id="L212">  }</span>
+
+  /**
+     Returns appropriate HTML headers.
+  */
+  public
+  String getHeader() {
+<span class="fc" id="L219">    StringBuffer sbuf = new StringBuffer();</span>
+<span class="fc" id="L220">    sbuf.append(&quot;&lt;!DOCTYPE HTML PUBLIC \&quot;-//W3C//DTD HTML 4.01 Transitional//EN\&quot; \&quot;http://www.w3.org/TR/html4/loose.dtd\&quot;&gt;&quot;  + Layout.LINE_SEP);</span>
+<span class="fc" id="L221">    sbuf.append(&quot;&lt;html&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L222">    sbuf.append(&quot;&lt;head&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L223">    sbuf.append(&quot;&lt;title&gt;&quot; + title + &quot;&lt;/title&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L224">    sbuf.append(&quot;&lt;style type=\&quot;text/css\&quot;&gt;&quot;  + Layout.LINE_SEP);</span>
+<span class="fc" id="L225">    sbuf.append(&quot;&lt;!--&quot;  + Layout.LINE_SEP);</span>
+<span class="fc" id="L226">    sbuf.append(&quot;body, table {font-family: arial,sans-serif; font-size: x-small;}&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L227">    sbuf.append(&quot;th {background: #336699; color: #FFFFFF; text-align: left;}&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L228">    sbuf.append(&quot;--&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L229">    sbuf.append(&quot;&lt;/style&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L230">    sbuf.append(&quot;&lt;/head&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L231">    sbuf.append(&quot;&lt;body bgcolor=\&quot;#FFFFFF\&quot; topmargin=\&quot;6\&quot; leftmargin=\&quot;6\&quot;&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L232">    sbuf.append(&quot;&lt;hr size=\&quot;1\&quot; noshade&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L233">    sbuf.append(&quot;Log session start time &quot; + new java.util.Date() + &quot;&lt;br&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L234">    sbuf.append(&quot;&lt;br&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L235">    sbuf.append(&quot;&lt;table cellspacing=\&quot;0\&quot; cellpadding=\&quot;4\&quot; border=\&quot;1\&quot; bordercolor=\&quot;#224466\&quot; width=\&quot;100%\&quot;&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L236">    sbuf.append(&quot;&lt;tr&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L237">    sbuf.append(&quot;&lt;th&gt;Time&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L238">    sbuf.append(&quot;&lt;th&gt;Thread&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L239">    sbuf.append(&quot;&lt;th&gt;Level&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L240">    sbuf.append(&quot;&lt;th&gt;Category&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">    if(locationInfo) {</span>
+<span class="fc" id="L242">      sbuf.append(&quot;&lt;th&gt;File:Line&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+    }
+<span class="fc" id="L244">    sbuf.append(&quot;&lt;th&gt;Message&lt;/th&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L245">    sbuf.append(&quot;&lt;/tr&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L246">    return sbuf.toString();</span>
+  }
+
+  /**
+     Returns the appropriate HTML footers.
+  */
+  public
+  String getFooter() {
+<span class="fc" id="L254">    StringBuffer sbuf = new StringBuffer();</span>
+<span class="fc" id="L255">    sbuf.append(&quot;&lt;/table&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L256">    sbuf.append(&quot;&lt;br&gt;&quot; + Layout.LINE_SEP);</span>
+<span class="fc" id="L257">    sbuf.append(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L258">    return sbuf.toString();</span>
+  }
+
+  /**
+     The HTML layout handles the throwable contained in logging
+     events. Hence, this method return &lt;code&gt;false&lt;/code&gt;.  */
+  public
+  boolean ignoresThrowable() {
+<span class="fc" id="L266">    return false;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

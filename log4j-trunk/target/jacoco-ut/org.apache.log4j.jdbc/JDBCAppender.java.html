@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JDBCAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.jdbc</a> &gt; <span class="el_source">JDBCAppender.java</span></div><h1>JDBCAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.spi.ErrorCode;
+import org.apache.log4j.spi.LoggingEvent;
+
+
+/**
+  The JDBCAppender provides for sending log events to a database.
+  
+ &lt;p&gt;&lt;b&gt;&lt;font color=&quot;#FF2222&quot;&gt;WARNING: This version of JDBCAppender
+ is very likely to be completely replaced in the future. Moreoever,
+ it does not log exceptions&lt;/font&gt;&lt;/b&gt;.
+
+  &lt;p&gt;Each append call adds to an &lt;code&gt;ArrayList&lt;/code&gt; buffer.  When
+  the buffer is filled each log event is placed in a sql statement
+  (configurable) and executed.
+
+  &lt;b&gt;BufferSize&lt;/b&gt;, &lt;b&gt;db URL&lt;/b&gt;, &lt;b&gt;User&lt;/b&gt;, &amp; &lt;b&gt;Password&lt;/b&gt; are
+  configurable options in the standard log4j ways.
+
+  &lt;p&gt;The &lt;code&gt;setSql(String sql)&lt;/code&gt; sets the SQL statement to be
+  used for logging -- this statement is sent to a
+  &lt;code&gt;PatternLayout&lt;/code&gt; (either created automaticly by the
+  appender or added by the user).  Therefore by default all the
+  conversion patterns in &lt;code&gt;PatternLayout&lt;/code&gt; can be used
+  inside of the statement.  (see the test cases for examples)
+
+  &lt;p&gt;Overriding the {@link #getLogStatement} method allows more
+  explicit control of the statement used for logging.
+
+  &lt;p&gt;For use as a base class:
+
+    &lt;ul&gt;
+
+    &lt;li&gt;Override &lt;code&gt;getConnection()&lt;/code&gt; to pass any connection
+    you want.  Typically this is used to enable application wide
+    connection pooling.
+
+     &lt;li&gt;Override &lt;code&gt;closeConnection(Connection con)&lt;/code&gt; -- if
+     you override getConnection make sure to implement
+     &lt;code&gt;closeConnection&lt;/code&gt; to handle the connection you
+     generated.  Typically this would return the connection to the
+     pool it came from.
+
+     &lt;li&gt;Override &lt;code&gt;getLogStatement(LoggingEvent event)&lt;/code&gt; to
+     produce specialized or dynamic statements. The default uses the
+     sql option value.
+
+    &lt;/ul&gt;
+
+    @author Kevin Steppe (&lt;A HREF=&quot;mailto:ksteppe@pacbell.net&quot;&gt;ksteppe@pacbell.net&lt;/A&gt;)
+
+*/
+public class JDBCAppender extends org.apache.log4j.AppenderSkeleton {
+
+  /**
+   * URL of the DB for default connection handling
+   */
+<span class="nc" id="L83">  protected String databaseURL = &quot;jdbc:odbc:myDB&quot;;</span>
+
+  /**
+   * User to connect as for default connection handling
+   */
+<span class="nc" id="L88">  protected String databaseUser = &quot;me&quot;;</span>
+
+  /**
+   * User to use for default connection handling
+   */
+<span class="nc" id="L93">  protected String databasePassword = &quot;mypassword&quot;;</span>
+
+  /**
+   * Connection used by default.  The connection is opened the first time it
+   * is needed and then held open until the appender is closed (usually at
+   * garbage collection).  This behavior is best modified by creating a
+   * sub-class and overriding the &lt;code&gt;getConnection&lt;/code&gt; and
+   * &lt;code&gt;closeConnection&lt;/code&gt; methods.
+   */
+<span class="nc" id="L102">  protected Connection connection = null;</span>
+
+  /**
+   * Stores the string given to the pattern layout for conversion into a SQL
+   * statement, eg: insert into LogTable (Thread, Class, Message) values
+   * (&quot;%t&quot;, &quot;%c&quot;, &quot;%m&quot;).
+   *
+   * Be careful of quotes in your messages!
+   *
+   * Also see PatternLayout.
+   */
+<span class="nc" id="L113">  protected String sqlStatement = &quot;&quot;;</span>
+
+  /**
+   * size of LoggingEvent buffer before writting to the database.
+   * Default is 1.
+   */
+<span class="nc" id="L119">  protected int bufferSize = 1;</span>
+
+  /**
+   * ArrayList holding the buffer of Logging Events.
+   */
+  protected ArrayList buffer;
+
+  /**
+   * Helper object for clearing out the buffer
+   */
+  protected ArrayList removes;
+  
+<span class="nc" id="L131">  private boolean locationInfo = false;</span>
+
+  public JDBCAppender() {
+<span class="nc" id="L134">    super();</span>
+<span class="nc" id="L135">    buffer = new ArrayList(bufferSize);</span>
+<span class="nc" id="L136">    removes = new ArrayList(bufferSize);</span>
+<span class="nc" id="L137">  }</span>
+
+  /**
+   * Gets whether the location of the logging request call
+   * should be captured.
+   *
+   * @since 1.2.16
+   * @return the current value of the &lt;b&gt;LocationInfo&lt;/b&gt; option.
+   */
+  public boolean getLocationInfo() {
+<span class="nc" id="L147">    return locationInfo;</span>
+  }
+  
+  /**
+   * The &lt;b&gt;LocationInfo&lt;/b&gt; option takes a boolean value. By default, it is
+   * set to false which means there will be no effort to extract the location
+   * information related to the event. As a result, the event that will be
+   * ultimately logged will likely to contain the wrong location information
+   * (if present in the log format).
+   * &lt;p/&gt;
+   * &lt;p/&gt;
+   * Location information extraction is comparatively very slow and should be
+   * avoided unless performance is not a concern.
+   * &lt;/p&gt;
+   * @since 1.2.16
+   * @param flag true if location information should be extracted.
+   */
+  public void setLocationInfo(final boolean flag) {
+<span class="nc" id="L165">    locationInfo = flag;</span>
+<span class="nc" id="L166">  }</span>
+  
+
+  /**
+   * Adds the event to the buffer.  When full the buffer is flushed.
+   */
+  public void append(LoggingEvent event) {
+<span class="nc" id="L173">    event.getNDC();</span>
+<span class="nc" id="L174">    event.getThreadName();</span>
+    // Get a copy of this thread's MDC.
+<span class="nc" id="L176">    event.getMDCCopy();</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">    if (locationInfo) {</span>
+<span class="nc" id="L178">      event.getLocationInformation();</span>
+    }
+<span class="nc" id="L180">    event.getRenderedMessage();</span>
+<span class="nc" id="L181">    event.getThrowableStrRep();</span>
+<span class="nc" id="L182">    buffer.add(event);</span>
+
+<span class="nc bnc" id="L184" title="All 2 branches missed.">    if (buffer.size() &gt;= bufferSize) {</span>
+<span class="nc" id="L185">        flushBuffer();</span>
+    }
+<span class="nc" id="L187">  }</span>
+
+  /**
+   * By default getLogStatement sends the event to the required Layout object.
+   * The layout will format the given pattern into a workable SQL string.
+   *
+   * Overriding this provides direct access to the LoggingEvent
+   * when constructing the logging statement.
+   *
+   */
+  protected String getLogStatement(LoggingEvent event) {
+<span class="nc" id="L198">    return getLayout().format(event);</span>
+  }
+
+  /**
+   *
+   * Override this to provide an alertnate method of getting
+   * connections (such as caching).  One method to fix this is to open
+   * connections at the start of flushBuffer() and close them at the
+   * end.  I use a connection pool outside of JDBCAppender which is
+   * accessed in an override of this method.
+   * */
+  protected void execute(String sql) throws SQLException {
+
+<span class="nc" id="L211">    Connection con = null;</span>
+<span class="nc" id="L212">    Statement stmt = null;</span>
+
+    try {
+<span class="nc" id="L215">        con = getConnection();</span>
+
+<span class="nc" id="L217">        stmt = con.createStatement();</span>
+<span class="nc" id="L218">        stmt.executeUpdate(sql);</span>
+    } finally {
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if(stmt != null) {</span>
+<span class="nc" id="L221">            stmt.close();</span>
+        }
+<span class="nc" id="L223">        closeConnection(con);</span>
+    }
+
+    //System.out.println(&quot;Execute: &quot; + sql);
+<span class="nc" id="L227">  }</span>
+
+
+  /**
+   * Override this to return the connection to a pool, or to clean up the
+   * resource.
+   *
+   * The default behavior holds a single connection open until the appender
+   * is closed (typically when garbage collected).
+   */
+  protected void closeConnection(Connection con) {
+<span class="nc" id="L238">  }</span>
+
+  /**
+   * Override this to link with your connection pooling system.
+   *
+   * By default this creates a single connection which is held open
+   * until the object is garbage collected.
+   */
+  protected Connection getConnection() throws SQLException {
+<span class="nc bnc" id="L247" title="All 2 branches missed.">      if (!DriverManager.getDrivers().hasMoreElements()) {</span>
+<span class="nc" id="L248">        setDriver(&quot;sun.jdbc.odbc.JdbcOdbcDriver&quot;);</span>
+    }
+
+<span class="nc bnc" id="L251" title="All 2 branches missed.">      if (connection == null) {</span>
+<span class="nc" id="L252">        connection = DriverManager.getConnection(databaseURL, databaseUser,</span>
+					databasePassword);
+      }
+
+<span class="nc" id="L256">      return connection;</span>
+  }
+
+  /**
+   * Closes the appender, flushing the buffer first then closing the default
+   * connection if it is open.
+   */
+  public void close()
+  {
+<span class="nc" id="L265">    flushBuffer();</span>
+
+    try {
+<span class="nc bnc" id="L268" title="All 4 branches missed.">      if (connection != null &amp;&amp; !connection.isClosed()) {</span>
+<span class="nc" id="L269">        connection.close();</span>
+    }
+<span class="nc" id="L271">    } catch (SQLException e) {</span>
+<span class="nc" id="L272">        errorHandler.error(&quot;Error closing connection&quot;, e, ErrorCode.GENERIC_FAILURE);</span>
+<span class="nc" id="L273">    }</span>
+<span class="nc" id="L274">    this.closed = true;</span>
+<span class="nc" id="L275">  }</span>
+
+  /**
+   * loops through the buffer of LoggingEvents, gets a
+   * sql string from getLogStatement() and sends it to execute().
+   * Errors are sent to the errorHandler.
+   *
+   * If a statement fails the LoggingEvent stays in the buffer!
+   */
+  public void flushBuffer() {
+    //Do the actual logging
+<span class="nc" id="L286">    removes.ensureCapacity(buffer.size());</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">    for (Iterator i = buffer.iterator(); i.hasNext();) {</span>
+<span class="nc" id="L288">      LoggingEvent logEvent = (LoggingEvent)i.next();</span>
+      try {
+<span class="nc" id="L290">	    String sql = getLogStatement(logEvent);</span>
+<span class="nc" id="L291">	    execute(sql);</span>
+      }
+<span class="nc" id="L293">      catch (SQLException e) {</span>
+<span class="nc" id="L294">	    errorHandler.error(&quot;Failed to excute sql&quot;, e,</span>
+			   ErrorCode.FLUSH_FAILURE);
+      } finally {
+<span class="nc" id="L297">        removes.add(logEvent);</span>
+      }
+<span class="nc" id="L299">    }</span>
+    
+    // remove from the buffer any events that were reported
+<span class="nc" id="L302">    buffer.removeAll(removes);</span>
+    
+    // clear the buffer of reported events
+<span class="nc" id="L305">    removes.clear();</span>
+<span class="nc" id="L306">  }</span>
+
+
+  /** closes the appender before disposal */
+  public void finalize() {
+<span class="nc" id="L311">    close();</span>
+<span class="nc" id="L312">  }</span>
+
+
+  /**
+   * JDBCAppender requires a layout.
+   * */
+  public boolean requiresLayout() {
+<span class="nc" id="L319">    return true;</span>
+  }
+
+
+  /**
+   *
+   */
+  public void setSql(String sql) {
+<span class="nc" id="L327">    sqlStatement = sql;</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">    if (getLayout() == null) {</span>
+<span class="nc" id="L329">        this.setLayout(new PatternLayout(sql));</span>
+    }
+    else {
+<span class="nc" id="L332">        ((PatternLayout)getLayout()).setConversionPattern(sql);</span>
+    }
+<span class="nc" id="L334">  }</span>
+
+
+  /**
+   * Returns pre-formated statement eg: insert into LogTable (msg) values (&quot;%m&quot;)
+   */
+  public String getSql() {
+<span class="nc" id="L341">    return sqlStatement;</span>
+  }
+
+
+  public void setUser(String user) {
+<span class="nc" id="L346">    databaseUser = user;</span>
+<span class="nc" id="L347">  }</span>
+
+
+  public void setURL(String url) {
+<span class="nc" id="L351">    databaseURL = url;</span>
+<span class="nc" id="L352">  }</span>
+
+
+  public void setPassword(String password) {
+<span class="nc" id="L356">    databasePassword = password;</span>
+<span class="nc" id="L357">  }</span>
+
+
+  public void setBufferSize(int newBufferSize) {
+<span class="nc" id="L361">    bufferSize = newBufferSize;</span>
+<span class="nc" id="L362">    buffer.ensureCapacity(bufferSize);</span>
+<span class="nc" id="L363">    removes.ensureCapacity(bufferSize);</span>
+<span class="nc" id="L364">  }</span>
+
+
+  public String getUser() {
+<span class="nc" id="L368">    return databaseUser;</span>
+  }
+
+
+  public String getURL() {
+<span class="nc" id="L373">    return databaseURL;</span>
+  }
+
+
+  public String getPassword() {
+<span class="nc" id="L378">    return databasePassword;</span>
+  }
+
+
+  public int getBufferSize() {
+<span class="nc" id="L383">    return bufferSize;</span>
+  }
+
+
+  /**
+   * Ensures that the given driver class has been loaded for sql connection
+   * creation.
+   */
+  public void setDriver(String driverClass) {
+    try {
+<span class="nc" id="L393">      Class.forName(driverClass);</span>
+<span class="nc" id="L394">    } catch (Exception e) {</span>
+<span class="nc" id="L395">      errorHandler.error(&quot;Failed to load driver&quot;, e,</span>
+			 ErrorCode.GENERIC_FAILURE);
+<span class="nc" id="L397">    }</span>
+<span class="nc" id="L398">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

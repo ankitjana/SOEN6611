@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatternConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">PatternConverter.java</span></div><h1>PatternConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+
+   &lt;p&gt;PatternConverter is an abtract class that provides the
+   formatting functionality that derived classes need.
+
+   &lt;p&gt;Conversion specifiers in a conversion patterns are parsed to
+   individual PatternConverters. Each of which is responsible for
+   converting a logging event in a converter specific manner.
+
+   @author &lt;a href=&quot;mailto:cakalijp@Maritz.com&quot;&gt;James P. Cakalic&lt;/a&gt;
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+
+   @since 0.8.2
+ */
+public abstract class PatternConverter {
+  public PatternConverter next;
+<span class="fc" id="L38">  int min = -1;</span>
+<span class="fc" id="L39">  int max = 0x7FFFFFFF;</span>
+<span class="fc" id="L40">  boolean leftAlign = false;</span>
+
+  protected
+<span class="fc" id="L43">  PatternConverter() {  }</span>
+  
+  protected
+<span class="fc" id="L46">  PatternConverter(FormattingInfo fi) {</span>
+<span class="fc" id="L47">    min = fi.min;</span>
+<span class="fc" id="L48">    max = fi.max;</span>
+<span class="fc" id="L49">    leftAlign = fi.leftAlign;</span>
+<span class="fc" id="L50">  }</span>
+
+  /**
+     Derived pattern converters must override this method in order to
+     convert conversion specifiers in the correct way.
+  */
+  abstract
+  protected
+  String convert(LoggingEvent event);
+
+  /**
+     A template method for formatting in a converter specific way.
+   */
+  public
+  void format(StringBuffer sbuf, LoggingEvent e) {
+<span class="fc" id="L65">    String s = convert(e);</span>
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">    if(s == null) {</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">      if(0 &lt; min) {</span>
+<span class="nc" id="L69">        spacePad(sbuf, min);</span>
+    }
+<span class="fc" id="L71">      return;</span>
+    }
+
+<span class="fc" id="L74">    int len = s.length();</span>
+
+<span class="fc bfc" id="L76" title="All 2 branches covered.">    if(len &gt; max) {</span>
+<span class="fc" id="L77">        sbuf.append(s.substring(len-max));</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    } else if(len &lt; min) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">      if(leftAlign) {	</span>
+<span class="fc" id="L80">	sbuf.append(s);</span>
+<span class="fc" id="L81">	spacePad(sbuf, min-len);</span>
+      }
+      else {
+<span class="fc" id="L84">	spacePad(sbuf, min-len);</span>
+<span class="fc" id="L85">	sbuf.append(s);</span>
+      }
+    } else {
+<span class="fc" id="L88">        sbuf.append(s);</span>
+    }
+<span class="fc" id="L90">  }	</span>
+
+<span class="fc" id="L92">  static String[] SPACES = {&quot; &quot;, &quot;  &quot;, &quot;    &quot;, &quot;        &quot;, //1,2,4,8 spaces</span>
+			    &quot;                &quot;, // 16 spaces
+			    &quot;                                &quot; }; // 32 spaces
+
+  /**
+     Fast space padding method.
+  */
+  public
+  void spacePad(StringBuffer sbuf, int length) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">    while(length &gt;= 32) {</span>
+<span class="nc" id="L102">      sbuf.append(SPACES[5]);</span>
+<span class="nc" id="L103">      length -= 32;</span>
+    }
+    
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    for(int i = 4; i &gt;= 0; i--) {	</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">      if((length &amp; (1&lt;&lt;i)) != 0) {</span>
+<span class="fc" id="L108">	sbuf.append(SPACES[i]);</span>
+      }
+    }
+<span class="fc" id="L111">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

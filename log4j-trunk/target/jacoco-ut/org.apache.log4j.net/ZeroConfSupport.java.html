@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ZeroConfSupport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">ZeroConfSupport.java</span></div><h1>ZeroConfSupport.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j.net;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.apache.log4j.helpers.LogLog;
+
+public class ZeroConfSupport {
+<span class="nc" id="L29">    private static Object jmDNS = initializeJMDNS();</span>
+
+    Object serviceInfo;
+    private static Class jmDNSClass;
+    private static Class serviceInfoClass;
+
+<span class="nc" id="L35">    public ZeroConfSupport(String zone, int port, String name, Map properties) {</span>
+        //if version 3 is available, use it to constuct a serviceInfo instance, otherwise support the version1 API
+<span class="nc" id="L37">        boolean isVersion3 = false;</span>
+        try {
+            //create method is in version 3, not version 1
+<span class="nc" id="L40">            jmDNSClass.getMethod(&quot;create&quot;, null);</span>
+<span class="nc" id="L41">            isVersion3 = true;</span>
+<span class="nc" id="L42">        } catch (NoSuchMethodException e) {</span>
+            //no-op
+<span class="nc" id="L44">        }</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (isVersion3) {</span>
+<span class="nc" id="L47">            LogLog.debug(&quot;using JmDNS version 3 to construct serviceInfo instance&quot;);</span>
+<span class="nc" id="L48">            serviceInfo = buildServiceInfoVersion3(zone, port, name, properties);</span>
+        } else {
+<span class="nc" id="L50">            LogLog.debug(&quot;using JmDNS version 1.0 to construct serviceInfo instance&quot;);</span>
+<span class="nc" id="L51">            serviceInfo = buildServiceInfoVersion1(zone, port, name, properties);</span>
+        }
+<span class="nc" id="L53">    }</span>
+
+    public ZeroConfSupport(String zone, int port, String name) {
+<span class="nc" id="L56">        this(zone, port, name, new HashMap());</span>
+<span class="nc" id="L57">    }</span>
+
+    private static Object createJmDNSVersion1()
+    {
+        try {
+<span class="nc" id="L62">            return jmDNSClass.newInstance();</span>
+<span class="nc" id="L63">        } catch (InstantiationException e) {</span>
+<span class="nc" id="L64">            LogLog.warn(&quot;Unable to instantiate JMDNS&quot;, e);</span>
+<span class="nc" id="L65">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L66">            LogLog.warn(&quot;Unable to instantiate JMDNS&quot;, e);</span>
+<span class="nc" id="L67">        }</span>
+<span class="nc" id="L68">        return null;</span>
+    }
+
+    private static Object createJmDNSVersion3()
+    {
+        try {
+<span class="nc" id="L74">            Method jmDNSCreateMethod = jmDNSClass.getMethod(&quot;create&quot;, null);</span>
+<span class="nc" id="L75">            return jmDNSCreateMethod.invoke(null, null);</span>
+<span class="nc" id="L76">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L77">            LogLog.warn(&quot;Unable to instantiate jmdns class&quot;, e);</span>
+<span class="nc" id="L78">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L79">            LogLog.warn(&quot;Unable to access constructor&quot;, e);</span>
+<span class="nc" id="L80">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L81">                LogLog.warn(&quot;Unable to call constructor&quot;, e);</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">        return null;</span>
+    }
+
+    private Object buildServiceInfoVersion1(String zone, int port, String name, Map properties) {
+        //version 1 uses a hashtable
+<span class="nc" id="L88">        Hashtable hashtableProperties = new Hashtable(properties);</span>
+        try {
+<span class="nc" id="L90">            Class[] args = new Class[6];</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            args[0] = String.class;</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            args[1] = String.class;</span>
+<span class="nc" id="L93">            args[2] = int.class;</span>
+<span class="nc" id="L94">            args[3] = int.class; //weight (0)</span>
+<span class="nc" id="L95">            args[4] = int.class; //priority (0)</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            args[5] = Hashtable.class;</span>
+<span class="nc" id="L97">            Constructor constructor  = serviceInfoClass.getConstructor(args);</span>
+<span class="nc" id="L98">            Object[] values = new Object[6];</span>
+<span class="nc" id="L99">            values[0] = zone;</span>
+<span class="nc" id="L100">            values[1] = name;</span>
+<span class="nc" id="L101">            values[2] = new Integer(port);</span>
+<span class="nc" id="L102">            values[3] = new Integer(0);</span>
+<span class="nc" id="L103">            values[4] = new Integer(0);</span>
+<span class="nc" id="L104">            values[5] = hashtableProperties;</span>
+<span class="nc" id="L105">            Object result = constructor.newInstance(values);</span>
+<span class="nc" id="L106">            LogLog.debug(&quot;created serviceinfo: &quot; + result);</span>
+<span class="nc" id="L107">            return result;</span>
+<span class="nc" id="L108">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L109">            LogLog.warn(&quot;Unable to construct ServiceInfo instance&quot;, e);</span>
+<span class="nc" id="L110">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L111">            LogLog.warn(&quot;Unable to get ServiceInfo constructor&quot;, e);</span>
+<span class="nc" id="L112">        } catch (InstantiationException e) {</span>
+<span class="nc" id="L113">            LogLog.warn(&quot;Unable to construct ServiceInfo instance&quot;, e);</span>
+<span class="nc" id="L114">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L115">            LogLog.warn(&quot;Unable to construct ServiceInfo instance&quot;, e);</span>
+<span class="nc" id="L116">        }</span>
+<span class="nc" id="L117">        return null;</span>
+    }
+
+    private Object buildServiceInfoVersion3(String zone, int port, String name, Map properties) {
+        try {
+<span class="nc" id="L122">            Class[] args = new Class[6];</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            args[0] = String.class; //zone/type</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            args[1] = String.class; //display name</span>
+<span class="nc" id="L125">            args[2] = int.class; //port</span>
+<span class="nc" id="L126">            args[3] = int.class; //weight (0)</span>
+<span class="nc" id="L127">            args[4] = int.class; //priority (0)</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            args[5] = Map.class;</span>
+<span class="nc" id="L129">            Method serviceInfoCreateMethod = serviceInfoClass.getMethod(&quot;create&quot;, args);</span>
+<span class="nc" id="L130">            Object[] values = new Object[6];</span>
+<span class="nc" id="L131">            values[0] = zone;</span>
+<span class="nc" id="L132">            values[1] = name;</span>
+<span class="nc" id="L133">            values[2] = new Integer(port);</span>
+<span class="nc" id="L134">            values[3] = new Integer(0);</span>
+<span class="nc" id="L135">            values[4] = new Integer(0);</span>
+<span class="nc" id="L136">            values[5] = properties;</span>
+<span class="nc" id="L137">            Object result = serviceInfoCreateMethod.invoke(null, values);</span>
+<span class="nc" id="L138">            LogLog.debug(&quot;created serviceinfo: &quot; + result);</span>
+<span class="nc" id="L139">            return result;</span>
+<span class="nc" id="L140">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L141">            LogLog.warn(&quot;Unable to invoke create method&quot;, e);</span>
+<span class="nc" id="L142">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L143">            LogLog.warn(&quot;Unable to find create method&quot;, e);</span>
+<span class="nc" id="L144">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L145">                LogLog.warn(&quot;Unable to invoke create method&quot;, e);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">        return null;</span>
+    }
+
+    public void advertise() {
+        try {
+<span class="nc" id="L152">            Method method = jmDNSClass.getMethod(&quot;registerService&quot;, new Class[]{serviceInfoClass});</span>
+<span class="nc" id="L153">            method.invoke(jmDNS, new Object[]{serviceInfo});</span>
+<span class="nc" id="L154">            LogLog.debug(&quot;registered serviceInfo: &quot; + serviceInfo);</span>
+<span class="nc" id="L155">        } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L156">            LogLog.warn(&quot;Unable to invoke registerService method&quot;, e);</span>
+<span class="nc" id="L157">        } catch(NoSuchMethodException e) {</span>
+<span class="nc" id="L158">            LogLog.warn(&quot;No registerService method&quot;, e);</span>
+<span class="nc" id="L159">        } catch(InvocationTargetException e) {</span>
+<span class="nc" id="L160">            LogLog.warn(&quot;Unable to invoke registerService method&quot;, e);</span>
+<span class="nc" id="L161">        }</span>
+<span class="nc" id="L162">    }</span>
+
+    public void unadvertise() {
+        try {
+<span class="nc" id="L166">            Method method = jmDNSClass.getMethod(&quot;unregisterService&quot;, new Class[]{serviceInfoClass});</span>
+<span class="nc" id="L167">            method.invoke(jmDNS, new Object[]{serviceInfo});</span>
+<span class="nc" id="L168">            LogLog.debug(&quot;unregistered serviceInfo: &quot; + serviceInfo);</span>
+<span class="nc" id="L169">        } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L170">            LogLog.warn(&quot;Unable to invoke unregisterService method&quot;, e);</span>
+<span class="nc" id="L171">        } catch(NoSuchMethodException e) {</span>
+<span class="nc" id="L172">            LogLog.warn(&quot;No unregisterService method&quot;, e);</span>
+<span class="nc" id="L173">        } catch(InvocationTargetException e) {</span>
+<span class="nc" id="L174">            LogLog.warn(&quot;Unable to invoke unregisterService method&quot;, e);</span>
+<span class="nc" id="L175">       }</span>
+<span class="nc" id="L176">    }</span>
+
+    private static Object initializeJMDNS() {
+        try {
+<span class="nc" id="L180">            jmDNSClass = Class.forName(&quot;javax.jmdns.JmDNS&quot;);</span>
+<span class="nc" id="L181">            serviceInfoClass = Class.forName(&quot;javax.jmdns.ServiceInfo&quot;);</span>
+<span class="nc" id="L182">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L183">            LogLog.warn(&quot;JmDNS or serviceInfo class not found&quot;, e);</span>
+<span class="nc" id="L184">        }</span>
+
+        //if version 3 is available, use it to constuct a serviceInfo instance, otherwise support the version1 API
+<span class="nc" id="L187">        boolean isVersion3 = false;</span>
+        try {
+            //create method is in version 3, not version 1
+<span class="nc" id="L190">            jmDNSClass.getMethod(&quot;create&quot;, null);</span>
+<span class="nc" id="L191">            isVersion3 = true;</span>
+<span class="nc" id="L192">        } catch (NoSuchMethodException e) {</span>
+            //no-op
+<span class="nc" id="L194">        }</span>
+
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (isVersion3) {</span>
+<span class="nc" id="L197">            return createJmDNSVersion3();</span>
+        } else {
+<span class="nc" id="L199">            return createJmDNSVersion1();</span>
+        }
+    }
+
+    public static Object getJMDNSInstance() {
+<span class="nc" id="L204">        return jmDNS;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

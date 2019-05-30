@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppenderAttachableImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">AppenderAttachableImpl.java</span></div><h1>AppenderAttachableImpl.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.spi.AppenderAttachable;
+import org.apache.log4j.spi.LoggingEvent;
+
+import org.apache.log4j.Appender;
+import java.util.Vector;
+import java.util.Enumeration;
+
+/**
+   A straightforward implementation of the {@link AppenderAttachable}
+   interface.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @since version 0.9.1 */
+<span class="fc" id="L33">public class AppenderAttachableImpl implements AppenderAttachable {</span>
+  
+  /** Array of appenders. */
+  protected Vector  appenderList;
+
+  /**
+     Attach an appender. If the appender is already in the list in
+     won't be added again.
+  */
+  public
+  void addAppender(Appender newAppender) {
+    // Null values for newAppender parameter are strictly forbidden.
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    if(newAppender == null) {</span>
+<span class="nc" id="L46">        return;</span>
+    }
+    
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    if(appenderList == null) {</span>
+<span class="fc" id="L50">      appenderList = new Vector(1);</span>
+    }
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">    if(!appenderList.contains(newAppender)) {</span>
+<span class="fc" id="L53">        appenderList.addElement(newAppender);</span>
+    }
+<span class="fc" id="L55">  }</span>
+
+  /**
+     Call the &lt;code&gt;doAppend&lt;/code&gt; method on all attached appenders.  */
+  public
+  int appendLoopOnAppenders(LoggingEvent event) {
+<span class="fc" id="L61">    int size = 0;</span>
+    Appender appender;
+
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    if(appenderList != null) {</span>
+<span class="fc" id="L65">      size = appenderList.size();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">      for(int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L67">	appender = (Appender) appenderList.elementAt(i);</span>
+<span class="fc" id="L68">	appender.doAppend(event);</span>
+      }
+    }    
+<span class="fc" id="L71">    return size;</span>
+  }
+
+
+  /**
+     Get all attached appenders as an Enumeration. If there are no
+     attached appenders &lt;code&gt;null&lt;/code&gt; is returned.
+     
+     @return Enumeration An enumeration of attached appenders.
+   */
+  public
+  Enumeration getAllAppenders() {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if(appenderList == null) {</span>
+<span class="nc" id="L84">        return null;</span>
+    } else {
+<span class="fc" id="L86">        return appenderList.elements();</span>
+    }    
+  }
+
+  /**
+     Look for an attached appender named as &lt;code&gt;name&lt;/code&gt;.
+
+     &lt;p&gt;Return the appender with that name if in the list. Return null
+     otherwise.  
+     
+   */
+  public
+  Appender getAppender(String name) {
+<span class="pc bpc" id="L99" title="2 of 4 branches missed.">     if(appenderList == null || name == null) {</span>
+<span class="nc" id="L100">        return null;</span>
+    }
+
+<span class="fc" id="L103">     int size = appenderList.size();</span>
+     Appender appender;
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">     for(int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L106">       appender = (Appender) appenderList.elementAt(i);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">       if(name.equals(appender.getName())) {</span>
+<span class="fc" id="L108">        return appender;</span>
+    }
+     }
+<span class="nc" id="L111">     return null;    </span>
+  }
+
+
+  /**
+     Returns &lt;code&gt;true&lt;/code&gt; if the specified appender is in the
+     list of attached appenders, &lt;code&gt;false&lt;/code&gt; otherwise.
+
+     @since 1.2 */
+  public 
+  boolean isAttached(Appender appender) {
+<span class="pc bpc" id="L122" title="2 of 4 branches missed.">    if(appenderList == null || appender == null) {</span>
+<span class="nc" id="L123">        return false;</span>
+    }
+
+<span class="fc" id="L126">     int size = appenderList.size();</span>
+     Appender a;
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">     for(int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L129">       a  = (Appender) appenderList.elementAt(i);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">       if(a == appender) {</span>
+<span class="fc" id="L131">        return true;</span>
+    }
+     }
+<span class="nc" id="L134">     return false;    </span>
+  }
+
+
+
+  /**
+   * Remove and close all previously attached appenders.
+   * */
+  public
+  void removeAllAppenders() {
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">    if(appenderList != null) {</span>
+<span class="fc" id="L145">      int len = appenderList.size();      </span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">      for(int i = 0; i &lt; len; i++) {</span>
+<span class="fc" id="L147">	Appender a = (Appender) appenderList.elementAt(i);</span>
+<span class="fc" id="L148">	a.close();</span>
+      }
+<span class="fc" id="L150">      appenderList.removeAllElements();</span>
+<span class="fc" id="L151">      appenderList = null;      </span>
+    }
+<span class="fc" id="L153">  }</span>
+
+
+  /**
+     Remove the appender passed as parameter form the list of attached
+     appenders.  */
+  public
+  void removeAppender(Appender appender) {
+<span class="pc bpc" id="L161" title="2 of 4 branches missed.">    if(appender == null || appenderList == null) {</span>
+<span class="nc" id="L162">        return;</span>
+    }
+<span class="fc" id="L164">    appenderList.removeElement(appender);    </span>
+<span class="fc" id="L165">  }</span>
+
+
+ /**
+    Remove the appender with the name passed as parameter form the
+    list of appenders.  
+  */
+  public
+  void removeAppender(String name) {
+<span class="pc bpc" id="L174" title="2 of 4 branches missed.">    if(name == null || appenderList == null) {</span>
+<span class="nc" id="L175">        return;</span>
+    }
+<span class="fc" id="L177">    int size = appenderList.size();</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    for(int i = 0; i &lt; size; i++) {</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">      if(name.equals(((Appender)appenderList.elementAt(i)).getName())) {</span>
+<span class="fc" id="L180">	 appenderList.removeElementAt(i);</span>
+<span class="fc" id="L181">	 break;</span>
+      }
+    }
+<span class="fc" id="L184">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertySetter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.config</a> &gt; <span class="el_source">PropertySetter.java</span></div><h1>PropertySetter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors:  Georg Lundesgaard
+
+package org.apache.log4j.config;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.spi.OptionHandler;
+import org.apache.log4j.spi.ErrorHandler;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.InterruptedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Properties;
+
+/**
+   General purpose Object property setter. Clients repeatedly invokes
+   {@link #setProperty setProperty(name,value)} in order to invoke setters
+   on the Object specified in the constructor. This class relies on the
+   JavaBeans {@link Introspector} to analyze the given Object Class using
+   reflection.
+   
+   &lt;p&gt;Usage:
+   &lt;pre&gt;
+     PropertySetter ps = new PropertySetter(anObject);
+     ps.set(&quot;name&quot;, &quot;Joe&quot;);
+     ps.set(&quot;age&quot;, &quot;32&quot;);
+     ps.set(&quot;isMale&quot;, &quot;true&quot;);
+   &lt;/pre&gt;
+   will cause the invocations anObject.setName(&quot;Joe&quot;), anObject.setAge(32),
+   and setMale(true) if such methods exist with those signatures.
+   Otherwise an {@link IntrospectionException} are thrown.
+  
+   @author Anders Kristensen
+   @since 1.1
+ */
+public class PropertySetter {
+  protected Object obj;
+  protected PropertyDescriptor[] props;
+  
+  /**
+    Create a new PropertySetter for the specified Object. This is done
+    in prepartion for invoking {@link #setProperty} one or more times.
+    
+    @param obj  the object for which to set properties
+   */
+  public
+<span class="fc" id="L72">  PropertySetter(Object obj) {</span>
+<span class="fc" id="L73">    this.obj = obj;</span>
+<span class="fc" id="L74">  }</span>
+  
+  /**
+     Uses JavaBeans {@link Introspector} to computer setters of object to be
+     configured.
+   */
+  protected
+  void introspect() {
+    try {
+<span class="fc" id="L83">      BeanInfo bi = Introspector.getBeanInfo(obj.getClass());</span>
+<span class="fc" id="L84">      props = bi.getPropertyDescriptors();</span>
+<span class="nc" id="L85">    } catch (IntrospectionException ex) {</span>
+<span class="nc" id="L86">      LogLog.error(&quot;Failed to introspect &quot;+obj+&quot;: &quot; + ex.getMessage());</span>
+<span class="nc" id="L87">      props = new PropertyDescriptor[0];</span>
+<span class="fc" id="L88">    }</span>
+<span class="fc" id="L89">  }</span>
+  
+
+  /**
+     Set the properties of an object passed as a parameter in one
+     go. The &lt;code&gt;properties&lt;/code&gt; are parsed relative to a
+     &lt;code&gt;prefix&lt;/code&gt;.
+
+     @param obj The object to configure.
+     @param properties A java.util.Properties containing keys and values.
+     @param prefix Only keys having the specified prefix will be set.
+  */
+  public
+  static
+  void setProperties(Object obj, Properties properties, String prefix) {
+<span class="fc" id="L104">    new PropertySetter(obj).setProperties(properties, prefix);</span>
+<span class="fc" id="L105">  }</span>
+  
+
+  /**
+     Set the properites for the object that match the
+     &lt;code&gt;prefix&lt;/code&gt; passed as parameter.
+
+     
+   */
+  public
+  void setProperties(Properties properties, String prefix) {
+<span class="fc" id="L116">    int len = prefix.length();</span>
+    
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    for (Enumeration e = properties.propertyNames(); e.hasMoreElements(); ) {</span>
+<span class="fc" id="L119">      String key = (String) e.nextElement();</span>
+      
+      // handle only properties that start with the desired frefix.
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (key.startsWith(prefix)) {</span>
+
+	
+	// ignore key if it contains dots after the prefix
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (key.indexOf('.', len + 1) &gt; 0) {</span>
+	  //System.err.println(&quot;----------Ignoring---[&quot;+key
+	  //	     +&quot;], prefix=[&quot;+prefix+&quot;].&quot;);
+<span class="fc" id="L129">	  continue;</span>
+	}
+        
+<span class="fc" id="L132">	String value = OptionConverter.findAndSubst(key, properties);</span>
+<span class="fc" id="L133">        key = key.substring(len);</span>
+<span class="pc bpc" id="L134" title="2 of 6 branches missed.">        if ((&quot;layout&quot;.equals(key) || &quot;errorhandler&quot;.equals(key)) &amp;&amp; obj instanceof Appender) {</span>
+<span class="fc" id="L135">          continue;</span>
+        }
+        //
+        //   if the property type is an OptionHandler
+        //     (for example, triggeringPolicy of org.apache.log4j.rolling.RollingFileAppender)
+<span class="fc" id="L140">        PropertyDescriptor prop = getPropertyDescriptor(Introspector.decapitalize(key));</span>
+<span class="pc bpc" id="L141" title="1 of 4 branches missed.">        if (prop != null</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                &amp;&amp; OptionHandler.class.isAssignableFrom(prop.getPropertyType())</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                &amp;&amp; prop.getWriteMethod() != null) {</span>
+<span class="fc" id="L144">            OptionHandler opt = (OptionHandler)</span>
+<span class="fc" id="L145">                    OptionConverter.instantiateByKey(properties, prefix + key,</span>
+<span class="fc" id="L146">                                  prop.getPropertyType(),</span>
+                                  null);
+<span class="fc" id="L148">            PropertySetter setter = new PropertySetter(opt);</span>
+<span class="fc" id="L149">            setter.setProperties(properties, prefix + key + &quot;.&quot;);</span>
+            try {
+<span class="fc" id="L151">                prop.getWriteMethod().invoke(this.obj, new Object[] { opt });</span>
+<span class="nc" id="L152">            } catch(IllegalAccessException ex) {</span>
+<span class="nc" id="L153">                LogLog.warn(&quot;Failed to set property [&quot; + key +</span>
+                            &quot;] to value \&quot;&quot; + value + &quot;\&quot;. &quot;, ex);
+<span class="nc" id="L155">            } catch(InvocationTargetException ex) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if (ex.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                        || ex.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L158">                    Thread.currentThread().interrupt();</span>
+                }
+<span class="nc" id="L160">                LogLog.warn(&quot;Failed to set property [&quot; + key +</span>
+                            &quot;] to value \&quot;&quot; + value + &quot;\&quot;. &quot;, ex);
+<span class="nc" id="L162">            } catch(RuntimeException ex) {</span>
+<span class="nc" id="L163">                LogLog.warn(&quot;Failed to set property [&quot; + key +</span>
+                            &quot;] to value \&quot;&quot; + value + &quot;\&quot;. &quot;, ex);
+<span class="pc" id="L165">            }</span>
+<span class="nc" id="L166">            continue;</span>
+        }
+
+<span class="fc" id="L169">        setProperty(key, value);</span>
+      }
+<span class="fc" id="L171">    }</span>
+<span class="fc" id="L172">    activate();</span>
+<span class="fc" id="L173">  }</span>
+  
+  /**
+     Set a property on this PropertySetter's Object. If successful, this
+     method will invoke a setter method on the underlying Object. The
+     setter is the one for the specified property name and the value is
+     determined partly from the setter argument type and partly from the
+     value specified in the call to this method.
+     
+     &lt;p&gt;If the setter expects a String no conversion is necessary.
+     If it expects an int, then an attempt is made to convert 'value'
+     to an int using new Integer(value). If the setter expects a boolean,
+     the conversion is by new Boolean(value).
+     
+     @param name    name of the property
+     @param value   String value of the property
+   */
+  public
+  void setProperty(String name, String value) {
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">    if (value == null) {</span>
+<span class="nc" id="L193">        return;</span>
+    }
+    
+<span class="fc" id="L196">    name = Introspector.decapitalize(name);</span>
+<span class="fc" id="L197">    PropertyDescriptor prop = getPropertyDescriptor(name);</span>
+    
+    //LogLog.debug(&quot;---------Key: &quot;+name+&quot;, type=&quot;+prop.getPropertyType());
+
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">    if (prop == null) {</span>
+<span class="nc" id="L202">      LogLog.warn(&quot;No such property [&quot; + name + &quot;] in &quot;+</span>
+<span class="nc" id="L203">		  obj.getClass().getName()+&quot;.&quot; );</span>
+    } else {
+      try {
+<span class="fc" id="L206">        setProperty(prop, name, value);</span>
+<span class="nc" id="L207">      } catch (PropertySetterException ex) {</span>
+<span class="nc" id="L208">        LogLog.warn(&quot;Failed to set property [&quot; + name +</span>
+                    &quot;] to value \&quot;&quot; + value + &quot;\&quot;. &quot;, ex.rootCause);
+<span class="fc" id="L210">      }</span>
+    }
+<span class="fc" id="L212">  }</span>
+  
+  /** 
+      Set the named property given a {@link PropertyDescriptor}.
+
+      @param prop A PropertyDescriptor describing the characteristics
+      of the property to set.
+      @param name The named of the property to set.
+      @param value The value of the property.      
+   */
+  public
+  void setProperty(PropertyDescriptor prop, String name, String value)
+    throws PropertySetterException {
+<span class="fc" id="L225">    Method setter = prop.getWriteMethod();</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">    if (setter == null) {</span>
+<span class="nc" id="L227">      throw new PropertySetterException(&quot;No setter for property [&quot;+name+&quot;].&quot;);</span>
+    }
+<span class="fc" id="L229">    Class[] paramTypes = setter.getParameterTypes();</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">    if (paramTypes.length != 1) {</span>
+<span class="nc" id="L231">      throw new PropertySetterException(&quot;#params for setter != 1&quot;);</span>
+    }
+    
+    Object arg;
+    try {
+<span class="fc" id="L236">      arg = convertArg(value, paramTypes[0]);</span>
+<span class="nc" id="L237">    } catch (Throwable t) {</span>
+<span class="nc" id="L238">      throw new PropertySetterException(&quot;Conversion to type [&quot;+paramTypes[0]+</span>
+					&quot;] failed. Reason: &quot;+t);
+<span class="fc" id="L240">    }</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">    if (arg == null) {</span>
+<span class="nc" id="L242">      throw new PropertySetterException(</span>
+          &quot;Conversion to type [&quot;+paramTypes[0]+&quot;] failed.&quot;);
+    }
+<span class="fc" id="L245">    LogLog.debug(&quot;Setting property [&quot; + name + &quot;] to [&quot; +arg+&quot;].&quot;);</span>
+    try {
+<span class="fc" id="L247">      setter.invoke(obj, new Object[]  { arg });</span>
+<span class="nc" id="L248">    } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L249">      throw new PropertySetterException(ex);</span>
+<span class="nc" id="L250">    } catch (InvocationTargetException ex) {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (ex.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">                || ex.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L253">            Thread.currentThread().interrupt();</span>
+        }        
+<span class="nc" id="L255">        throw new PropertySetterException(ex);</span>
+<span class="nc" id="L256">    } catch (RuntimeException ex) {</span>
+<span class="nc" id="L257">      throw new PropertySetterException(ex);</span>
+<span class="fc" id="L258">    }</span>
+<span class="fc" id="L259">  }</span>
+  
+
+  /**
+     Convert &lt;code&gt;val&lt;/code&gt; a String parameter to an object of a
+     given type.
+  */
+  protected
+  Object convertArg(String val, Class type) {
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">    if(val == null) {</span>
+<span class="nc" id="L269">        return null;</span>
+    }
+
+<span class="fc" id="L272">    String v = val.trim();</span>
+<span class="fc bfc" id="L273" title="All 4 branches covered.">    if (String.class.isAssignableFrom(type)) {</span>
+<span class="fc" id="L274">      return val;</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">    } else if (Integer.TYPE.isAssignableFrom(type)) {</span>
+<span class="fc" id="L276">      return new Integer(v);</span>
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">    } else if (Long.TYPE.isAssignableFrom(type)) {</span>
+<span class="nc" id="L278">      return new Long(v);</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">    } else if (Boolean.TYPE.isAssignableFrom(type)) {</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">      if (&quot;true&quot;.equalsIgnoreCase(v)) {</span>
+<span class="fc" id="L281">        return Boolean.TRUE;</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">      } else if (&quot;false&quot;.equalsIgnoreCase(v)) {</span>
+<span class="fc" id="L283">        return Boolean.FALSE;</span>
+      }
+<span class="pc bpc" id="L285" title="1 of 4 branches missed.">    } else if (Priority.class.isAssignableFrom(type)) {</span>
+<span class="fc" id="L286">      return OptionConverter.toLevel(v, Level.DEBUG);</span>
+<span class="nc bnc" id="L287" title="All 4 branches missed.">    } else if (ErrorHandler.class.isAssignableFrom(type)) {</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">      return OptionConverter.instantiateByClassName(v, </span>
+<span class="nc" id="L289">	  ErrorHandler.class, null);</span>
+    }
+<span class="nc" id="L291">    return null;</span>
+  }
+  
+  
+  protected
+  PropertyDescriptor getPropertyDescriptor(String name) {
+<span class="fc bfc" id="L297" title="All 2 branches covered.">    if (props == null) {</span>
+<span class="fc" id="L298">        introspect();</span>
+    }
+    
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">    for (int i = 0; i &lt; props.length; i++) {</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">      if (name.equals(props[i].getName())) {</span>
+<span class="fc" id="L303">	return props[i];</span>
+      }
+    }
+<span class="nc" id="L306">    return null;</span>
+  }
+  
+  public
+  void activate() {
+<span class="fc bfc" id="L311" title="All 2 branches covered.">    if (obj instanceof OptionHandler) {</span>
+<span class="fc" id="L312">      ((OptionHandler) obj).activateOptions();</span>
+    }
+<span class="fc" id="L314">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">FileAppender.java</span></div><h1>FileAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.Writer;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.QuietWriter;
+import org.apache.log4j.spi.ErrorCode;
+
+// Contibutors: Jens Uwe Pipka &lt;jens.pipka@gmx.de&gt;
+//              Ben Sandee
+
+/**
+ *  FileAppender appends log events to a file.
+ *
+ *  &lt;p&gt;Support for &lt;code&gt;java.io.Writer&lt;/code&gt; and console appending
+ *  has been deprecated and then removed. See the replacement
+ *  solutions: {@link WriterAppender} and {@link ConsoleAppender}.
+ *
+ * @author Ceki G&amp;uuml;lc&amp;uuml; 
+ * */
+public class FileAppender extends WriterAppender {
+
+  /** Controls file truncatation. The default value for this variable
+   * is &lt;code&gt;true&lt;/code&gt;, meaning that by default a
+   * &lt;code&gt;FileAppender&lt;/code&gt; will append to an existing file and not
+   * truncate it.
+   *
+   * &lt;p&gt;This option is meaningful only if the FileAppender opens the
+   * file.
+   */
+<span class="pc" id="L54">  protected boolean fileAppend = true;</span>
+
+  /**
+     The name of the log file. */
+<span class="pc" id="L58">  protected String fileName = null;</span>
+
+  /**
+     Do we do bufferedIO? */
+<span class="pc" id="L62">  protected boolean bufferedIO = false;</span>
+
+  /**
+   * Determines the size of IO buffer be. Default is 8K. 
+   */
+<span class="pc" id="L67">  protected int bufferSize = 8*1024;</span>
+
+
+  /**
+     The default constructor does not do anything.
+  */
+  public
+<span class="fc" id="L74">  FileAppender() {</span>
+<span class="fc" id="L75">  }</span>
+
+  /**
+    Instantiate a &lt;code&gt;FileAppender&lt;/code&gt; and open the file
+    designated by &lt;code&gt;filename&lt;/code&gt;. The opened filename will
+    become the output destination for this appender.
+
+    &lt;p&gt;If the &lt;code&gt;append&lt;/code&gt; parameter is true, the file will be
+    appended to. Otherwise, the file designated by
+    &lt;code&gt;filename&lt;/code&gt; will be truncated before being opened.
+
+    &lt;p&gt;If the &lt;code&gt;bufferedIO&lt;/code&gt; parameter is &lt;code&gt;true&lt;/code&gt;,
+    then buffered IO will be used to write to the output file.
+
+  */
+  public
+  FileAppender(Layout layout, String filename, boolean append, boolean bufferedIO,
+<span class="nc" id="L92">	       int bufferSize) throws IOException {</span>
+<span class="nc" id="L93">    this.layout = layout;</span>
+<span class="nc" id="L94">    this.setFile(filename, append, bufferedIO, bufferSize);</span>
+<span class="nc" id="L95">  }</span>
+
+  /**
+    Instantiate a FileAppender and open the file designated by
+    &lt;code&gt;filename&lt;/code&gt;. The opened filename will become the output
+    destination for this appender.
+
+    &lt;p&gt;If the &lt;code&gt;append&lt;/code&gt; parameter is true, the file will be
+    appended to. Otherwise, the file designated by
+    &lt;code&gt;filename&lt;/code&gt; will be truncated before being opened.
+  */
+  public
+  FileAppender(Layout layout, String filename, boolean append)
+<span class="fc" id="L108">                                                             throws IOException {</span>
+<span class="fc" id="L109">    this.layout = layout;</span>
+<span class="fc" id="L110">    this.setFile(filename, append, false, bufferSize);</span>
+<span class="fc" id="L111">  }</span>
+
+  /**
+     Instantiate a FileAppender and open the file designated by
+    &lt;code&gt;filename&lt;/code&gt;. The opened filename will become the output
+    destination for this appender.
+
+    &lt;p&gt;The file will be appended to.  */
+  public
+  FileAppender(Layout layout, String filename) throws IOException {
+<span class="fc" id="L121">    this(layout, filename, true);</span>
+<span class="fc" id="L122">  }</span>
+
+  /**
+     The &lt;b&gt;File&lt;/b&gt; property takes a string value which should be the
+     name of the file to append to.
+
+     &lt;p&gt;&lt;font color=&quot;#DD0044&quot;&gt;&lt;b&gt;Note that the special values
+     &quot;System.out&quot; or &quot;System.err&quot; are no longer honored.&lt;/b&gt;&lt;/font&gt;
+
+     &lt;p&gt;Note: Actual opening of the file is made when {@link
+     #activateOptions} is called, not when the options are set.  */
+  public void setFile(String file) {
+    // Trim spaces from both ends. The users probably does not want
+    // trailing spaces in file names.
+<span class="fc" id="L136">    String val = file.trim();</span>
+<span class="fc" id="L137">    fileName = val;</span>
+<span class="fc" id="L138">  }</span>
+
+  /**
+      Returns the value of the &lt;b&gt;Append&lt;/b&gt; option.
+   */
+  public
+  boolean getAppend() {
+<span class="nc" id="L145">    return fileAppend;</span>
+  }
+
+
+  /** Returns the value of the &lt;b&gt;File&lt;/b&gt; option. */
+  public
+  String getFile() {
+<span class="fc" id="L152">    return fileName;</span>
+  }
+
+  /**
+     If the value of &lt;b&gt;File&lt;/b&gt; is not &lt;code&gt;null&lt;/code&gt;, then {@link
+     #setFile} is called with the values of &lt;b&gt;File&lt;/b&gt;  and
+     &lt;b&gt;Append&lt;/b&gt; properties.
+
+     @since 0.8.1 */
+  public
+  void activateOptions() {
+<span class="fc bfc" id="L163" title="All 2 branches covered.">    if(fileName != null) {</span>
+      try {
+<span class="fc" id="L165">	setFile(fileName, fileAppend, bufferedIO, bufferSize);</span>
+      }
+<span class="nc" id="L167">      catch(java.io.IOException e) {</span>
+<span class="nc" id="L168">	errorHandler.error(&quot;setFile(&quot;+fileName+&quot;,&quot;+fileAppend+&quot;) call failed.&quot;,</span>
+			   e, ErrorCode.FILE_OPEN_FAILURE);
+<span class="pc" id="L170">      }</span>
+    } else {
+      //LogLog.error(&quot;File option not set for appender [&quot;+name+&quot;].&quot;);
+<span class="fc" id="L173">      LogLog.warn(&quot;File option not set for appender [&quot;+name+&quot;].&quot;);</span>
+<span class="fc" id="L174">      LogLog.warn(&quot;Are you using FileAppender instead of ConsoleAppender?&quot;);</span>
+    }
+<span class="fc" id="L176">  }</span>
+
+ /**
+     Closes the previously opened file.
+  */
+  protected
+  void closeFile() {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    if(this.qw != null) {</span>
+      try {
+<span class="fc" id="L185">	this.qw.close();</span>
+      }
+<span class="nc" id="L187">      catch(java.io.IOException e) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">          if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L189">              Thread.currentThread().interrupt();</span>
+          }
+	// Exceptionally, it does not make sense to delegate to an
+	// ErrorHandler. Since a closed appender is basically dead.
+<span class="nc" id="L193">	LogLog.error(&quot;Could not close &quot; + qw, e);</span>
+<span class="fc" id="L194">      }</span>
+    }
+<span class="fc" id="L196">  }</span>
+
+  /**
+     Get the value of the &lt;b&gt;BufferedIO&lt;/b&gt; option.
+
+     &lt;p&gt;BufferedIO will significatnly increase performance on heavily
+     loaded systems.
+
+  */
+  public
+  boolean getBufferedIO() {
+<span class="nc" id="L207">    return this.bufferedIO;</span>
+  }
+
+
+  /**
+     Get the size of the IO buffer.
+  */
+  public
+  int getBufferSize() {
+<span class="nc" id="L216">    return this.bufferSize;</span>
+  }
+
+
+
+  /**
+     The &lt;b&gt;Append&lt;/b&gt; option takes a boolean value. It is set to
+     &lt;code&gt;true&lt;/code&gt; by default. If true, then &lt;code&gt;File&lt;/code&gt;
+     will be opened in append mode by {@link #setFile setFile} (see
+     above). Otherwise, {@link #setFile setFile} will open
+     &lt;code&gt;File&lt;/code&gt; in truncate mode.
+
+     &lt;p&gt;Note: Actual opening of the file is made when {@link
+     #activateOptions} is called, not when the options are set.
+   */
+  public
+  void setAppend(boolean flag) {
+<span class="fc" id="L233">    fileAppend = flag;</span>
+<span class="fc" id="L234">  }</span>
+
+  /**
+     The &lt;b&gt;BufferedIO&lt;/b&gt; option takes a boolean value. It is set to
+     &lt;code&gt;false&lt;/code&gt; by default. If true, then &lt;code&gt;File&lt;/code&gt;
+     will be opened and the resulting {@link java.io.Writer} wrapped
+     around a {@link BufferedWriter}.
+
+     BufferedIO will significatnly increase performance on heavily
+     loaded systems.
+
+  */
+  public
+  void setBufferedIO(boolean bufferedIO) {
+<span class="nc" id="L248">    this.bufferedIO = bufferedIO;</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">    if(bufferedIO) {</span>
+<span class="nc" id="L250">      immediateFlush = false;</span>
+    }
+<span class="nc" id="L252">  }</span>
+
+
+  /**
+     Set the size of the IO buffer.
+  */
+  public
+  void setBufferSize(int bufferSize) {
+<span class="nc" id="L260">    this.bufferSize = bufferSize;</span>
+<span class="nc" id="L261">  }</span>
+
+  /**
+    &lt;p&gt;Sets and &lt;i&gt;opens&lt;/i&gt; the file where the log output will
+    go. The specified file must be writable.
+
+    &lt;p&gt;If there was already an opened file, then the previous file
+    is closed first.
+
+    &lt;p&gt;&lt;b&gt;Do not use this method directly. To configure a FileAppender
+    or one of its subclasses, set its properties one by one and then
+    call activateOptions.&lt;/b&gt;
+
+    @param fileName The path to the log file.
+    @param append   If true will append to fileName. Otherwise will
+        truncate fileName.  */
+  public
+  synchronized
+  void setFile(String fileName, boolean append, boolean bufferedIO, int bufferSize)
+                                                            throws IOException {
+<span class="fc" id="L281">    LogLog.debug(&quot;setFile called: &quot;+fileName+&quot;, &quot;+append);</span>
+
+    // It does not make sense to have immediate flush and bufferedIO.
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">    if(bufferedIO) {</span>
+<span class="nc" id="L285">      setImmediateFlush(false);</span>
+    }
+
+<span class="fc" id="L288">    reset();</span>
+<span class="fc" id="L289">    FileOutputStream ostream = null;</span>
+    try {
+          //
+          //   attempt to create file
+          //
+<span class="fc" id="L294">          ostream = new FileOutputStream(fileName, append);</span>
+<span class="fc" id="L295">    } catch(FileNotFoundException ex) {</span>
+          //
+          //   if parent directory does not exist then
+          //      attempt to create it and try to create file
+          //      see bug 9150
+          //
+<span class="fc" id="L301">          String parentName = new File(fileName).getParent();</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">          if (parentName != null) {</span>
+<span class="fc" id="L303">             File parentDir = new File(parentName);</span>
+<span class="pc bpc" id="L304" title="2 of 4 branches missed.">             if(!parentDir.exists() &amp;&amp; parentDir.mkdirs()) {</span>
+<span class="fc" id="L305">                ostream = new FileOutputStream(fileName, append);</span>
+             } else {
+<span class="nc" id="L307">                throw ex;</span>
+             }
+<span class="fc" id="L309">          } else {</span>
+<span class="nc" id="L310">             throw ex;</span>
+          }
+<span class="fc" id="L312">    }</span>
+<span class="fc" id="L313">    Writer fw = createWriter(ostream);</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">    if(bufferedIO) {</span>
+<span class="nc" id="L315">      fw = new BufferedWriter(fw, bufferSize);</span>
+    }
+<span class="fc" id="L317">    this.setQWForFiles(fw);</span>
+<span class="fc" id="L318">    this.fileName = fileName;</span>
+<span class="fc" id="L319">    this.fileAppend = append;</span>
+<span class="fc" id="L320">    this.bufferedIO = bufferedIO;</span>
+<span class="fc" id="L321">    this.bufferSize = bufferSize;</span>
+<span class="fc" id="L322">    writeHeader();</span>
+<span class="fc" id="L323">    LogLog.debug(&quot;setFile ended&quot;);</span>
+<span class="fc" id="L324">  }</span>
+
+
+  /**
+     Sets the quiet writer being used.
+
+     This method is overriden by {@link RollingFileAppender}.
+   */
+  protected
+  void setQWForFiles(Writer writer) {
+<span class="fc" id="L334">     this.qw = new QuietWriter(writer, errorHandler);</span>
+<span class="fc" id="L335">  }</span>
+
+
+  /**
+     Close any previously opened file and call the parent's
+     &lt;code&gt;reset&lt;/code&gt;.  */
+  protected
+  void reset() {
+<span class="fc" id="L343">    closeFile();</span>
+<span class="fc" id="L344">    this.fileName = null;</span>
+<span class="fc" id="L345">    super.reset();</span>
+<span class="fc" id="L346">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

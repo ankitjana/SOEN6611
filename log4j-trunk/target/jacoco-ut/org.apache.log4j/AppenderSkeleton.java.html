@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppenderSkeleton.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">AppenderSkeleton.java</span></div><h1>AppenderSkeleton.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j;
+
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.ErrorHandler;
+import org.apache.log4j.spi.OptionHandler;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.helpers.OnlyOnceErrorHandler;
+import org.apache.log4j.helpers.LogLog;
+
+
+/** 
+ * Abstract superclass of the other appenders in the package.
+ *  
+ *  This class provides the code for common functionality, such as
+ *  support for threshold filtering and support for general filters.
+ *
+ * @since 0.8.1
+ * @author Ceki G&amp;uuml;lc&amp;uuml; 
+ * */
+public abstract class AppenderSkeleton implements Appender, OptionHandler {
+
+  /** The layout variable does not need to be set if the appender
+      implementation has its own layout. */
+  protected Layout layout;
+
+  /** Appenders are named. */
+  protected String name;
+
+  /**
+     There is no level threshold filtering by default.  */
+  protected Priority threshold;
+
+  /** 
+      It is assumed and enforced that errorHandler is never null.
+  */
+<span class="pc" id="L53">  protected ErrorHandler errorHandler = new OnlyOnceErrorHandler();</span>
+
+  /** The first filter in the filter chain. Set to &lt;code&gt;null&lt;/code&gt;
+      initially. */
+  protected Filter headFilter;
+  /** The last filter in the filter chain. */
+  protected Filter tailFilter;
+
+  /**
+     Is this appender closed? 
+   */
+<span class="pc" id="L64">  protected boolean closed = false;</span>
+
+    /**
+     * Create new instance.
+     */
+    public AppenderSkeleton() {
+<span class="fc" id="L70">        super();</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Create new instance.
+     * Provided for compatibility with log4j 1.3.
+     *
+     * @param isActive true if appender is ready for use upon construction.
+     *                 Not used in log4j 1.2.x.
+     * @since 1.2.15
+     */
+    protected AppenderSkeleton(final boolean isActive) {
+<span class="nc" id="L82">        super();</span>
+<span class="nc" id="L83">    }</span>
+
+
+
+  /**
+     Derived appenders should override this method if option structure
+     requires it.  */
+  public
+  void activateOptions() {
+<span class="fc" id="L92">  }</span>
+
+
+  /**
+     Add a filter to end of the filter list.
+
+     @since 0.9.0
+   */
+  public
+  void addFilter(Filter newFilter) {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">    if(headFilter == null) {</span>
+<span class="fc" id="L103">      headFilter = tailFilter = newFilter;</span>
+    } else {
+<span class="fc" id="L105">      tailFilter.setNext(newFilter);</span>
+<span class="fc" id="L106">      tailFilter = newFilter;    </span>
+    }
+<span class="fc" id="L108">  }</span>
+
+  /**
+     Subclasses of &lt;code&gt;AppenderSkeleton&lt;/code&gt; should implement this
+     method to perform actual logging. See also {@link #doAppend
+     AppenderSkeleton.doAppend} method.
+
+     @since 0.9.0
+  */
+  abstract
+  protected
+  void append(LoggingEvent event);
+
+
+  /**
+     Clear the filters chain.
+     
+     @since 0.9.0 */
+  public
+  void clearFilters() {
+<span class="nc" id="L128">    headFilter = tailFilter = null;</span>
+<span class="nc" id="L129">  }</span>
+
+  /**
+     Finalize this appender by calling the derived class'
+     &lt;code&gt;close&lt;/code&gt; method.
+
+     @since 0.8.4 */
+  public
+  void finalize() {
+    // An appender might be closed then garbage collected. There is no
+    // point in closing twice.
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    if(this.closed) {</span>
+<span class="fc" id="L141">        return;</span>
+    }
+
+<span class="fc" id="L144">    LogLog.debug(&quot;Finalizing appender named [&quot;+name+&quot;].&quot;);</span>
+<span class="fc" id="L145">    close();</span>
+<span class="fc" id="L146">  }</span>
+
+
+  /** 
+      Return the currently set {@link ErrorHandler} for this
+      Appender.  
+
+      @since 0.9.0 */
+  public
+  ErrorHandler getErrorHandler() {
+<span class="nc" id="L156">    return this.errorHandler;</span>
+  }
+
+
+  /**
+     Returns the head Filter.
+     
+     @since 1.1
+  */
+  public
+  Filter getFilter() {
+<span class="nc" id="L167">    return headFilter;</span>
+  }
+
+  /** 
+      Return the first filter in the filter chain for this
+      Appender. The return value may be &lt;code&gt;null&lt;/code&gt; if no is
+      filter is set.
+      
+  */
+  public
+  final
+  Filter getFirstFilter() {
+<span class="nc" id="L179">    return headFilter;</span>
+  }
+
+  /**
+     Returns the layout of this appender. The value may be null.
+  */
+  public
+  Layout getLayout() {
+<span class="nc" id="L187">    return layout;</span>
+  }
+
+
+  /**
+     Returns the name of this appender.
+     @return name, may be null.
+   */
+  public
+  final
+  String getName() {
+<span class="fc" id="L198">    return this.name;</span>
+  }
+
+  /**
+     Returns this appenders threshold level. See the {@link
+     #setThreshold} method for the meaning of this option.
+     
+     @since 1.1 */
+  public
+  Priority getThreshold() {
+<span class="fc" id="L208">    return threshold;</span>
+  }
+
+
+  /**
+     Check whether the message level is below the appender's
+     threshold. If there is no threshold set, then the return value is
+     always &lt;code&gt;true&lt;/code&gt;.
+
+  */
+  public
+  boolean isAsSevereAsThreshold(Priority priority) {
+<span class="pc bpc" id="L220" title="3 of 4 branches missed.">    return ((threshold == null) || priority.isGreaterOrEqual(threshold));</span>
+  }
+
+
+  /**
+    * This method performs threshold checks and invokes filters before
+    * delegating actual logging to the subclasses specific {@link
+    * AppenderSkeleton#append} method.
+    * */
+  public
+  synchronized 
+  void doAppend(LoggingEvent event) {
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">    if(closed) {</span>
+<span class="nc" id="L233">      LogLog.error(&quot;Attempted to append to closed appender named [&quot;+name+&quot;].&quot;);</span>
+<span class="nc" id="L234">      return;</span>
+    }
+    
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">    if(!isAsSevereAsThreshold(event.getLevel())) {</span>
+<span class="nc" id="L238">      return;</span>
+    }
+
+<span class="fc" id="L241">    Filter f = this.headFilter;</span>
+    
+    FILTER_LOOP:
+<span class="fc bfc" id="L244" title="All 2 branches covered.">    while(f != null) {</span>
+<span class="pc bpc" id="L245" title="1 of 4 branches missed.">      switch(f.decide(event)) {</span>
+<span class="fc" id="L246">      case Filter.DENY: return;</span>
+<span class="fc" id="L247">      case Filter.ACCEPT: break FILTER_LOOP;</span>
+<span class="fc" id="L248">      case Filter.NEUTRAL: f = f.getNext();</span>
+      }
+    }
+    
+<span class="fc" id="L252">    this.append(event);    </span>
+<span class="fc" id="L253">  }</span>
+
+  /** 
+      Set the {@link ErrorHandler} for this Appender.
+      @since 0.9.0
+  */
+  public
+  synchronized
+  void setErrorHandler(ErrorHandler eh) {
+<span class="nc bnc" id="L262" title="All 2 branches missed.">    if(eh == null) {</span>
+      // We do not throw exception here since the cause is probably a
+      // bad config file.
+<span class="nc" id="L265">      LogLog.warn(&quot;You have tried to set a null error-handler.&quot;);</span>
+    } else {
+<span class="nc" id="L267">      this.errorHandler = eh;</span>
+    }
+<span class="nc" id="L269">  }</span>
+
+  /**
+     Set the layout for this appender. Note that some appenders have
+     their own (fixed) layouts or do not use one. For example, the
+     {@link org.apache.log4j.net.SocketAppender} ignores the layout set
+     here. 
+  */
+  public
+  void setLayout(Layout layout) {
+<span class="fc" id="L279">    this.layout = layout;</span>
+<span class="fc" id="L280">  }</span>
+
+  
+  /**
+     Set the name of this Appender.
+   */
+  public
+  void setName(String name) {
+<span class="fc" id="L288">    this.name = name;</span>
+<span class="fc" id="L289">  }</span>
+
+
+  /**
+     Set the threshold level. All log events with lower level
+     than the threshold level are ignored by the appender.
+     
+     &lt;p&gt;In configuration files this option is specified by setting the
+     value of the &lt;b&gt;Threshold&lt;/b&gt; option to a level
+     string, such as &quot;DEBUG&quot;, &quot;INFO&quot; and so on.
+     
+     @since 0.8.3 */
+  public
+  void setThreshold(Priority threshold) {
+<span class="fc" id="L303">    this.threshold = threshold;</span>
+<span class="fc" id="L304">  }  </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

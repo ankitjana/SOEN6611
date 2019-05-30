@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NameAbbreviator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">NameAbbreviator.java</span></div><h1>NameAbbreviator.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * NameAbbreviator generates abbreviated logger and class names.
+ *
+ */
+<span class="nc" id="L28">public abstract class NameAbbreviator {</span>
+  /**
+   * Default (no abbreviation) abbreviator.
+   */
+<span class="nc" id="L32">  private static final NameAbbreviator DEFAULT = new NOPAbbreviator();</span>
+
+  /**
+   * Gets an abbreviator.
+   *
+   * For example, &quot;%logger{2}&quot; will output only 2 elements of the logger name,
+   * %logger{-2} will drop 2 elements from the logger name,
+   * &quot;%logger{1.}&quot; will output only the first character of the non-final elements in the name,
+   * &quot;%logger{1~.2~} will output the first character of the first element, two characters of
+   * the second and subsequent elements and will use a tilde to indicate abbreviated characters.
+   *
+   * @param pattern abbreviation pattern.
+   * @return abbreviator, will not be null.
+   */
+  public static NameAbbreviator getAbbreviator(final String pattern) {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">    if (pattern.length() &gt; 0) {</span>
+      //  if pattern is just spaces and numbers then
+      //     use MaxElementAbbreviator
+<span class="nc" id="L50">      String trimmed = pattern.trim();</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">      if (trimmed.length() == 0) {</span>
+<span class="nc" id="L53">        return DEFAULT;</span>
+      }
+
+<span class="nc" id="L56">      int i = 0;</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">      if (trimmed.length() &gt; 0) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">          if (trimmed.charAt(0) == '-') {</span>
+<span class="nc" id="L59">              i++;</span>
+          }
+          for (;
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                (i &lt; trimmed.length()) &amp;&amp;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                  (trimmed.charAt(i) &gt;= '0') &amp;&amp;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                  (trimmed.charAt(i) &lt;= '9');</span>
+<span class="nc" id="L65">               i++) {</span>
+          }
+      }
+
+
+      //
+      //  if all blanks and digits
+      //
+<span class="nc bnc" id="L73" title="All 2 branches missed.">      if (i == trimmed.length()) {</span>
+<span class="nc" id="L74">        int elements = Integer.parseInt(trimmed);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (elements &gt;= 0) {</span>
+<span class="nc" id="L76">            return new MaxElementAbbreviator(elements);</span>
+        } else {
+<span class="nc" id="L78">            return new DropElementAbbreviator(-elements);</span>
+        }
+      }
+
+<span class="nc" id="L82">      ArrayList fragments = new ArrayList(5);</span>
+      char ellipsis;
+      int charCount;
+<span class="nc" id="L85">      int pos = 0;</span>
+
+<span class="nc bnc" id="L87" title="All 4 branches missed.">      while ((pos &lt; trimmed.length()) &amp;&amp; (pos &gt;= 0)) {</span>
+<span class="nc" id="L88">        int ellipsisPos = pos;</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (trimmed.charAt(pos) == '*') {</span>
+<span class="nc" id="L91">          charCount = Integer.MAX_VALUE;</span>
+<span class="nc" id="L92">          ellipsisPos++;</span>
+        } else {
+<span class="nc bnc" id="L94" title="All 4 branches missed.">          if ((trimmed.charAt(pos) &gt;= '0') &amp;&amp; (trimmed.charAt(pos) &lt;= '9')) {</span>
+<span class="nc" id="L95">            charCount = trimmed.charAt(pos) - '0';</span>
+<span class="nc" id="L96">            ellipsisPos++;</span>
+          } else {
+<span class="nc" id="L98">            charCount = 0;</span>
+          }
+        }
+
+<span class="nc" id="L102">        ellipsis = '\0';</span>
+
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (ellipsisPos &lt; trimmed.length()) {</span>
+<span class="nc" id="L105">          ellipsis = trimmed.charAt(ellipsisPos);</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">          if (ellipsis == '.') {</span>
+<span class="nc" id="L108">            ellipsis = '\0';</span>
+          }
+        }
+
+<span class="nc" id="L112">        fragments.add(new PatternAbbreviatorFragment(charCount, ellipsis));</span>
+<span class="nc" id="L113">        pos = trimmed.indexOf(&quot;.&quot;, pos);</span>
+
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (pos == -1) {</span>
+<span class="nc" id="L116">          break;</span>
+        }
+
+<span class="nc" id="L119">        pos++;</span>
+<span class="nc" id="L120">      }</span>
+
+<span class="nc" id="L122">      return new PatternAbbreviator(fragments);</span>
+    }
+
+    //
+    //  no matching abbreviation, return defaultAbbreviator
+    //
+<span class="nc" id="L128">    return DEFAULT;</span>
+  }
+
+  /**
+   * Gets default abbreviator.
+   *
+   * @return default abbreviator.
+   */
+  public static NameAbbreviator getDefaultAbbreviator() {
+<span class="nc" id="L137">    return DEFAULT;</span>
+  }
+
+  /**
+   * Abbreviates a name in a StringBuffer.
+   *
+   * @param nameStart starting position of name in buf.
+   * @param buf buffer, may not be null.
+   */
+  public abstract void abbreviate(final int nameStart, final StringBuffer buf);
+
+  /**
+   * Abbreviator that simply appends full name to buffer.
+   */
+  private static class NOPAbbreviator extends NameAbbreviator {
+    /**
+     * Constructor.
+     */
+<span class="nc" id="L155">    public NOPAbbreviator() {</span>
+<span class="nc" id="L156">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void abbreviate(final int nameStart, final StringBuffer buf) {
+<span class="nc" id="L162">    }</span>
+  }
+
+  /**
+   * Abbreviator that drops starting path elements.
+   */
+  private static class MaxElementAbbreviator extends NameAbbreviator {
+    /**
+     * Maximum number of path elements to output.
+     */
+    private final int count;
+
+    /**
+     * Create new instance.
+     * @param count maximum number of path elements to output.
+     */
+<span class="nc" id="L178">    public MaxElementAbbreviator(final int count) {</span>
+<span class="nc" id="L179">      this.count = count;</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Abbreviate name.
+     * @param buf buffer to append abbreviation.
+     * @param nameStart start of name to abbreviate.
+     */
+    public void abbreviate(final int nameStart, final StringBuffer buf) {
+      // We substract 1 from 'len' when assigning to 'end' to avoid out of
+      // bounds exception in return r.substring(end+1, len). This can happen if
+      // precision is 1 and the category name ends with a dot.
+<span class="nc" id="L191">      int end = buf.length() - 1;</span>
+
+<span class="nc" id="L193">      String bufString = buf.toString();</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">      for (int i = count; i &gt; 0; i--) {</span>
+<span class="nc" id="L195">        end = bufString.lastIndexOf(&quot;.&quot;, end - 1);</span>
+
+<span class="nc bnc" id="L197" title="All 4 branches missed.">        if ((end == -1) || (end &lt; nameStart)) {</span>
+<span class="nc" id="L198">          return;</span>
+        }
+      }
+
+<span class="nc" id="L202">      buf.delete(nameStart, end + 1);</span>
+<span class="nc" id="L203">    }</span>
+  }
+
+  /**
+   * Abbreviator that drops starting path elements.
+   */
+  private static class DropElementAbbreviator extends NameAbbreviator {
+    /**
+     * Maximum number of path elements to output.
+     */
+    private final int count;
+
+    /**
+     * Create new instance.
+     * @param count maximum number of path elements to output.
+     */
+<span class="nc" id="L219">    public DropElementAbbreviator(final int count) {</span>
+<span class="nc" id="L220">      this.count = count;</span>
+<span class="nc" id="L221">    }</span>
+
+    /**
+     * Abbreviate name.
+     * @param buf buffer to append abbreviation.
+     * @param nameStart start of name to abbreviate.
+     */
+    public void abbreviate(final int nameStart, final StringBuffer buf) {
+<span class="nc" id="L229">      int i = count;</span>
+<span class="nc" id="L230">      for(int pos = buf.indexOf(&quot;.&quot;, nameStart);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        pos != -1;</span>
+<span class="nc" id="L232">        pos = buf.indexOf(&quot;.&quot;, pos + 1)) {</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">          if(--i == 0) {</span>
+<span class="nc" id="L234">              buf.delete(nameStart, pos + 1);</span>
+<span class="nc" id="L235">              break;</span>
+          }
+      }
+<span class="nc" id="L238">    }</span>
+  }
+
+
+  /**
+   * Fragment of an pattern abbreviator.
+   *
+   */
+  private static class PatternAbbreviatorFragment {
+    /**
+     * Count of initial characters of element to output.
+     */
+    private final int charCount;
+
+    /**
+     *  Character used to represent dropped characters.
+     * '\0' indicates no representation of dropped characters.
+     */
+    private final char ellipsis;
+
+    /**
+     * Creates a PatternAbbreviatorFragment.
+     * @param charCount number of initial characters to preserve.
+     * @param ellipsis character to represent elimination of characters,
+     *    '\0' if no ellipsis is desired.
+     */
+    public PatternAbbreviatorFragment(
+<span class="nc" id="L265">      final int charCount, final char ellipsis) {</span>
+<span class="nc" id="L266">      this.charCount = charCount;</span>
+<span class="nc" id="L267">      this.ellipsis = ellipsis;</span>
+<span class="nc" id="L268">    }</span>
+
+    /**
+     * Abbreviate element of name.
+     * @param buf buffer to receive element.
+     * @param startPos starting index of name element.
+     * @return starting index of next element.
+     */
+    public int abbreviate(final StringBuffer buf, final int startPos) {
+<span class="nc" id="L277">      int nextDot = buf.toString().indexOf(&quot;.&quot;, startPos);</span>
+
+<span class="nc bnc" id="L279" title="All 2 branches missed.">      if (nextDot != -1) {</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        if ((nextDot - startPos) &gt; charCount) {</span>
+<span class="nc" id="L281">          buf.delete(startPos + charCount, nextDot);</span>
+<span class="nc" id="L282">          nextDot = startPos + charCount;</span>
+
+<span class="nc bnc" id="L284" title="All 2 branches missed.">          if (ellipsis != '\0') {</span>
+<span class="nc" id="L285">            buf.insert(nextDot, ellipsis);</span>
+<span class="nc" id="L286">            nextDot++;</span>
+          }
+        }
+
+<span class="nc" id="L290">        nextDot++;</span>
+      }
+
+<span class="nc" id="L293">      return nextDot;</span>
+    }
+  }
+
+  /**
+   * Pattern abbreviator.
+   *
+   *
+   */
+  private static class PatternAbbreviator extends NameAbbreviator {
+    /**
+     * Element abbreviation patterns.
+     */
+    private final PatternAbbreviatorFragment[] fragments;
+
+    /**
+     * Create PatternAbbreviator.
+     *
+     * @param fragments element abbreviation patterns.
+     */
+<span class="nc" id="L313">    public PatternAbbreviator(List fragments) {</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">      if (fragments.size() == 0) {</span>
+<span class="nc" id="L315">        throw new IllegalArgumentException(</span>
+          &quot;fragments must have at least one element&quot;);
+      }
+
+<span class="nc" id="L319">      this.fragments = new PatternAbbreviatorFragment[fragments.size()];</span>
+<span class="nc" id="L320">      fragments.toArray(this.fragments);</span>
+<span class="nc" id="L321">    }</span>
+
+    /**
+     * Abbreviate name.
+     * @param buf buffer that abbreviated name is appended.
+     * @param nameStart start of name.
+     */
+    public void abbreviate(final int nameStart, final StringBuffer buf) {
+      //
+      //  all non-terminal patterns are executed once
+      //
+<span class="nc" id="L332">      int pos = nameStart;</span>
+
+<span class="nc bnc" id="L334" title="All 4 branches missed.">      for (int i = 0; (i &lt; (fragments.length - 1)) &amp;&amp; (pos &lt; buf.length());</span>
+<span class="nc" id="L335">          i++) {</span>
+<span class="nc" id="L336">        pos = fragments[i].abbreviate(buf, pos);</span>
+      }
+
+      //
+      //   last pattern in executed repeatedly
+      //
+<span class="nc" id="L342">      PatternAbbreviatorFragment terminalFragment =</span>
+        fragments[fragments.length - 1];
+
+<span class="nc bnc" id="L345" title="All 4 branches missed.">      while ((pos &lt; buf.length()) &amp;&amp; (pos &gt;= 0)) {</span>
+<span class="nc" id="L346">        pos = terminalFragment.abbreviate(buf, pos);</span>
+      }
+<span class="nc" id="L348">    }</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

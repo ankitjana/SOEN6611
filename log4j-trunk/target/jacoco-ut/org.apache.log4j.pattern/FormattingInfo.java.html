@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FormattingInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">FormattingInfo.java</span></div><h1>FormattingInfo.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+
+/**
+ * Modifies the output of a pattern converter for a specified minimum
+ * and maximum width and alignment.
+ *
+ *
+ *  @author &lt;a href=mailto:jim_cakalic@na.biomerieux.com&gt;Jim Cakalic&lt;/a&gt;
+ *  @author Ceki G&amp;uuml;lc&amp;uuml;
+ *  @author Curt Arnold
+ *
+ */
+public final class FormattingInfo {
+  /**
+   *  Array of spaces.
+   */
+<span class="nc" id="L35">  private static final char[] SPACES =</span>
+    new char[] { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+
+  /**
+   * Default instance.
+   */
+<span class="nc" id="L41">  private static final FormattingInfo DEFAULT =</span>
+    new FormattingInfo(false, 0, Integer.MAX_VALUE);
+
+  /**
+   * Minimum length.
+   */
+  private final int minLength;
+
+  /**
+   * Maximum length.
+   */
+  private final int maxLength;
+
+  /**
+   * Alignment.
+   */
+  private final boolean leftAlign;
+
+  /**
+   * Right truncation.
+   * @since 1.2.17
+   */
+  private final boolean rightTruncate;
+
+  /**
+   * Creates new instance.
+   * @param leftAlign left align if true.
+   * @param minLength minimum length.
+   * @param maxLength maximum length.
+   * @deprecated since 1.2.17
+   */
+  public FormattingInfo(
+    final boolean leftAlign, 
+    final int minLength, 
+<span class="nc" id="L75">    final int maxLength) {</span>
+<span class="nc" id="L76">    this.leftAlign = leftAlign;</span>
+<span class="nc" id="L77">    this.minLength = minLength;</span>
+<span class="nc" id="L78">    this.maxLength = maxLength;</span>
+<span class="nc" id="L79">    this.rightTruncate = false;</span>
+<span class="nc" id="L80">  }</span>
+
+  /**
+   * Creates new instance.
+   * @param leftAlign left align if true.
+   * @param rightTruncate right truncate if true.
+   * @param minLength minimum length.
+   * @param maxLength maximum length.
+   * @since 1.2.17
+   */
+  public FormattingInfo(
+    final boolean leftAlign, 
+    final boolean rightTruncate,
+    final int minLength, 
+<span class="nc" id="L94">    final int maxLength) {</span>
+<span class="nc" id="L95">    this.leftAlign = leftAlign;</span>
+<span class="nc" id="L96">    this.minLength = minLength;</span>
+<span class="nc" id="L97">    this.maxLength = maxLength;</span>
+<span class="nc" id="L98">    this.rightTruncate = rightTruncate;</span>
+<span class="nc" id="L99">  }</span>
+
+  /**
+   * Gets default instance.
+   * @return default instance.
+   */
+  public static FormattingInfo getDefault() {
+<span class="nc" id="L106">    return DEFAULT;</span>
+  }
+
+  /**
+   * Determine if left aligned.
+   * @return true if left aligned.
+   */
+  public boolean isLeftAligned() {
+<span class="nc" id="L114">    return leftAlign;</span>
+  }
+
+  /**
+   * Determine if right truncated.
+   * @return true if right truncated.
+   * @since 1.2.17
+   */
+  public boolean isRightTruncated() {
+<span class="nc" id="L123">    return rightTruncate;</span>
+  }
+
+  /**
+   * Get minimum length.
+   * @return minimum length.
+   */
+  public int getMinLength() {
+<span class="nc" id="L131">    return minLength;</span>
+  }
+
+  /**
+   * Get maximum length.
+   * @return maximum length.
+   */
+  public int getMaxLength() {
+<span class="nc" id="L139">    return maxLength;</span>
+  }
+
+  /**
+   * Adjust the content of the buffer based on the specified lengths and alignment.
+   *
+   * @param fieldStart start of field in buffer.
+   * @param buffer buffer to be modified.
+   */
+  public void format(final int fieldStart, final StringBuffer buffer) {
+<span class="nc" id="L149">    final int rawLength = buffer.length() - fieldStart;</span>
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">    if (rawLength &gt; maxLength) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">      if(rightTruncate) {</span>
+<span class="nc" id="L153">         buffer.setLength(fieldStart + maxLength);</span>
+      } else {
+<span class="nc" id="L155">         buffer.delete(fieldStart, buffer.length() - maxLength);</span>
+      }
+<span class="nc bnc" id="L157" title="All 2 branches missed.">    } else if (rawLength &lt; minLength) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">      if (leftAlign) {</span>
+<span class="nc" id="L159">        final int fieldEnd = buffer.length();</span>
+<span class="nc" id="L160">        buffer.setLength(fieldStart + minLength);</span>
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        for (int i = fieldEnd; i &lt; buffer.length(); i++) {</span>
+<span class="nc" id="L163">          buffer.setCharAt(i, ' ');</span>
+        }
+<span class="nc" id="L165">      } else {</span>
+<span class="nc" id="L166">        int padLength = minLength - rawLength;</span>
+
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        for (; padLength &gt; 8; padLength -= 8) {</span>
+<span class="nc" id="L169">          buffer.insert(fieldStart, SPACES);</span>
+        }
+
+<span class="nc" id="L172">        buffer.insert(fieldStart, SPACES, 0, padLength);</span>
+      }
+    }
+<span class="nc" id="L175">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

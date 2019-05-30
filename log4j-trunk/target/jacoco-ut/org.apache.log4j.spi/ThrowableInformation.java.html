@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ThrowableInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.spi</a> &gt; <span class="el_source">ThrowableInformation.java</span></div><h1>ThrowableInformation.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.spi;
+
+import org.apache.log4j.Category;
+import org.apache.log4j.DefaultThrowableRenderer;
+
+/**
+  * ThrowableInformation is log4j's internal representation of
+  * throwables. It essentially consists of a string array, called
+  * 'rep', where the first element, that is rep[0], represents the
+  * string representation of the throwable (i.e. the value you get
+  * when you do throwable.toString()) and subsequent elements
+  * correspond the stack trace with the top most entry of the stack
+  * corresponding to the second entry of the 'rep' array that is
+  * rep[1].
+  *
+  * @author Ceki G&amp;uuml;lc&amp;uuml;
+  *
+  * */
+public class ThrowableInformation implements java.io.Serializable {
+
+  static final long serialVersionUID = -4748765566864322735L;
+
+  private transient Throwable throwable;
+  private transient Category category;
+  private String[] rep;
+
+  public
+<span class="nc" id="L45">  ThrowableInformation(Throwable throwable) {</span>
+<span class="nc" id="L46">    this.throwable = throwable;</span>
+<span class="nc" id="L47">  }</span>
+
+    /**
+     * Create a new instance.
+     * @param throwable throwable, may not be null.
+     * @param category category used to obtain ThrowableRenderer, may be null.
+     * @since 1.2.16
+     */
+<span class="fc" id="L55">  public ThrowableInformation(Throwable throwable, Category category) {</span>
+<span class="fc" id="L56">      this.throwable = throwable;</span>
+<span class="fc" id="L57">      this.category = category;</span>
+<span class="fc" id="L58">  }</span>
+
+    /**
+     * Create new instance.
+     * @since 1.2.15
+     * @param r String representation of throwable.
+     */
+<span class="nc" id="L65">  public ThrowableInformation(final String[] r) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">      if (r != null) {</span>
+<span class="nc" id="L67">        rep = (String[]) r.clone();</span>
+      }
+<span class="nc" id="L69">  }</span>
+
+
+  public
+  Throwable getThrowable() {
+<span class="nc" id="L74">    return throwable;</span>
+  }
+
+  public synchronized String[] getThrowableStrRep() {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if(rep == null) {</span>
+<span class="fc" id="L79">      ThrowableRenderer renderer = null;</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">      if (category != null) {</span>
+<span class="fc" id="L81">          LoggerRepository repo = category.getLoggerRepository();</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">          if (repo instanceof ThrowableRendererSupport) {</span>
+<span class="fc" id="L83">              renderer = ((ThrowableRendererSupport) repo).getThrowableRenderer();</span>
+          }
+      }
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">      if (renderer == null) {</span>
+<span class="fc" id="L87">          rep = DefaultThrowableRenderer.render(throwable);</span>
+      } else {
+<span class="nc" id="L89">          rep = renderer.doRender(throwable);</span>
+      }
+    }
+<span class="fc" id="L92">    return (String[]) rep.clone();</span>
+  }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

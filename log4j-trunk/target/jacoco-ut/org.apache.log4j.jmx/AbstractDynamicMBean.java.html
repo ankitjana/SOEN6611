@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractDynamicMBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.jmx</a> &gt; <span class="el_source">AbstractDynamicMBean.java</span></div><h1>AbstractDynamicMBean.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.jmx;
+
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.DynamicMBean;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+import javax.management.RuntimeOperationsException;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Appender;
+
+<span class="nc" id="L40">public abstract class AbstractDynamicMBean implements DynamicMBean,</span>
+                                                      MBeanRegistration {
+
+  String dClassName;
+  MBeanServer server;
+<span class="nc" id="L45">  private final Vector mbeanList = new Vector();</span>
+
+    /**
+     * Get MBean name.
+     * @param appender appender, may not be null.
+     * @return name.
+     * @since 1.2.16
+     */
+  static protected String getAppenderName(final Appender appender){
+<span class="nc" id="L54">      String name = appender.getName();</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">      if (name == null || name.trim().length() == 0) {</span>
+          // try to get some form of a name, because null is not allowed (exception), and empty string certainly isn't useful in JMX..
+<span class="nc" id="L57">          name = appender.toString();</span>
+      }
+<span class="nc" id="L59">      return name;</span>
+  }
+      
+
+  /**
+   * Enables the to get the values of several attributes of the Dynamic MBean.
+   */
+  public
+  AttributeList getAttributes(String[] attributeNames) {
+
+    // Check attributeNames is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L70" title="All 2 branches missed.">    if (attributeNames == null) {</span>
+<span class="nc" id="L71">      throw new RuntimeOperationsException(</span>
+			   new IllegalArgumentException(&quot;attributeNames[] cannot be null&quot;),
+			   &quot;Cannot invoke a getter of &quot; + dClassName);
+    }
+
+<span class="nc" id="L76">    AttributeList resultList = new AttributeList();</span>
+
+    // if attributeNames is empty, return an empty result list
+<span class="nc bnc" id="L79" title="All 2 branches missed.">    if (attributeNames.length == 0) {</span>
+<span class="nc" id="L80">        return resultList;</span>
+    }
+
+    // build the result attribute list
+<span class="nc bnc" id="L84" title="All 2 branches missed.">    for (int i=0 ; i&lt;attributeNames.length ; i++){</span>
+      try {
+<span class="nc" id="L86">	Object value = getAttribute(attributeNames[i]);</span>
+<span class="nc" id="L87">	resultList.add(new Attribute(attributeNames[i],value));</span>
+<span class="nc" id="L88">      } catch (JMException e) {</span>
+<span class="nc" id="L89">	     e.printStackTrace();</span>
+<span class="nc" id="L90">      } catch (RuntimeException e) {</span>
+<span class="nc" id="L91">	     e.printStackTrace();</span>
+<span class="nc" id="L92">      }</span>
+    }
+<span class="nc" id="L94">    return(resultList);</span>
+  }
+
+  /**
+   * Sets the values of several attributes of the Dynamic MBean, and returns the
+   * list of attributes that have been set.
+   */
+  public AttributeList setAttributes(AttributeList attributes) {
+
+    // Check attributes is not null to avoid NullPointerException later on
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    if (attributes == null) {</span>
+<span class="nc" id="L105">      throw new RuntimeOperationsException(</span>
+                    new IllegalArgumentException(&quot;AttributeList attributes cannot be null&quot;),
+		    &quot;Cannot invoke a setter of &quot; + dClassName);
+    }
+<span class="nc" id="L109">    AttributeList resultList = new AttributeList();</span>
+
+    // if attributeNames is empty, nothing more to do
+<span class="nc bnc" id="L112" title="All 2 branches missed.">    if (attributes.isEmpty()) {</span>
+<span class="nc" id="L113">        return resultList;</span>
+    }
+
+    // for each attribute, try to set it and add to the result list if successfull
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    for (Iterator i = attributes.iterator(); i.hasNext();) {</span>
+<span class="nc" id="L118">      Attribute attr = (Attribute) i.next();</span>
+      try {
+<span class="nc" id="L120">	setAttribute(attr);</span>
+<span class="nc" id="L121">	String name = attr.getName();</span>
+<span class="nc" id="L122">	Object value = getAttribute(name);</span>
+<span class="nc" id="L123">	resultList.add(new Attribute(name,value));</span>
+<span class="nc" id="L124">      } catch(JMException e) {</span>
+<span class="nc" id="L125">	    e.printStackTrace();</span>
+<span class="nc" id="L126">      } catch(RuntimeException e) {</span>
+<span class="nc" id="L127">	    e.printStackTrace();</span>
+<span class="nc" id="L128">      }</span>
+<span class="nc" id="L129">    }</span>
+<span class="nc" id="L130">    return(resultList);</span>
+  }
+
+  protected
+  abstract
+  Logger getLogger();
+
+  public
+  void postDeregister() {
+<span class="nc" id="L139">    getLogger().debug(&quot;postDeregister is called.&quot;);</span>
+<span class="nc" id="L140">  }</span>
+
+  public
+  void postRegister(java.lang.Boolean registrationDone) {
+<span class="nc" id="L144">  }</span>
+
+
+
+  public
+  ObjectName preRegister(MBeanServer server, ObjectName name) {
+<span class="nc" id="L150">    getLogger().debug(&quot;preRegister called. Server=&quot;+server+ &quot;, name=&quot;+name);</span>
+<span class="nc" id="L151">    this.server = server;</span>
+<span class="nc" id="L152">    return name;</span>
+  }
+  /**
+   * Registers MBean instance in the attached server. Must &lt;em&gt;NOT&lt;/em&gt;
+   * be called before registration of this instance.
+   */
+  protected
+  void registerMBean(Object mbean, ObjectName objectName)
+  throws InstanceAlreadyExistsException, MBeanRegistrationException,
+                   NotCompliantMBeanException {
+<span class="nc" id="L162">    server.registerMBean(mbean, objectName);</span>
+<span class="nc" id="L163">    mbeanList.add(objectName);</span>
+<span class="nc" id="L164">  }</span>
+
+  /**
+   * Performs cleanup for deregistering this MBean. Default implementation
+   * unregisters MBean instances which are registered using 
+   * {@link #registerMBean(Object mbean, ObjectName objectName)}.
+   */
+   public
+   void preDeregister() {
+<span class="nc" id="L173">     getLogger().debug(&quot;preDeregister called.&quot;);</span>
+     
+<span class="nc" id="L175">    Enumeration iterator = mbeanList.elements();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">    while (iterator.hasMoreElements()) {</span>
+<span class="nc" id="L177">      ObjectName name = (ObjectName) iterator.nextElement();</span>
+      try {
+<span class="nc" id="L179">        server.unregisterMBean(name);</span>
+<span class="nc" id="L180">      } catch (InstanceNotFoundException e) {</span>
+<span class="nc" id="L181">   getLogger().warn(&quot;Missing MBean &quot; + name.getCanonicalName());</span>
+<span class="nc" id="L182">      } catch (MBeanRegistrationException e) {</span>
+<span class="nc" id="L183">   getLogger().warn(&quot;Failed unregistering &quot; + name.getCanonicalName());</span>
+<span class="nc" id="L184">      }</span>
+<span class="nc" id="L185">    }</span>
+<span class="nc" id="L186">   }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

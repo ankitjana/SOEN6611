@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoggingEvent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.spi</a> &gt; <span class="el_source">LoggingEvent.java</span></div><h1>LoggingEvent.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.spi;
+
+import java.io.InterruptedIOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Category;
+import org.apache.log4j.Level;
+import org.apache.log4j.MDC;
+import org.apache.log4j.NDC;
+import org.apache.log4j.Priority;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.LogLog;
+
+// Contributors:   Nelson Minar &lt;nelson@monkey.org&gt;
+//                 Wolf Siberski
+//                 Anders Kristensen &lt;akristensen@dynamicsoft.com&gt;
+
+/**
+   The internal representation of logging events. When an affirmative
+   decision is made to log then a &lt;code&gt;LoggingEvent&lt;/code&gt; instance
+   is created. This instance is passed around to the different log4j
+   components.
+
+   &lt;p&gt;This class is of concern to those wishing to extend log4j.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author James P. Cakalic
+
+   @since 0.8.2 */
+public class LoggingEvent implements java.io.Serializable {
+
+<span class="fc" id="L57">  private static long startTime = System.currentTimeMillis();</span>
+
+  /** Fully qualified name of the calling category class. */
+  transient public final String fqnOfCategoryClass;
+
+  /** 
+   * The category of the logging event. This field is not serialized
+   * for performance reasons.
+   *
+   * &lt;p&gt;It is set by the LoggingEvent constructor or set by a remote
+   * entity after deserialization.
+   * 
+   * @deprecated This field will be marked as private or be completely
+   * removed in future releases. Please do not use it.
+   * */
+  transient private Category logger;
+
+  /** 
+   * &lt;p&gt;The category (logger) name.
+   *   
+   * @deprecated This field will be marked as private in future
+   * releases. Please do not access it directly. Use the {@link
+   * #getLoggerName} method instead.
+
+   * */
+  final public String categoryName;
+
+  /** 
+   * Level of logging event. Level cannot be serializable because it
+   * is a flyweight.  Due to its special seralization it cannot be
+   * declared final either.
+   *   
+   * &lt;p&gt; This field should not be accessed directly. You shoud use the
+   * {@link #getLevel} method instead.
+   *
+   * @deprecated This field will be marked as private in future
+   * releases. Please do not access it directly. Use the {@link
+   * #getLevel} method instead.
+   * */
+  transient public Priority level;
+
+  /** The nested diagnostic context (NDC) of logging event. */
+  private String ndc;
+
+  /** The mapped diagnostic context (MDC) of logging event. */
+  private Hashtable mdcCopy;
+
+
+  /** Have we tried to do an NDC lookup? If we did, there is no need
+   *  to do it again.  Note that its value is always false when
+   *  serialized. Thus, a receiving SocketNode will never use it's own
+   *  (incorrect) NDC. See also writeObject method. */
+<span class="pc" id="L109">  private boolean ndcLookupRequired = true;</span>
+
+
+  /** Have we tried to do an MDC lookup? If we did, there is no need
+   *  to do it again.  Note that its value is always false when
+   *  serialized. See also the getMDC and getMDCCopy methods.  */
+<span class="pc" id="L115">  private boolean mdcCopyLookupRequired = true;</span>
+
+  /** The application supplied message of logging event. */
+  transient private Object message;
+
+  /** The application supplied message rendered through the log4j
+      objet rendering mechanism.*/
+  private String renderedMessage;
+
+  /** The name of thread in which this logging event was generated. */
+  private String threadName;
+
+
+  /** This
+      variable contains information about this event's throwable
+  */
+  private ThrowableInformation throwableInfo;
+
+  /** The number of milliseconds elapsed from 1/1/1970 until logging event
+      was created. */
+  public final long timeStamp;
+  /** Location information for the caller. */
+  private LocationInfo locationInfo;
+
+  // Serialization
+  static final long serialVersionUID = -868428216207166145L;
+
+<span class="fc" id="L142">  static final Integer[] PARAM_ARRAY = new Integer[1];</span>
+  static final String TO_LEVEL = &quot;toLevel&quot;;
+<span class="fc" id="L144">  static final Class[] TO_LEVEL_PARAMS = new Class[] {int.class};</span>
+<span class="fc" id="L145">  static final Hashtable methodCache = new Hashtable(3); // use a tiny table</span>
+
+  /**
+     Instantiate a LoggingEvent from the supplied parameters.
+
+     &lt;p&gt;Except {@link #timeStamp} all the other fields of
+     &lt;code&gt;LoggingEvent&lt;/code&gt; are filled when actually needed.
+     &lt;p&gt;
+     @param logger The logger generating this event.
+     @param level The level of this event.
+     @param message  The message of this event.
+     @param throwable The throwable of this event.  */
+  public LoggingEvent(String fqnOfCategoryClass, Category logger,
+<span class="fc" id="L158">		      Priority level, Object message, Throwable throwable) {</span>
+<span class="fc" id="L159">    this.fqnOfCategoryClass = fqnOfCategoryClass;</span>
+<span class="fc" id="L160">    this.logger = logger;</span>
+<span class="fc" id="L161">    this.categoryName = logger.getName();</span>
+<span class="fc" id="L162">    this.level = level;</span>
+<span class="fc" id="L163">    this.message = message;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    if(throwable != null) {</span>
+<span class="fc" id="L165">      this.throwableInfo = new ThrowableInformation(throwable, logger);</span>
+    }
+<span class="fc" id="L167">    timeStamp = System.currentTimeMillis();</span>
+<span class="fc" id="L168">  }</span>
+
+  /**
+     Instantiate a LoggingEvent from the supplied parameters.
+
+     &lt;p&gt;Except {@link #timeStamp} all the other fields of
+     &lt;code&gt;LoggingEvent&lt;/code&gt; are filled when actually needed.
+     &lt;p&gt;
+     @param logger The logger generating this event.
+     @param timeStamp the timestamp of this logging event
+     @param level The level of this event.
+     @param message  The message of this event.
+     @param throwable The throwable of this event.  */
+  public LoggingEvent(String fqnOfCategoryClass, Category logger,
+		      long timeStamp, Priority level, Object message,
+<span class="nc" id="L183">		      Throwable throwable) {</span>
+<span class="nc" id="L184">    this.fqnOfCategoryClass = fqnOfCategoryClass;</span>
+<span class="nc" id="L185">    this.logger = logger;</span>
+<span class="nc" id="L186">    this.categoryName = logger.getName();</span>
+<span class="nc" id="L187">    this.level = level;</span>
+<span class="nc" id="L188">    this.message = message;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">    if(throwable != null) {</span>
+<span class="nc" id="L190">      this.throwableInfo = new ThrowableInformation(throwable, logger);</span>
+    }
+
+<span class="nc" id="L193">    this.timeStamp = timeStamp;</span>
+<span class="nc" id="L194">  }</span>
+
+    /**
+       Create new instance.
+       @since 1.2.15
+       @param fqnOfCategoryClass Fully qualified class name
+                 of Logger implementation.
+       @param logger The logger generating this event.
+       @param timeStamp the timestamp of this logging event
+       @param level The level of this event.
+       @param message  The message of this event.
+       @param threadName thread name
+       @param throwable The throwable of this event.
+       @param ndc Nested diagnostic context
+       @param info Location info
+       @param properties MDC properties
+     */
+    public LoggingEvent(final String fqnOfCategoryClass,
+                        final Category logger,
+                        final long timeStamp,
+                        final Level level,
+                        final Object message,
+                        final String threadName,
+                        final ThrowableInformation throwable,
+                        final String ndc,
+                        final LocationInfo info,
+                        final java.util.Map properties) {
+<span class="nc" id="L221">      super();</span>
+<span class="nc" id="L222">      this.fqnOfCategoryClass = fqnOfCategoryClass;</span>
+<span class="nc" id="L223">      this.logger = logger;</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">      if (logger != null) {</span>
+<span class="nc" id="L225">          categoryName = logger.getName();</span>
+      } else {
+<span class="nc" id="L227">          categoryName = null;</span>
+      }
+<span class="nc" id="L229">      this.level = level;</span>
+<span class="nc" id="L230">      this.message = message;</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">      if(throwable != null) {</span>
+<span class="nc" id="L232">        this.throwableInfo = throwable;</span>
+      }
+
+<span class="nc" id="L235">      this.timeStamp = timeStamp;</span>
+<span class="nc" id="L236">      this.threadName = threadName;</span>
+<span class="nc" id="L237">      ndcLookupRequired = false;</span>
+<span class="nc" id="L238">      this.ndc = ndc;</span>
+<span class="nc" id="L239">      this.locationInfo = info;</span>
+<span class="nc" id="L240">      mdcCopyLookupRequired = false;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">      if (properties != null) {</span>
+<span class="nc" id="L242">        mdcCopy = new java.util.Hashtable(properties);</span>
+      }
+<span class="nc" id="L244">    }</span>
+
+
+  /**
+     Set the location information for this logging event. The collected
+     information is cached for future use.
+   */
+  public LocationInfo getLocationInformation() {
+<span class="fc bfc" id="L252" title="All 2 branches covered.">    if(locationInfo == null) {</span>
+<span class="fc" id="L253">      locationInfo = new LocationInfo(new Throwable(), fqnOfCategoryClass);</span>
+    }
+<span class="fc" id="L255">    return locationInfo;</span>
+  }
+
+  /**
+   * Return the level of this event. Use this form instead of directly
+   * accessing the &lt;code&gt;level&lt;/code&gt; field.  */
+  public Level getLevel() {
+<span class="fc" id="L262">    return (Level) level;</span>
+  }
+
+  /**
+   * Return the name of the logger. Use this form instead of directly
+   * accessing the &lt;code&gt;categoryName&lt;/code&gt; field.  
+   */
+  public String getLoggerName() {
+<span class="fc" id="L270">    return categoryName;</span>
+  }
+
+    /**
+     * Gets the logger of the event.
+     * Use should be restricted to cloning events.
+     * @since 1.2.15
+     */
+    public Category getLogger() {
+<span class="nc" id="L279">      return logger;</span>
+    }
+
+  /**
+     Return the message for this logging event.
+
+     &lt;p&gt;Before serialization, the returned object is the message
+     passed by the user to generate the logging event. After
+     serialization, the returned value equals the String form of the
+     message possibly after object rendering.
+
+     @since 1.1 */
+  public
+  Object getMessage() {
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">    if(message != null) {</span>
+<span class="fc" id="L294">      return message;</span>
+    } else {
+<span class="nc" id="L296">      return getRenderedMessage();</span>
+    }
+  }
+
+  /**
+   * This method returns the NDC for this event. It will return the
+   * correct content even if the event was generated in a different
+   * thread or even on a different machine. The {@link NDC#get} method
+   * should &lt;em&gt;never&lt;/em&gt; be called directly.  */
+  public
+  String getNDC() {
+<span class="fc bfc" id="L307" title="All 2 branches covered.">    if(ndcLookupRequired) {</span>
+<span class="fc" id="L308">      ndcLookupRequired = false;</span>
+<span class="fc" id="L309">      ndc = NDC.get();</span>
+    }
+<span class="fc" id="L311">    return ndc;</span>
+  }
+
+
+  /**
+      Returns the the context corresponding to the &lt;code&gt;key&lt;/code&gt;
+      parameter. If there is a local MDC copy, possibly because we are
+      in a logging server or running inside AsyncAppender, then we
+      search for the key in MDC copy, if a value is found it is
+      returned. Otherwise, if the search in MDC copy returns a null
+      result, then the current thread's &lt;code&gt;MDC&lt;/code&gt; is used.
+      
+      &lt;p&gt;Note that &lt;em&gt;both&lt;/em&gt; the local MDC copy and the current
+      thread's MDC are searched.
+
+  */
+  public
+  Object getMDC(String key) {
+    Object r;
+    // Note the mdcCopy is used if it exists. Otherwise we use the MDC
+    // that is associated with the thread.
+<span class="fc bfc" id="L332" title="All 2 branches covered.">    if(mdcCopy != null) {</span>
+<span class="fc" id="L333">      r = mdcCopy.get(key);</span>
+<span class="pc bpc" id="L334" title="1 of 2 branches missed.">      if(r != null) {</span>
+<span class="fc" id="L335">        return r;</span>
+      }
+    }
+<span class="fc" id="L338">    return MDC.get(key);</span>
+  }
+
+  /**
+     Obtain a copy of this thread's MDC prior to serialization or
+     asynchronous logging.  
+  */
+  public
+  void getMDCCopy() {
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">    if(mdcCopyLookupRequired) {</span>
+<span class="fc" id="L348">      mdcCopyLookupRequired = false;</span>
+      // the clone call is required for asynchronous logging.
+      // See also bug #5932.
+<span class="fc" id="L351">      Hashtable t = MDC.getContext();</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">      if(t != null) {</span>
+<span class="fc" id="L353">	mdcCopy = (Hashtable) t.clone();</span>
+      }
+    }
+<span class="fc" id="L356">  }</span>
+
+  public
+  String getRenderedMessage() {
+<span class="fc bfc" id="L360" title="All 4 branches covered.">     if(renderedMessage == null &amp;&amp; message != null) {</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">       if(message instanceof String) {</span>
+<span class="fc" id="L362">        renderedMessage = (String) message;</span>
+    } else {
+<span class="nc" id="L364">	 LoggerRepository repository = logger.getLoggerRepository();</span>
+
+<span class="nc bnc" id="L366" title="All 2 branches missed.">	 if(repository instanceof RendererSupport) {</span>
+<span class="nc" id="L367">	   RendererSupport rs = (RendererSupport) repository;</span>
+<span class="nc" id="L368">	   renderedMessage= rs.getRendererMap().findAndRender(message);</span>
+<span class="nc" id="L369">	 } else {</span>
+<span class="nc" id="L370">	   renderedMessage = message.toString();</span>
+	 }
+       }
+     }
+<span class="fc" id="L374">     return renderedMessage;</span>
+  }
+
+  /**
+     Returns the time when the application started, in milliseconds
+     elapsed since 01.01.1970.  */
+  public static long getStartTime() {
+<span class="fc" id="L381">    return startTime;</span>
+  }
+
+  public
+  String getThreadName() {
+<span class="fc bfc" id="L386" title="All 2 branches covered.">    if(threadName == null) {</span>
+<span class="fc" id="L387">        threadName = (Thread.currentThread()).getName();</span>
+    }
+<span class="fc" id="L389">    return threadName;</span>
+  }
+
+  /**
+     Returns the throwable information contained within this
+     event. May be &lt;code&gt;null&lt;/code&gt; if there is no such information.
+
+     &lt;p&gt;Note that the {@link Throwable} object contained within a
+     {@link ThrowableInformation} does not survive serialization.
+
+     @since 1.1 */
+  public
+  ThrowableInformation getThrowableInformation() {
+<span class="nc" id="L402">    return throwableInfo;</span>
+  }
+
+  /**
+     Return this event's throwable's string[] representaion.
+  */
+  public
+  String[] getThrowableStrRep() {
+
+<span class="fc bfc" id="L411" title="All 2 branches covered.">    if(throwableInfo ==  null) {</span>
+<span class="fc" id="L412">        return null;</span>
+    } else {
+<span class="fc" id="L414">        return throwableInfo.getThrowableStrRep();</span>
+    }
+  }
+
+
+  private
+  void readLevel(ObjectInputStream ois)
+                      throws java.io.IOException, ClassNotFoundException {
+
+<span class="nc" id="L423">    int p = ois.readInt();</span>
+    try {
+<span class="nc" id="L425">      String className = (String) ois.readObject();</span>
+<span class="nc bnc" id="L426" title="All 2 branches missed.">      if(className == null) {</span>
+<span class="nc" id="L427">	level = Level.toLevel(p);</span>
+      } else {
+<span class="nc" id="L429">	Method m = (Method) methodCache.get(className);</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">	if(m == null) {</span>
+<span class="nc" id="L431">	  Class clazz = Loader.loadClass(className);</span>
+	  // Note that we use Class.getDeclaredMethod instead of
+	  // Class.getMethod. This assumes that the Level subclass
+	  // implements the toLevel(int) method which is a
+	  // requirement. Actually, it does not make sense for Level
+	  // subclasses NOT to implement this method. Also note that
+	  // only Level can be subclassed and not Priority.
+<span class="nc" id="L438">	  m = clazz.getDeclaredMethod(TO_LEVEL, TO_LEVEL_PARAMS);</span>
+<span class="nc" id="L439">	  methodCache.put(className, m);</span>
+	}
+<span class="nc" id="L441">	level = (Level) m.invoke(null,  new Integer[] { new Integer(p) } );</span>
+      }
+<span class="nc" id="L443">    } catch(InvocationTargetException e) {</span>
+<span class="nc bnc" id="L444" title="All 2 branches missed.">        if (e.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L445" title="All 2 branches missed.">                || e.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L446">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L448">    LogLog.warn(&quot;Level deserialization failed, reverting to default.&quot;, e);</span>
+<span class="nc" id="L449">	level = Level.toLevel(p);</span>
+<span class="nc" id="L450">    } catch(NoSuchMethodException e) {</span>
+<span class="nc" id="L451">	LogLog.warn(&quot;Level deserialization failed, reverting to default.&quot;, e);</span>
+<span class="nc" id="L452">	level = Level.toLevel(p);</span>
+<span class="nc" id="L453">    } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L454">	LogLog.warn(&quot;Level deserialization failed, reverting to default.&quot;, e);</span>
+<span class="nc" id="L455">	level = Level.toLevel(p);</span>
+<span class="nc" id="L456">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L457">	LogLog.warn(&quot;Level deserialization failed, reverting to default.&quot;, e);</span>
+<span class="nc" id="L458">	level = Level.toLevel(p);</span>
+<span class="nc" id="L459">    }</span>
+<span class="nc" id="L460">  }</span>
+
+  private void readObject(ObjectInputStream ois)
+                        throws java.io.IOException, ClassNotFoundException {
+<span class="nc" id="L464">    ois.defaultReadObject();</span>
+<span class="nc" id="L465">    readLevel(ois);</span>
+
+    // Make sure that no location info is available to Layouts
+<span class="nc bnc" id="L468" title="All 2 branches missed.">    if(locationInfo == null) {</span>
+<span class="nc" id="L469">        locationInfo = new LocationInfo(null, null);</span>
+    }
+<span class="nc" id="L471">  }</span>
+
+  private
+  void writeObject(ObjectOutputStream oos) throws java.io.IOException {
+    // Aside from returning the current thread name the wgetThreadName
+    // method sets the threadName variable.
+<span class="nc" id="L477">    this.getThreadName();</span>
+
+    // This sets the renders the message in case it wasn't up to now.
+<span class="nc" id="L480">    this.getRenderedMessage();</span>
+
+    // This call has a side effect of setting this.ndc and
+    // setting ndcLookupRequired to false if not already false.
+<span class="nc" id="L484">    this.getNDC();</span>
+
+    // This call has a side effect of setting this.mdcCopy and
+    // setting mdcLookupRequired to false if not already false.
+<span class="nc" id="L488">    this.getMDCCopy();</span>
+
+    // This sets the throwable sting representation of the event throwable.
+<span class="nc" id="L491">    this.getThrowableStrRep();</span>
+
+<span class="nc" id="L493">    oos.defaultWriteObject();</span>
+
+    // serialize this event's level
+<span class="nc" id="L496">    writeLevel(oos);</span>
+<span class="nc" id="L497">  }</span>
+
+  private
+  void writeLevel(ObjectOutputStream oos) throws java.io.IOException {
+
+<span class="nc" id="L502">    oos.writeInt(level.toInt());</span>
+
+<span class="nc" id="L504">    Class clazz = level.getClass();</span>
+<span class="nc bnc" id="L505" title="All 4 branches missed.">    if(clazz == Level.class) {</span>
+<span class="nc" id="L506">      oos.writeObject(null);</span>
+    } else {
+      // writing directly the Class object would be nicer, except that
+      // serialized a Class object can not be read back by JDK
+      // 1.1.x. We have to resort to this hack instead.
+<span class="nc" id="L511">      oos.writeObject(clazz.getName());</span>
+    }
+<span class="nc" id="L513">  }</span>
+
+    /**
+     * Set value for MDC property.
+     * This adds the specified MDC property to the event.
+     * Access to the MDC is not synchronized, so this
+     * method should only be called when it is known that
+     * no other threads are accessing the MDC.
+     * @since 1.2.15
+     * @param propName
+     * @param propValue
+     */
+  public final void setProperty(final String propName,
+                          final String propValue) {
+<span class="nc bnc" id="L527" title="All 2 branches missed.">        if (mdcCopy == null) {</span>
+<span class="nc" id="L528">            getMDCCopy();</span>
+        }
+<span class="nc bnc" id="L530" title="All 2 branches missed.">        if (mdcCopy == null) {</span>
+<span class="nc" id="L531">            mdcCopy = new Hashtable();</span>
+        }
+<span class="nc" id="L533">        mdcCopy.put(propName, propValue);      </span>
+<span class="nc" id="L534">  }</span>
+
+    /**
+     * Return a property for this event. The return value can be null.
+     *
+     * Equivalent to getMDC(String) in log4j 1.2.  Provided
+     * for compatibility with log4j 1.3.
+     *
+     * @param key property name
+     * @return property value or null if property not set
+     * @since 1.2.15
+     */
+    public final String getProperty(final String key) {
+<span class="nc" id="L547">        Object value = getMDC(key);</span>
+<span class="nc" id="L548">        String retval = null;</span>
+<span class="nc bnc" id="L549" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc" id="L550">            retval = value.toString();</span>
+        }
+<span class="nc" id="L552">        return retval;</span>
+    }
+
+    /**
+     * Check for the existence of location information without creating it
+     * (a byproduct of calling getLocationInformation).
+     * @return true if location information has been extracted.
+     * @since 1.2.15
+     */
+    public final boolean locationInformationExists() {
+<span class="nc bnc" id="L562" title="All 2 branches missed.">      return (locationInfo != null);</span>
+    }
+
+    /**
+     * Getter for the event's time stamp. The time stamp is calculated starting
+     * from 1970-01-01 GMT.
+     * @return timestamp
+     *
+     * @since 1.2.15
+     */
+    public final long getTimeStamp() {
+<span class="nc" id="L573">      return timeStamp;</span>
+    }
+
+    /**
+     * Returns the set of the key values in the properties
+     * for the event.
+     *
+     * The returned set is unmodifiable by the caller.
+     *
+     * Provided for compatibility with log4j 1.3
+     *
+     * @return Set an unmodifiable set of the property keys.
+     * @since 1.2.15
+     */
+    public Set getPropertyKeySet() {
+<span class="fc" id="L588">      return getProperties().keySet();</span>
+    }
+
+    /**
+     * Returns the set of properties
+     * for the event.
+     *
+     * The returned set is unmodifiable by the caller.
+     *
+     * Provided for compatibility with log4j 1.3
+     *
+     * @return Set an unmodifiable map of the properties.
+     * @since 1.2.15
+     */
+    public Map getProperties() {
+<span class="fc" id="L603">      getMDCCopy();</span>
+      Map properties;
+<span class="fc bfc" id="L605" title="All 2 branches covered.">      if (mdcCopy == null) {</span>
+<span class="fc" id="L606">         properties = new HashMap();</span>
+      } else {
+<span class="fc" id="L608">         properties = mdcCopy;</span>
+      }
+<span class="fc" id="L610">      return Collections.unmodifiableMap(properties);</span>
+    }
+
+    /**
+     * Get the fully qualified name of the calling logger sub-class/wrapper.
+     * Provided for compatibility with log4j 1.3
+     * @return fully qualified class name, may be null.
+     * @since 1.2.15
+     */
+    public String getFQNOfLoggerClass() {
+<span class="nc" id="L620">      return fqnOfCategoryClass;</span>
+    }
+
+
+    /**
+     * This removes the specified MDC property from the event.
+     * Access to the MDC is not synchronized, so this
+     * method should only be called when it is known that
+     * no other threads are accessing the MDC.
+     * @param propName the property name to remove
+     * @since 1.2.16
+     */
+    public Object removeProperty(String propName) {
+<span class="nc bnc" id="L633" title="All 2 branches missed.">        if (mdcCopy == null) {</span>
+<span class="nc" id="L634">            getMDCCopy();</span>
+        }
+<span class="nc bnc" id="L636" title="All 2 branches missed.">        if (mdcCopy == null) {</span>
+<span class="nc" id="L637">            mdcCopy = new Hashtable();</span>
+        }
+<span class="nc" id="L639">        return mdcCopy.remove(propName);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

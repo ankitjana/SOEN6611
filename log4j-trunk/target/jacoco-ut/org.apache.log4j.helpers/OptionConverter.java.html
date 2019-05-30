@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OptionConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">OptionConverter.java</span></div><h1>OptionConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.net.URL;
+import java.util.Properties;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.Configurator;
+import org.apache.log4j.spi.LoggerRepository;
+
+// Contributors:   Avy Sharell (sharell@online.fr)
+//                 Matthieu Verbert (mve@zurich.ibm.com)
+//                 Colin Sampaleanu
+
+/**
+   A convenience class to convert property values to specific types.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Simon Kitching;
+   @author Anders Kristensen
+*/
+public class OptionConverter {
+
+<span class="fc" id="L43">  static String DELIM_START = &quot;${&quot;;</span>
+<span class="fc" id="L44">  static char   DELIM_STOP  = '}';</span>
+<span class="fc" id="L45">  static int DELIM_START_LEN = 2;</span>
+<span class="fc" id="L46">  static int DELIM_STOP_LEN  = 1;</span>
+
+  /** OptionConverter is a static class. */
+  private OptionConverter() {}
+
+  public
+  static
+  String[] concatanateArrays(String[] l, String[] r) {
+<span class="nc" id="L54">    int len = l.length + r.length;</span>
+<span class="nc" id="L55">    String[] a = new String[len];</span>
+
+<span class="nc" id="L57">    System.arraycopy(l, 0, a, 0, l.length);</span>
+<span class="nc" id="L58">    System.arraycopy(r, 0, a, l.length, r.length);</span>
+
+<span class="nc" id="L60">    return a;</span>
+  }
+
+  public
+  static
+  String convertSpecialChars(String s) {
+    char c;
+<span class="fc" id="L67">    int len = s.length();</span>
+<span class="fc" id="L68">    StringBuffer sbuf = new StringBuffer(len);</span>
+
+<span class="fc" id="L70">    int i = 0;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    while(i &lt; len) {</span>
+<span class="fc" id="L72">      c = s.charAt(i++);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">      if (c == '\\') {</span>
+<span class="fc" id="L74">	c =  s.charAt(i++);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">	if(c == 'n') {</span>
+<span class="fc" id="L76">        c = '\n';</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">    } else if(c == 'r') {</span>
+<span class="nc" id="L78">        c = '\r';</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">    } else if(c == 't') {</span>
+<span class="nc" id="L80">        c = '\t';</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">    } else if(c == 'f') {</span>
+<span class="nc" id="L82">        c = '\f';</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">    } else if(c == '\b') {</span>
+<span class="nc" id="L84">        c = '\b';</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">    } else if(c == '\&quot;') {</span>
+<span class="nc" id="L86">        c = '\&quot;';</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    } else if(c == '\'') {</span>
+<span class="nc" id="L88">        c = '\'';</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">    } else if(c == '\\') {</span>
+<span class="nc" id="L90">        c = '\\';</span>
+    }
+      }
+<span class="fc" id="L93">      sbuf.append(c);</span>
+    }
+<span class="fc" id="L95">    return sbuf.toString();</span>
+  }
+
+
+  /**
+     Very similar to &lt;code&gt;System.getProperty&lt;/code&gt; except
+     that the {@link SecurityException} is hidden.
+
+     @param key The key to search for.
+     @param def The default value to return.
+     @return the string value of the system property, or the default
+     value if there is no property with that key.
+
+     @since 1.1 */
+  public
+  static
+  String getSystemProperty(String key, String def) {
+    try {
+<span class="fc" id="L113">      return System.getProperty(key, def);</span>
+<span class="nc" id="L114">    } catch(Throwable e) { // MS-Java throws com.ms.security.SecurityExceptionEx</span>
+<span class="nc" id="L115">      LogLog.debug(&quot;Was not allowed to read system property \&quot;&quot;+key+&quot;\&quot;.&quot;);</span>
+<span class="nc" id="L116">      return def;</span>
+    }
+  }
+
+
+  public
+  static
+  Object instantiateByKey(Properties props, String key, Class superClass,
+				Object defaultValue) {
+
+    // Get the value of the property in string form
+<span class="fc" id="L127">    String className = findAndSubst(key, props);</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">    if(className == null) {</span>
+<span class="nc" id="L129">      LogLog.error(&quot;Could not find value for key &quot; + key);</span>
+<span class="nc" id="L130">      return defaultValue;</span>
+    }
+    // Trim className to avoid trailing spaces that cause problems.
+<span class="fc" id="L133">    return OptionConverter.instantiateByClassName(className.trim(), superClass,</span>
+						  defaultValue);
+  }
+
+  /**
+     If &lt;code&gt;value&lt;/code&gt; is &quot;true&quot;, then &lt;code&gt;true&lt;/code&gt; is
+     returned. If &lt;code&gt;value&lt;/code&gt; is &quot;false&quot;, then
+     &lt;code&gt;true&lt;/code&gt; is returned. Otherwise, &lt;code&gt;default&lt;/code&gt; is
+     returned.
+
+     &lt;p&gt;Case of value is unimportant.  */
+  public
+  static
+  boolean toBoolean(String value, boolean dEfault) {
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">    if(value == null) {</span>
+<span class="nc" id="L148">        return dEfault;</span>
+    }
+<span class="fc" id="L150">    String trimmedVal = value.trim();</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    if(&quot;true&quot;.equalsIgnoreCase(trimmedVal)) {</span>
+<span class="fc" id="L152">        return true;</span>
+    }
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">    if(&quot;false&quot;.equalsIgnoreCase(trimmedVal)) {</span>
+<span class="fc" id="L155">        return false;</span>
+    }
+<span class="nc" id="L157">    return dEfault;</span>
+  }
+
+  public
+  static
+  int toInt(String value, int dEfault) {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">    if(value != null) {</span>
+<span class="nc" id="L164">      String s = value.trim();</span>
+      try {
+<span class="nc" id="L166">	return Integer.valueOf(s).intValue();</span>
+      }
+<span class="nc" id="L168">      catch (NumberFormatException e) {</span>
+<span class="nc" id="L169">	 LogLog.error(&quot;[&quot; + s + &quot;] is not in proper int form.&quot;);</span>
+<span class="nc" id="L170">	e.printStackTrace();</span>
+      }
+    }
+<span class="nc" id="L173">    return dEfault;</span>
+  }
+
+  /**
+     Converts a standard or custom priority level to a Level
+     object.  &lt;p&gt; If &lt;code&gt;value&lt;/code&gt; is of form
+     &quot;level#classname&quot;, then the specified class' toLevel method
+     is called to process the specified level string; if no '#'
+     character is present, then the default {@link org.apache.log4j.Level}
+     class is used to process the level value.
+
+     &lt;p&gt;As a special case, if the &lt;code&gt;value&lt;/code&gt; parameter is
+     equal to the string &quot;NULL&quot;, then the value &lt;code&gt;null&lt;/code&gt; will
+     be returned.
+
+     &lt;p&gt; If any error occurs while converting the value to a level,
+     the &lt;code&gt;defaultValue&lt;/code&gt; parameter, which may be
+     &lt;code&gt;null&lt;/code&gt;, is returned.
+
+     &lt;p&gt; Case of &lt;code&gt;value&lt;/code&gt; is insignificant for the level level, but is
+     significant for the class name part, if present.
+
+     @since 1.1 */
+  public
+  static
+  Level toLevel(String value, Level defaultValue) {
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if(value == null) {</span>
+<span class="nc" id="L200">        return defaultValue;</span>
+    }
+      
+<span class="fc" id="L203">    value = value.trim();</span>
+
+<span class="fc" id="L205">    int hashIndex = value.indexOf('#');</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">    if (hashIndex == -1) {</span>
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">      if(&quot;NULL&quot;.equalsIgnoreCase(value)) {</span>
+<span class="nc" id="L208">	return null;</span>
+      } else {
+	// no class name specified : use standard Level class
+<span class="fc" id="L211">	return Level.toLevel(value, defaultValue);</span>
+      }
+    }
+
+<span class="fc" id="L215">    Level result = defaultValue;</span>
+
+<span class="fc" id="L217">    String clazz = value.substring(hashIndex+1);</span>
+<span class="fc" id="L218">    String levelName = value.substring(0, hashIndex);</span>
+
+    // This is degenerate case but you never know.
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">    if(&quot;NULL&quot;.equalsIgnoreCase(levelName)) {</span>
+<span class="nc" id="L222">	return null;</span>
+    }
+
+<span class="fc" id="L225">    LogLog.debug(&quot;toLevel&quot; + &quot;:class=[&quot; + clazz + &quot;]&quot;</span>
+		 + &quot;:pri=[&quot; + levelName + &quot;]&quot;);
+
+    try {
+<span class="fc" id="L229">      Class customLevel = Loader.loadClass(clazz);</span>
+
+      // get a ref to the specified class' static method
+      // toLevel(String, org.apache.log4j.Level)
+<span class="fc bfc" id="L233" title="All 4 branches covered.">      Class[] paramTypes = new Class[] { String.class,</span>
+<span class="fc" id="L234">					 org.apache.log4j.Level.class</span>
+                                       };
+<span class="fc" id="L236">      java.lang.reflect.Method toLevelMethod =</span>
+<span class="fc" id="L237">                      customLevel.getMethod(&quot;toLevel&quot;, paramTypes);</span>
+
+      // now call the toLevel method, passing level string + default
+<span class="fc" id="L240">      Object[] params = new Object[] {levelName, defaultValue};</span>
+<span class="fc" id="L241">      Object o = toLevelMethod.invoke(null, params);</span>
+
+<span class="fc" id="L243">      result = (Level) o;</span>
+<span class="nc" id="L244">    } catch(ClassNotFoundException e) {</span>
+<span class="nc" id="L245">      LogLog.warn(&quot;custom level class [&quot; + clazz + &quot;] not found.&quot;);</span>
+<span class="nc" id="L246">    } catch(NoSuchMethodException e) {</span>
+<span class="nc" id="L247">      LogLog.warn(&quot;custom level class [&quot; + clazz + &quot;]&quot;</span>
+        + &quot; does not have a class function toLevel(String, Level)&quot;, e);
+<span class="nc" id="L249">    } catch(java.lang.reflect.InvocationTargetException e) {</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (e.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                || e.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L252">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L254">      LogLog.warn(&quot;custom level class [&quot; + clazz + &quot;]&quot;</span>
+		   + &quot; could not be instantiated&quot;, e);
+<span class="nc" id="L256">    } catch(ClassCastException e) {</span>
+<span class="nc" id="L257">      LogLog.warn(&quot;class [&quot; + clazz</span>
+        + &quot;] is not a subclass of org.apache.log4j.Level&quot;, e);
+<span class="nc" id="L259">    } catch(IllegalAccessException e) {</span>
+<span class="nc" id="L260">      LogLog.warn(&quot;class [&quot;+clazz+</span>
+		   &quot;] cannot be instantiated due to access restrictions&quot;, e);
+<span class="nc" id="L262">    } catch(RuntimeException e) {</span>
+<span class="nc" id="L263">      LogLog.warn(&quot;class [&quot;+clazz+&quot;], level [&quot;+levelName+</span>
+		   &quot;] conversion failed.&quot;, e);
+<span class="pc" id="L265">    }</span>
+<span class="fc" id="L266">    return result;</span>
+   }
+
+  public
+  static
+  long toFileSize(String value, long dEfault) {
+<span class="pc bpc" id="L272" title="1 of 2 branches missed.">    if(value == null) {</span>
+<span class="nc" id="L273">        return dEfault;</span>
+    }
+
+<span class="fc" id="L276">    String s = value.trim().toUpperCase();</span>
+<span class="fc" id="L277">    long multiplier = 1;</span>
+    int index;
+
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">    if((index = s.indexOf(&quot;KB&quot;)) != -1) {</span>
+<span class="nc" id="L281">      multiplier = 1024;</span>
+<span class="nc" id="L282">      s = s.substring(0, index);</span>
+    }
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">    else if((index = s.indexOf(&quot;MB&quot;)) != -1) {</span>
+<span class="nc" id="L285">      multiplier = 1024*1024;</span>
+<span class="nc" id="L286">      s = s.substring(0, index);</span>
+    }
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">    else if((index = s.indexOf(&quot;GB&quot;)) != -1) {</span>
+<span class="nc" id="L289">      multiplier = 1024*1024*1024;</span>
+<span class="nc" id="L290">      s = s.substring(0, index);</span>
+    }
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">    if(s != null) {</span>
+      try {
+<span class="fc" id="L294">	return Long.valueOf(s).longValue() * multiplier;</span>
+      }
+<span class="nc" id="L296">      catch (NumberFormatException e) {</span>
+<span class="nc" id="L297">	LogLog.error(&quot;[&quot; + s + &quot;] is not in proper int form.&quot;);</span>
+<span class="nc" id="L298">	LogLog.error(&quot;[&quot; + value + &quot;] not in expected format.&quot;, e);</span>
+      }
+    }
+<span class="nc" id="L301">    return dEfault;</span>
+  }
+
+  /**
+     Find the value corresponding to &lt;code&gt;key&lt;/code&gt; in
+     &lt;code&gt;props&lt;/code&gt;. Then perform variable substitution on the
+     found value.
+
+ */
+  public
+  static
+  String findAndSubst(String key, Properties props) {
+<span class="fc" id="L313">    String value = props.getProperty(key);</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">    if(value == null) {</span>
+<span class="fc" id="L315">        return null;</span>
+    }
+
+    try {
+<span class="fc" id="L319">      return substVars(value, props);</span>
+<span class="nc" id="L320">    } catch(IllegalArgumentException e) {</span>
+<span class="nc" id="L321">      LogLog.error(&quot;Bad option value [&quot;+value+&quot;].&quot;, e);</span>
+<span class="nc" id="L322">      return value;</span>
+    }
+  }
+
+  /**
+     Instantiate an object given a class name. Check that the
+     &lt;code&gt;className&lt;/code&gt; is a subclass of
+     &lt;code&gt;superClass&lt;/code&gt;. If that test fails or the object could
+     not be instantiated, then &lt;code&gt;defaultValue&lt;/code&gt; is returned.
+
+     @param className The fully qualified class name of the object to instantiate.
+     @param superClass The class to which the new object should belong.
+     @param defaultValue The object to return in case of non-fulfillment
+   */
+  public
+  static
+  Object instantiateByClassName(String className, Class superClass,
+				Object defaultValue) {
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">    if(className != null) {</span>
+      try {
+<span class="fc" id="L342">	Class classObj = Loader.loadClass(className);</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">	if(!superClass.isAssignableFrom(classObj)) {</span>
+<span class="nc" id="L344">	  LogLog.error(&quot;A \&quot;&quot;+className+&quot;\&quot; object is not assignable to a \&quot;&quot;+</span>
+<span class="nc" id="L345">		       superClass.getName() + &quot;\&quot; variable.&quot;);</span>
+<span class="nc" id="L346">	  LogLog.error(&quot;The class \&quot;&quot;+ superClass.getName()+&quot;\&quot; was loaded by &quot;);</span>
+<span class="nc" id="L347">	  LogLog.error(&quot;[&quot;+superClass.getClassLoader()+&quot;] whereas object of type &quot;);</span>
+<span class="nc" id="L348">	  LogLog.error(&quot;\&quot;&quot; +classObj.getName()+&quot;\&quot; was loaded by [&quot;</span>
+<span class="nc" id="L349">		       +classObj.getClassLoader()+&quot;].&quot;);</span>
+<span class="nc" id="L350">	  return defaultValue;</span>
+	}
+<span class="fc" id="L352">	return classObj.newInstance();</span>
+<span class="nc" id="L353">      } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L354">	    LogLog.error(&quot;Could not instantiate class [&quot; + className + &quot;].&quot;, e);</span>
+<span class="nc" id="L355">      } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L356">	    LogLog.error(&quot;Could not instantiate class [&quot; + className + &quot;].&quot;, e);</span>
+<span class="nc" id="L357">      } catch (InstantiationException e) {</span>
+<span class="nc" id="L358">        LogLog.error(&quot;Could not instantiate class [&quot; + className + &quot;].&quot;, e);</span>
+<span class="nc" id="L359">      } catch (RuntimeException e) {</span>
+<span class="nc" id="L360">	    LogLog.error(&quot;Could not instantiate class [&quot; + className + &quot;].&quot;, e);</span>
+<span class="nc" id="L361">      }</span>
+    }
+<span class="nc" id="L363">    return defaultValue;</span>
+  }
+
+
+  /**
+     Perform variable substitution in string &lt;code&gt;val&lt;/code&gt; from the
+     values of keys found in the system propeties.
+
+     &lt;p&gt;The variable substitution delimeters are &lt;b&gt;${&lt;/b&gt; and &lt;b&gt;}&lt;/b&gt;.
+
+     &lt;p&gt;For example, if the System properties contains &quot;key=value&quot;, then
+     the call
+     &lt;pre&gt;
+     String s = OptionConverter.substituteVars(&quot;Value of key is ${key}.&quot;);
+     &lt;/pre&gt;
+
+     will set the variable &lt;code&gt;s&lt;/code&gt; to &quot;Value of key is value.&quot;.
+
+     &lt;p&gt;If no value could be found for the specified key, then the
+     &lt;code&gt;props&lt;/code&gt; parameter is searched, if the value could not
+     be found there, then substitution defaults to the empty string.
+
+     &lt;p&gt;For example, if system propeties contains no value for the key
+     &quot;inexistentKey&quot;, then the call
+
+     &lt;pre&gt;
+     String s = OptionConverter.subsVars(&quot;Value of inexistentKey is [${inexistentKey}]&quot;);
+     &lt;/pre&gt;
+     will set &lt;code&gt;s&lt;/code&gt; to &quot;Value of inexistentKey is []&quot;
+
+     &lt;p&gt;An {@link java.lang.IllegalArgumentException} is thrown if
+     &lt;code&gt;val&lt;/code&gt; contains a start delimeter &quot;${&quot; which is not
+     balanced by a stop delimeter &quot;}&quot;. &lt;/p&gt;
+
+     &lt;p&gt;&lt;b&gt;Author&lt;/b&gt; Avy Sharell&lt;/a&gt;&lt;/p&gt;
+
+     @param val The string on which variable substitution is performed.
+     @throws IllegalArgumentException if &lt;code&gt;val&lt;/code&gt; is malformed.
+
+  */
+  public static
+  String substVars(String val, Properties props) throws
+                        IllegalArgumentException {
+
+<span class="fc" id="L407">    StringBuffer sbuf = new StringBuffer();</span>
+
+<span class="fc" id="L409">    int i = 0;</span>
+    int j, k;
+
+    while(true) {
+<span class="fc" id="L413">      j=val.indexOf(DELIM_START, i);</span>
+<span class="pc bpc" id="L414" title="1 of 2 branches missed.">      if(j == -1) {</span>
+	// no more variables
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">	if(i==0) { // this is a simple string</span>
+<span class="fc" id="L417">	  return val;</span>
+	} else { // add the tail string which contails no variables and return the result.
+<span class="nc" id="L419">	  sbuf.append(val.substring(i, val.length()));</span>
+<span class="nc" id="L420">	  return sbuf.toString();</span>
+	}
+      } else {
+<span class="nc" id="L423">	sbuf.append(val.substring(i, j));</span>
+<span class="nc" id="L424">	k = val.indexOf(DELIM_STOP, j);</span>
+<span class="nc bnc" id="L425" title="All 2 branches missed.">	if(k == -1) {</span>
+<span class="nc" id="L426">	  throw new IllegalArgumentException('&quot;'+val+</span>
+		      &quot;\&quot; has no closing brace. Opening brace at position &quot; + j
+					     + '.');
+	} else {
+<span class="nc" id="L430">	  j += DELIM_START_LEN;</span>
+<span class="nc" id="L431">	  String key = val.substring(j, k);</span>
+	  // first try in System properties
+<span class="nc" id="L433">	  String replacement = getSystemProperty(key, null);</span>
+	  // then try props parameter
+<span class="nc bnc" id="L435" title="All 4 branches missed.">	  if(replacement == null &amp;&amp; props != null) {</span>
+<span class="nc" id="L436">	    replacement =  props.getProperty(key);</span>
+	  }
+
+<span class="nc bnc" id="L439" title="All 2 branches missed.">	  if(replacement != null) {</span>
+	    // Do variable substitution on the replacement string
+	    // such that we can solve &quot;Hello ${x2}&quot; as &quot;Hello p1&quot; 
+            // the where the properties are
+	    // x1=p1
+            // x2=${x1}
+<span class="nc" id="L445">	    String recursiveReplacement = substVars(replacement, props);</span>
+<span class="nc" id="L446">	    sbuf.append(recursiveReplacement);</span>
+	  }
+<span class="nc" id="L448">	  i = k + DELIM_STOP_LEN;</span>
+<span class="nc" id="L449">	}</span>
+      }
+    }
+  }
+
+    /**
+     * Configure log4j given an {@link InputStream}.
+     * 
+     * &lt;p&gt;
+     * The InputStream will be interpreted by a new instance of a log4j configurator.
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * All configurations steps are taken on the &lt;code&gt;hierarchy&lt;/code&gt; passed as a parameter.
+     * &lt;/p&gt;
+     * 
+     * @param inputStream
+     *            The configuration input stream.
+     * @param clazz
+     *            The class name, of the log4j configurator which will parse the &lt;code&gt;inputStream&lt;/code&gt;. This must be a
+     *            subclass of {@link Configurator}, or null. If this value is null then a default configurator of
+     *            {@link PropertyConfigurator} is used.
+     * @param hierarchy
+     *            The {@link org.apache.log4j.Hierarchy} to act on.
+     * @since 1.2.17
+     */
+
+static
+public
+void selectAndConfigure(InputStream inputStream, String clazz, LoggerRepository hierarchy) {
+<span class="nc" id="L478">Configurator configurator = null;</span>
+
+<span class="nc bnc" id="L480" title="All 2 branches missed.">if(clazz != null) {</span>
+<span class="nc" id="L481">  LogLog.debug(&quot;Preferred configurator class: &quot; + clazz);</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">  configurator = (Configurator) instantiateByClassName(clazz,</span>
+<span class="nc" id="L483">                           Configurator.class,</span>
+                           null);
+<span class="nc bnc" id="L485" title="All 2 branches missed.">  if(configurator == null) {</span>
+<span class="nc" id="L486">   LogLog.error(&quot;Could not instantiate configurator [&quot;+clazz+&quot;].&quot;);</span>
+<span class="nc" id="L487">   return;</span>
+  }
+} else {
+<span class="nc" id="L490">  configurator = new PropertyConfigurator();</span>
+}
+
+<span class="nc" id="L493">configurator.doConfigure(inputStream, hierarchy);</span>
+<span class="nc" id="L494">}</span>
+
+
+  /**
+     Configure log4j given a URL.
+
+     &lt;p&gt;The url must point to a file or resource which will be interpreted by
+     a new instance of a log4j configurator.
+
+     &lt;p&gt;All configurations steps are taken on the
+     &lt;code&gt;hierarchy&lt;/code&gt; passed as a parameter.
+
+     &lt;p&gt;
+     @param url The location of the configuration file or resource.
+     @param clazz The classname, of the log4j configurator which will parse
+     the file or resource at &lt;code&gt;url&lt;/code&gt;. This must be a subclass of
+     {@link Configurator}, or null. If this value is null then a default
+     configurator of {@link PropertyConfigurator} is used, unless the
+     filename pointed to by &lt;code&gt;url&lt;/code&gt; ends in '.xml', in which case
+     {@link org.apache.log4j.xml.DOMConfigurator} is used.
+     @param hierarchy The {@link org.apache.log4j.Hierarchy} to act on.
+
+     @since 1.1.4 */
+
+  static
+  public
+  void selectAndConfigure(URL url, String clazz, LoggerRepository hierarchy) {
+<span class="nc" id="L521">   Configurator configurator = null;</span>
+<span class="nc" id="L522">   String filename = url.getFile();</span>
+
+<span class="nc bnc" id="L524" title="All 6 branches missed.">   if(clazz == null &amp;&amp; filename != null &amp;&amp; filename.endsWith(&quot;.xml&quot;)) {</span>
+<span class="nc" id="L525">     clazz = &quot;org.apache.log4j.xml.DOMConfigurator&quot;;</span>
+   }
+
+<span class="nc bnc" id="L528" title="All 2 branches missed.">   if(clazz != null) {</span>
+<span class="nc" id="L529">     LogLog.debug(&quot;Preferred configurator class: &quot; + clazz);</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">     configurator = (Configurator) instantiateByClassName(clazz,</span>
+<span class="nc" id="L531">							  Configurator.class,</span>
+							  null);
+<span class="nc bnc" id="L533" title="All 2 branches missed.">     if(configurator == null) {</span>
+<span class="nc" id="L534">   	  LogLog.error(&quot;Could not instantiate configurator [&quot;+clazz+&quot;].&quot;);</span>
+<span class="nc" id="L535">   	  return;</span>
+     }
+   } else {
+<span class="nc" id="L538">     configurator = new PropertyConfigurator();</span>
+   }
+
+<span class="nc" id="L541">   configurator.doConfigure(url, hierarchy);</span>
+<span class="nc" id="L542">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

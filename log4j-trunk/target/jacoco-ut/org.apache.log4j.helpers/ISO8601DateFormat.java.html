@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ISO8601DateFormat.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">ISO8601DateFormat.java</span></div><h1>ISO8601DateFormat.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.Date;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+
+// Contributors: Arndt Schoenewald &lt;arndt@ibm23093i821.mc.schoenewald.de&gt;
+
+/**
+   Formats a {@link Date} in the format &quot;yyyy-MM-dd HH:mm:ss,SSS&quot; for example
+   &quot;1999-11-27 15:49:37,459&quot;.
+
+   &lt;p&gt;Refer to the &lt;a
+   href=http://www.cl.cam.ac.uk/~mgk25/iso-time.html&gt;summary of the
+   International Standard Date and Time Notation&lt;/a&gt; for more
+   information on this format.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Andrew Vajoczki
+
+   @since 0.7.5
+*/
+public class ISO8601DateFormat extends AbsoluteTimeDateFormat {
+  private static final long serialVersionUID = -759840745298755296L;
+
+  public
+<span class="fc" id="L46">  ISO8601DateFormat() {</span>
+<span class="fc" id="L47">  }</span>
+
+  public
+  ISO8601DateFormat(TimeZone timeZone) {
+<span class="fc" id="L51">    super(timeZone);</span>
+<span class="fc" id="L52">  }</span>
+
+  static private long   lastTime;
+<span class="fc" id="L55">  static private char[] lastTimeString = new char[20];</span>
+
+  /**
+     Appends a date in the format &quot;YYYY-mm-dd HH:mm:ss,SSS&quot;
+     to &lt;code&gt;sbuf&lt;/code&gt;. For example: &quot;1999-11-27 15:49:37,459&quot;.
+
+     @param sbuf the &lt;code&gt;StringBuffer&lt;/code&gt; to write to
+  */
+  public
+  StringBuffer format(Date date, StringBuffer sbuf,
+		      FieldPosition fieldPosition) {
+
+<span class="fc" id="L67">    long now = date.getTime();</span>
+<span class="fc" id="L68">    int millis = (int)(now % 1000);</span>
+
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">    if ((now - millis) != lastTime || lastTimeString[0] == 0) {</span>
+      // We reach this point at most once per second
+      // across all threads instead of each time format()
+      // is called. This saves considerable CPU time.
+
+<span class="fc" id="L75">      calendar.setTime(date);</span>
+
+<span class="fc" id="L77">      int start = sbuf.length();</span>
+
+<span class="fc" id="L79">      int year =  calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L80">      sbuf.append(year);</span>
+
+      String month;
+<span class="pc bpc" id="L83" title="11 of 13 branches missed.">      switch(calendar.get(Calendar.MONTH)) {</span>
+<span class="fc" id="L84">      case Calendar.JANUARY: month = &quot;-01-&quot;; break;</span>
+<span class="nc" id="L85">      case Calendar.FEBRUARY: month = &quot;-02-&quot;;  break;</span>
+<span class="nc" id="L86">      case Calendar.MARCH: month = &quot;-03-&quot;; break;</span>
+<span class="nc" id="L87">      case Calendar.APRIL: month = &quot;-04-&quot;;  break;</span>
+<span class="fc" id="L88">      case Calendar.MAY: month = &quot;-05-&quot;; break;</span>
+<span class="nc" id="L89">      case Calendar.JUNE: month = &quot;-06-&quot;;  break;</span>
+<span class="nc" id="L90">      case Calendar.JULY: month = &quot;-07-&quot;; break;</span>
+<span class="nc" id="L91">      case Calendar.AUGUST: month = &quot;-08-&quot;;  break;</span>
+<span class="nc" id="L92">      case Calendar.SEPTEMBER: month = &quot;-09-&quot;; break;</span>
+<span class="nc" id="L93">      case Calendar.OCTOBER: month = &quot;-10-&quot;; break;</span>
+<span class="nc" id="L94">      case Calendar.NOVEMBER: month = &quot;-11-&quot;;  break;</span>
+<span class="nc" id="L95">      case Calendar.DECEMBER: month = &quot;-12-&quot;;  break;</span>
+<span class="nc" id="L96">      default: month = &quot;-NA-&quot;; break;</span>
+      }
+<span class="fc" id="L98">      sbuf.append(month);</span>
+
+<span class="fc" id="L100">      int day = calendar.get(Calendar.DAY_OF_MONTH);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">      if(day &lt; 10) {</span>
+<span class="fc" id="L102">        sbuf.append('0');</span>
+    }
+<span class="fc" id="L104">      sbuf.append(day);</span>
+
+<span class="fc" id="L106">      sbuf.append(' ');</span>
+
+<span class="fc" id="L108">      int hour = calendar.get(Calendar.HOUR_OF_DAY);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">      if(hour &lt; 10) {</span>
+<span class="fc" id="L110">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L112">      sbuf.append(hour);</span>
+<span class="fc" id="L113">      sbuf.append(':');</span>
+
+<span class="fc" id="L115">      int mins = calendar.get(Calendar.MINUTE);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">      if(mins &lt; 10) {</span>
+<span class="fc" id="L117">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L119">      sbuf.append(mins);</span>
+<span class="fc" id="L120">      sbuf.append(':');</span>
+
+<span class="fc" id="L122">      int secs = calendar.get(Calendar.SECOND);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">      if(secs &lt; 10) {</span>
+<span class="fc" id="L124">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L126">      sbuf.append(secs);</span>
+
+<span class="fc" id="L128">      sbuf.append(',');</span>
+
+      // store the time string for next time to avoid recomputation
+<span class="fc" id="L131">      sbuf.getChars(start, sbuf.length(), lastTimeString, 0);</span>
+<span class="fc" id="L132">      lastTime = now - millis;</span>
+<span class="fc" id="L133">    }</span>
+    else {
+<span class="fc" id="L135">      sbuf.append(lastTimeString);</span>
+    }
+
+
+<span class="fc bfc" id="L139" title="All 2 branches covered.">    if (millis &lt; 100) {</span>
+<span class="fc" id="L140">        sbuf.append('0');</span>
+    }
+<span class="fc bfc" id="L142" title="All 2 branches covered.">    if (millis &lt; 10) {</span>
+<span class="fc" id="L143">        sbuf.append('0');</span>
+    }
+
+<span class="fc" id="L146">    sbuf.append(millis);</span>
+<span class="fc" id="L147">    return sbuf;</span>
+  }
+
+  /**
+    This method does not do anything but return &lt;code&gt;null&lt;/code&gt;.
+   */
+  public
+  Date parse(java.lang.String s, ParsePosition pos) {
+<span class="nc" id="L155">    return null;</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

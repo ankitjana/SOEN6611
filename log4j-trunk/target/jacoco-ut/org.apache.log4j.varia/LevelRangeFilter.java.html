@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LevelRangeFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.varia</a> &gt; <span class="el_source">LevelRangeFilter.java</span></div><h1>LevelRangeFilter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.varia;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.spi.Filter;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+   This is a very simple filter based on level matching, which can be
+   used to reject messages with priorities outside a certain range.
+   
+   &lt;p&gt;The filter admits three options &lt;b&gt;LevelMin&lt;/b&gt;, &lt;b&gt;LevelMax&lt;/b&gt;
+   and &lt;b&gt;AcceptOnMatch&lt;/b&gt;.
+
+   &lt;p&gt;If the level of the {@link LoggingEvent} is not between Min and Max
+   (inclusive), then {@link Filter#DENY} is returned.
+   
+   &lt;p&gt; If the Logging event level is within the specified range, then if
+   &lt;b&gt;AcceptOnMatch&lt;/b&gt; is true, {@link Filter#ACCEPT} is returned, and if
+   &lt;b&gt;AcceptOnMatch&lt;/b&gt; is false, {@link Filter#NEUTRAL} is returned.
+   
+   &lt;p&gt;If &lt;code&gt;LevelMin&lt;/code&gt;w is not defined, then there is no
+   minimum acceptable level (ie a level is never rejected for
+   being too &quot;low&quot;/unimportant).  If &lt;code&gt;LevelMax&lt;/code&gt; is not
+   defined, then there is no maximum acceptable level (ie a
+   level is never rejected for beeing too &quot;high&quot;/important).
+
+   &lt;p&gt;Refer to the {@link
+   org.apache.log4j.AppenderSkeleton#setThreshold setThreshold} method
+   available to &lt;code&gt;all&lt;/code&gt; appenders extending {@link
+   org.apache.log4j.AppenderSkeleton} for a more convenient way to
+   filter out events by level.
+
+   @author Simon Kitching
+   @author based on code by Ceki G&amp;uuml;lc&amp;uuml; 
+*/
+<span class="fc" id="L53">public class LevelRangeFilter extends Filter {</span>
+
+  /**
+     Do we return ACCEPT when a match occurs. Default is
+     &lt;code&gt;false&lt;/code&gt;, so that later filters get run by default  */
+<span class="fc" id="L58">  boolean acceptOnMatch = false;</span>
+
+  Level levelMin;
+  Level levelMax;
+
+ 
+  /**
+     Return the decision of this filter.
+   */
+  public
+  int decide(LoggingEvent event) {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    if(this.levelMin != null) {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">      if (event.getLevel().isGreaterOrEqual(levelMin) == false) {</span>
+        // level of event is less than minimum
+<span class="nc" id="L72">        return Filter.DENY;</span>
+      }
+    }
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">    if(this.levelMax != null) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">      if (event.getLevel().toInt() &gt; levelMax.toInt()) {</span>
+        // level of event is greater than maximum
+        // Alas, there is no Level.isGreater method. and using
+        // a combo of isGreaterOrEqual &amp;&amp; !Equal seems worse than
+        // checking the int values of the level objects..
+<span class="nc" id="L82">        return Filter.DENY;</span>
+      }
+    }
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">    if (acceptOnMatch) {</span>
+      // this filter set up to bypass later filters and always return
+      // accept if level in range
+<span class="nc" id="L89">      return Filter.ACCEPT;</span>
+    }
+    else {
+      // event is ok for this filter; allow later filters to have a look..
+<span class="nc" id="L93">      return Filter.NEUTRAL;</span>
+    }
+  }
+
+ /**
+     Get the value of the &lt;code&gt;LevelMax&lt;/code&gt; option.  */
+  public
+  Level getLevelMax() {
+<span class="nc" id="L101">    return levelMax;</span>
+  }
+
+
+  /**
+     Get the value of the &lt;code&gt;LevelMin&lt;/code&gt; option.  */
+  public
+  Level getLevelMin() {
+<span class="fc" id="L109">    return levelMin;</span>
+  }
+
+  /**
+     Get the value of the &lt;code&gt;AcceptOnMatch&lt;/code&gt; option.
+   */
+  public
+  boolean getAcceptOnMatch() {
+<span class="nc" id="L117">    return acceptOnMatch;</span>
+  }
+
+  /**
+     Set the &lt;code&gt;LevelMax&lt;/code&gt; option.
+   */
+  public
+  void setLevelMax(Level levelMax) {
+<span class="nc" id="L125">    this.levelMax =  levelMax;</span>
+<span class="nc" id="L126">  }</span>
+
+  /**
+     Set the &lt;code&gt;LevelMin&lt;/code&gt; option.
+   */
+  public
+  void setLevelMin(Level levelMin) {
+<span class="fc" id="L133">    this.levelMin =  levelMin;</span>
+<span class="fc" id="L134">  }</span>
+
+  /**
+     Set the &lt;code&gt;AcceptOnMatch&lt;/code&gt; option.
+   */  
+  public 
+  void setAcceptOnMatch(boolean acceptOnMatch) {
+<span class="nc" id="L141">    this.acceptOnMatch = acceptOnMatch;</span>
+<span class="nc" id="L142">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

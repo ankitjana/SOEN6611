@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbsoluteTimeDateFormat.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">AbsoluteTimeDateFormat.java</span></div><h1>AbsoluteTimeDateFormat.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.DateFormat;
+
+
+/**
+   Formats a {@link Date} in the format &quot;HH:mm:ss,SSS&quot; for example,
+   &quot;15:49:37,459&quot;.
+   
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+   @author Andrew Vajoczki    
+
+   @since 0.7.5
+*/
+public class AbsoluteTimeDateFormat extends DateFormat {
+   private static final long serialVersionUID = -388856345976723342L;
+
+  /**
+     String constant used to specify {@link
+     org.apache.log4j.helpers.AbsoluteTimeDateFormat} in layouts. Current
+     value is &lt;b&gt;ABSOLUTE&lt;/b&gt;.  */
+  public final static String ABS_TIME_DATE_FORMAT = &quot;ABSOLUTE&quot;;
+
+  /**
+     String constant used to specify {@link
+     org.apache.log4j.helpers.DateTimeDateFormat} in layouts.  Current
+     value is &lt;b&gt;DATE&lt;/b&gt;.
+  */
+  public final static String DATE_AND_TIME_DATE_FORMAT = &quot;DATE&quot;;
+
+  /**
+     String constant used to specify {@link
+     org.apache.log4j.helpers.ISO8601DateFormat} in layouts. Current
+     value is &lt;b&gt;ISO8601&lt;/b&gt;.
+  */
+  public final static String ISO8601_DATE_FORMAT = &quot;ISO8601&quot;;
+
+  public
+<span class="fc" id="L61">  AbsoluteTimeDateFormat() {</span>
+<span class="fc" id="L62">    setCalendar(Calendar.getInstance());</span>
+<span class="fc" id="L63">  }</span>
+  
+  public
+<span class="fc" id="L66">  AbsoluteTimeDateFormat(TimeZone timeZone) {</span>
+<span class="fc" id="L67">    setCalendar(Calendar.getInstance(timeZone));</span>
+<span class="fc" id="L68">  }</span>
+
+  private static long   previousTime;
+<span class="fc" id="L71">  private static char[] previousTimeWithoutMillis = new char[9]; // &quot;HH:mm:ss.&quot;</span>
+
+  /**
+     Appends to &lt;code&gt;sbuf&lt;/code&gt; the time in the format
+     &quot;HH:mm:ss,SSS&quot; for example, &quot;15:49:37,459&quot;
+
+     @param date the date to format
+     @param sbuf the string buffer to write to
+     @param fieldPosition remains untouched
+    */
+  public
+  StringBuffer format(Date date, StringBuffer sbuf,
+		      FieldPosition fieldPosition) {
+
+<span class="fc" id="L85">    long now = date.getTime();</span>
+<span class="fc" id="L86">    int millis = (int)(now % 1000);</span>
+
+<span class="pc bpc" id="L88" title="1 of 4 branches missed.">    if ((now - millis) != previousTime || previousTimeWithoutMillis[0] == 0) {</span>
+      // We reach this point at most once per second
+      // across all threads instead of each time format()
+      // is called. This saves considerable CPU time.
+
+<span class="fc" id="L93">      calendar.setTime(date);</span>
+
+<span class="fc" id="L95">      int start = sbuf.length();</span>
+      
+<span class="fc" id="L97">      int hour = calendar.get(Calendar.HOUR_OF_DAY);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">      if(hour &lt; 10) {</span>
+<span class="fc" id="L99">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L101">      sbuf.append(hour);</span>
+<span class="fc" id="L102">      sbuf.append(':');</span>
+      
+<span class="fc" id="L104">      int mins = calendar.get(Calendar.MINUTE);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">      if(mins &lt; 10) {</span>
+<span class="fc" id="L106">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L108">      sbuf.append(mins);</span>
+<span class="fc" id="L109">      sbuf.append(':');</span>
+      
+<span class="fc" id="L111">      int secs = calendar.get(Calendar.SECOND);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">      if(secs &lt; 10) {</span>
+<span class="fc" id="L113">	sbuf.append('0');</span>
+      }
+<span class="fc" id="L115">      sbuf.append(secs);</span>
+<span class="fc" id="L116">      sbuf.append(',');      </span>
+
+      // store the time string for next time to avoid recomputation
+<span class="fc" id="L119">      sbuf.getChars(start, sbuf.length(), previousTimeWithoutMillis, 0);</span>
+      
+<span class="fc" id="L121">      previousTime = now - millis;</span>
+<span class="fc" id="L122">    }</span>
+    else {
+<span class="fc" id="L124">      sbuf.append(previousTimeWithoutMillis);</span>
+    }
+    
+
+    
+<span class="fc bfc" id="L129" title="All 2 branches covered.">    if(millis &lt; 100) {</span>
+<span class="fc" id="L130">        sbuf.append('0');</span>
+    }
+<span class="fc bfc" id="L132" title="All 2 branches covered.">    if(millis &lt; 10) {</span>
+<span class="fc" id="L133">        sbuf.append('0');</span>
+    }
+    
+<span class="fc" id="L136">    sbuf.append(millis);</span>
+<span class="fc" id="L137">    return sbuf;</span>
+  }
+
+  /**
+     This method does not do anything but return &lt;code&gt;null&lt;/code&gt;.
+   */
+  public
+  Date parse(String s, ParsePosition pos) {
+<span class="nc" id="L145">    return null;</span>
+  }  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

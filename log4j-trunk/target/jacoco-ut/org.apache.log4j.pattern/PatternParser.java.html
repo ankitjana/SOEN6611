@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatternParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.pattern</a> &gt; <span class="el_source">PatternParser.java</span></div><h1>PatternParser.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.pattern;
+
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.LogLog;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+// Contributors:   Nelson Minar &lt;(nelson@monkey.org&gt;
+//                 Igor E. Poteryaev &lt;jah@mail.ru&gt;
+//                 Reinhard Deschler &lt;reinhard.deschler@web.de&gt;
+
+/**
+ * Most of the work of the {@link org.apache.log4j.EnhancedPatternLayout} class
+ * is delegated to the PatternParser class.
+ * &lt;p&gt;It is this class that parses conversion patterns and creates
+ * a chained list of {@link PatternConverter PatternConverters}.
+ *
+ * @author James P. Cakalic
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ * @author Anders Kristensen
+ * @author Paul Smith
+ * @author Curt Arnold
+ *
+*/
+public final class PatternParser {
+  /**
+   * Escape character for format specifier.
+   */
+  private static final char ESCAPE_CHAR = '%';
+
+  /**
+   * Literal state.
+   */
+  private static final int LITERAL_STATE = 0;
+
+  /**
+   * In converter name state.
+   */
+  private static final int CONVERTER_STATE = 1;
+
+  /**
+   * Dot state.
+   */
+  private static final int DOT_STATE = 3;
+
+  /**
+   * Min state.
+   */
+  private static final int MIN_STATE = 4;
+
+  /**
+   * Max state.
+   */
+  private static final int MAX_STATE = 5;
+
+  /**
+   * Standard format specifiers for EnhancedPatternLayout.
+   */
+  private static final Map PATTERN_LAYOUT_RULES;
+
+  /**
+   * Standard format specifiers for rolling file appenders.
+   */
+  private static final Map FILENAME_PATTERN_RULES;
+
+  static {
+    // We set the global rules in the static initializer of PatternParser class
+<span class="nc" id="L91">    Map rules = new HashMap(17);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    rules.put(&quot;c&quot;, LoggerPatternConverter.class);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">    rules.put(&quot;logger&quot;, LoggerPatternConverter.class);</span>
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">    rules.put(&quot;C&quot;, ClassNamePatternConverter.class);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">    rules.put(&quot;class&quot;, ClassNamePatternConverter.class);</span>
+
+<span class="nc bnc" id="L98" title="All 2 branches missed.">    rules.put(&quot;d&quot;, DatePatternConverter.class);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">    rules.put(&quot;date&quot;, DatePatternConverter.class);</span>
+
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    rules.put(&quot;F&quot;, FileLocationPatternConverter.class);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">    rules.put(&quot;file&quot;, FileLocationPatternConverter.class);</span>
+
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    rules.put(&quot;l&quot;, FullLocationPatternConverter.class);</span>
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    rules.put(&quot;L&quot;, LineLocationPatternConverter.class);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">    rules.put(&quot;line&quot;, LineLocationPatternConverter.class);</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    rules.put(&quot;m&quot;, MessagePatternConverter.class);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">    rules.put(&quot;message&quot;, MessagePatternConverter.class);</span>
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">    rules.put(&quot;n&quot;, LineSeparatorPatternConverter.class);</span>
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">    rules.put(&quot;M&quot;, MethodLocationPatternConverter.class);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    rules.put(&quot;method&quot;, MethodLocationPatternConverter.class);</span>
+
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    rules.put(&quot;p&quot;, LevelPatternConverter.class);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">    rules.put(&quot;level&quot;, LevelPatternConverter.class);</span>
+
+<span class="nc bnc" id="L120" title="All 2 branches missed.">    rules.put(&quot;r&quot;, RelativeTimePatternConverter.class);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    rules.put(&quot;relative&quot;, RelativeTimePatternConverter.class);</span>
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">    rules.put(&quot;t&quot;, ThreadPatternConverter.class);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">    rules.put(&quot;thread&quot;, ThreadPatternConverter.class);</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">    rules.put(&quot;x&quot;, NDCPatternConverter.class);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">    rules.put(&quot;ndc&quot;, NDCPatternConverter.class);</span>
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">    rules.put(&quot;X&quot;, PropertiesPatternConverter.class);</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">    rules.put(&quot;properties&quot;, PropertiesPatternConverter.class);</span>
+
+<span class="nc bnc" id="L132" title="All 2 branches missed.">    rules.put(&quot;sn&quot;, SequenceNumberPatternConverter.class);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">    rules.put(&quot;sequenceNumber&quot;, SequenceNumberPatternConverter.class);</span>
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    rules.put(&quot;throwable&quot;, ThrowableInformationPatternConverter.class);</span>
+<span class="nc" id="L136">    PATTERN_LAYOUT_RULES = new ReadOnlyMap(rules);</span>
+
+<span class="nc" id="L138">    Map fnameRules = new HashMap(4);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">    fnameRules.put(&quot;d&quot;, FileDatePatternConverter.class);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">    fnameRules.put(&quot;date&quot;, FileDatePatternConverter.class);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    fnameRules.put(&quot;i&quot;, IntegerPatternConverter.class);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">    fnameRules.put(&quot;index&quot;, IntegerPatternConverter.class);</span>
+
+<span class="nc" id="L144">    FILENAME_PATTERN_RULES = new ReadOnlyMap(fnameRules);</span>
+<span class="nc" id="L145">  }</span>
+
+  /**
+   * Private constructor.
+   */
+  private PatternParser() {
+  }
+
+  /**
+   * Get standard format specifiers for EnhancedPatternLayout.
+   * @return read-only map of format converter classes keyed by format specifier strings.
+   */
+  public static Map getPatternLayoutRules() {
+<span class="nc" id="L158">    return PATTERN_LAYOUT_RULES;</span>
+  }
+
+  /**
+   * Get standard format specifiers for rolling file appender file specification.
+   * @return read-only map of format converter classes keyed by format specifier strings.
+   */
+  public static Map getFileNamePatternRules() {
+<span class="nc" id="L166">    return FILENAME_PATTERN_RULES;</span>
+  }
+
+  /** Extract the converter identifier found at position i.
+   *
+   * After this function returns, the variable i will point to the
+   * first char after the end of the converter identifier.
+   *
+   * If i points to a char which is not a character acceptable at the
+   * start of a unicode identifier, the value null is returned.
+   *
+   * @param lastChar last processed character.
+   * @param pattern format string.
+   * @param i current index into pattern format.
+   * @param convBuf buffer to receive conversion specifier.
+   * @param currentLiteral literal to be output in case format specifier in unrecognized.
+   * @return position in pattern after converter.
+   */
+  private static int extractConverter(
+    char lastChar, final String pattern, int i, final StringBuffer convBuf,
+    final StringBuffer currentLiteral) {
+<span class="nc" id="L187">    convBuf.setLength(0);</span>
+
+    // When this method is called, lastChar points to the first character of the
+    // conversion word. For example:
+    // For &quot;%hello&quot;     lastChar = 'h'
+    // For &quot;%-5hello&quot;   lastChar = 'h'
+    //System.out.println(&quot;lastchar is &quot;+lastChar);
+<span class="nc bnc" id="L194" title="All 2 branches missed.">    if (!Character.isUnicodeIdentifierStart(lastChar)) {</span>
+<span class="nc" id="L195">      return i;</span>
+    }
+
+<span class="nc" id="L198">    convBuf.append(lastChar);</span>
+
+<span class="nc" id="L200">    while (</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">      (i &lt; pattern.length())</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        &amp;&amp; Character.isUnicodeIdentifierPart(pattern.charAt(i))) {</span>
+<span class="nc" id="L203">      convBuf.append(pattern.charAt(i));</span>
+<span class="nc" id="L204">      currentLiteral.append(pattern.charAt(i));</span>
+
+      //System.out.println(&quot;conv buffer is now [&quot;+convBuf+&quot;].&quot;);
+<span class="nc" id="L207">      i++;</span>
+    }
+
+<span class="nc" id="L210">    return i;</span>
+  }
+
+  /**
+   * Extract options.
+   * @param pattern conversion pattern.
+   * @param i start of options.
+   * @param options array to receive extracted options
+   * @return position in pattern after options.
+   */
+  private static int extractOptions(String pattern, int i, List options) {
+<span class="nc bnc" id="L221" title="All 4 branches missed.">    while ((i &lt; pattern.length()) &amp;&amp; (pattern.charAt(i) == '{')) {</span>
+<span class="nc" id="L222">      int end = pattern.indexOf('}', i);</span>
+
+<span class="nc bnc" id="L224" title="All 2 branches missed.">      if (end == -1) {</span>
+<span class="nc" id="L225">        break;</span>
+      }
+
+<span class="nc" id="L228">      String r = pattern.substring(i + 1, end);</span>
+<span class="nc" id="L229">      options.add(r);</span>
+<span class="nc" id="L230">      i = end + 1;</span>
+<span class="nc" id="L231">    }</span>
+
+<span class="nc" id="L233">    return i;</span>
+  }
+
+  /**
+   * Parse a format specifier.
+   * @param pattern pattern to parse.
+   * @param patternConverters list to receive pattern converters.
+   * @param formattingInfos list to receive field specifiers corresponding to pattern converters.
+   * @param converterRegistry map of user-supported pattern converters keyed by format specifier, may be null.
+   * @param rules map of stock pattern converters keyed by format specifier.
+   */
+  public static void parse(
+    final String pattern, final List patternConverters,
+    final List formattingInfos, final Map converterRegistry, final Map rules) {
+<span class="nc bnc" id="L247" title="All 2 branches missed.">    if (pattern == null) {</span>
+<span class="nc" id="L248">      throw new NullPointerException(&quot;pattern&quot;);</span>
+    }
+
+<span class="nc" id="L251">    StringBuffer currentLiteral = new StringBuffer(32);</span>
+
+<span class="nc" id="L253">    int patternLength = pattern.length();</span>
+<span class="nc" id="L254">    int state = LITERAL_STATE;</span>
+    char c;
+<span class="nc" id="L256">    int i = 0;</span>
+<span class="nc" id="L257">    FormattingInfo formattingInfo = FormattingInfo.getDefault();</span>
+
+<span class="nc bnc" id="L259" title="All 2 branches missed.">    while (i &lt; patternLength) {</span>
+<span class="nc" id="L260">      c = pattern.charAt(i++);</span>
+
+<span class="nc bnc" id="L262" title="All 6 branches missed.">      switch (state) {</span>
+      case LITERAL_STATE:
+
+        // In literal state, the last char is always a literal.
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (i == patternLength) {</span>
+<span class="nc" id="L267">          currentLiteral.append(c);</span>
+
+<span class="nc" id="L269">          continue;</span>
+        }
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (c == ESCAPE_CHAR) {</span>
+          // peek at the next char.
+<span class="nc bnc" id="L274" title="All 2 branches missed.">          switch (pattern.charAt(i)) {</span>
+          case ESCAPE_CHAR:
+<span class="nc" id="L276">            currentLiteral.append(c);</span>
+<span class="nc" id="L277">            i++; // move pointer</span>
+
+<span class="nc" id="L279">            break;</span>
+
+          default:
+
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (currentLiteral.length() != 0) {</span>
+<span class="nc" id="L284">              patternConverters.add(</span>
+<span class="nc" id="L285">                new LiteralPatternConverter(currentLiteral.toString()));</span>
+<span class="nc" id="L286">              formattingInfos.add(FormattingInfo.getDefault());</span>
+            }
+
+<span class="nc" id="L289">            currentLiteral.setLength(0);</span>
+<span class="nc" id="L290">            currentLiteral.append(c); // append %</span>
+<span class="nc" id="L291">            state = CONVERTER_STATE;</span>
+<span class="nc" id="L292">            formattingInfo = FormattingInfo.getDefault();</span>
+          }
+        } else {
+<span class="nc" id="L295">          currentLiteral.append(c);</span>
+        }
+
+<span class="nc" id="L298">        break;</span>
+
+      case CONVERTER_STATE:
+<span class="nc" id="L301">        currentLiteral.append(c);</span>
+
+<span class="nc bnc" id="L303" title="All 4 branches missed.">        switch (c) {</span>
+        case '-':
+<span class="nc" id="L305">          formattingInfo =</span>
+            new FormattingInfo(
+              true, 
+<span class="nc" id="L308">              formattingInfo.isRightTruncated(),</span>
+<span class="nc" id="L309">              formattingInfo.getMinLength(),</span>
+<span class="nc" id="L310">              formattingInfo.getMaxLength());</span>
+<span class="nc" id="L311">          break;</span>
+
+        case '!':
+<span class="nc" id="L314">          formattingInfo =</span>
+            new FormattingInfo(
+<span class="nc" id="L316">              formattingInfo.isLeftAligned(), </span>
+              true,
+<span class="nc" id="L318">              formattingInfo.getMinLength(),</span>
+<span class="nc" id="L319">              formattingInfo.getMaxLength());</span>
+<span class="nc" id="L320">          break;</span>
+
+
+        case '.':
+<span class="nc" id="L324">          state = DOT_STATE;</span>
+
+<span class="nc" id="L326">          break;</span>
+
+        default:
+
+<span class="nc bnc" id="L330" title="All 4 branches missed.">          if ((c &gt;= '0') &amp;&amp; (c &lt;= '9')) {</span>
+<span class="nc" id="L331">            formattingInfo =</span>
+              new FormattingInfo(
+<span class="nc" id="L333">                formattingInfo.isLeftAligned(), </span>
+<span class="nc" id="L334">                formattingInfo.isRightTruncated(),</span>
+                c - '0',
+<span class="nc" id="L336">                formattingInfo.getMaxLength());</span>
+<span class="nc" id="L337">            state = MIN_STATE;</span>
+          } else {
+<span class="nc" id="L339">            i = finalizeConverter(</span>
+                c, pattern, i, currentLiteral, formattingInfo,
+                converterRegistry, rules, patternConverters, formattingInfos);
+
+            // Next pattern is assumed to be a literal.
+<span class="nc" id="L344">            state = LITERAL_STATE;</span>
+<span class="nc" id="L345">            formattingInfo = FormattingInfo.getDefault();</span>
+<span class="nc" id="L346">            currentLiteral.setLength(0);</span>
+          }
+        } // switch
+
+<span class="nc" id="L350">        break;</span>
+
+      case MIN_STATE:
+<span class="nc" id="L353">        currentLiteral.append(c);</span>
+
+<span class="nc bnc" id="L355" title="All 4 branches missed.">        if ((c &gt;= '0') &amp;&amp; (c &lt;= '9')) {</span>
+<span class="nc" id="L356">          formattingInfo =</span>
+            new FormattingInfo(
+<span class="nc" id="L358">              formattingInfo.isLeftAligned(),</span>
+<span class="nc" id="L359">              formattingInfo.isRightTruncated(),</span>
+<span class="nc" id="L360">              (formattingInfo.getMinLength() * 10) + (c - '0'),</span>
+<span class="nc" id="L361">              formattingInfo.getMaxLength());</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        } else if (c == '.') {</span>
+<span class="nc" id="L363">          state = DOT_STATE;</span>
+        } else {
+<span class="nc" id="L365">          i = finalizeConverter(</span>
+              c, pattern, i, currentLiteral, formattingInfo,
+              converterRegistry, rules, patternConverters, formattingInfos);
+<span class="nc" id="L368">          state = LITERAL_STATE;</span>
+<span class="nc" id="L369">          formattingInfo = FormattingInfo.getDefault();</span>
+<span class="nc" id="L370">          currentLiteral.setLength(0);</span>
+        }
+
+<span class="nc" id="L373">        break;</span>
+
+      case DOT_STATE:
+<span class="nc" id="L376">        currentLiteral.append(c);</span>
+
+<span class="nc bnc" id="L378" title="All 4 branches missed.">        if ((c &gt;= '0') &amp;&amp; (c &lt;= '9')) {</span>
+<span class="nc" id="L379">          formattingInfo =</span>
+            new FormattingInfo(
+<span class="nc" id="L381">              formattingInfo.isLeftAligned(), </span>
+<span class="nc" id="L382">              formattingInfo.isRightTruncated(),</span>
+<span class="nc" id="L383">              formattingInfo.getMinLength(),</span>
+              c - '0');
+<span class="nc" id="L385">          state = MAX_STATE;</span>
+        } else {
+<span class="nc" id="L387">            LogLog.error(</span>
+              &quot;Error occured in position &quot; + i
+              + &quot;.\n Was expecting digit, instead got char \&quot;&quot; + c + &quot;\&quot;.&quot;);
+
+<span class="nc" id="L391">          state = LITERAL_STATE;</span>
+        }
+
+<span class="nc" id="L394">        break;</span>
+
+      case MAX_STATE:
+<span class="nc" id="L397">        currentLiteral.append(c);</span>
+
+<span class="nc bnc" id="L399" title="All 4 branches missed.">        if ((c &gt;= '0') &amp;&amp; (c &lt;= '9')) {</span>
+<span class="nc" id="L400">          formattingInfo =</span>
+            new FormattingInfo(
+<span class="nc" id="L402">              formattingInfo.isLeftAligned(), </span>
+<span class="nc" id="L403">              formattingInfo.isRightTruncated(),</span>
+<span class="nc" id="L404">              formattingInfo.getMinLength(),</span>
+<span class="nc" id="L405">              (formattingInfo.getMaxLength() * 10) + (c - '0'));</span>
+        } else {
+<span class="nc" id="L407">          i = finalizeConverter(</span>
+              c, pattern, i, currentLiteral, formattingInfo,
+              converterRegistry, rules, patternConverters, formattingInfos);
+<span class="nc" id="L410">          state = LITERAL_STATE;</span>
+<span class="nc" id="L411">          formattingInfo = FormattingInfo.getDefault();</span>
+<span class="nc" id="L412">          currentLiteral.setLength(0);</span>
+        }
+
+<span class="nc" id="L415">        break;</span>
+      } // switch
+    }
+
+    // while
+<span class="nc bnc" id="L420" title="All 2 branches missed.">    if (currentLiteral.length() != 0) {</span>
+<span class="nc" id="L421">      patternConverters.add(</span>
+<span class="nc" id="L422">        new LiteralPatternConverter(currentLiteral.toString()));</span>
+<span class="nc" id="L423">      formattingInfos.add(FormattingInfo.getDefault());</span>
+    }
+<span class="nc" id="L425">  }</span>
+
+  /**
+   * Creates a new PatternConverter.
+   *
+   *
+   * @param converterId converterId.
+   * @param currentLiteral literal to be used if converter is unrecognized or following converter
+   *    if converterId contains extra characters.
+   * @param converterRegistry map of user-supported pattern converters keyed by format specifier, may be null.
+   * @param rules map of stock pattern converters keyed by format specifier.
+   * @param options converter options.
+   * @return  converter or null.
+   */
+  private static PatternConverter createConverter(
+    final String converterId, final StringBuffer currentLiteral,
+    final Map converterRegistry, final Map rules, final List options) {
+<span class="nc" id="L442">    String converterName = converterId;</span>
+<span class="nc" id="L443">    Object converterObj = null;</span>
+
+<span class="nc bnc" id="L445" title="All 4 branches missed.">    for (int i = converterId.length(); (i &gt; 0) &amp;&amp; (converterObj == null);</span>
+<span class="nc" id="L446">        i--) {</span>
+<span class="nc" id="L447">      converterName = converterName.substring(0, i);</span>
+
+<span class="nc bnc" id="L449" title="All 2 branches missed.">      if (converterRegistry != null) {</span>
+<span class="nc" id="L450">        converterObj = converterRegistry.get(converterName);</span>
+      }
+
+<span class="nc bnc" id="L453" title="All 4 branches missed.">      if ((converterObj == null) &amp;&amp; (rules != null)) {</span>
+<span class="nc" id="L454">        converterObj = rules.get(converterName);</span>
+      }
+    }
+
+<span class="nc bnc" id="L458" title="All 2 branches missed.">    if (converterObj == null) {</span>
+<span class="nc" id="L459">        LogLog.error(&quot;Unrecognized format specifier [&quot; + converterId + &quot;]&quot;);</span>
+
+<span class="nc" id="L461">      return null;</span>
+    }
+
+<span class="nc" id="L464">    Class converterClass = null;</span>
+
+<span class="nc bnc" id="L466" title="All 2 branches missed.">    if (converterObj instanceof Class) {</span>
+<span class="nc" id="L467">      converterClass = (Class) converterObj;</span>
+    } else {
+<span class="nc bnc" id="L469" title="All 2 branches missed.">      if (converterObj instanceof String) {</span>
+        try {
+<span class="nc" id="L471">          converterClass = Loader.loadClass((String) converterObj);</span>
+<span class="nc" id="L472">        } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L473">            LogLog.warn(</span>
+              &quot;Class for conversion pattern %&quot; + converterName + &quot; not found&quot;,
+              ex);
+
+<span class="nc" id="L477">          return null;</span>
+<span class="nc" id="L478">        }</span>
+      } else {
+<span class="nc" id="L480">          LogLog.warn(</span>
+            &quot;Bad map entry for conversion pattern %&quot; +  converterName + &quot;.&quot;);
+
+<span class="nc" id="L483">        return null;</span>
+      }
+    }
+
+    try {
+<span class="nc" id="L488">      Method factory =</span>
+<span class="nc" id="L489">        converterClass.getMethod(</span>
+          &quot;newInstance&quot;,
+          new Class[] {
+<span class="nc" id="L492">            Class.forName(&quot;[Ljava.lang.String;&quot;)</span>
+          });
+<span class="nc" id="L494">      String[] optionsArray = new String[options.size()];</span>
+<span class="nc" id="L495">      optionsArray = (String[]) options.toArray(optionsArray);</span>
+
+<span class="nc" id="L497">      Object newObj =</span>
+<span class="nc" id="L498">        factory.invoke(null, new Object[] { optionsArray });</span>
+
+<span class="nc bnc" id="L500" title="All 2 branches missed.">      if (newObj instanceof PatternConverter) {</span>
+<span class="nc" id="L501">        currentLiteral.delete(</span>
+          0,
+<span class="nc" id="L503">          currentLiteral.length()</span>
+<span class="nc" id="L504">          - (converterId.length() - converterName.length()));</span>
+
+<span class="nc" id="L506">        return (PatternConverter) newObj;</span>
+      } else {
+<span class="nc" id="L508">          LogLog.warn(</span>
+<span class="nc" id="L509">            &quot;Class &quot; + converterClass.getName()</span>
+            + &quot; does not extend PatternConverter.&quot;);
+      }
+<span class="nc" id="L512">    } catch (Exception ex) {</span>
+<span class="nc" id="L513">        LogLog.error(&quot;Error creating converter for &quot; + converterId, ex);</span>
+
+      try {
+        //
+        //  try default constructor
+<span class="nc" id="L518">        PatternConverter pc = (PatternConverter) converterClass.newInstance();</span>
+<span class="nc" id="L519">        currentLiteral.delete(</span>
+          0,
+<span class="nc" id="L521">          currentLiteral.length()</span>
+<span class="nc" id="L522">          - (converterId.length() - converterName.length()));</span>
+
+<span class="nc" id="L524">        return pc;</span>
+<span class="nc" id="L525">      } catch (Exception ex2) {</span>
+<span class="nc" id="L526">          LogLog.error(&quot;Error creating converter for &quot; + converterId, ex2);</span>
+      }
+<span class="nc" id="L528">    }</span>
+
+<span class="nc" id="L530">    return null;</span>
+  }
+
+  /**
+   * Processes a format specifier sequence.
+   *
+   * @param c initial character of format specifier.
+   * @param pattern conversion pattern
+   * @param i current position in conversion pattern.
+   * @param currentLiteral current literal.
+   * @param formattingInfo current field specifier.
+   * @param converterRegistry map of user-provided pattern converters keyed by format specifier, may be null.
+   * @param rules map of stock pattern converters keyed by format specifier.
+   * @param patternConverters list to receive parsed pattern converter.
+   * @param formattingInfos list to receive corresponding field specifier.
+   * @return position after format specifier sequence.
+   */
+  private static int finalizeConverter(
+    char c, String pattern, int i,
+    final StringBuffer currentLiteral, final FormattingInfo formattingInfo,
+    final Map converterRegistry, final Map rules, final List patternConverters,
+    final List formattingInfos) {
+<span class="nc" id="L552">    StringBuffer convBuf = new StringBuffer();</span>
+<span class="nc" id="L553">    i = extractConverter(c, pattern, i, convBuf, currentLiteral);</span>
+
+<span class="nc" id="L555">    String converterId = convBuf.toString();</span>
+
+<span class="nc" id="L557">    List options = new ArrayList();</span>
+<span class="nc" id="L558">    i = extractOptions(pattern, i, options);</span>
+
+<span class="nc" id="L560">    PatternConverter pc =</span>
+<span class="nc" id="L561">      createConverter(</span>
+        converterId, currentLiteral, converterRegistry, rules, options);
+
+<span class="nc bnc" id="L564" title="All 2 branches missed.">    if (pc == null) {</span>
+      StringBuffer msg;
+
+<span class="nc bnc" id="L567" title="All 4 branches missed.">      if ((converterId == null) || (converterId.length() == 0)) {</span>
+<span class="nc" id="L568">        msg =</span>
+          new StringBuffer(&quot;Empty conversion specifier starting at position &quot;);
+      } else {
+<span class="nc" id="L571">        msg = new StringBuffer(&quot;Unrecognized conversion specifier [&quot;);</span>
+<span class="nc" id="L572">        msg.append(converterId);</span>
+<span class="nc" id="L573">        msg.append(&quot;] starting at position &quot;);</span>
+      }
+
+<span class="nc" id="L576">      msg.append(Integer.toString(i));</span>
+<span class="nc" id="L577">      msg.append(&quot; in conversion pattern.&quot;);</span>
+
+<span class="nc" id="L579">        LogLog.error(msg.toString());</span>
+
+<span class="nc" id="L581">      patternConverters.add(</span>
+<span class="nc" id="L582">        new LiteralPatternConverter(currentLiteral.toString()));</span>
+<span class="nc" id="L583">      formattingInfos.add(FormattingInfo.getDefault());</span>
+<span class="nc" id="L584">    } else {</span>
+<span class="nc" id="L585">      patternConverters.add(pc);</span>
+<span class="nc" id="L586">      formattingInfos.add(formattingInfo);</span>
+
+<span class="nc bnc" id="L588" title="All 2 branches missed.">      if (currentLiteral.length() &gt; 0) {</span>
+<span class="nc" id="L589">        patternConverters.add(</span>
+<span class="nc" id="L590">          new LiteralPatternConverter(currentLiteral.toString()));</span>
+<span class="nc" id="L591">        formattingInfos.add(FormattingInfo.getDefault());</span>
+      }
+    }
+
+<span class="nc" id="L595">    currentLiteral.setLength(0);</span>
+
+<span class="nc" id="L597">    return i;</span>
+  }
+
+  /**
+   * The class wraps another Map but throws exceptions on any attempt to modify the map.
+   */
+  private static class ReadOnlyMap implements Map {
+    /**
+     * Wrapped map.
+     */
+    private final Map map;
+
+    /**
+     * Constructor
+     * @param src source map.
+     */
+<span class="nc" id="L613">    public ReadOnlyMap(Map src) {</span>
+<span class="nc" id="L614">      map = src;</span>
+<span class="nc" id="L615">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+<span class="nc" id="L621">      throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsKey(Object key) {
+<span class="nc" id="L628">      return map.containsKey(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsValue(Object value) {
+<span class="nc" id="L635">      return map.containsValue(value);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set entrySet() {
+<span class="nc" id="L642">      return map.entrySet();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object get(Object key) {
+<span class="nc" id="L649">      return map.get(key);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmpty() {
+<span class="nc" id="L656">      return map.isEmpty();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set keySet() {
+<span class="nc" id="L663">      return map.keySet();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object put(Object key, Object value) {
+<span class="nc" id="L670">      throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void putAll(Map t) {
+<span class="nc" id="L677">      throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object remove(Object key) {
+<span class="nc" id="L684">      throw new UnsupportedOperationException();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int size() {
+<span class="nc" id="L691">      return map.size();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Collection values() {
+<span class="nc" id="L698">      return map.values();</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

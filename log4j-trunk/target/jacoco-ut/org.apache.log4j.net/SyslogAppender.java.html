@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SyslogAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SyslogAppender.java</span></div><h1>SyslogAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.net;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
+import org.apache.log4j.helpers.SyslogQuietWriter;
+import org.apache.log4j.helpers.SyslogWriter;
+import org.apache.log4j.spi.LoggingEvent;
+
+// Contributors: Yves Bossel &lt;ybossel@opengets.cl&gt;
+//               Christopher Taylor &lt;cstaylor@pacbell.net&gt;
+
+/**
+    Use SyslogAppender to send log messages to a remote syslog daemon.
+
+    @author Ceki G&amp;uuml;lc&amp;uuml;
+    @author Anders Kristensen
+ */
+public class SyslogAppender extends AppenderSkeleton {
+  // The following constants are extracted from a syslog.h file
+  // copyrighted by the Regents of the University of California
+  // I hope nobody at Berkley gets offended.
+
+  /**
+    * Maximum length of a TAG string.
+    */
+  private static final int MAX_TAG_LEN = 32;
+  
+  /** Kernel messages */
+  final static public int LOG_KERN     = 0;
+  /** Random user-level messages */
+  final static public int LOG_USER     = 1&lt;&lt;3;
+  /** Mail system */
+  final static public int LOG_MAIL     = 2&lt;&lt;3;
+  /** System daemons */
+  final static public int LOG_DAEMON   = 3&lt;&lt;3;
+  /** security/authorization messages */
+  final static public int LOG_AUTH     = 4&lt;&lt;3;
+  /** messages generated internally by syslogd */
+  final static public int LOG_SYSLOG   = 5&lt;&lt;3;
+
+  /** line printer subsystem */
+  final static public int LOG_LPR      = 6&lt;&lt;3;
+  /** network news subsystem */
+  final static public int LOG_NEWS     = 7&lt;&lt;3;
+  /** UUCP subsystem */
+  final static public int LOG_UUCP     = 8&lt;&lt;3;
+  /** clock daemon */
+  final static public int LOG_CRON     = 9&lt;&lt;3;
+  /** security/authorization  messages (private) */
+  final static public int LOG_AUTHPRIV = 10&lt;&lt;3;
+  /** ftp daemon */
+  final static public int LOG_FTP      = 11&lt;&lt;3;
+
+  // other codes through 15 reserved for system use
+  /** reserved for local use */
+  final static public int LOG_LOCAL0 = 16&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL1 = 17&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL2 = 18&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL3 = 19&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL4 = 20&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL5 = 21&lt;&lt;3;
+  /** reserved for local use */
+  final static public int LOG_LOCAL6 = 22&lt;&lt;3;
+  /** reserved for local use*/
+  final static public int LOG_LOCAL7 = 23&lt;&lt;3;
+
+  protected static final int SYSLOG_HOST_OI = 0;
+  protected static final int FACILITY_OI = 1;
+
+  static final String TAB = &quot;    &quot;;
+
+<span class="nc" id="L102">  static final Pattern NOT_ALPHANUM = Pattern.compile(&quot;[^\\p{Alnum}]&quot;);</span>
+
+  // Have LOG_USER as default
+<span class="nc" id="L105">  int syslogFacility = LOG_USER;</span>
+  String facilityStr;
+<span class="nc" id="L107">  boolean facilityPrinting = false;</span>
+
+  //SyslogTracerPrintWriter stp;
+  SyslogQuietWriter sqw;
+  String syslogHost;
+
+    /**
+     * If true, the appender will generate the HEADER (timestamp and host name)
+     * part of the syslog packet.
+     * @since 1.2.15
+     */
+<span class="nc" id="L118">  private boolean header = false;</span>
+  
+    /**
+     * The TAG part of the syslog message.
+     * 
+     * @since 1.2.18
+     */
+<span class="nc" id="L125">  private String tag = null;</span>
+  
+    /**
+     * Date format used if header = true.
+     * @since 1.2.15
+     */
+<span class="nc" id="L131">  private final SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;MMM dd HH:mm:ss &quot;, Locale.ENGLISH);</span>
+  
+    /**
+     * Host name used to identify messages from this appender.
+     * @since 1.2.15
+     */
+  private String localHostname;
+
+    /**
+     * Set to true after the header of the layout has been sent or if it has none.
+     */
+<span class="nc" id="L142">  private boolean layoutHeaderChecked = false;</span>
+
+  public
+<span class="nc" id="L145">  SyslogAppender() {</span>
+<span class="nc" id="L146">    this.initSyslogFacilityStr();</span>
+<span class="nc" id="L147">  }</span>
+
+  public
+<span class="nc" id="L150">  SyslogAppender(Layout layout, int syslogFacility) {</span>
+<span class="nc" id="L151">    this.layout = layout;</span>
+<span class="nc" id="L152">    this.syslogFacility = syslogFacility;</span>
+<span class="nc" id="L153">    this.initSyslogFacilityStr();</span>
+<span class="nc" id="L154">  }</span>
+
+  public
+  SyslogAppender(Layout layout, String syslogHost, int syslogFacility) {
+<span class="nc" id="L158">    this(layout, syslogFacility);</span>
+<span class="nc" id="L159">    setSyslogHost(syslogHost);</span>
+<span class="nc" id="L160">  }</span>
+
+  /**
+     Release any resources held by this SyslogAppender.
+
+     @since 0.8.4
+   */
+  synchronized
+  public
+  void close() {
+<span class="nc" id="L170">    closed = true;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">    if (sqw != null) {</span>
+        try {
+<span class="nc bnc" id="L173" title="All 6 branches missed.">            if (layoutHeaderChecked &amp;&amp; layout != null &amp;&amp; layout.getFooter() != null) {</span>
+<span class="nc" id="L174">                sendLayoutMessage(layout.getFooter());</span>
+            }
+<span class="nc" id="L176">            sqw.close();</span>
+<span class="nc" id="L177">            sqw = null;</span>
+<span class="nc" id="L178">        } catch(java.io.InterruptedIOException e) {</span>
+<span class="nc" id="L179">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L180">            sqw = null;</span>
+<span class="nc" id="L181">        } catch(IOException e) {</span>
+<span class="nc" id="L182">            sqw = null;</span>
+<span class="nc" id="L183">        }</span>
+    }
+<span class="nc" id="L185">  }</span>
+
+  private
+  void initSyslogFacilityStr() {
+<span class="nc" id="L189">    facilityStr = getFacilityString(this.syslogFacility);</span>
+
+<span class="nc bnc" id="L191" title="All 2 branches missed.">    if (facilityStr == null) {</span>
+<span class="nc" id="L192">      System.err.println(&quot;\&quot;&quot; + syslogFacility +</span>
+                  &quot;\&quot; is an unknown syslog facility. Defaulting to \&quot;USER\&quot;.&quot;);
+<span class="nc" id="L194">      this.syslogFacility = LOG_USER;</span>
+<span class="nc" id="L195">      facilityStr = &quot;user:&quot;;</span>
+    } else {
+<span class="nc" id="L197">      facilityStr += &quot;:&quot;;</span>
+    }
+<span class="nc" id="L199">  }</span>
+
+  /**
+     Returns the specified syslog facility as a lower-case String,
+     e.g. &quot;kern&quot;, &quot;user&quot;, etc.
+  */
+  public
+  static
+  String getFacilityString(int syslogFacility) {
+<span class="nc bnc" id="L208" title="All 21 branches missed.">    switch(syslogFacility) {</span>
+<span class="nc" id="L209">    case LOG_KERN:      return &quot;kern&quot;;</span>
+<span class="nc" id="L210">    case LOG_USER:      return &quot;user&quot;;</span>
+<span class="nc" id="L211">    case LOG_MAIL:      return &quot;mail&quot;;</span>
+<span class="nc" id="L212">    case LOG_DAEMON:    return &quot;daemon&quot;;</span>
+<span class="nc" id="L213">    case LOG_AUTH:      return &quot;auth&quot;;</span>
+<span class="nc" id="L214">    case LOG_SYSLOG:    return &quot;syslog&quot;;</span>
+<span class="nc" id="L215">    case LOG_LPR:       return &quot;lpr&quot;;</span>
+<span class="nc" id="L216">    case LOG_NEWS:      return &quot;news&quot;;</span>
+<span class="nc" id="L217">    case LOG_UUCP:      return &quot;uucp&quot;;</span>
+<span class="nc" id="L218">    case LOG_CRON:      return &quot;cron&quot;;</span>
+<span class="nc" id="L219">    case LOG_AUTHPRIV:  return &quot;authpriv&quot;;</span>
+<span class="nc" id="L220">    case LOG_FTP:       return &quot;ftp&quot;;</span>
+<span class="nc" id="L221">    case LOG_LOCAL0:    return &quot;local0&quot;;</span>
+<span class="nc" id="L222">    case LOG_LOCAL1:    return &quot;local1&quot;;</span>
+<span class="nc" id="L223">    case LOG_LOCAL2:    return &quot;local2&quot;;</span>
+<span class="nc" id="L224">    case LOG_LOCAL3:    return &quot;local3&quot;;</span>
+<span class="nc" id="L225">    case LOG_LOCAL4:    return &quot;local4&quot;;</span>
+<span class="nc" id="L226">    case LOG_LOCAL5:    return &quot;local5&quot;;</span>
+<span class="nc" id="L227">    case LOG_LOCAL6:    return &quot;local6&quot;;</span>
+<span class="nc" id="L228">    case LOG_LOCAL7:    return &quot;local7&quot;;</span>
+<span class="nc" id="L229">    default:            return null;</span>
+    }
+  }
+
+  /**
+     Returns the integer value corresponding to the named syslog
+     facility, or -1 if it couldn't be recognized.
+
+     @param facilityName one of the strings KERN, USER, MAIL, DAEMON,
+            AUTH, SYSLOG, LPR, NEWS, UUCP, CRON, AUTHPRIV, FTP, LOCAL0,
+            LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7.
+            The matching is case-insensitive.
+
+     @since 1.1
+  */
+  public
+  static
+  int getFacility(String facilityName) {
+<span class="nc bnc" id="L247" title="All 2 branches missed.">    if(facilityName != null) {</span>
+<span class="nc" id="L248">      facilityName = facilityName.trim();</span>
+    }
+<span class="nc bnc" id="L250" title="All 2 branches missed.">    if(&quot;KERN&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L251">      return LOG_KERN;</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">    } else if(&quot;USER&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L253">      return LOG_USER;</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">    } else if(&quot;MAIL&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L255">      return LOG_MAIL;</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">    } else if(&quot;DAEMON&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L257">      return LOG_DAEMON;</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">    } else if(&quot;AUTH&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L259">      return LOG_AUTH;</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">    } else if(&quot;SYSLOG&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L261">      return LOG_SYSLOG;</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">    } else if(&quot;LPR&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L263">      return LOG_LPR;</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">    } else if(&quot;NEWS&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L265">      return LOG_NEWS;</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">    } else if(&quot;UUCP&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L267">      return LOG_UUCP;</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">    } else if(&quot;CRON&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L269">      return LOG_CRON;</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">    } else if(&quot;AUTHPRIV&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L271">      return LOG_AUTHPRIV;</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">    } else if(&quot;FTP&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L273">      return LOG_FTP;</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">    } else if(&quot;LOCAL0&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L275">      return LOG_LOCAL0;</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">    } else if(&quot;LOCAL1&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L277">      return LOG_LOCAL1;</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">    } else if(&quot;LOCAL2&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L279">      return LOG_LOCAL2;</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">    } else if(&quot;LOCAL3&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L281">      return LOG_LOCAL3;</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">    } else if(&quot;LOCAL4&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L283">      return LOG_LOCAL4;</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">    } else if(&quot;LOCAL5&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L285">      return LOG_LOCAL5;</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">    } else if(&quot;LOCAL6&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L287">      return LOG_LOCAL6;</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">    } else if(&quot;LOCAL7&quot;.equalsIgnoreCase(facilityName)) {</span>
+<span class="nc" id="L289">      return LOG_LOCAL7;</span>
+    } else {
+<span class="nc" id="L291">      return -1;</span>
+    }
+  }
+
+
+  private void splitPacket(final String header, final String packet) {
+<span class="nc" id="L297">      int byteCount = packet.getBytes().length;</span>
+      //
+      //   if packet is less than RFC 3164 limit
+      //      of 1024 bytes, then write it
+      //      (must allow for up 5to 5 characters in the PRI section
+      //          added by SyslogQuietWriter)
+<span class="nc bnc" id="L303" title="All 2 branches missed.">      if (byteCount &lt;= 1019) {</span>
+<span class="nc" id="L304">          sqw.write(packet);</span>
+      } else {
+<span class="nc" id="L306">          int split = header.length() + (packet.length() - header.length())/2;</span>
+<span class="nc" id="L307">          splitPacket(header, packet.substring(0, split) + &quot;...&quot;);</span>
+<span class="nc" id="L308">          splitPacket(header, header + &quot;...&quot; + packet.substring(split));</span>
+      }      
+<span class="nc" id="L310">  }</span>
+
+  public
+  void append(LoggingEvent event) {
+
+<span class="nc bnc" id="L315" title="All 2 branches missed.">    if(!isAsSevereAsThreshold(event.getLevel())) {</span>
+<span class="nc" id="L316">        return;</span>
+    }
+
+    // We must not attempt to append if sqw is null.
+<span class="nc bnc" id="L320" title="All 2 branches missed.">    if(sqw == null) {</span>
+<span class="nc" id="L321">      errorHandler.error(&quot;No syslog host is set for SyslogAppedender named \&quot;&quot;+</span>
+			this.name+&quot;\&quot;.&quot;);
+<span class="nc" id="L323">      return;</span>
+    }
+
+<span class="nc bnc" id="L326" title="All 2 branches missed.">    if (!layoutHeaderChecked) {</span>
+<span class="nc bnc" id="L327" title="All 4 branches missed.">        if (layout != null &amp;&amp; layout.getHeader() != null) {</span>
+<span class="nc" id="L328">            sendLayoutMessage(layout.getHeader());</span>
+        }
+<span class="nc" id="L330">        layoutHeaderChecked = true;</span>
+    }
+
+<span class="nc" id="L333">    String hdr = getPacketHeader(event.timeStamp);</span>
+    String packet;
+<span class="nc bnc" id="L335" title="All 2 branches missed.">    if (layout == null) {</span>
+<span class="nc" id="L336">        packet = String.valueOf(event.getMessage());</span>
+    } else {
+<span class="nc" id="L338">        packet = layout.format(event);</span>
+    }
+<span class="nc bnc" id="L340" title="All 4 branches missed.">    if(facilityPrinting || hdr.length() &gt; 0) {</span>
+<span class="nc" id="L341">        StringBuffer buf = new StringBuffer(hdr);</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">        if(facilityPrinting) {</span>
+<span class="nc" id="L343">            buf.append(facilityStr);</span>
+        }
+<span class="nc" id="L345">        buf.append(packet);</span>
+<span class="nc" id="L346">        packet = buf.toString();</span>
+    }
+
+<span class="nc" id="L349">    sqw.setLevel(event.getLevel().getSyslogEquivalent());</span>
+    //
+    //   if message has a remote likelihood of exceeding 1024 bytes
+    //      when encoded, consider splitting message into multiple packets
+<span class="nc bnc" id="L353" title="All 2 branches missed.">    if (packet.length() &gt; 256) {</span>
+<span class="nc" id="L354">        splitPacket(hdr, packet);</span>
+    } else {
+<span class="nc" id="L356">        sqw.write(packet);</span>
+    }
+
+<span class="nc bnc" id="L359" title="All 4 branches missed.">    if (layout == null || layout.ignoresThrowable()) {</span>
+<span class="nc" id="L360">      String[] s = event.getThrowableStrRep();</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">      if (s != null) {</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        for(int i = 0; i &lt; s.length; i++) {</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">            if (s[i].startsWith(&quot;\t&quot;)) {</span>
+<span class="nc" id="L364">               sqw.write(hdr+TAB+s[i].substring(1));</span>
+            } else {
+<span class="nc" id="L366">               sqw.write(hdr+s[i]);</span>
+            }
+        }
+      }
+    }
+<span class="nc" id="L371">  }</span>
+
+  /**
+     This method returns immediately as options are activated when they
+     are set.
+  */
+  public
+  void activateOptions() {
+<span class="nc bnc" id="L379" title="All 2 branches missed.">      if (header) {</span>
+<span class="nc" id="L380">        getLocalHostname();</span>
+      }
+<span class="nc bnc" id="L382" title="All 4 branches missed.">      if (layout != null &amp;&amp; layout.getHeader() != null) {</span>
+<span class="nc" id="L383">          sendLayoutMessage(layout.getHeader());</span>
+      }
+<span class="nc" id="L385">      layoutHeaderChecked = true;</span>
+<span class="nc" id="L386">  }</span>
+
+  /**
+     The SyslogAppender requires a layout. Hence, this method returns
+     &lt;code&gt;true&lt;/code&gt;.
+
+     @since 0.8.4 */
+  public
+  boolean requiresLayout() {
+<span class="nc" id="L395">    return true;</span>
+  }
+
+  /**
+    The &lt;b&gt;SyslogHost&lt;/b&gt; option is the name of the the syslog host
+    where log output should go.  A non-default port can be specified by
+    appending a colon and port number to a host name,
+    an IPv4 address or an IPv6 address enclosed in square brackets.
+
+    &lt;b&gt;WARNING&lt;/b&gt; If the SyslogHost is not set, then this appender
+    will fail.
+   */
+  public
+  void setSyslogHost(final String syslogHost) {
+<span class="nc" id="L409">    this.sqw = new SyslogQuietWriter(new SyslogWriter(syslogHost),</span>
+				     syslogFacility, errorHandler);
+    //this.stp = new SyslogTracerPrintWriter(sqw);
+<span class="nc" id="L412">    this.syslogHost = syslogHost;</span>
+<span class="nc" id="L413">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;SyslogHost&lt;/b&gt; option.
+   */
+  public
+  String getSyslogHost() {
+<span class="nc" id="L420">    return syslogHost;</span>
+  }
+
+  /**
+     Set the syslog facility. This is the &lt;b&gt;Facility&lt;/b&gt; option.
+
+     &lt;p&gt;The &lt;code&gt;facilityName&lt;/code&gt; parameter must be one of the
+     strings KERN, USER, MAIL, DAEMON, AUTH, SYSLOG, LPR, NEWS, UUCP,
+     CRON, AUTHPRIV, FTP, LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4,
+     LOCAL5, LOCAL6, LOCAL7. Case is unimportant.
+
+     @since 0.8.1 */
+  public
+  void setFacility(String facilityName) {
+<span class="nc bnc" id="L434" title="All 2 branches missed.">    if(facilityName == null) {</span>
+<span class="nc" id="L435">        return;</span>
+    }
+
+<span class="nc" id="L438">    syslogFacility = getFacility(facilityName);</span>
+<span class="nc bnc" id="L439" title="All 2 branches missed.">    if (syslogFacility == -1) {</span>
+<span class="nc" id="L440">      System.err.println(&quot;[&quot;+facilityName +</span>
+                  &quot;] is an unknown syslog facility. Defaulting to [USER].&quot;);
+<span class="nc" id="L442">      syslogFacility = LOG_USER;</span>
+    }
+
+<span class="nc" id="L445">    this.initSyslogFacilityStr();</span>
+
+    // If there is already a sqw, make it use the new facility.
+<span class="nc bnc" id="L448" title="All 2 branches missed.">    if(sqw != null) {</span>
+<span class="nc" id="L449">      sqw.setSyslogFacility(this.syslogFacility);</span>
+    }
+<span class="nc" id="L451">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;Facility&lt;/b&gt; option.
+   */
+  public
+  String getFacility() {
+<span class="nc" id="L458">    return getFacilityString(syslogFacility);</span>
+  }
+
+  /**
+    If the &lt;b&gt;FacilityPrinting&lt;/b&gt; option is set to true, the printed
+    message will include the facility name of the application. It is
+    &lt;em&gt;false&lt;/em&gt; by default.
+   */
+  public
+  void setFacilityPrinting(boolean on) {
+<span class="nc" id="L468">    facilityPrinting = on;</span>
+<span class="nc" id="L469">  }</span>
+
+  /**
+     Returns the value of the &lt;b&gt;FacilityPrinting&lt;/b&gt; option.
+   */
+  public
+  boolean getFacilityPrinting() {
+<span class="nc" id="L476">    return facilityPrinting;</span>
+  }
+
+  /**
+   * If true, the appender will generate the HEADER part (that is, timestamp and host name)
+   * of the syslog packet.  Default value is false for compatibility with existing behavior,
+   * however should be true unless there is a specific justification.
+   * @since 1.2.15
+  */
+  public final boolean getHeader() {
+<span class="nc" id="L486">      return header;</span>
+  }
+
+    /**
+     * Returns whether the appender produces the HEADER part (that is, timestamp and host name)
+     * of the syslog packet.
+     * @since 1.2.15
+    */
+  public final void setHeader(final boolean val) {
+<span class="nc" id="L495">      header = val;</span>
+<span class="nc" id="L496">  }</span>
+
+    /**
+     * Sets the &lt;b&gt;Tag&lt;/b&gt; option.
+     * 
+     * &lt;p&gt;
+     * If non-{@code null}, the printed HEADER will include the specified tag followed by a colon. If {@code null}, then no tag is printed.
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * The default value is {@code null}.
+     * &lt;/p&gt;
+     * 
+     * @param tag
+     *            the TAG to be printed out with the header
+     * @see #getTag()
+     * @since 1.2.18
+     */
+    public void setTag(final String tag) {
+<span class="nc" id="L514">        String newTag = tag;</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        if (newTag != null) {</span>
+<span class="nc bnc" id="L516" title="All 2 branches missed.">            if (newTag.length() &gt; MAX_TAG_LEN) {</span>
+<span class="nc" id="L517">                newTag = newTag.substring(0, MAX_TAG_LEN);</span>
+            }
+<span class="nc bnc" id="L519" title="All 2 branches missed.">            if (NOT_ALPHANUM.matcher(newTag).find()) {</span>
+<span class="nc" id="L520">                throw new IllegalArgumentException(&quot;tag contains non-alphanumeric characters&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L524">        this.tag = newTag;</span>
+<span class="nc" id="L525">    }</span>
+
+    /**
+     * Gets the TAG to be printed with the HEADER portion of the log message. This will return {@code null} if no TAG is to be printed.
+     * &lt;p&gt;
+     * The default value is {@code null}.
+     * &lt;/p&gt;
+     * 
+     * @return the TAG, max length 32.
+     * @see #setTag(String)
+     * @since 1.2.18
+     */
+  public String getTag() {
+<span class="nc" id="L538">      return this.tag;</span>
+  }
+
+    /**
+     * Get the host name used to identify this appender.
+     * @return local host name
+     * @since 1.2.15
+     */
+  private String getLocalHostname() {
+<span class="nc bnc" id="L547" title="All 2 branches missed.">      if (localHostname == null) {</span>
+          try {
+<span class="nc" id="L549">            InetAddress addr = InetAddress.getLocalHost();</span>
+<span class="nc" id="L550">            localHostname = addr.getHostName();</span>
+<span class="nc" id="L551">          } catch (UnknownHostException uhe) {</span>
+<span class="nc" id="L552">            localHostname = &quot;UNKNOWN_HOST&quot;;</span>
+<span class="nc" id="L553">          }</span>
+      }
+<span class="nc" id="L555">      return localHostname;</span>
+  }
+
+    /**
+     * Gets HEADER portion of packet.
+     * @param timeStamp number of milliseconds after the standard base time.
+     * @return HEADER portion of packet, will be zero-length string if header is false.
+     * @since 1.2.15
+     */
+  private String getPacketHeader(final long timeStamp) {
+<span class="nc bnc" id="L565" title="All 2 branches missed.">      if (header) {</span>
+<span class="nc" id="L566">        StringBuffer buf = new StringBuffer(dateFormat.format(new Date(timeStamp)));</span>
+        //  RFC 3164 says leading space, not leading zero on days 1-9
+<span class="nc bnc" id="L568" title="All 2 branches missed.">        if (buf.charAt(4) == '0') {</span>
+<span class="nc" id="L569">          buf.setCharAt(4, ' ');</span>
+        }
+<span class="nc" id="L571">        buf.append(getLocalHostname());</span>
+<span class="nc" id="L572">        buf.append(' ');</span>
+<span class="nc bnc" id="L573" title="All 2 branches missed.">        if(this.tag != null) {</span>
+<span class="nc" id="L574">            buf.append(this.tag);</span>
+<span class="nc" id="L575">            buf.append(&quot;: &quot;);</span>
+        }
+<span class="nc" id="L577">        return buf.toString();</span>
+      }
+<span class="nc" id="L579">      return &quot;&quot;;</span>
+  }
+
+    /**
+     * Set header or footer of layout.
+     * @param msg message body, may not be null.
+     */
+  private void sendLayoutMessage(final String msg) {
+<span class="nc bnc" id="L587" title="All 2 branches missed.">      if (sqw != null) {</span>
+<span class="nc" id="L588">          String packet = msg;</span>
+<span class="nc" id="L589">          String hdr = getPacketHeader(new Date().getTime());</span>
+<span class="nc bnc" id="L590" title="All 4 branches missed.">          if(facilityPrinting || hdr.length() &gt; 0) {</span>
+<span class="nc" id="L591">              StringBuffer buf = new StringBuffer(hdr);</span>
+<span class="nc bnc" id="L592" title="All 2 branches missed.">              if(facilityPrinting) {</span>
+<span class="nc" id="L593">                  buf.append(facilityStr);</span>
+              }
+<span class="nc" id="L595">              buf.append(msg);</span>
+<span class="nc" id="L596">              packet = buf.toString();</span>
+          }
+<span class="nc" id="L598">          sqw.setLevel(6);</span>
+<span class="nc" id="L599">          sqw.write(packet);</span>
+      }
+<span class="nc" id="L601">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocketAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.net</a> &gt; <span class="el_source">SocketAppender.java</span></div><h1>SocketAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors: Dan MacDonald &lt;dan@redknee.com&gt;
+
+package org.apache.log4j.net;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.InterruptedIOException;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.ErrorCode;
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+    Sends {@link LoggingEvent} objects to a remote a log server,
+    usually a {@link SocketNode}.
+
+    &lt;p&gt;The SocketAppender has the following properties:
+
+    &lt;ul&gt;
+
+      &lt;p&gt;&lt;li&gt;If sent to a {@link SocketNode}, remote logging is
+      non-intrusive as far as the log event is concerned. In other
+      words, the event will be logged with the same time stamp, {@link
+      org.apache.log4j.NDC}, location info as if it were logged locally by
+      the client.
+
+      &lt;p&gt;&lt;li&gt;SocketAppenders do not use a layout. They ship a
+      serialized {@link LoggingEvent} object to the server side.
+
+      &lt;p&gt;&lt;li&gt;Remote logging uses the TCP protocol. Consequently, if
+      the server is reachable, then log events will eventually arrive
+      at the server.
+
+      &lt;p&gt;&lt;li&gt;If the remote server is down, the logging requests are
+      simply dropped. However, if and when the server comes back up,
+      then event transmission is resumed transparently. This
+      transparent reconneciton is performed by a &lt;em&gt;connector&lt;/em&gt;
+      thread which periodically attempts to connect to the server.
+
+      &lt;p&gt;&lt;li&gt;Logging events are automatically &lt;em&gt;buffered&lt;/em&gt; by the
+      native TCP implementation. This means that if the link to server
+      is slow but still faster than the rate of (log) event production
+      by the client, the client will not be affected by the slow
+      network connection. However, if the network connection is slower
+      then the rate of event production, then the client can only
+      progress at the network rate. In particular, if the network link
+      to the the server is down, the client will be blocked.
+
+      &lt;p&gt;On the other hand, if the network link is up, but the server
+      is down, the client will not be blocked when making log requests
+      but the log events will be lost due to server unavailability.
+
+      &lt;p&gt;&lt;li&gt;Even if a &lt;code&gt;SocketAppender&lt;/code&gt; is no longer
+      attached to any category, it will not be garbage collected in
+      the presence of a connector thread. A connector thread exists
+      only if the connection to the server is down. To avoid this
+      garbage collection problem, you should {@link #close} the the
+      &lt;code&gt;SocketAppender&lt;/code&gt; explicitly. See also next item.
+
+      &lt;p&gt;Long lived applications which create/destroy many
+      &lt;code&gt;SocketAppender&lt;/code&gt; instances should be aware of this
+      garbage collection problem. Most other applications can safely
+      ignore it.
+
+      &lt;p&gt;&lt;li&gt;If the JVM hosting the &lt;code&gt;SocketAppender&lt;/code&gt; exits
+      before the &lt;code&gt;SocketAppender&lt;/code&gt; is closed either
+      explicitly or subsequent to garbage collection, then there might
+      be untransmitted data in the pipe which might be lost. This is a
+      common problem on Windows based systems.
+
+      &lt;p&gt;To avoid lost data, it is usually sufficient to {@link
+      #close} the &lt;code&gt;SocketAppender&lt;/code&gt; either explicitly or by
+      calling the {@link org.apache.log4j.LogManager#shutdown} method
+      before exiting the application.
+
+
+     &lt;/ul&gt;
+
+    @author  Ceki G&amp;uuml;lc&amp;uuml;
+    @since 0.8.4 */
+
+public class SocketAppender extends AppenderSkeleton {
+
+  /**
+     The default port number of remote logging server (4560).
+     @since 1.2.15
+  */
+  static public final int DEFAULT_PORT                 = 4560;
+
+  /**
+     The default reconnection delay (30000 milliseconds or 30 seconds).
+  */
+  static final int DEFAULT_RECONNECTION_DELAY   = 30000;
+
+  /**
+     We remember host name as String in addition to the resolved
+     InetAddress so that it can be returned via getOption().
+  */
+  String remoteHost;
+
+  /**
+   * The MulticastDNS zone advertised by a SocketAppender
+   */
+  public static final String ZONE = &quot;_log4j_obj_tcpconnect_appender.local.&quot;;
+
+  InetAddress address;
+<span class="nc" id="L127">  int port = DEFAULT_PORT;</span>
+  ObjectOutputStream oos;
+<span class="nc" id="L129">  int reconnectionDelay = DEFAULT_RECONNECTION_DELAY;</span>
+<span class="nc" id="L130">  boolean locationInfo = false;</span>
+  private String application;
+
+  private Connector connector;
+
+<span class="nc" id="L135">  int counter = 0;</span>
+
+  // reset the ObjectOutputStream every 70 calls
+  //private static final int RESET_FREQUENCY = 70;
+  private static final int RESET_FREQUENCY = 1;
+  private boolean advertiseViaMulticastDNS;
+  private ZeroConfSupport zeroConf;
+
+<span class="nc" id="L143">  public SocketAppender() {</span>
+<span class="nc" id="L144">  }</span>
+
+  /**
+     Connects to remote server at &lt;code&gt;address&lt;/code&gt; and &lt;code&gt;port&lt;/code&gt;.
+  */
+<span class="nc" id="L149">  public SocketAppender(InetAddress address, int port) {</span>
+<span class="nc" id="L150">    this.address = address;</span>
+<span class="nc" id="L151">    this.remoteHost = address.getHostName();</span>
+<span class="nc" id="L152">    this.port = port;</span>
+<span class="nc" id="L153">    connect(address, port);</span>
+<span class="nc" id="L154">  }</span>
+
+  /**
+     Connects to remote server at &lt;code&gt;host&lt;/code&gt; and &lt;code&gt;port&lt;/code&gt;.
+  */
+<span class="nc" id="L159">  public SocketAppender(String host, int port) {</span>
+<span class="nc" id="L160">    this.port = port;</span>
+<span class="nc" id="L161">    this.address = getAddressByName(host);</span>
+<span class="nc" id="L162">    this.remoteHost = host;</span>
+<span class="nc" id="L163">    connect(address, port);</span>
+<span class="nc" id="L164">  }</span>
+
+  /**
+     Connect to the specified &lt;b&gt;RemoteHost&lt;/b&gt; and &lt;b&gt;Port&lt;/b&gt;.
+  */
+  public void activateOptions() {
+<span class="nc bnc" id="L170" title="All 2 branches missed.">    if (advertiseViaMulticastDNS) {</span>
+<span class="nc" id="L171">      zeroConf = new ZeroConfSupport(ZONE, port, getName());</span>
+<span class="nc" id="L172">      zeroConf.advertise();</span>
+    }
+<span class="nc" id="L174">    connect(address, port);</span>
+<span class="nc" id="L175">  }</span>
+
+  /**
+   * Close this appender.  
+   *
+   * &lt;p&gt;This will mark the appender as closed and call then {@link
+   * #cleanUp} method.
+   * */
+  synchronized public void close() {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">    if(closed) {</span>
+<span class="nc" id="L185">        return;</span>
+    }
+
+<span class="nc" id="L188">    this.closed = true;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">    if (advertiseViaMulticastDNS) {</span>
+<span class="nc" id="L190">      zeroConf.unadvertise();</span>
+    }
+
+<span class="nc" id="L193">    cleanUp();</span>
+<span class="nc" id="L194">  }</span>
+
+  /**
+   * Drop the connection to the remote host and release the underlying
+   * connector thread if it has been created 
+   * */
+  public void cleanUp() {
+<span class="nc bnc" id="L201" title="All 2 branches missed.">    if(oos != null) {</span>
+      try {
+<span class="nc" id="L203">	oos.close();</span>
+<span class="nc" id="L204">      } catch(IOException e) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">          if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L206">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L208">	      LogLog.error(&quot;Could not close oos.&quot;, e);</span>
+<span class="nc" id="L209">      }</span>
+<span class="nc" id="L210">      oos = null;</span>
+    }
+<span class="nc bnc" id="L212" title="All 2 branches missed.">    if(connector != null) {</span>
+      //LogLog.debug(&quot;Interrupting the connector.&quot;);
+<span class="nc" id="L214">      connector.interrupted = true;</span>
+<span class="nc" id="L215">      connector = null;  // allow gc</span>
+    }
+<span class="nc" id="L217">  }</span>
+
+  void connect(InetAddress address, int port) {
+<span class="nc bnc" id="L220" title="All 2 branches missed.">    if(this.address == null) {</span>
+<span class="nc" id="L221">        return;</span>
+    }
+    try {
+      // First, close the previous connection if any.
+<span class="nc" id="L225">      cleanUp();</span>
+<span class="nc" id="L226">      oos = new ObjectOutputStream(new Socket(address, port).getOutputStream());</span>
+<span class="nc" id="L227">    } catch(IOException e) {</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">      if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L229">          Thread.currentThread().interrupt();</span>
+      }
+<span class="nc" id="L231">      String msg = &quot;Could not connect to remote log4j server at [&quot;</span>
+<span class="nc" id="L232">	+address.getHostName()+&quot;].&quot;;</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">      if(reconnectionDelay &gt; 0) {</span>
+<span class="nc" id="L234">        msg += &quot; We will try again later.&quot;;</span>
+<span class="nc" id="L235">	fireConnector(); // fire the connector thread</span>
+      } else {
+<span class="nc" id="L237">          msg += &quot; We are not retrying.&quot;;</span>
+<span class="nc" id="L238">          errorHandler.error(msg, e, ErrorCode.GENERIC_FAILURE);</span>
+      } 
+<span class="nc" id="L240">      LogLog.error(msg);</span>
+<span class="nc" id="L241">    }</span>
+<span class="nc" id="L242">  }</span>
+
+
+  public void append(LoggingEvent event) {
+<span class="nc bnc" id="L246" title="All 2 branches missed.">    if(event == null) {</span>
+<span class="nc" id="L247">        return;</span>
+    }
+
+<span class="nc bnc" id="L250" title="All 2 branches missed.">    if(address==null) {</span>
+<span class="nc" id="L251">      errorHandler.error(&quot;No remote host is set for SocketAppender named \&quot;&quot;+</span>
+			this.name+&quot;\&quot;.&quot;);
+<span class="nc" id="L253">      return;</span>
+    }
+
+<span class="nc bnc" id="L256" title="All 2 branches missed.">    if(oos != null) {</span>
+      try {
+    	 
+<span class="nc bnc" id="L259" title="All 2 branches missed.">	if(locationInfo) {</span>
+<span class="nc" id="L260">	   event.getLocationInformation();</span>
+	}
+<span class="nc bnc" id="L262" title="All 2 branches missed.">    if (application != null) {</span>
+<span class="nc" id="L263">        event.setProperty(&quot;application&quot;, application);</span>
+    }
+<span class="nc" id="L265">    event.getNDC();</span>
+<span class="nc" id="L266">    event.getThreadName();</span>
+<span class="nc" id="L267">    event.getMDCCopy();</span>
+<span class="nc" id="L268">    event.getRenderedMessage();</span>
+<span class="nc" id="L269">    event.getThrowableStrRep();</span>
+    
+<span class="nc" id="L271">	oos.writeObject(event);</span>
+	//LogLog.debug(&quot;=========Flushing.&quot;);
+<span class="nc" id="L273">	oos.flush();</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">	if(++counter &gt;= RESET_FREQUENCY) {</span>
+<span class="nc" id="L275">	  counter = 0;</span>
+	  // Failing to reset the object output stream every now and
+	  // then creates a serious memory leak.
+	  //System.err.println(&quot;Doing oos.reset()&quot;);
+<span class="nc" id="L279">	  oos.reset();</span>
+	}
+<span class="nc" id="L281">      } catch(IOException e) {</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">          if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L283">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L285">	      oos = null;</span>
+<span class="nc" id="L286">	      LogLog.warn(&quot;Detected problem with connection: &quot;+e);</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">	      if(reconnectionDelay &gt; 0) {</span>
+<span class="nc" id="L288">	         fireConnector();</span>
+	      } else {
+<span class="nc" id="L290">	         errorHandler.error(&quot;Detected problem with connection, not reconnecting.&quot;, e,</span>
+	               ErrorCode.GENERIC_FAILURE);
+	      }
+<span class="nc" id="L293">      }</span>
+    }
+<span class="nc" id="L295">  }</span>
+
+  public void setAdvertiseViaMulticastDNS(boolean advertiseViaMulticastDNS) {
+<span class="nc" id="L298">    this.advertiseViaMulticastDNS = advertiseViaMulticastDNS;</span>
+<span class="nc" id="L299">  }</span>
+
+  public boolean isAdvertiseViaMulticastDNS() {
+<span class="nc" id="L302">    return advertiseViaMulticastDNS;</span>
+  }
+
+  void fireConnector() {
+<span class="nc bnc" id="L306" title="All 2 branches missed.">    if(connector == null) {</span>
+<span class="nc" id="L307">      LogLog.debug(&quot;Starting a new connector thread.&quot;);</span>
+<span class="nc" id="L308">      connector = new Connector();</span>
+<span class="nc" id="L309">      connector.setDaemon(true);</span>
+<span class="nc" id="L310">      connector.setPriority(Thread.MIN_PRIORITY);</span>
+<span class="nc" id="L311">      connector.start();</span>
+    }
+<span class="nc" id="L313">  }</span>
+
+  static
+  InetAddress getAddressByName(String host) {
+    try {
+<span class="nc" id="L318">      return InetAddress.getByName(host);</span>
+<span class="nc" id="L319">    } catch(Exception e) {</span>
+<span class="nc bnc" id="L320" title="All 4 branches missed.">      if (e instanceof InterruptedIOException || e instanceof InterruptedException) {</span>
+<span class="nc" id="L321">          Thread.currentThread().interrupt();</span>
+      }
+<span class="nc" id="L323">      LogLog.error(&quot;Could not find address of [&quot;+host+&quot;].&quot;, e);</span>
+<span class="nc" id="L324">      return null;</span>
+    }
+  }
+
+  /**
+   * The SocketAppender does not use a layout. Hence, this method
+   * returns &lt;code&gt;false&lt;/code&gt;.  
+   * */
+  public boolean requiresLayout() {
+<span class="nc" id="L333">    return false;</span>
+  }
+
+  /**
+   * The &lt;b&gt;RemoteHost&lt;/b&gt; option takes a string value which should be
+   * the host name of the server where a {@link SocketNode} is
+   * running.
+   * */
+  public void setRemoteHost(String host) {
+<span class="nc" id="L342">    address = getAddressByName(host);</span>
+<span class="nc" id="L343">    remoteHost = host;</span>
+<span class="nc" id="L344">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;RemoteHost&lt;/b&gt; option.
+   */
+  public String getRemoteHost() {
+<span class="nc" id="L350">    return remoteHost;</span>
+  }
+
+  /**
+     The &lt;b&gt;Port&lt;/b&gt; option takes a positive integer representing
+     the port where the server is waiting for connections.
+   */
+  public void setPort(int port) {
+<span class="nc" id="L358">    this.port = port;</span>
+<span class="nc" id="L359">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;Port&lt;/b&gt; option.
+   */
+  public int getPort() {
+<span class="nc" id="L365">    return port;</span>
+  }
+
+  /**
+     The &lt;b&gt;LocationInfo&lt;/b&gt; option takes a boolean value. If true,
+     the information sent to the remote host will include location
+     information. By default no location information is sent to the server.
+   */
+  public void setLocationInfo(boolean locationInfo) {
+<span class="nc" id="L374">    this.locationInfo = locationInfo;</span>
+<span class="nc" id="L375">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;LocationInfo&lt;/b&gt; option.
+   */
+  public boolean getLocationInfo() {
+<span class="nc" id="L381">    return locationInfo;</span>
+  }
+
+  /**
+   * The &lt;b&gt;App&lt;/b&gt; option takes a string value which should be the name of the 
+   * application getting logged.
+   * If property was already set (via system property), don't set here.
+   * @since 1.2.15
+   */
+  public void setApplication(String lapp) {
+<span class="nc" id="L391">    this.application = lapp;</span>
+<span class="nc" id="L392">  }</span>
+
+  /**
+   *  Returns value of the &lt;b&gt;Application&lt;/b&gt; option.
+   * @since 1.2.15
+   */
+  public String getApplication() {
+<span class="nc" id="L399">    return application;</span>
+  }
+
+  /**
+     The &lt;b&gt;ReconnectionDelay&lt;/b&gt; option takes a positive integer
+     representing the number of milliseconds to wait between each
+     failed connection attempt to the server. The default value of
+     this option is 30000 which corresponds to 30 seconds.
+
+     &lt;p&gt;Setting this option to zero turns off reconnection
+     capability.
+   */
+  public void setReconnectionDelay(int delay) {
+<span class="nc" id="L412">    this.reconnectionDelay = delay;</span>
+<span class="nc" id="L413">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;ReconnectionDelay&lt;/b&gt; option.
+   */
+  public int getReconnectionDelay() {
+<span class="nc" id="L419">    return reconnectionDelay;</span>
+  }
+
+  /**
+     The Connector will reconnect when the server becomes available
+     again.  It does this by attempting to open a new connection every
+     &lt;code&gt;reconnectionDelay&lt;/code&gt; milliseconds.
+
+     &lt;p&gt;It stops trying whenever a connection is established. It will
+     restart to try reconnect to the server when previously open
+     connection is droppped.
+
+     @author  Ceki G&amp;uuml;lc&amp;uuml;
+     @since 0.8.4
+  */
+<span class="nc" id="L434">  class Connector extends Thread {</span>
+
+<span class="nc" id="L436">    boolean interrupted = false;</span>
+
+    public
+    void run() {
+      Socket socket;
+<span class="nc bnc" id="L441" title="All 2 branches missed.">      while(!interrupted) {</span>
+	try {
+<span class="nc" id="L443">	  sleep(reconnectionDelay);</span>
+<span class="nc" id="L444">	  LogLog.debug(&quot;Attempting connection to &quot;+address.getHostName());</span>
+<span class="nc" id="L445">	  socket = new Socket(address, port);</span>
+<span class="nc" id="L446">	  synchronized(this) {</span>
+<span class="nc" id="L447">	    oos = new ObjectOutputStream(socket.getOutputStream());</span>
+<span class="nc" id="L448">	    connector = null;</span>
+<span class="nc" id="L449">	    LogLog.debug(&quot;Connection established. Exiting connector thread.&quot;);</span>
+<span class="nc" id="L450">	    break;</span>
+	  }
+<span class="nc" id="L452">	} catch(InterruptedException e) {</span>
+<span class="nc" id="L453">	  LogLog.debug(&quot;Connector interrupted. Leaving loop.&quot;);</span>
+<span class="nc" id="L454">	  return;</span>
+<span class="nc" id="L455">	} catch(java.net.ConnectException e) {</span>
+<span class="nc" id="L456">	  LogLog.debug(&quot;Remote host &quot;+address.getHostName()</span>
+		       +&quot; refused connection.&quot;);
+<span class="nc" id="L458">	} catch(IOException e) {</span>
+<span class="nc bnc" id="L459" title="All 2 branches missed.">        if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L460">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L462">	    LogLog.debug(&quot;Could not connect to &quot; + address.getHostName()+</span>
+		       &quot;. Exception is &quot; + e);
+<span class="nc" id="L464">	}</span>
+      }
+      //LogLog.debug(&quot;Exiting Connector.run() method.&quot;);
+<span class="nc" id="L467">    }</span>
+
+    /**
+       public
+       void finalize() {
+       LogLog.debug(&quot;Connector finalize() has been called.&quot;);
+       }
+    */
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

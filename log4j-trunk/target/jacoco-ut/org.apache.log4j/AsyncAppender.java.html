@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsyncAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">AsyncAppender.java</span></div><h1>AsyncAppender.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contibutors:  Aaron Greenhouse &lt;aarong@cs.cmu.edu&gt;
+//               Thomas Tuft Muller &lt;ttm@online.no&gt;
+package org.apache.log4j;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.helpers.AppenderAttachableImpl;
+import org.apache.log4j.spi.AppenderAttachable;
+import org.apache.log4j.spi.LoggingEvent;
+
+
+/**
+ * The AsyncAppender lets users log events asynchronously.
+ * &lt;p/&gt;
+ * &lt;p/&gt;
+ * The AsyncAppender will collect the events sent to it and then dispatch them
+ * to all the appenders that are attached to it. You can attach multiple
+ * appenders to an AsyncAppender.
+ * &lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;p/&gt;
+ * The AsyncAppender uses a separate thread to serve the events in its buffer.
+ * &lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;b&gt;Important note:&lt;/b&gt; The &lt;code&gt;AsyncAppender&lt;/code&gt; can only be script
+ * configured using the {@link org.apache.log4j.xml.DOMConfigurator}.
+ * &lt;/p&gt;
+ *
+ * @author Ceki G&amp;uuml;lc&amp;uuml;
+ * @author Curt Arnold
+ * @since 0.9.1
+ */
+public class AsyncAppender extends AppenderSkeleton
+  implements AppenderAttachable {
+  /**
+   * The default buffer size is set to 128 events.
+   */
+  public static final int DEFAULT_BUFFER_SIZE = 128;
+
+  /**
+   * Event buffer, also used as monitor to protect itself and
+   * discardMap from simulatenous modifications.
+   */
+<span class="nc" id="L67">  private final List buffer = new ArrayList();</span>
+
+  /**
+   * Map of DiscardSummary objects keyed by logger name.
+   */
+<span class="nc" id="L72">  private final Map discardMap = new HashMap();</span>
+
+  /**
+   * Buffer size.
+   */
+<span class="nc" id="L77">  private int bufferSize = DEFAULT_BUFFER_SIZE;</span>
+
+  /** Nested appenders. */
+  AppenderAttachableImpl aai;
+
+  /**
+   * Nested appenders.
+   */
+  private final AppenderAttachableImpl appenders;
+
+  /**
+   * Dispatcher.
+   */
+  private final Thread dispatcher;
+
+  /**
+   * Should location info be included in dispatched messages.
+   */
+<span class="nc" id="L95">  private boolean locationInfo = false;</span>
+
+  /**
+   * Does appender block when buffer is full.
+   */
+<span class="nc" id="L100">  private boolean blocking = true;</span>
+
+  /**
+   * Create new instance.
+   */
+<span class="nc" id="L105">  public AsyncAppender() {</span>
+<span class="nc" id="L106">    appenders = new AppenderAttachableImpl();</span>
+
+    //
+    //   only set for compatibility
+<span class="nc" id="L110">    aai = appenders;</span>
+
+<span class="nc" id="L112">    dispatcher =</span>
+      new Thread(new Dispatcher(this, buffer, discardMap, appenders));
+
+    // It is the user's responsibility to close appenders before
+    // exiting.
+<span class="nc" id="L117">    dispatcher.setDaemon(true);</span>
+
+    // set the dispatcher priority to lowest possible value
+    //        dispatcher.setPriority(Thread.MIN_PRIORITY);
+<span class="nc" id="L121">    dispatcher.setName(&quot;AsyncAppender-Dispatcher-&quot; + dispatcher.getName());</span>
+<span class="nc" id="L122">    dispatcher.start();</span>
+<span class="nc" id="L123">  }</span>
+
+  /**
+   * Add appender.
+   *
+   * @param newAppender appender to add, may not be null.
+   */
+  public void addAppender(final Appender newAppender) {
+<span class="nc" id="L131">    synchronized (appenders) {</span>
+<span class="nc" id="L132">      appenders.addAppender(newAppender);</span>
+<span class="nc" id="L133">    }</span>
+<span class="nc" id="L134">  }</span>
+
+  /**
+   * {@inheritDoc}
+   */
+  public void append(final LoggingEvent event) {
+    //
+    //   if dispatcher thread has died then
+    //      append subsequent events synchronously
+    //   See bug 23021
+<span class="nc bnc" id="L144" title="All 6 branches missed.">    if ((dispatcher == null) || !dispatcher.isAlive() || (bufferSize &lt;= 0)) {</span>
+<span class="nc" id="L145">      synchronized (appenders) {</span>
+<span class="nc" id="L146">        appenders.appendLoopOnAppenders(event);</span>
+<span class="nc" id="L147">      }</span>
+
+<span class="nc" id="L149">      return;</span>
+    }
+
+    // Set the NDC and thread name for the calling thread as these
+    // LoggingEvent fields were not set at event creation time.
+<span class="nc" id="L154">    event.getNDC();</span>
+<span class="nc" id="L155">    event.getThreadName();</span>
+    // Get a copy of this thread's MDC.
+<span class="nc" id="L157">    event.getMDCCopy();</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    if (locationInfo) {</span>
+<span class="nc" id="L159">      event.getLocationInformation();</span>
+    }
+<span class="nc" id="L161">    event.getRenderedMessage();</span>
+<span class="nc" id="L162">    event.getThrowableStrRep();</span>
+
+<span class="nc" id="L164">    synchronized (buffer) {</span>
+      while (true) {
+<span class="nc" id="L166">        int previousSize = buffer.size();</span>
+
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (previousSize &lt; bufferSize) {</span>
+<span class="nc" id="L169">          buffer.add(event);</span>
+
+          //
+          //   if buffer had been empty
+          //       signal all threads waiting on buffer
+          //       to check their conditions.
+          //
+<span class="nc bnc" id="L176" title="All 2 branches missed.">          if (previousSize == 0) {</span>
+<span class="nc" id="L177">            buffer.notifyAll();</span>
+          }
+
+          break;
+        }
+
+        //
+        //   Following code is only reachable if buffer is full
+        //
+        //
+        //   if blocking and thread is not already interrupted
+        //      and not the dispatcher then
+        //      wait for a buffer notification
+<span class="nc" id="L190">        boolean discard = true;</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (blocking</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                &amp;&amp; !Thread.interrupted()</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">                &amp;&amp; Thread.currentThread() != dispatcher) {</span>
+          try {
+<span class="nc" id="L195">            buffer.wait();</span>
+<span class="nc" id="L196">            discard = false;</span>
+<span class="nc" id="L197">          } catch (InterruptedException e) {</span>
+            //
+            //  reset interrupt status so
+            //    calling code can see interrupt on
+            //    their next wait or sleep.
+<span class="nc" id="L202">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L203">          }</span>
+        }
+
+        //
+        //   if blocking is false or thread has been interrupted
+        //   add event to discard map.
+        //
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (discard) {</span>
+<span class="nc" id="L211">          String loggerName = event.getLoggerName();</span>
+<span class="nc" id="L212">          DiscardSummary summary = (DiscardSummary) discardMap.get(loggerName);</span>
+
+<span class="nc bnc" id="L214" title="All 2 branches missed.">          if (summary == null) {</span>
+<span class="nc" id="L215">            summary = new DiscardSummary(event);</span>
+<span class="nc" id="L216">            discardMap.put(loggerName, summary);</span>
+          } else {
+<span class="nc" id="L218">            summary.add(event);</span>
+          }
+
+<span class="nc" id="L221">          break;</span>
+        }
+<span class="nc" id="L223">      }</span>
+<span class="nc" id="L224">    }</span>
+<span class="nc" id="L225">  }</span>
+
+  /**
+   * Close this &lt;code&gt;AsyncAppender&lt;/code&gt; by interrupting the dispatcher
+   * thread which will process all pending events before exiting.
+   */
+  public void close() {
+    /**
+     * Set closed flag and notify all threads to check their conditions.
+     * Should result in dispatcher terminating.
+     */
+<span class="nc" id="L236">    synchronized (buffer) {</span>
+<span class="nc" id="L237">      closed = true;</span>
+<span class="nc" id="L238">      buffer.notifyAll();</span>
+<span class="nc" id="L239">    }</span>
+
+    try {
+<span class="nc" id="L242">      dispatcher.join();</span>
+<span class="nc" id="L243">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L244">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L245">      org.apache.log4j.helpers.LogLog.error(</span>
+        &quot;Got an InterruptedException while waiting for the &quot;
+        + &quot;dispatcher to finish.&quot;, e);
+<span class="nc" id="L248">    }</span>
+
+    //
+    //    close all attached appenders.
+    //
+<span class="nc" id="L253">    synchronized (appenders) {</span>
+<span class="nc" id="L254">      Enumeration iter = appenders.getAllAppenders();</span>
+
+<span class="nc bnc" id="L256" title="All 2 branches missed.">      if (iter != null) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        while (iter.hasMoreElements()) {</span>
+<span class="nc" id="L258">          Object next = iter.nextElement();</span>
+
+<span class="nc bnc" id="L260" title="All 2 branches missed.">          if (next instanceof Appender) {</span>
+<span class="nc" id="L261">            ((Appender) next).close();</span>
+          }
+<span class="nc" id="L263">        }</span>
+      }
+<span class="nc" id="L265">    }</span>
+<span class="nc" id="L266">  }</span>
+
+  /**
+   * Get iterator over attached appenders.
+   * @return iterator or null if no attached appenders.
+   */
+  public Enumeration getAllAppenders() {
+<span class="nc" id="L273">    synchronized (appenders) {</span>
+<span class="nc" id="L274">      return appenders.getAllAppenders();</span>
+    }
+  }
+
+  /**
+   * Get appender by name.
+   *
+   * @param name name, may not be null.
+   * @return matching appender or null.
+   */
+  public Appender getAppender(final String name) {
+<span class="nc" id="L285">    synchronized (appenders) {</span>
+<span class="nc" id="L286">      return appenders.getAppender(name);</span>
+    }
+  }
+
+  /**
+   * Gets whether the location of the logging request call
+   * should be captured.
+   *
+   * @return the current value of the &lt;b&gt;LocationInfo&lt;/b&gt; option.
+   */
+  public boolean getLocationInfo() {
+<span class="nc" id="L297">    return locationInfo;</span>
+  }
+
+  /**
+   * Determines if specified appender is attached.
+   * @param appender appender.
+   * @return true if attached.
+   */
+  public boolean isAttached(final Appender appender) {
+<span class="nc" id="L306">    synchronized (appenders) {</span>
+<span class="nc" id="L307">      return appenders.isAttached(appender);</span>
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean requiresLayout() {
+<span class="nc" id="L315">    return false;</span>
+  }
+
+  /**
+   * Removes and closes all attached appenders.
+   */
+  public void removeAllAppenders() {
+<span class="nc" id="L322">    synchronized (appenders) {</span>
+<span class="nc" id="L323">      appenders.removeAllAppenders();</span>
+<span class="nc" id="L324">    }</span>
+<span class="nc" id="L325">  }</span>
+
+  /**
+   * Removes an appender.
+   * @param appender appender to remove.
+   */
+  public void removeAppender(final Appender appender) {
+<span class="nc" id="L332">    synchronized (appenders) {</span>
+<span class="nc" id="L333">      appenders.removeAppender(appender);</span>
+<span class="nc" id="L334">    }</span>
+<span class="nc" id="L335">  }</span>
+
+  /**
+   * Remove appender by name.
+   * @param name name.
+   */
+  public void removeAppender(final String name) {
+<span class="nc" id="L342">    synchronized (appenders) {</span>
+<span class="nc" id="L343">      appenders.removeAppender(name);</span>
+<span class="nc" id="L344">    }</span>
+<span class="nc" id="L345">  }</span>
+
+  /**
+   * The &lt;b&gt;LocationInfo&lt;/b&gt; option takes a boolean value. By default, it is
+   * set to false which means there will be no effort to extract the location
+   * information related to the event. As a result, the event that will be
+   * ultimately logged will likely to contain the wrong location information
+   * (if present in the log format).
+   * &lt;p/&gt;
+   * &lt;p/&gt;
+   * Location information extraction is comparatively very slow and should be
+   * avoided unless performance is not a concern.
+   * &lt;/p&gt;
+   * @param flag true if location information should be extracted.
+   */
+  public void setLocationInfo(final boolean flag) {
+<span class="nc" id="L361">    locationInfo = flag;</span>
+<span class="nc" id="L362">  }</span>
+
+  /**
+   * Sets the number of messages allowed in the event buffer
+   * before the calling thread is blocked (if blocking is true)
+   * or until messages are summarized and discarded.  Changing
+   * the size will not affect messages already in the buffer.
+   *
+   * @param size buffer size, must be positive.
+   */
+  public void setBufferSize(final int size) {
+    //
+    //   log4j 1.2 would throw exception if size was negative
+    //      and deadlock if size was zero.
+    //
+<span class="nc bnc" id="L377" title="All 2 branches missed.">    if (size &lt; 0) {</span>
+<span class="nc" id="L378">      throw new java.lang.NegativeArraySizeException(&quot;size&quot;);</span>
+    }
+
+<span class="nc" id="L381">    synchronized (buffer) {</span>
+      //
+      //   don't let size be zero.
+      //
+<span class="nc bnc" id="L385" title="All 2 branches missed.">      bufferSize = (size &lt; 1) ? 1 : size;</span>
+<span class="nc" id="L386">      buffer.notifyAll();</span>
+<span class="nc" id="L387">    }</span>
+<span class="nc" id="L388">  }</span>
+
+  /**
+   * Gets the current buffer size.
+   * @return the current value of the &lt;b&gt;BufferSize&lt;/b&gt; option.
+   */
+  public int getBufferSize() {
+<span class="nc" id="L395">    return bufferSize;</span>
+  }
+
+  /**
+   * Sets whether appender should wait if there is no
+   * space available in the event buffer or immediately return.
+   *
+   * @since 1.2.14
+   * @param value true if appender should wait until available space in buffer.
+   */
+  public void setBlocking(final boolean value) {
+<span class="nc" id="L406">    synchronized (buffer) {</span>
+<span class="nc" id="L407">      blocking = value;</span>
+<span class="nc" id="L408">      buffer.notifyAll();</span>
+<span class="nc" id="L409">    }</span>
+<span class="nc" id="L410">  }</span>
+
+  /**
+   * Gets whether appender should block calling thread when buffer is full.
+   * If false, messages will be counted by logger and a summary
+   * message appended after the contents of the buffer have been appended.
+   *
+   * @since 1.2.14
+   * @return true if calling thread will be blocked when buffer is full.
+   */
+  public boolean getBlocking() {
+<span class="nc" id="L421">    return blocking;</span>
+  }
+
+  /**
+   * Summary of discarded logging events for a logger.
+   */
+  private static final class DiscardSummary {
+    /**
+     * First event of the highest severity.
+     */
+    private LoggingEvent maxEvent;
+
+    /**
+     * Total count of messages discarded.
+     */
+    private int count;
+
+    /**
+     * Create new instance.
+     *
+     * @param event event, may not be null.
+     */
+<span class="nc" id="L443">    public DiscardSummary(final LoggingEvent event) {</span>
+<span class="nc" id="L444">      maxEvent = event;</span>
+<span class="nc" id="L445">      count = 1;</span>
+<span class="nc" id="L446">    }</span>
+
+    /**
+     * Add discarded event to summary.
+     *
+     * @param event event, may not be null.
+     */
+    public void add(final LoggingEvent event) {
+<span class="nc bnc" id="L454" title="All 2 branches missed.">      if (event.getLevel().toInt() &gt; maxEvent.getLevel().toInt()) {</span>
+<span class="nc" id="L455">        maxEvent = event;</span>
+      }
+
+<span class="nc" id="L458">      count++;</span>
+<span class="nc" id="L459">    }</span>
+
+    /**
+     * Create event with summary information.
+     *
+     * @return new event.
+     */
+    public LoggingEvent createEvent() {
+<span class="nc" id="L467">      String msg =</span>
+<span class="nc" id="L468">        MessageFormat.format(</span>
+          &quot;Discarded {0} messages due to full event buffer including: {1}&quot;,
+<span class="nc" id="L470">          new Object[] { new Integer(count), maxEvent.getMessage() });</span>
+
+<span class="nc" id="L472">      return new LoggingEvent(</span>
+              &quot;org.apache.log4j.AsyncAppender.DONT_REPORT_LOCATION&quot;,
+<span class="nc" id="L474">              Logger.getLogger(maxEvent.getLoggerName()),</span>
+<span class="nc" id="L475">              maxEvent.getLevel(),</span>
+              msg,
+              null);
+    }
+  }
+
+  /**
+   * Event dispatcher.
+   */
+  private static class Dispatcher implements Runnable {
+    /**
+     * Parent AsyncAppender.
+     */
+    private final AsyncAppender parent;
+
+    /**
+     * Event buffer.
+     */
+    private final List buffer;
+
+    /**
+     * Map of DiscardSummary keyed by logger name.
+     */
+    private final Map discardMap;
+
+    /**
+     * Wrapped appenders.
+     */
+    private final AppenderAttachableImpl appenders;
+
+    /**
+     * Create new instance of dispatcher.
+     *
+     * @param parent     parent AsyncAppender, may not be null.
+     * @param buffer     event buffer, may not be null.
+     * @param discardMap discard map, may not be null.
+     * @param appenders  appenders, may not be null.
+     */
+    public Dispatcher(
+      final AsyncAppender parent, final List buffer, final Map discardMap,
+<span class="nc" id="L515">      final AppenderAttachableImpl appenders) {</span>
+
+<span class="nc" id="L517">      this.parent = parent;</span>
+<span class="nc" id="L518">      this.buffer = buffer;</span>
+<span class="nc" id="L519">      this.appenders = appenders;</span>
+<span class="nc" id="L520">      this.discardMap = discardMap;</span>
+<span class="nc" id="L521">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void run() {
+<span class="nc" id="L527">      boolean isActive = true;</span>
+
+      //
+      //   if interrupted (unlikely), end thread
+      //
+      try {
+        //
+        //   loop until the AsyncAppender is closed.
+        //
+<span class="nc bnc" id="L536" title="All 2 branches missed.">        while (isActive) {</span>
+<span class="nc" id="L537">          LoggingEvent[] events = null;</span>
+
+          //
+          //   extract pending events while synchronized
+          //       on buffer
+          //
+<span class="nc" id="L543">          synchronized (buffer) {</span>
+<span class="nc" id="L544">            int bufferSize = buffer.size();</span>
+<span class="nc bnc" id="L545" title="All 2 branches missed.">            isActive = !parent.closed;</span>
+
+<span class="nc bnc" id="L547" title="All 4 branches missed.">            while ((bufferSize == 0) &amp;&amp; isActive) {</span>
+<span class="nc" id="L548">              buffer.wait();</span>
+<span class="nc" id="L549">              bufferSize = buffer.size();</span>
+<span class="nc bnc" id="L550" title="All 2 branches missed.">              isActive = !parent.closed;</span>
+            }
+
+<span class="nc bnc" id="L553" title="All 2 branches missed.">            if (bufferSize &gt; 0) {</span>
+<span class="nc" id="L554">              events = new LoggingEvent[bufferSize + discardMap.size()];</span>
+<span class="nc" id="L555">              buffer.toArray(events);</span>
+
+              //
+              //   add events due to buffer overflow
+              //
+<span class="nc" id="L560">              int index = bufferSize;</span>
+
+              for (
+<span class="nc" id="L563">                Iterator iter = discardMap.values().iterator();</span>
+<span class="nc bnc" id="L564" title="All 2 branches missed.">                  iter.hasNext();) {</span>
+<span class="nc" id="L565">                events[index++] = ((DiscardSummary) iter.next()).createEvent();</span>
+              }
+
+              //
+              //    clear buffer and discard map
+              //
+<span class="nc" id="L571">              buffer.clear();</span>
+<span class="nc" id="L572">              discardMap.clear();</span>
+
+              //
+              //    allow blocked appends to continue
+<span class="nc" id="L576">              buffer.notifyAll();</span>
+            }
+<span class="nc" id="L578">          }</span>
+
+          //
+          //   process events after lock on buffer is released.
+          //
+<span class="nc bnc" id="L583" title="All 2 branches missed.">          if (events != null) {</span>
+<span class="nc bnc" id="L584" title="All 2 branches missed.">            for (int i = 0; i &lt; events.length; i++) {</span>
+<span class="nc" id="L585">              synchronized (appenders) {</span>
+<span class="nc" id="L586">                appenders.appendLoopOnAppenders(events[i]);</span>
+<span class="nc" id="L587">              }</span>
+            }
+          }
+<span class="nc" id="L590">        }</span>
+<span class="nc" id="L591">      } catch (InterruptedException ex) {</span>
+<span class="nc" id="L592">        Thread.currentThread().interrupt();</span>
+<span class="nc" id="L593">      }</span>
+<span class="nc" id="L594">    }</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

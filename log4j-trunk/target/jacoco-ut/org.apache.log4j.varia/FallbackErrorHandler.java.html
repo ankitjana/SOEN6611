@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FallbackErrorHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.varia</a> &gt; <span class="el_source">FallbackErrorHandler.java</span></div><h1>FallbackErrorHandler.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+package org.apache.log4j.varia;
+
+import  org.apache.log4j.spi.ErrorHandler;
+import  org.apache.log4j.spi.LoggingEvent;
+import  org.apache.log4j.Appender;
+import  org.apache.log4j.Logger;
+import  org.apache.log4j.helpers.LogLog;
+import java.util.Vector;
+import java.io.InterruptedIOException;
+
+/**
+  *
+  * The &lt;code&gt;FallbackErrorHandler&lt;/code&gt; implements the ErrorHandler
+  * interface such that a secondary appender may be specified.  This
+  * secondary appender takes over if the primary appender fails for
+  * whatever reason.
+  *
+  * &lt;p&gt;The error message is printed on &lt;code&gt;System.err&lt;/code&gt;, and
+  * logged in the new secondary appender.
+  *
+  * @author Ceki G&amp;uuml;c&amp;uuml;
+  * */
+public class FallbackErrorHandler implements ErrorHandler {
+
+
+  Appender backup;
+  Appender primary;
+  Vector loggers;
+
+<span class="nc" id="L47">  public FallbackErrorHandler() {</span>
+<span class="nc" id="L48">  }</span>
+  
+
+  /**
+     &lt;em&gt;Adds&lt;/em&gt; the logger passed as parameter to the list of
+     loggers that we need to search for in case of appender failure.
+  */
+  public 
+  void setLogger(Logger logger) {
+<span class="nc" id="L57">    LogLog.debug(&quot;FB: Adding logger [&quot; + logger.getName() + &quot;].&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">    if(loggers == null) {</span>
+<span class="nc" id="L59">      loggers = new Vector();</span>
+    }
+<span class="nc" id="L61">    loggers.addElement(logger);</span>
+<span class="nc" id="L62">  }</span>
+
+
+  /**
+     No options to activate.
+  */
+  public 
+  void activateOptions() {
+<span class="nc" id="L70">  }</span>
+
+
+  /**
+     Prints the message and the stack trace of the exception on
+     &lt;code&gt;System.err&lt;/code&gt;.  */
+  public
+  void error(String message, Exception e, int errorCode) { 
+<span class="nc" id="L78">    error(message, e, errorCode, null);</span>
+<span class="nc" id="L79">  }</span>
+
+  /**
+     Prints the message and the stack trace of the exception on
+     &lt;code&gt;System.err&lt;/code&gt;.
+   */
+  public
+  void error(String message, Exception e, int errorCode, LoggingEvent event) {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    if (e instanceof InterruptedIOException) {</span>
+<span class="nc" id="L88">        Thread.currentThread().interrupt();</span>
+    }
+<span class="nc" id="L90">    LogLog.debug(&quot;FB: The following error reported: &quot; + message, e);</span>
+<span class="nc" id="L91">    LogLog.debug(&quot;FB: INITIATING FALLBACK PROCEDURE.&quot;);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    if (loggers != null) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">    	for(int i = 0; i &lt; loggers.size(); i++) {</span>
+<span class="nc" id="L94">      		Logger l = (Logger) loggers.elementAt(i);</span>
+<span class="nc" id="L95">      		LogLog.debug(&quot;FB: Searching for [&quot;+primary.getName()+&quot;] in logger [&quot;</span>
+<span class="nc" id="L96">		   		+l.getName() + &quot;].&quot;);</span>
+<span class="nc" id="L97">      		LogLog.debug(&quot;FB: Replacing [&quot;+primary.getName()+&quot;] by [&quot;</span>
+<span class="nc" id="L98">		   		+ backup.getName() + &quot;] in logger [&quot;+ l.getName() +&quot;].&quot;);</span>
+<span class="nc" id="L99">      		l.removeAppender(primary);</span>
+<span class="nc" id="L100">      		LogLog.debug(&quot;FB: Adding appender [&quot;+backup.getName()+&quot;] to logger &quot;</span>
+<span class="nc" id="L101">		   		+  l.getName());</span>
+<span class="nc" id="L102">      		l.addAppender(backup);</span>
+        }
+    }    
+<span class="nc" id="L105">  }</span>
+
+
+  /**
+     Print a the error message passed as parameter on
+     &lt;code&gt;System.err&lt;/code&gt;.  
+  */
+  public 
+  void error(String message) {
+    //if(firstTime) {
+    //LogLog.error(message);
+    //firstTime = false;
+    //}
+<span class="nc" id="L118">  }</span>
+  
+  /**
+     The appender to which this error handler is attached.
+   */
+  public
+  void setAppender(Appender primary) {
+<span class="nc" id="L125">    LogLog.debug(&quot;FB: Setting primary appender to [&quot; + primary.getName() + &quot;].&quot;);</span>
+<span class="nc" id="L126">    this.primary = primary;</span>
+<span class="nc" id="L127">  }</span>
+
+  /**
+     Set the backup appender.
+   */
+  public
+  void setBackupAppender(Appender backup) {
+<span class="nc" id="L134">    LogLog.debug(&quot;FB: Setting backup appender to [&quot; + backup.getName() + &quot;].&quot;);</span>
+<span class="nc" id="L135">    this.backup = backup;</span>
+<span class="nc" id="L136">  }</span>
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

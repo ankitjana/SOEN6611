@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateLayout.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">DateLayout.java</span></div><h1>DateLayout.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LoggingEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import java.text.FieldPosition;
+
+
+/**
+   This abstract layout takes care of all the date related options and
+   formatting work.
+   
+
+   @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+<span class="fc" id="L36">abstract public class DateLayout extends Layout {</span>
+
+  /**
+     String constant designating no time information. Current value of
+     this constant is &lt;b&gt;NULL&lt;/b&gt;.
+     
+  */
+  public final static String NULL_DATE_FORMAT = &quot;NULL&quot;;
+
+  /**
+     String constant designating relative time. Current value of
+     this constant is &lt;b&gt;RELATIVE&lt;/b&gt;.
+   */
+  public final static String RELATIVE_TIME_DATE_FORMAT = &quot;RELATIVE&quot;;
+
+<span class="fc" id="L51">  protected FieldPosition pos = new FieldPosition(0);</span>
+
+  /**
+     @deprecated Options are now handled using the JavaBeans paradigm.
+     This constant is not longer needed and will be removed in the
+     &lt;em&gt;near&lt;/em&gt; term.
+  */
+  final static public String DATE_FORMAT_OPTION = &quot;DateFormat&quot;;
+  
+  /**
+     @deprecated Options are now handled using the JavaBeans paradigm.
+     This constant is not longer needed and will be removed in the
+     &lt;em&gt;near&lt;/em&gt; term.
+  */
+  final static public String TIMEZONE_OPTION = &quot;TimeZone&quot;;  
+
+  private String timeZoneID;
+  private String dateFormatOption;  
+
+  protected DateFormat dateFormat;
+<span class="fc" id="L71">  protected Date date = new Date();</span>
+
+  /**
+     @deprecated Use the setter method for the option directly instead
+     of the generic &lt;code&gt;setOption&lt;/code&gt; method. 
+  */
+  public
+  String[] getOptionStrings() {
+<span class="fc" id="L79">    return new String[] {DATE_FORMAT_OPTION, TIMEZONE_OPTION};</span>
+  }
+
+  /**
+     @deprecated Use the setter method for the option directly instead
+     of the generic &lt;code&gt;setOption&lt;/code&gt; method. 
+  */
+  public
+  void setOption(String option, String value) {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    if(option.equalsIgnoreCase(DATE_FORMAT_OPTION)) {</span>
+<span class="fc" id="L89">      dateFormatOption = value.toUpperCase();</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">    } else if(option.equalsIgnoreCase(TIMEZONE_OPTION)) {</span>
+<span class="fc" id="L91">      timeZoneID = value;</span>
+    }
+<span class="fc" id="L93">  }</span>
+  
+
+  /**
+    The value of the &lt;b&gt;DateFormat&lt;/b&gt; option should be either an
+    argument to the constructor of {@link SimpleDateFormat} or one of
+    the srings &quot;NULL&quot;, &quot;RELATIVE&quot;, &quot;ABSOLUTE&quot;, &quot;DATE&quot; or &quot;ISO8601.
+   */
+  public
+  void setDateFormat(String dateFormat) {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    if (dateFormat != null) {</span>
+<span class="fc" id="L104">        dateFormatOption = dateFormat;</span>
+    }
+<span class="fc" id="L106">    setDateFormat(dateFormatOption, TimeZone.getDefault());</span>
+<span class="fc" id="L107">  }</span>
+
+  /**
+     Returns value of the &lt;b&gt;DateFormat&lt;/b&gt; option.
+   */
+  public
+  String getDateFormat() {
+<span class="fc" id="L114">    return dateFormatOption;</span>
+  }
+  
+  /**
+    The &lt;b&gt;TimeZoneID&lt;/b&gt; option is a time zone ID string in the format
+    expected by the {@link TimeZone#getTimeZone} method.
+   */
+  public
+  void setTimeZone(String timeZone) {
+<span class="fc" id="L123">    this.timeZoneID = timeZone;</span>
+<span class="fc" id="L124">  }</span>
+  
+  /**
+     Returns value of the &lt;b&gt;TimeZone&lt;/b&gt; option.
+   */
+  public
+  String getTimeZone() {
+<span class="fc" id="L131">    return timeZoneID;</span>
+  }
+  
+  public
+  void activateOptions() {
+<span class="fc" id="L136">    setDateFormat(dateFormatOption);</span>
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">    if(timeZoneID != null &amp;&amp; dateFormat != null) {</span>
+<span class="fc" id="L138">      dateFormat.setTimeZone(TimeZone.getTimeZone(timeZoneID));</span>
+    }
+<span class="fc" id="L140">  }</span>
+
+  public
+  void dateFormat(StringBuffer buf, LoggingEvent event) {
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">    if(dateFormat != null) {</span>
+<span class="fc" id="L145">      date.setTime(event.timeStamp);</span>
+<span class="fc" id="L146">      dateFormat.format(date, buf, this.pos);</span>
+<span class="fc" id="L147">      buf.append(' ');</span>
+    }
+<span class="fc" id="L149">  }</span>
+
+  /**
+     Sets the {@link DateFormat} used to format time and date in the
+     zone determined by &lt;code&gt;timeZone&lt;/code&gt;.
+   */
+  public
+  void setDateFormat(DateFormat dateFormat, TimeZone timeZone) {
+<span class="fc" id="L157">    this.dateFormat = dateFormat;    </span>
+<span class="fc" id="L158">    this.dateFormat.setTimeZone(timeZone);</span>
+<span class="fc" id="L159">  }</span>
+  
+  /**
+     Sets the DateFormat used to format date and time in the time zone
+     determined by &lt;code&gt;timeZone&lt;/code&gt; parameter. The {@link DateFormat} used
+     will depend on the &lt;code&gt;dateFormatType&lt;/code&gt;.
+
+     &lt;p&gt;The recognized types are {@link #NULL_DATE_FORMAT}, {@link
+     #RELATIVE_TIME_DATE_FORMAT} {@link
+     AbsoluteTimeDateFormat#ABS_TIME_DATE_FORMAT}, {@link
+     AbsoluteTimeDateFormat#DATE_AND_TIME_DATE_FORMAT} and {@link
+     AbsoluteTimeDateFormat#ISO8601_DATE_FORMAT}. If the
+     &lt;code&gt;dateFormatType&lt;/code&gt; is not one of the above, then the
+     argument is assumed to be a date pattern for {@link
+     SimpleDateFormat}.
+  */
+  public
+  void setDateFormat(String dateFormatType, TimeZone timeZone) {
+<span class="fc bfc" id="L177" title="All 2 branches covered.">    if(dateFormatType == null) {</span>
+<span class="fc" id="L178">      this.dateFormat = null;</span>
+<span class="fc" id="L179">      return;</span>
+    } 
+
+<span class="fc bfc" id="L182" title="All 2 branches covered.">    if(dateFormatType.equalsIgnoreCase(NULL_DATE_FORMAT)) {</span>
+<span class="fc" id="L183">      this.dateFormat = null;</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">    } else if (dateFormatType.equalsIgnoreCase(RELATIVE_TIME_DATE_FORMAT)) {</span>
+<span class="fc" id="L185">      this.dateFormat =  new RelativeTimeDateFormat();</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">    } else if(dateFormatType.equalsIgnoreCase(</span>
+                             AbsoluteTimeDateFormat.ABS_TIME_DATE_FORMAT)) {
+<span class="fc" id="L188">      this.dateFormat =  new AbsoluteTimeDateFormat(timeZone);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">    } else if(dateFormatType.equalsIgnoreCase(</span>
+                        AbsoluteTimeDateFormat.DATE_AND_TIME_DATE_FORMAT)) {
+<span class="fc" id="L191">      this.dateFormat =  new DateTimeDateFormat(timeZone);</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">    } else if(dateFormatType.equalsIgnoreCase(</span>
+                              AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT)) {
+<span class="fc" id="L194">      this.dateFormat =  new ISO8601DateFormat(timeZone);</span>
+    } else {
+<span class="fc" id="L196">      this.dateFormat = new SimpleDateFormat(dateFormatType);</span>
+<span class="fc" id="L197">      this.dateFormat.setTimeZone(timeZone);</span>
+    }
+<span class="fc" id="L199">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyPrinter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.config</a> &gt; <span class="el_source">PropertyPrinter.java</span></div><h1>PropertyPrinter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.config;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Category;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+/**
+   Prints the configuration of the log4j default hierarchy
+   (which needs to be auto-initialized) as a propoperties file
+   on a {@link PrintWriter}.
+   
+   @author  Anders Kristensen
+ */
+public class PropertyPrinter implements PropertyGetter.PropertyCallback {
+<span class="nc" id="L38">  protected int numAppenders = 0;</span>
+<span class="nc" id="L39">  protected Hashtable appenderNames = new Hashtable();</span>
+<span class="nc" id="L40">  protected Hashtable layoutNames   = new Hashtable();</span>
+  protected PrintWriter out;
+  protected boolean doCapitalize;
+  
+  public
+  PropertyPrinter(PrintWriter out) {
+<span class="nc" id="L46">    this(out, false);</span>
+<span class="nc" id="L47">  }</span>
+  
+  public
+<span class="nc" id="L50">  PropertyPrinter(PrintWriter out, boolean doCapitalize) {</span>
+<span class="nc" id="L51">    this.out = out;</span>
+<span class="nc" id="L52">    this.doCapitalize = doCapitalize;</span>
+    
+<span class="nc" id="L54">    print(out);</span>
+<span class="nc" id="L55">    out.flush();</span>
+<span class="nc" id="L56">  }</span>
+  
+  protected
+  String genAppName() {
+<span class="nc" id="L60">    return &quot;A&quot; + numAppenders++;</span>
+  }
+  
+  /**
+   * Returns true if the specified appender name is considered to have
+   * been generated, that is, if it is of the form A[0-9]+.
+  */
+  protected
+  boolean isGenAppName(String name) {
+<span class="nc bnc" id="L69" title="All 4 branches missed.">    if (name.length() &lt; 2 || name.charAt(0) != 'A') {</span>
+<span class="nc" id="L70">        return false;</span>
+    }
+    
+<span class="nc bnc" id="L73" title="All 2 branches missed.">    for (int i = 0; i &lt; name.length(); i++) {</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">      if (name.charAt(i) &lt; '0' || name.charAt(i) &gt; '9') {</span>
+<span class="nc" id="L75">        return false;</span>
+    }
+    }
+<span class="nc" id="L78">    return true;</span>
+  }
+  
+  /**
+   * Prints the configuration of the default log4j hierarchy as a Java
+   * properties file on the specified Writer.
+   * 
+   * &lt;p&gt;N.B. print() can be invoked only once!
+   */
+  public
+  void print(PrintWriter out) {
+<span class="nc" id="L89">    printOptions(out, Logger.getRootLogger());</span>
+    
+<span class="nc" id="L91">    Enumeration cats = LogManager.getCurrentLoggers();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    while (cats.hasMoreElements()) {</span>
+<span class="nc" id="L93">      printOptions(out, (Logger) cats.nextElement());</span>
+    }
+<span class="nc" id="L95">  }</span>
+  
+  /**
+   * @since 1.2.15
+   */
+  protected
+  void printOptions(PrintWriter out, Category cat) {
+<span class="nc" id="L102">    Enumeration appenders = cat.getAllAppenders();</span>
+<span class="nc" id="L103">    Level prio = cat.getLevel();</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    String appenderString = (prio == null ? &quot;&quot; : prio.toString());</span>
+    
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    while (appenders.hasMoreElements()) {</span>
+<span class="nc" id="L107">      Appender app = (Appender) appenders.nextElement();</span>
+      String name;
+      
+<span class="nc bnc" id="L110" title="All 2 branches missed.">      if ((name = (String) appenderNames.get(app)) == null) {</span>
+      
+        // first assign name to the appender
+<span class="nc bnc" id="L113" title="All 4 branches missed.">        if ((name = app.getName()) == null || isGenAppName(name)) {</span>
+<span class="nc" id="L114">            name = genAppName();</span>
+        }
+<span class="nc" id="L116">        appenderNames.put(app, name);</span>
+        
+<span class="nc" id="L118">        printOptions(out, app, &quot;log4j.appender.&quot;+name);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (app.getLayout() != null) {</span>
+<span class="nc" id="L120">          printOptions(out, app.getLayout(), &quot;log4j.appender.&quot;+name+&quot;.layout&quot;);</span>
+        }
+      }
+<span class="nc" id="L123">      appenderString += &quot;, &quot; + name;</span>
+<span class="nc" id="L124">    }</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">    String catKey = (cat == Logger.getRootLogger())</span>
+        ? &quot;log4j.rootLogger&quot;
+<span class="nc" id="L127">        : &quot;log4j.logger.&quot; + cat.getName();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">    if (appenderString != &quot;&quot;) {</span>
+<span class="nc" id="L129">      out.println(catKey + &quot;=&quot; + appenderString);</span>
+    }
+<span class="nc bnc" id="L131" title="All 4 branches missed.">    if (!cat.getAdditivity() &amp;&amp; cat != Logger.getRootLogger()) {</span>
+<span class="nc" id="L132">    	out.println(&quot;log4j.additivity.&quot; + cat.getName() + &quot;=false&quot;);    </span>
+    }
+<span class="nc" id="L134">  }</span>
+
+  protected void printOptions(PrintWriter out, Logger cat) {
+<span class="nc" id="L137">      printOptions(out, (Category) cat);</span>
+<span class="nc" id="L138">  }</span>
+  
+  protected
+  void printOptions(PrintWriter out, Object obj, String fullname) {
+<span class="nc" id="L142">    out.println(fullname + &quot;=&quot; + obj.getClass().getName());</span>
+<span class="nc" id="L143">    PropertyGetter.getProperties(obj, this, fullname + &quot;.&quot;);</span>
+<span class="nc" id="L144">  }</span>
+  
+  public void foundProperty(Object obj, String prefix, String name, Object value) {
+    // XXX: Properties encode value.toString()
+<span class="nc bnc" id="L148" title="All 4 branches missed.">    if (obj instanceof Appender &amp;&amp; &quot;name&quot;.equals(name)) {</span>
+<span class="nc" id="L149">      return;</span>
+    }
+<span class="nc bnc" id="L151" title="All 2 branches missed.">    if (doCapitalize) {</span>
+<span class="nc" id="L152">      name = capitalize(name);</span>
+    }
+<span class="nc" id="L154">    out.println(prefix + name + &quot;=&quot; + value.toString());</span>
+<span class="nc" id="L155">  }</span>
+  
+  public static String capitalize(String name) {
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    if (Character.isLowerCase(name.charAt(0))) {</span>
+<span class="nc bnc" id="L159" title="All 4 branches missed.">      if (name.length() == 1 || Character.isLowerCase(name.charAt(1))) {</span>
+<span class="nc" id="L160">        StringBuffer newname = new StringBuffer(name);</span>
+<span class="nc" id="L161">        newname.setCharAt(0, Character.toUpperCase(name.charAt(0)));</span>
+<span class="nc" id="L162">        return newname.toString();</span>
+      }
+    }
+<span class="nc" id="L165">    return name;</span>
+  }
+  
+  // for testing
+  public static void main(String[] args) {
+<span class="nc" id="L170">    new PropertyPrinter(new PrintWriter(System.out));</span>
+<span class="nc" id="L171">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

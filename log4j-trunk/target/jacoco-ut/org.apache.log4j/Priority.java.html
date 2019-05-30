@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Priority.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">Priority.java</span></div><h1>Priority.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors:  Kitching Simon &lt;Simon.Kitching@orange.ch&gt;
+
+package org.apache.log4j;
+
+/**
+   &lt;font color=&quot;#AA4444&quot;&gt;Refrain from using this class directly, use
+   the {@link Level} class instead&lt;/font&gt;.
+
+   @author Ceki G&amp;uuml;lc&amp;uuml; */
+public class Priority {
+
+  transient int level;
+  transient String levelStr;
+  transient int syslogEquivalent;
+
+  public final static int OFF_INT = Integer.MAX_VALUE;
+  public final static int FATAL_INT = 50000;
+  public final static int ERROR_INT = 40000;
+  public final static int WARN_INT  = 30000;
+  public final static int INFO_INT  = 20000;
+  public final static int DEBUG_INT = 10000;
+    //public final static int FINE_INT = DEBUG_INT;
+  public final static int ALL_INT = Integer.MIN_VALUE;
+
+  /**
+   * @deprecated Use {@link Level#FATAL} instead.
+   */
+<span class="fc" id="L45">  final static public Priority FATAL = new Level(FATAL_INT, &quot;FATAL&quot;, 0);</span>
+
+  /**
+   * @deprecated Use {@link Level#ERROR} instead.
+   */
+<span class="fc" id="L50">  final static public Priority ERROR = new Level(ERROR_INT, &quot;ERROR&quot;, 3);</span>
+
+  /**
+   * @deprecated Use {@link Level#WARN} instead.
+   */
+<span class="fc" id="L55">  final static public Priority WARN  = new Level(WARN_INT, &quot;WARN&quot;,  4);</span>
+
+  /**
+   * @deprecated Use {@link Level#INFO} instead.
+   */
+<span class="fc" id="L60">  final static public Priority INFO  = new Level(INFO_INT, &quot;INFO&quot;,  6);</span>
+
+  /**
+   * @deprecated Use {@link Level#DEBUG} instead.
+   */
+<span class="fc" id="L65">  final static public Priority DEBUG = new Level(DEBUG_INT, &quot;DEBUG&quot;, 7);</span>
+
+
+  /**
+    * Default constructor for deserialization.
+    */
+<span class="fc" id="L71">  protected Priority() {</span>
+<span class="fc" id="L72">      level = DEBUG_INT;</span>
+<span class="fc" id="L73">      levelStr = &quot;DEBUG&quot;;</span>
+<span class="fc" id="L74">      syslogEquivalent = 7;</span>
+<span class="fc" id="L75">  }</span>
+
+  /**
+     Instantiate a level object.
+   */
+  protected
+<span class="fc" id="L81">  Priority(int level, String levelStr, int syslogEquivalent) {</span>
+<span class="fc" id="L82">    this.level = level;</span>
+<span class="fc" id="L83">    this.levelStr = levelStr;</span>
+<span class="fc" id="L84">    this.syslogEquivalent = syslogEquivalent;</span>
+<span class="fc" id="L85">  }</span>
+
+  /**
+     Two priorities are equal if their level fields are equal.
+     @since 1.2
+   */
+  public
+  boolean equals(Object o) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">    if(o instanceof Priority) {</span>
+<span class="fc" id="L94">      Priority r = (Priority) o;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">      return (this.level == r.level);</span>
+    } else {
+<span class="fc" id="L97">      return false;</span>
+    }
+  }
+
+  /**
+     Return the syslog equivalent of this priority as an integer.
+   */
+  public
+  final
+  int getSyslogEquivalent() {
+<span class="fc" id="L107">    return syslogEquivalent;</span>
+  }
+
+
+   
+  /**
+     Returns &lt;code&gt;true&lt;/code&gt; if this level has a higher or equal
+     level than the level passed as argument, &lt;code&gt;false&lt;/code&gt;
+     otherwise.  
+     
+     &lt;p&gt;You should think twice before overriding the default
+     implementation of &lt;code&gt;isGreaterOrEqual&lt;/code&gt; method.
+
+  */
+  public
+  boolean isGreaterOrEqual(Priority r) {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    return level &gt;= r.level;</span>
+  }
+
+  /**
+     Return all possible priorities as an array of Level objects in
+     descending order.
+
+     @deprecated This method will be removed with no replacement.
+  */
+  public
+  static
+  Priority[] getAllPossiblePriorities() {
+<span class="fc" id="L135">    return new Priority[] {Priority.FATAL, Priority.ERROR, Level.WARN, </span>
+			   Priority.INFO, Priority.DEBUG};
+  }
+
+
+  /**
+     Returns the string representation of this priority.
+   */
+  final
+  public
+  String toString() {
+<span class="fc" id="L146">    return levelStr;</span>
+  }
+
+  /**
+     Returns the integer representation of this level.
+   */
+  public
+  final
+  int toInt() {
+<span class="fc" id="L155">    return level;</span>
+  }
+
+  /**
+   * @deprecated Please use the {@link Level#toLevel(String)} method instead.
+  */
+  public
+  static
+  Priority toPriority(String sArg) {
+<span class="fc" id="L164">    return Level.toLevel(sArg);</span>
+  }
+
+  /**
+   * @deprecated Please use the {@link Level#toLevel(int)} method instead.   
+   */
+  public
+  static
+  Priority toPriority(int val) {
+<span class="fc" id="L173">    return toPriority(val, Priority.DEBUG);</span>
+  }
+
+  /**
+   * @deprecated Please use the {@link Level#toLevel(int, Level)} method instead.   
+  */
+  public
+  static
+  Priority toPriority(int val, Priority defaultPriority) {
+<span class="fc" id="L182">    return Level.toLevel(val, (Level) defaultPriority);</span>
+  }
+
+  /**
+   * @deprecated Please use the {@link Level#toLevel(String, Level)} method instead.   
+   */
+  public
+  static
+  Priority toPriority(String sArg, Priority defaultPriority) {                  
+<span class="fc" id="L191">    return Level.toLevel(sArg, (Level) defaultPriority);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

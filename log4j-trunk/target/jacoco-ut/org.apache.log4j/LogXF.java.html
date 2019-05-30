@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogXF.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j</a> &gt; <span class="el_source">LogXF.java</span></div><h1>LogXF.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.log4j;
+
+import org.apache.log4j.spi.LoggingEvent;
+
+/**
+ * This is a base class for LogMF and LogSF parameterized logging classes.
+ *
+ *
+ * @see org.apache.log4j.LogMF
+ * @see org.apache.log4j.LogSF
+ * @since 1.2.16
+ */
+public abstract class LogXF {
+    /**
+     * Trace level.
+     */
+<span class="nc" id="L33">    protected static final Level TRACE = new Level(5000, &quot;TRACE&quot;, 7);</span>
+    /**
+     * Fully Qualified Class Name of this class.
+     */
+<span class="nc bnc" id="L37" title="All 2 branches missed.">    private static final String FQCN = LogXF.class.getName();</span>
+
+<span class="nc" id="L39">    protected LogXF() {</span>
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * Returns a Boolean instance representing the specified boolean.
+     * Boolean.valueOf was added in JDK 1.4.
+     *
+     * @param b a boolean value.
+     * @return a Boolean instance representing b.
+     */
+    protected static Boolean valueOf(final boolean b) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (b) {</span>
+<span class="nc" id="L51">            return Boolean.TRUE;</span>
+        }
+<span class="nc" id="L53">        return Boolean.FALSE;</span>
+    }
+
+    /**
+     * Returns a Character instance representing the specified char.
+     * Character.valueOf was added in JDK 1.5.
+     *
+     * @param c a character value.
+     * @return a Character instance representing c.
+     */
+    protected static Character valueOf(final char c) {
+<span class="nc" id="L64">        return new Character(c);</span>
+    }
+
+    /**
+     * Returns a Byte instance representing the specified byte.
+     * Byte.valueOf was added in JDK 1.5.
+     *
+     * @param b a byte value.
+     * @return a Byte instance representing b.
+     */
+    protected static Byte valueOf(final byte b) {
+<span class="nc" id="L75">        return new Byte(b);</span>
+    }
+
+    /**
+     * Returns a Short instance representing the specified short.
+     * Short.valueOf was added in JDK 1.5.
+     *
+     * @param b a short value.
+     * @return a Byte instance representing b.
+     */
+    protected static Short valueOf(final short b) {
+<span class="nc" id="L86">        return new Short(b);</span>
+    }
+
+    /**
+     * Returns an Integer instance representing the specified int.
+     * Integer.valueOf was added in JDK 1.5.
+     *
+     * @param b an int value.
+     * @return an Integer instance representing b.
+     */
+    protected static Integer valueOf(final int b) {
+<span class="nc" id="L97">        return new Integer(b);</span>
+    }
+
+    /**
+     * Returns a Long instance representing the specified long.
+     * Long.valueOf was added in JDK 1.5.
+     *
+     * @param b a long value.
+     * @return a Long instance representing b.
+     */
+    protected static Long valueOf(final long b) {
+<span class="nc" id="L108">        return new Long(b);</span>
+    }
+
+    /**
+     * Returns a Float instance representing the specified float.
+     * Float.valueOf was added in JDK 1.5.
+     *
+     * @param b a float value.
+     * @return a Float instance representing b.
+     */
+    protected static Float valueOf(final float b) {
+<span class="nc" id="L119">        return new Float(b);</span>
+    }
+
+    /**
+     * Returns a Double instance representing the specified double.
+     * Double.valueOf was added in JDK 1.5.
+     *
+     * @param b a double value.
+     * @return a Byte instance representing b.
+     */
+    protected static Double valueOf(final double b) {
+<span class="nc" id="L130">        return new Double(b);</span>
+    }
+
+    /**
+     * Create new array.
+     *
+     * @param param1 parameter 1.
+     * @return new array.
+     */
+    protected static Object[] toArray(final Object param1) {
+<span class="nc" id="L140">        return new Object[]{</span>
+                param1
+        };
+    }
+
+    /**
+     * Create new array.
+     *
+     * @param param1 parameter 1.
+     * @param param2 parameter 2.
+     * @return new array.
+     */
+    protected static Object[] toArray(final Object param1,
+                                      final Object param2) {
+<span class="nc" id="L154">        return new Object[]{</span>
+                param1, param2
+        };
+    }
+
+    /**
+     * Create new array.
+     *
+     * @param param1 parameter 1.
+     * @param param2 parameter 2.
+     * @param param3 parameter 3.
+     * @return new array.
+     */
+    protected static Object[] toArray(final Object param1,
+                                      final Object param2,
+                                      final Object param3) {
+<span class="nc" id="L170">        return new Object[]{</span>
+                param1, param2, param3
+        };
+    }
+
+    /**
+     * Create new array.
+     *
+     * @param param1 parameter 1.
+     * @param param2 parameter 2.
+     * @param param3 parameter 3.
+     * @param param4 parameter 4.
+     * @return new array.
+     */
+    protected static Object[] toArray(final Object param1,
+                                      final Object param2,
+                                      final Object param3,
+                                      final Object param4) {
+<span class="nc" id="L188">        return new Object[]{</span>
+                param1, param2, param3, param4
+        };
+    }
+
+    /**
+     * Log an entering message at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     */
+    public static void entering(final Logger logger,
+                                final String sourceClass,
+                                final String sourceMethod) {
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L204">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    sourceClass + &quot;.&quot; + sourceMethod + &quot; ENTRY&quot;, null));
+        }
+<span class="nc" id="L207">    }</span>
+
+    /**
+     * Log an entering message with a parameter at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param param        parameter, may be null.
+     */
+    public static void entering(final Logger logger,
+                                final String sourceClass,
+                                final String sourceMethod,
+                                final String param) {
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L222">            String msg = sourceClass + &quot;.&quot; + sourceMethod + &quot; ENTRY &quot; + param;</span>
+<span class="nc" id="L223">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    msg, null));
+        }
+<span class="nc" id="L226">    }</span>
+
+    /**
+     * Log an entering message with a parameter at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param param        parameter, may be null.
+     */
+    public static void entering(final Logger logger,
+                                final String sourceClass,
+                                final String sourceMethod,
+                                final Object param) {
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L241">            String msg = sourceClass + &quot;.&quot; + sourceMethod + &quot; ENTRY &quot;;</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            if (param == null) {</span>
+<span class="nc" id="L243">                msg += &quot;null&quot;;</span>
+            } else {
+                try {
+<span class="nc" id="L246">                    msg += param;</span>
+<span class="nc" id="L247">                } catch(Throwable ex) {</span>
+<span class="nc" id="L248">                    msg += &quot;?&quot;;</span>
+<span class="nc" id="L249">                }</span>
+            }
+<span class="nc" id="L251">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    msg, null));
+        }
+<span class="nc" id="L254">    }</span>
+
+    /**
+     * Log an entering message with an array of parameters at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param params       parameters, may be null.
+     */
+    public static void entering(final Logger logger,
+                                final String sourceClass,
+                                final String sourceMethod,
+                                final Object[] params) {
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L269">            String msg = sourceClass + &quot;.&quot; + sourceMethod + &quot; ENTRY &quot;;</span>
+<span class="nc bnc" id="L270" title="All 4 branches missed.">            if (params != null &amp;&amp; params.length &gt; 0) {</span>
+<span class="nc" id="L271">                String delim = &quot;{&quot;;</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">                for (int i = 0; i &lt; params.length; i++) {</span>
+                    try {
+<span class="nc" id="L274">                        msg += delim + params[i];</span>
+<span class="nc" id="L275">                    } catch(Throwable ex) {</span>
+<span class="nc" id="L276">                        msg += delim + &quot;?&quot;;</span>
+<span class="nc" id="L277">                    }</span>
+<span class="nc" id="L278">                    delim = &quot;,&quot;;</span>
+                }
+<span class="nc" id="L280">                msg += &quot;}&quot;;</span>
+<span class="nc" id="L281">            } else {</span>
+<span class="nc" id="L282">                msg += &quot;{}&quot;;</span>
+            }
+<span class="nc" id="L284">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    msg, null));
+        }
+<span class="nc" id="L287">    }</span>
+
+    /**
+     * Log an exiting message at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     */
+    public static void exiting(final Logger logger,
+                               final String sourceClass,
+                               final String sourceMethod) {
+<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L300">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    sourceClass + &quot;.&quot; + sourceMethod + &quot; RETURN&quot;, null));
+        }
+<span class="nc" id="L303">    }</span>
+
+    /**
+     * Log an exiting message with result at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param result       result, may be null.
+     */
+    public static void exiting(
+            final Logger logger,
+            final String sourceClass,
+            final String sourceMethod,
+            final String result) {
+<span class="nc bnc" id="L318" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L319">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    sourceClass + &quot;.&quot; + sourceMethod + &quot; RETURN &quot; + result, null));
+        }
+<span class="nc" id="L322">    }</span>
+
+    /**
+     * Log an exiting message with result at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param result       result, may be null.
+     */
+    public static void exiting(
+            final Logger logger,
+            final String sourceClass,
+            final String sourceMethod,
+            final Object result) {
+<span class="nc bnc" id="L337" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L338">            String msg = sourceClass + &quot;.&quot; + sourceMethod + &quot; RETURN &quot;;</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">            if (result == null) {</span>
+<span class="nc" id="L340">                msg += &quot;null&quot;;</span>
+            } else {
+                try {
+<span class="nc" id="L343">                    msg += result;</span>
+<span class="nc" id="L344">                } catch(Throwable ex) {</span>
+<span class="nc" id="L345">                    msg += &quot;?&quot;;</span>
+<span class="nc" id="L346">                }</span>
+            }
+<span class="nc" id="L348">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    msg, null));
+        }
+<span class="nc" id="L351">    }</span>
+
+    /**
+     * Logs a throwing message at DEBUG level.
+     *
+     * @param logger       logger, may not be null.
+     * @param sourceClass  source class, may be null.
+     * @param sourceMethod method, may be null.
+     * @param thrown      throwable, may be null.
+     */
+    public static void throwing(
+            final Logger logger,
+            final String sourceClass,
+            final String sourceMethod,
+            final Throwable thrown) {
+<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L367">            logger.callAppenders(new LoggingEvent(FQCN, logger, Level.DEBUG,</span>
+                    sourceClass + &quot;.&quot; + sourceMethod + &quot; THROW&quot;, thrown));
+        }
+<span class="nc" id="L370">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

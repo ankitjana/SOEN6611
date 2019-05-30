@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SyslogWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">SyslogWriter.java</span></div><h1>SyslogWriter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+
+import java.io.Writer;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.DatagramPacket;
+import java.net.UnknownHostException;
+import java.net.SocketException;
+import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
+
+/**
+   SyslogWriter is a wrapper around the java.net.DatagramSocket class
+   so that it behaves like a java.io.Writer.
+
+   @since 0.7.3
+*/
+public class SyslogWriter extends Writer {
+
+<span class="nc" id="L39">  final int SYSLOG_PORT = 514;</span>
+  /**
+   *  Host string from last constructed SyslogWriter.
+   *  @deprecated
+   */
+  static String syslogHost;
+  
+  private InetAddress address;
+  private final int port;
+  private DatagramSocket ds;
+
+  /**
+   *  Constructs a new instance of SyslogWriter.
+   *  @param syslogHost host name, may not be null.  A port
+   *  may be specified by following the name or IPv4 literal address with
+   *  a colon and a decimal port number.  To specify a port with an IPv6
+   *  address, enclose the IPv6 address in square brackets before appending
+   *  the colon and decimal port number.
+   */
+  public
+<span class="nc" id="L59">  SyslogWriter(final String syslogHost) {</span>
+<span class="nc" id="L60">    SyslogWriter.syslogHost = syslogHost;</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">    if (syslogHost == null) {</span>
+<span class="nc" id="L62">        throw new NullPointerException(&quot;syslogHost&quot;);</span>
+    }
+    
+<span class="nc" id="L65">    String host = syslogHost;</span>
+<span class="nc" id="L66">    int urlPort = -1;</span>
+    
+    //
+    //  If not an unbracketed IPv6 address then
+    //      parse as a URL
+    //
+<span class="nc bnc" id="L72" title="All 4 branches missed.">    if (host.indexOf(&quot;[&quot;) != -1 || host.indexOf(':') == host.lastIndexOf(':')) {</span>
+        try {
+<span class="nc" id="L74">            URL url = new URL(&quot;http://&quot; + host);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (url.getHost() != null) {</span>
+<span class="nc" id="L76">                host = url.getHost();</span>
+                //   if host is a IPv6 literal, strip off the brackets
+<span class="nc bnc" id="L78" title="All 4 branches missed.">                if(host.startsWith(&quot;[&quot;) &amp;&amp; host.charAt(host.length() - 1) == ']') {</span>
+<span class="nc" id="L79">                    host = host.substring(1, host.length() - 1);</span>
+                }
+<span class="nc" id="L81">                urlPort = url.getPort();</span>
+            }
+<span class="nc" id="L83">        } catch(MalformedURLException e) {</span>
+<span class="nc" id="L84">      		LogLog.error(&quot;Malformed URL: will attempt to interpret as InetAddress.&quot;, e);</span>
+<span class="nc" id="L85">        }</span>
+    }
+    
+<span class="nc bnc" id="L88" title="All 2 branches missed.">    if (urlPort == -1) {</span>
+<span class="nc" id="L89">        urlPort = SYSLOG_PORT;</span>
+    }
+<span class="nc" id="L91">    port = urlPort;</span>
+
+    try {      
+<span class="nc" id="L94">      this.address = InetAddress.getByName(host);</span>
+    }
+<span class="nc" id="L96">    catch (UnknownHostException e) {</span>
+<span class="nc" id="L97">      LogLog.error(&quot;Could not find &quot; + host +</span>
+			 &quot;. All logging will FAIL.&quot;, e);
+<span class="nc" id="L99">    }</span>
+
+    try {
+<span class="nc" id="L102">      this.ds = new DatagramSocket();</span>
+    }
+<span class="nc" id="L104">    catch (SocketException e) {</span>
+<span class="nc" id="L105">      e.printStackTrace();</span>
+<span class="nc" id="L106">      LogLog.error(&quot;Could not instantiate DatagramSocket to &quot; + host +</span>
+			 &quot;. All logging will FAIL.&quot;, e);
+<span class="nc" id="L108">    }</span>
+    
+<span class="nc" id="L110">  }</span>
+
+
+  public
+  void write(char[] buf, int off, int len) throws IOException {
+<span class="nc" id="L115">    this.write(new String(buf, off, len));</span>
+<span class="nc" id="L116">  }</span>
+  
+  public
+  void write(final String string) throws IOException {
+
+<span class="nc bnc" id="L121" title="All 4 branches missed.">    if(this.ds != null &amp;&amp; this.address != null) {</span>
+<span class="nc" id="L122">        byte[] bytes = string.getBytes();</span>
+        //
+        //  syslog packets must be less than 1024 bytes
+        //
+<span class="nc" id="L126">        int bytesLength = bytes.length;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (bytesLength &gt;= 1024) {</span>
+<span class="nc" id="L128">            bytesLength = 1024;</span>
+        }
+<span class="nc" id="L130">        DatagramPacket packet = new DatagramPacket(bytes, bytesLength,</span>
+                               address, port);
+<span class="nc" id="L132">        ds.send(packet);</span>
+    }
+    
+<span class="nc" id="L135">  }</span>
+
+  public
+<span class="nc" id="L138">  void flush() {}</span>
+
+  public void close() {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">      if (ds != null) {</span>
+<span class="nc" id="L142">          ds.close();</span>
+      }
+<span class="nc" id="L144">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

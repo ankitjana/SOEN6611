@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Loader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">Loader.java</span></div><h1>Loader.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import java.net.URL;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.io.InterruptedIOException;
+
+
+/**
+   Load resources (or images) from various sources.
+ 
+  @author Ceki G&amp;uuml;lc&amp;uuml;
+ */
+
+<span class="nc" id="L32">public class Loader  { </span>
+
+  static final String TSTR = &quot;Caught Exception while in Loader.getResource. This may be innocuous.&quot;;
+
+  // We conservatively assume that we are running under Java 1.x
+<span class="fc" id="L37">  static private boolean java1 = true;</span>
+  
+<span class="fc" id="L39">  static private boolean ignoreTCL = false;</span>
+  
+  static {
+<span class="fc" id="L42">    String prop = OptionConverter.getSystemProperty(&quot;java.version&quot;, null);</span>
+    
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">    if(prop != null) {</span>
+<span class="fc" id="L45">      int i = prop.indexOf('.');</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">      if(i != -1) {	</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">	if(prop.charAt(i+1) != '1') {</span>
+<span class="fc" id="L48">        java1 = false;</span>
+    }
+      } 
+    }
+<span class="fc" id="L52">    String ignoreTCLProp = OptionConverter.getSystemProperty(&quot;log4j.ignoreTCL&quot;, null);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if(ignoreTCLProp != null) {</span>
+<span class="nc" id="L54">      ignoreTCL = OptionConverter.toBoolean(ignoreTCLProp, true);      </span>
+    }   
+<span class="fc" id="L56">  }</span>
+  
+  /**
+   *  Get a resource by delegating to getResource(String).
+   *  @param resource resource name
+   *  @param clazz class, ignored.
+   *  @return URL to resource or null.
+   *  @deprecated as of 1.2.
+   */
+  public static URL getResource(String resource, Class clazz) {
+<span class="nc" id="L66">      return getResource(resource);</span>
+  }
+
+  /**
+     This method will search for &lt;code&gt;resource&lt;/code&gt; in different
+     places. The search order is as follows:
+
+     &lt;ol&gt;
+
+     &lt;p&gt;&lt;li&gt;Search for &lt;code&gt;resource&lt;/code&gt; using the thread context
+     class loader under Java2. If that fails, search for
+     &lt;code&gt;resource&lt;/code&gt; using the class loader that loaded this
+     class (&lt;code&gt;Loader&lt;/code&gt;). Under JDK 1.1, only the the class
+     loader that loaded this class (&lt;code&gt;Loader&lt;/code&gt;) is used.
+
+     &lt;p&gt;&lt;li&gt;Try one last time with
+     &lt;code&gt;ClassLoader.getSystemResource(resource)&lt;/code&gt;, that is is
+     using the system class loader in JDK 1.2 and virtual machine's
+     built-in class loader in JDK 1.1.
+
+     &lt;/ol&gt;
+  */
+  static public URL getResource(String resource) {
+<span class="fc" id="L89">    ClassLoader classLoader = null;</span>
+<span class="fc" id="L90">    URL url = null;</span>
+    
+    try {
+<span class="pc bpc" id="L93" title="2 of 4 branches missed.">  	if(!java1 &amp;&amp; !ignoreTCL) {</span>
+<span class="fc" id="L94">  	  classLoader = getTCL();</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">  	  if(classLoader != null) {</span>
+<span class="fc" id="L96">  	    LogLog.debug(&quot;Trying to find [&quot;+resource+&quot;] using context classloader &quot;</span>
+  			 +classLoader+&quot;.&quot;);
+<span class="fc" id="L98">  	    url = classLoader.getResource(resource);      </span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">  	    if(url != null) {</span>
+<span class="nc" id="L100">  	      return url;</span>
+  	    }
+  	  }
+  	}
+  	
+  	// We could not find resource. Ler us now try with the
+  	// classloader that loaded this class.
+<span class="fc bfc" id="L107" title="All 2 branches covered.">  	classLoader = Loader.class.getClassLoader(); </span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">  	if(classLoader != null) {</span>
+<span class="fc" id="L109">  	  LogLog.debug(&quot;Trying to find [&quot;+resource+&quot;] using &quot;+classLoader</span>
+  		       +&quot; class loader.&quot;);
+<span class="fc" id="L111">  	  url = classLoader.getResource(resource);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">  	  if(url != null) {</span>
+<span class="nc" id="L113">  	    return url;</span>
+  	  }
+  	}
+<span class="nc" id="L116">    } catch(IllegalAccessException t) {</span>
+<span class="nc" id="L117">        LogLog.warn(TSTR, t);</span>
+<span class="nc" id="L118">    } catch(InvocationTargetException t) {</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (t.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                || t.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L121">            Thread.currentThread().interrupt();</span>
+        }
+<span class="nc" id="L123">        LogLog.warn(TSTR, t);</span>
+<span class="nc" id="L124">    } catch(Throwable t) {</span>
+      //
+      //  can't be InterruptedException or InterruptedIOException
+      //    since not declared, must be error or RuntimeError.
+<span class="nc" id="L128">      LogLog.warn(TSTR, t);</span>
+<span class="pc" id="L129">    }</span>
+    
+    // Last ditch attempt: get the resource from the class path. It
+    // may be the case that clazz was loaded by the Extentsion class
+    // loader which the parent of the system class loader. Hence the
+    // code below.
+<span class="fc" id="L135">    LogLog.debug(&quot;Trying to find [&quot;+resource+</span>
+  		   &quot;] using ClassLoader.getSystemResource().&quot;);
+<span class="fc" id="L137">    return ClassLoader.getSystemResource(resource);</span>
+  } 
+  
+  /**
+     Are we running under JDK 1.x?        
+  */
+  public
+  static
+  boolean isJava1() {
+<span class="fc" id="L146">    return java1;</span>
+  }
+  
+  /**
+    * Get the Thread Context Loader which is a JDK 1.2 feature. If we
+    * are running under JDK 1.1 or anything else goes wrong the method
+    * returns &lt;code&gt;null&lt;code&gt;.
+    *
+    *  */
+  private static ClassLoader getTCL() throws IllegalAccessException, 
+    InvocationTargetException {
+
+    // Are we running on a JDK 1.2 or later system?
+<span class="fc" id="L159">    Method method = null;</span>
+    try {
+<span class="fc bfc" id="L161" title="All 2 branches covered.">      method = Thread.class.getMethod(&quot;getContextClassLoader&quot;, null);</span>
+<span class="nc" id="L162">    } catch (NoSuchMethodException e) {</span>
+      // We are running on JDK 1.1
+<span class="nc" id="L164">      return null;</span>
+<span class="fc" id="L165">    }</span>
+    
+<span class="fc" id="L167">    return (ClassLoader) method.invoke(Thread.currentThread(), null);</span>
+  }
+
+
+  
+  /**
+   * If running under JDK 1.2 load the specified class using the
+   *  &lt;code&gt;Thread&lt;/code&gt; &lt;code&gt;contextClassLoader&lt;/code&gt; if that
+   *  fails try Class.forname. Under JDK 1.1 only Class.forName is
+   *  used.
+   *
+   */
+  static public Class loadClass (String clazz) throws ClassNotFoundException {
+    // Just call Class.forName(clazz) if we are running under JDK 1.1
+    // or if we are instructed to ignore the TCL.
+<span class="pc bpc" id="L182" title="2 of 4 branches missed.">    if(java1 || ignoreTCL) {</span>
+<span class="nc" id="L183">      return Class.forName(clazz);</span>
+    } else {
+      try {
+<span class="fc" id="L186">	    return getTCL().loadClass(clazz);</span>
+      }
+      // we reached here because tcl was null or because of a
+      // security exception, or because clazz could not be loaded...
+      // In any case we now try one more time
+<span class="nc" id="L191">      catch(InvocationTargetException e) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">          if (e.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">                  || e.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L194">              Thread.currentThread().interrupt();</span>
+          }
+<span class="nc" id="L196">      } catch(Throwable t) {</span>
+<span class="nc" id="L197">      }</span>
+    }
+<span class="nc" id="L199">    return Class.forName(clazz);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

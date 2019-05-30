@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LocationInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.spi</a> &gt; <span class="el_source">LocationInfo.java</span></div><h1>LocationInfo.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors: Mathias Rupprecht &lt;mmathias.rupprecht@fja.com&gt;
+
+package org.apache.log4j.spi;
+
+import org.apache.log4j.Layout;
+import org.apache.log4j.helpers.LogLog;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.InterruptedIOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
+/**
+   The internal representation of caller location information.
+
+   @since 0.8.3
+*/
+public class LocationInfo implements java.io.Serializable {
+
+  /**
+     Caller's line number.
+  */
+  transient String lineNumber;
+  /**
+     Caller's file name.
+  */
+  transient String fileName;
+  /**
+     Caller's fully qualified class name.
+  */
+  transient String className;
+  /**
+     Caller's method name.
+  */
+  transient String methodName;
+  /**
+     All available caller information, in the format
+     &lt;code&gt;fully.qualified.classname.of.caller.methodName(Filename.java:line)&lt;/code&gt;
+    */
+  public String fullInfo;
+
+<span class="fc" id="L60">  private static StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L61">  private static PrintWriter pw = new PrintWriter(sw);</span>
+
+  private static Method getStackTraceMethod;
+  private static Method getClassNameMethod;
+  private static Method getMethodNameMethod;
+  private static Method getFileNameMethod;
+  private static Method getLineNumberMethod;
+
+
+  /**
+     When location information is not available the constant
+     &lt;code&gt;NA&lt;/code&gt; is returned. Current value of this string
+     constant is &lt;b&gt;?&lt;/b&gt;.  */
+  public final static String NA = &quot;?&quot;;
+
+  static final long serialVersionUID = -1325822038990805636L;
+
+    /**
+     * NA_LOCATION_INFO is provided for compatibility with log4j 1.3.
+     * @since 1.2.15
+     */
+<span class="fc" id="L82">    public static final LocationInfo NA_LOCATION_INFO =</span>
+            new LocationInfo(NA, NA, NA, NA);
+
+
+
+  // Check if we are running in IBM's visual age.
+<span class="fc" id="L88">  static boolean inVisualAge = false;</span>
+  static {
+    try {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">      inVisualAge = Class.forName(&quot;com.ibm.uvm.tools.DebugSupport&quot;) != null;</span>
+<span class="nc" id="L92">      LogLog.debug(&quot;Detected IBM VisualAge environment.&quot;);</span>
+<span class="fc" id="L93">    } catch(Throwable e) {</span>
+      // nothing to do
+<span class="nc" id="L95">    }</span>
+      try {
+<span class="fc" id="L97">          Class[] noArgs = null;</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">          getStackTraceMethod = Throwable.class.getMethod(&quot;getStackTrace&quot;, noArgs);</span>
+<span class="fc" id="L99">          Class stackTraceElementClass = Class.forName(&quot;java.lang.StackTraceElement&quot;);</span>
+<span class="fc" id="L100">          getClassNameMethod = stackTraceElementClass.getMethod(&quot;getClassName&quot;, noArgs);</span>
+<span class="fc" id="L101">          getMethodNameMethod = stackTraceElementClass.getMethod(&quot;getMethodName&quot;, noArgs);</span>
+<span class="fc" id="L102">          getFileNameMethod = stackTraceElementClass.getMethod(&quot;getFileName&quot;, noArgs);</span>
+<span class="fc" id="L103">          getLineNumberMethod = stackTraceElementClass.getMethod(&quot;getLineNumber&quot;, noArgs);</span>
+<span class="nc" id="L104">      } catch(ClassNotFoundException ex) {</span>
+<span class="nc" id="L105">          LogLog.debug(&quot;LocationInfo will use pre-JDK 1.4 methods to determine location.&quot;);</span>
+<span class="nc" id="L106">      } catch(NoSuchMethodException ex) {</span>
+<span class="nc" id="L107">          LogLog.debug(&quot;LocationInfo will use pre-JDK 1.4 methods to determine location.&quot;);</span>
+<span class="pc" id="L108">      }</span>
+<span class="fc" id="L109">  }</span>
+
+  /**
+     Instantiate location information based on a Throwable. We
+     expect the Throwable &lt;code&gt;t&lt;/code&gt;, to be in the format
+
+       &lt;pre&gt;
+        java.lang.Throwable
+        ...
+          at org.apache.log4j.PatternLayout.format(PatternLayout.java:413)
+          at org.apache.log4j.FileAppender.doAppend(FileAppender.java:183)
+        at org.apache.log4j.Category.callAppenders(Category.java:131)
+        at org.apache.log4j.Category.log(Category.java:512)
+        at callers.fully.qualified.className.methodName(FileName.java:74)
+	...
+       &lt;/pre&gt;
+
+       &lt;p&gt;However, we can also deal with JIT compilers that &quot;lose&quot; the
+       location information, especially between the parentheses.
+        @param t throwable used to determine location, may be null.
+        @param fqnOfCallingClass class name of first class considered part of
+           the logging framework.  Location will be site that calls a method on this class.
+
+    */
+<span class="fc" id="L133">    public LocationInfo(Throwable t, String fqnOfCallingClass) {</span>
+<span class="pc bpc" id="L134" title="2 of 4 branches missed.">      if(t == null || fqnOfCallingClass == null) {</span>
+<span class="nc" id="L135">        return;</span>
+    }
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">      if (getLineNumberMethod != null) {</span>
+          try {
+<span class="fc" id="L139">              Object[] noArgs = null;</span>
+<span class="fc" id="L140">              Object[] elements =  (Object[]) getStackTraceMethod.invoke(t, noArgs);</span>
+<span class="fc" id="L141">              String prevClass = NA;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">              for(int i = elements.length - 1; i &gt;= 0; i--) {</span>
+<span class="fc" id="L143">                  String thisClass = (String) getClassNameMethod.invoke(elements[i], noArgs);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">                  if(fqnOfCallingClass.equals(thisClass)) {</span>
+<span class="fc" id="L145">                      int caller = i + 1;</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                      if (caller &lt; elements.length) {</span>
+<span class="fc" id="L147">                          className = prevClass;</span>
+<span class="fc" id="L148">                          methodName = (String) getMethodNameMethod.invoke(elements[caller], noArgs);</span>
+<span class="fc" id="L149">                          fileName = (String) getFileNameMethod.invoke(elements[caller], noArgs);</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                          if (fileName == null) {</span>
+<span class="nc" id="L151">                              fileName = NA;</span>
+                          }
+<span class="fc" id="L153">                          int line = ((Integer) getLineNumberMethod.invoke(elements[caller], noArgs)).intValue();</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">                          if (line &lt; 0) {</span>
+<span class="nc" id="L155">                              lineNumber = NA;</span>
+                          } else {
+<span class="fc" id="L157">                              lineNumber = String.valueOf(line);</span>
+                          }
+<span class="fc" id="L159">                          StringBuffer buf = new StringBuffer();</span>
+<span class="fc" id="L160">                          buf.append(className);</span>
+<span class="fc" id="L161">                          buf.append(&quot;.&quot;);</span>
+<span class="fc" id="L162">                          buf.append(methodName);</span>
+<span class="fc" id="L163">                          buf.append(&quot;(&quot;);</span>
+<span class="fc" id="L164">                          buf.append(fileName);</span>
+<span class="fc" id="L165">                          buf.append(&quot;:&quot;);</span>
+<span class="fc" id="L166">                          buf.append(lineNumber);</span>
+<span class="fc" id="L167">                          buf.append(&quot;)&quot;);</span>
+<span class="fc" id="L168">                          this.fullInfo = buf.toString();</span>
+                      }
+<span class="fc" id="L170">                      return;</span>
+                  }
+<span class="fc" id="L172">                  prevClass = thisClass;</span>
+              }
+<span class="fc" id="L174">              return;</span>
+<span class="nc" id="L175">          } catch(IllegalAccessException ex) {</span>
+<span class="nc" id="L176">              LogLog.debug(&quot;LocationInfo failed using JDK 1.4 methods&quot;, ex);</span>
+<span class="nc" id="L177">          } catch(InvocationTargetException ex) {</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">              if (ex.getTargetException() instanceof InterruptedException</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                      || ex.getTargetException() instanceof InterruptedIOException) {</span>
+<span class="nc" id="L180">                  Thread.currentThread().interrupt();</span>
+              }
+<span class="nc" id="L182">              LogLog.debug(&quot;LocationInfo failed using JDK 1.4 methods&quot;, ex);</span>
+<span class="nc" id="L183">          } catch(RuntimeException ex) {</span>
+<span class="nc" id="L184">              LogLog.debug(&quot;LocationInfo failed using JDK 1.4 methods&quot;, ex);</span>
+<span class="nc" id="L185">          }</span>
+      }
+
+      String s;
+      // Protect against multiple access to sw.
+<span class="nc" id="L190">      synchronized(sw) {</span>
+<span class="nc" id="L191">	t.printStackTrace(pw);</span>
+<span class="nc" id="L192">	s = sw.toString();</span>
+<span class="nc" id="L193">	sw.getBuffer().setLength(0);</span>
+<span class="nc" id="L194">      }</span>
+      //System.out.println(&quot;s is [&quot;+s+&quot;].&quot;);
+      int ibegin, iend;
+
+      // Given the current structure of the package, the line
+      // containing &quot;org.apache.log4j.Category.&quot; should be printed just
+      // before the caller.
+
+      // This method of searching may not be fastest but it's safer
+      // than counting the stack depth which is not guaranteed to be
+      // constant across JVM implementations.
+<span class="nc" id="L205">      ibegin = s.lastIndexOf(fqnOfCallingClass);</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">      if(ibegin == -1) {</span>
+<span class="nc" id="L207">        return;</span>
+    }
+
+      //
+      //   if the next character after the class name exists
+      //       but is not a period, see if the classname is
+      //       followed by a period earlier in the trace.
+      //       Minimizes mistakeningly matching on a class whose
+      //       name is a substring of the desired class.
+      //       See bug 44888.
+<span class="nc bnc" id="L217" title="All 2 branches missed.">      if (ibegin + fqnOfCallingClass.length() &lt; s.length() &amp;&amp;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">              s.charAt(ibegin + fqnOfCallingClass.length()) != '.') {</span>
+<span class="nc" id="L219">          int i = s.lastIndexOf(fqnOfCallingClass + &quot;.&quot;);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">          if (i != -1) {</span>
+<span class="nc" id="L221">              ibegin = i;</span>
+          }
+      }
+
+
+<span class="nc" id="L226">      ibegin = s.indexOf(Layout.LINE_SEP, ibegin);</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">      if(ibegin == -1) {</span>
+<span class="nc" id="L228">        return;</span>
+    }
+<span class="nc" id="L230">      ibegin+= Layout.LINE_SEP_LEN;</span>
+
+      // determine end of line
+<span class="nc" id="L233">      iend = s.indexOf(Layout.LINE_SEP, ibegin);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">      if(iend == -1) {</span>
+<span class="nc" id="L235">        return;</span>
+    }
+
+      // VA has a different stack trace format which doesn't
+      // need to skip the inital 'at'
+<span class="nc bnc" id="L240" title="All 2 branches missed.">      if(!inVisualAge) {</span>
+	// back up to first blank character
+<span class="nc" id="L242">	ibegin = s.lastIndexOf(&quot;at &quot;, iend);</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">	if(ibegin == -1) {</span>
+<span class="nc" id="L244">        return;</span>
+    }
+	// Add 3 to skip &quot;at &quot;;
+<span class="nc" id="L247">	ibegin += 3;</span>
+      }
+      // everything between is the requested stack item
+<span class="nc" id="L250">      this.fullInfo = s.substring(ibegin, iend);</span>
+<span class="nc" id="L251">    }</span>
+
+    /**
+     *   Appends a location fragment to a buffer to build the 
+     *     full location info.
+     *    @param buf StringBuffer to receive content.
+     *    @param fragment fragment of location (class, method, file, line),
+     *        if null the value of NA will be appended.
+     *    @since 1.2.15
+     */
+    private static final void appendFragment(final StringBuffer buf,
+                                             final String fragment) {
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">          if (fragment == null) {</span>
+<span class="nc" id="L264">             buf.append(NA);</span>
+          } else {
+<span class="fc" id="L266">             buf.append(fragment);</span>
+          }
+<span class="fc" id="L268">    }</span>
+
+    /**
+     * Create new instance.
+     * @param file source file name
+     * @param classname class name
+     * @param method method
+     * @param line source line number
+     *
+     * @since 1.2.15
+     */
+    public LocationInfo(
+      final String file,
+      final String classname,
+      final String method,
+<span class="fc" id="L283">      final String line) {</span>
+<span class="fc" id="L284">      this.fileName = file;</span>
+<span class="fc" id="L285">      this.className = classname;</span>
+<span class="fc" id="L286">      this.methodName = method;</span>
+<span class="fc" id="L287">      this.lineNumber = line;</span>
+<span class="fc" id="L288">      StringBuffer buf = new StringBuffer();</span>
+<span class="fc" id="L289">	  appendFragment(buf, classname);</span>
+<span class="fc" id="L290">	  buf.append(&quot;.&quot;);</span>
+<span class="fc" id="L291">	  appendFragment(buf, method);</span>
+<span class="fc" id="L292">	  buf.append(&quot;(&quot;);</span>
+<span class="fc" id="L293">	  appendFragment(buf, file);</span>
+<span class="fc" id="L294">	  buf.append(&quot;:&quot;);</span>
+<span class="fc" id="L295">	  appendFragment(buf, line);</span>
+<span class="fc" id="L296">	  buf.append(&quot;)&quot;);</span>
+<span class="fc" id="L297">	  this.fullInfo = buf.toString();</span>
+<span class="fc" id="L298">    }</span>
+
+    /**
+       Return the fully qualified class name of the caller making the
+       logging request.
+    */
+    public
+    String getClassName() {
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">      if(fullInfo == null) {</span>
+<span class="nc" id="L307">        return NA;</span>
+    }
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">      if(className == null) {</span>
+	// Starting the search from '(' is safer because there is
+	// potentially a dot between the parentheses.
+<span class="nc" id="L312">	int iend = fullInfo.lastIndexOf('(');</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">	if(iend == -1) {</span>
+<span class="nc" id="L314">        className = NA;</span>
+    } else {
+<span class="nc" id="L316">	  iend =fullInfo.lastIndexOf('.', iend);</span>
+
+	  // This is because a stack trace in VisualAge looks like:
+
+          //java.lang.RuntimeException
+	  //  java.lang.Throwable()
+	  //  java.lang.Exception()
+	  //  java.lang.RuntimeException()
+	  //  void test.test.B.print()
+	  //  void test.test.A.printIndirect()
+	  //  void test.test.Run.main(java.lang.String [])
+<span class="nc" id="L327">          int ibegin = 0;</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">	  if (inVisualAge) {</span>
+<span class="nc" id="L329">	    ibegin = fullInfo.lastIndexOf(' ', iend)+1;</span>
+          }
+
+<span class="nc bnc" id="L332" title="All 2 branches missed.">	  if(iend == -1) {</span>
+<span class="nc" id="L333">        className = NA;</span>
+    } else {
+<span class="nc" id="L335">        className = this.fullInfo.substring(ibegin, iend);</span>
+    }
+	}
+      }
+<span class="fc" id="L339">      return className;</span>
+    }
+
+    /**
+       Return the file name of the caller.
+
+       &lt;p&gt;This information is not always available.
+    */
+    public
+    String getFileName() {
+<span class="fc bfc" id="L349" title="All 2 branches covered.">      if(fullInfo == null) {</span>
+<span class="fc" id="L350">        return NA;</span>
+    }
+
+<span class="pc bpc" id="L353" title="1 of 2 branches missed.">      if(fileName == null) {</span>
+<span class="nc" id="L354">	int iend = fullInfo.lastIndexOf(':');</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">	if(iend == -1) {</span>
+<span class="nc" id="L356">        fileName = NA;</span>
+    } else {
+<span class="nc" id="L358">	  int ibegin = fullInfo.lastIndexOf('(', iend - 1);</span>
+<span class="nc" id="L359">	  fileName = this.fullInfo.substring(ibegin + 1, iend);</span>
+	}
+      }
+<span class="fc" id="L362">      return fileName;</span>
+    }
+
+    /**
+       Returns the line number of the caller.
+
+       &lt;p&gt;This information is not always available.
+    */
+    public
+    String getLineNumber() {
+<span class="fc bfc" id="L372" title="All 2 branches covered.">      if(fullInfo == null) {</span>
+<span class="fc" id="L373">        return NA;</span>
+    }
+
+<span class="pc bpc" id="L376" title="1 of 2 branches missed.">      if(lineNumber == null) {</span>
+<span class="nc" id="L377">	int iend = fullInfo.lastIndexOf(')');</span>
+<span class="nc" id="L378">	int ibegin = fullInfo.lastIndexOf(':', iend -1);</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">	if(ibegin == -1) {</span>
+<span class="nc" id="L380">        lineNumber = NA;</span>
+    } else {
+<span class="nc" id="L382">        lineNumber = this.fullInfo.substring(ibegin + 1, iend);</span>
+    }
+      }
+<span class="fc" id="L385">      return lineNumber;</span>
+    }
+
+    /**
+       Returns the method name of the caller.
+    */
+    public
+    String getMethodName() {
+<span class="pc bpc" id="L393" title="1 of 2 branches missed.">      if(fullInfo == null) {</span>
+<span class="nc" id="L394">        return NA;</span>
+    }
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">      if(methodName == null) {</span>
+<span class="nc" id="L397">	int iend = fullInfo.lastIndexOf('(');</span>
+<span class="nc" id="L398">	int ibegin = fullInfo.lastIndexOf('.', iend);</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">	if(ibegin == -1) {</span>
+<span class="nc" id="L400">        methodName = NA;</span>
+    } else {
+<span class="nc" id="L402">        methodName = this.fullInfo.substring(ibegin + 1, iend);</span>
+    }
+      }
+<span class="fc" id="L405">      return methodName;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UtilLoggingLevel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Log4j</a> &gt; <a href="index.source.html" class="el_package">org.apache.log4j.helpers</a> &gt; <span class="el_source">UtilLoggingLevel.java</span></div><h1>UtilLoggingLevel.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apache.log4j.helpers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Level;
+
+/**
+ * An extension of the Level class that provides support for java.util.logging
+ * Levels.
+ *
+ *
+ * @author Scott Deboy (sdeboy@apache.org)
+ */
+
+public class UtilLoggingLevel extends Level {
+
+    /**
+     * Serialization version id.
+     */
+    private static final long serialVersionUID = 909301162611820211L;
+
+    /**
+     * Numerical value for SEVERE.
+     */
+    public static final int SEVERE_INT = 22000;
+    /**
+     * Numerical value for WARNING.
+     */
+    public static final int WARNING_INT = 21000;
+
+    //INFO level defined in parent as 20000..no need to redefine here
+    
+    /**
+     * Numerical value for CONFIG.
+     */
+    public static final int CONFIG_INT = 14000;
+    /**
+     * Numerical value for FINE.
+     */
+    public static final int FINE_INT = 13000;
+    /**
+     * Numerical value for FINER.
+     */
+    public static final int FINER_INT = 12000;
+    /**
+     * Numerical value for FINEST.
+     */
+    public static final int FINEST_INT = 11000;
+    /**
+     * Numerical value for UNKNOWN.
+     */
+    public static final int UNKNOWN_INT = 10000;
+
+    /**
+     * SEVERE.
+     */
+<span class="nc" id="L75">    public static final UtilLoggingLevel SEVERE =</span>
+            new UtilLoggingLevel(SEVERE_INT, &quot;SEVERE&quot;, 0);
+    /**
+     * WARNING.
+     */
+<span class="nc" id="L80">    public static final UtilLoggingLevel WARNING =</span>
+            new UtilLoggingLevel(WARNING_INT, &quot;WARNING&quot;, 4);
+    /**
+     * INFO.
+     */
+    //note: we've aligned the int values of the java.util.logging INFO level with log4j's level
+<span class="nc" id="L86">    public static final UtilLoggingLevel INFO =</span>
+            new UtilLoggingLevel(INFO_INT, &quot;INFO&quot;, 5);
+    /**
+     * CONFIG.
+     */
+<span class="nc" id="L91">    public static final UtilLoggingLevel CONFIG =</span>
+            new UtilLoggingLevel(CONFIG_INT, &quot;CONFIG&quot;, 6);
+    /**
+     * FINE.
+     */
+<span class="nc" id="L96">    public static final UtilLoggingLevel FINE =</span>
+            new UtilLoggingLevel(FINE_INT, &quot;FINE&quot;, 7);
+    /**
+     * FINER.
+     */
+<span class="nc" id="L101">    public static final UtilLoggingLevel FINER =</span>
+            new UtilLoggingLevel(FINER_INT, &quot;FINER&quot;, 8);
+    /**
+     * FINEST.
+     */
+<span class="nc" id="L106">    public static final UtilLoggingLevel FINEST =</span>
+            new UtilLoggingLevel(FINEST_INT, &quot;FINEST&quot;, 9);
+
+    /**
+     * Create new instance.
+     * @param level numeric value for level.
+     * @param levelStr symbolic name for level.
+     * @param syslogEquivalent Equivalent syslog severity.
+     */
+    protected UtilLoggingLevel(final int level,
+                               final String levelStr,
+                               final int syslogEquivalent) {
+<span class="nc" id="L118">        super(level, levelStr, syslogEquivalent);</span>
+<span class="nc" id="L119">    }</span>
+
+    /**
+     * Convert an integer passed as argument to a level. If the
+     * conversion fails, then this method returns the specified default.
+     * @param val numeric value.
+     * @param defaultLevel level to be returned if no level matches
+     * numeric value.
+     * @return matching level or default level.
+     */
+    public static UtilLoggingLevel toLevel(final int val,
+                               final UtilLoggingLevel defaultLevel) {
+<span class="nc bnc" id="L131" title="All 8 branches missed.">        switch (val) {</span>
+            case SEVERE_INT:
+<span class="nc" id="L133">                return SEVERE;</span>
+
+            case WARNING_INT:
+<span class="nc" id="L136">                return WARNING;</span>
+
+            case INFO_INT:
+<span class="nc" id="L139">                return INFO;</span>
+
+            case CONFIG_INT:
+<span class="nc" id="L142">                return CONFIG;</span>
+
+            case FINE_INT:
+<span class="nc" id="L145">                return FINE;</span>
+
+            case FINER_INT:
+<span class="nc" id="L148">                return FINER;</span>
+
+            case FINEST_INT:
+<span class="nc" id="L151">                return FINEST;</span>
+
+            default:
+<span class="nc" id="L154">                return defaultLevel;</span>
+        }
+    }
+
+    /**
+     * Gets level matching numeric value.
+     * @param val numeric value.
+     * @return  matching level or UtilLoggerLevel.FINEST if no match.
+     */
+    public static Level toLevel(final int val) {
+<span class="nc" id="L164">        return toLevel(val, FINEST);</span>
+    }
+
+    /**
+     * Gets list of supported levels.
+     * @return  list of supported levels.
+     */
+    public static List getAllPossibleLevels() {
+<span class="nc" id="L172">        ArrayList list = new ArrayList();</span>
+<span class="nc" id="L173">        list.add(FINE);</span>
+<span class="nc" id="L174">        list.add(FINER);</span>
+<span class="nc" id="L175">        list.add(FINEST);</span>
+<span class="nc" id="L176">        list.add(INFO);</span>
+<span class="nc" id="L177">        list.add(CONFIG);</span>
+<span class="nc" id="L178">        list.add(WARNING);</span>
+<span class="nc" id="L179">        list.add(SEVERE);</span>
+<span class="nc" id="L180">        return list;</span>
+    }
+
+    /**
+     * Get level with specified symbolic name.
+     * @param s symbolic name.
+     * @return matching level or Level.DEBUG if no match.
+     */
+    public static Level toLevel(final String s) {
+<span class="nc" id="L189">        return toLevel(s, Level.DEBUG);</span>
+    }
+
+
+    /**
+     * Get level with specified symbolic name.
+     * @param sArg symbolic name.
+     * @param defaultLevel level to return if no match.
+     * @return matching level or defaultLevel if no match.
+     */
+    public static Level toLevel(final String sArg,
+                                final Level defaultLevel) {
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (sArg == null) {</span>
+<span class="nc" id="L202">            return defaultLevel;</span>
+        }
+
+<span class="nc" id="L205">        String s = sArg.toUpperCase();</span>
+
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (s.equals(&quot;SEVERE&quot;)) {</span>
+<span class="nc" id="L208">            return SEVERE;</span>
+        }
+
+        //if(s.equals(&quot;FINE&quot;)) return Level.FINE;
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (s.equals(&quot;WARNING&quot;)) {</span>
+<span class="nc" id="L213">            return WARNING;</span>
+        }
+
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (s.equals(&quot;INFO&quot;)) {</span>
+<span class="nc" id="L217">            return INFO;</span>
+        }
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (s.equals(&quot;CONFI&quot;)) {</span>
+<span class="nc" id="L221">            return CONFIG;</span>
+        }
+
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (s.equals(&quot;FINE&quot;)) {</span>
+<span class="nc" id="L225">            return FINE;</span>
+        }
+
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        if (s.equals(&quot;FINER&quot;)) {</span>
+<span class="nc" id="L229">            return FINER;</span>
+        }
+
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (s.equals(&quot;FINEST&quot;)) {</span>
+<span class="nc" id="L233">            return FINEST;</span>
+        }
+<span class="nc" id="L235">        return defaultLevel;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
