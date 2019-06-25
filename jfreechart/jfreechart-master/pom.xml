@@ -54,12 +54,30 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.4.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.7.7.201606060606</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 
     <distributionManagement>
         <snapshotRepository>
@@ -72,7 +90,36 @@
         <testSourceDirectory>src/test/java</testSourceDirectory>
 
         <plugins>
-
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.4.8</version>
+                <configuration>
+                    <outputFormats>
+                        <param>
+                            HTML
+                        </param>
+                        <param>
+                            CSV
+                        </param>
+                    </outputFormats>
+                <targetClasses>
+                    <param>org.jfree*</param>
+                </targetClasses>
+                <targetTests>
+                    <param>org.jfree*</param>
+                </targetTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pit-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -196,6 +243,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.source.level>1.6</project.source.level>
         <project.target.level>1.6</project.target.level>
+        <pitest.plugin.version>1.4.8</pitest.plugin.version>
+        <pitest.plugin.timeout.factor>10</pitest.plugin.timeout.factor>
+        <pitest.plugin.timeout.constant>50000</pitest.plugin.timeout.constant>
+        <pitest.plugin.threads>4</pitest.plugin.threads>
+        <sonar.test.exclusions>**/test/resources/**/*,**/it/resources/**/*</sonar.test.exclusions>
     </properties>
 
     <profiles>
