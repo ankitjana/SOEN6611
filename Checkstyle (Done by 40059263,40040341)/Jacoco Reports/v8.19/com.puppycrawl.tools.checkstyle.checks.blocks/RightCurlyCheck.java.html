@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RightCurlyCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">checkstyle</a> &gt; <a href="index.source.html" class="el_package">com.puppycrawl.tools.checkstyle.checks.blocks</a> &gt; <span class="el_source">RightCurlyCheck.java</span></div><h1>RightCurlyCheck.java</h1><pre class="source lang-java linenums">////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2019 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
+package com.puppycrawl.tools.checkstyle.checks.blocks;
+
+import java.util.Locale;
+
+import com.puppycrawl.tools.checkstyle.StatelessCheck;
+import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
+import com.puppycrawl.tools.checkstyle.api.DetailAST;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
+import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
+
+/**
+ * &lt;p&gt;
+ * Checks the placement of right curly braces (&lt;code&gt;'}'&lt;/code&gt;)
+ * for if-else, try-catch-finally blocks, while-loops, for-loops,
+ * method definitions, class definitions, constructor definitions,
+ * instance and static initialization blocks.
+ * For right curly brace of expression blocks please follow issue
+ * &lt;a href=&quot;https://github.com/checkstyle/checkstyle/issues/5945&quot;&gt;#5945&lt;/a&gt;.
+ * &lt;/p&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;
+ * Property {@code option} - Specify the policy on placement of a right curly brace
+ * (&lt;code&gt;'}'&lt;/code&gt;).
+ * Default value is {@code same}.
+ * &lt;/li&gt;
+ * &lt;li&gt;
+ * Property {@code tokens} - tokens to check
+ * Default value is:
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#LITERAL_TRY&quot;&gt;
+ * LITERAL_TRY&lt;/a&gt;,
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#LITERAL_CATCH&quot;&gt;
+ * LITERAL_CATCH&lt;/a&gt;,
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#LITERAL_FINALLY&quot;&gt;
+ * LITERAL_FINALLY&lt;/a&gt;,
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#LITERAL_IF&quot;&gt;
+ * LITERAL_IF&lt;/a&gt;,
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#LITERAL_ELSE&quot;&gt;
+ * LITERAL_ELSE&lt;/a&gt;.
+ * &lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;p&gt;
+ * To configure the check:
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * &amp;lt;module name=&quot;RightCurly&quot;/&amp;gt;
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * To configure the check with policy {@code alone} for {@code else} and
+ * &lt;a href=&quot;https://checkstyle.org/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html#METHOD_DEF&quot;&gt;
+ * METHOD_DEF&lt;/a&gt; tokens:
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * &amp;lt;module name=&amp;quot;RightCurly&amp;quot;&amp;gt;
+ *   &amp;lt;property name=&amp;quot;option&amp;quot; value=&amp;quot;alone&amp;quot;/&amp;gt;
+ *   &amp;lt;property name=&amp;quot;tokens&amp;quot; value=&amp;quot;LITERAL_ELSE, METHOD_DEF&amp;quot;/&amp;gt;
+ * &amp;lt;/module&amp;gt;
+ * &lt;/pre&gt;
+ *
+ * @since 3.0
+ * @noinspection HtmlTagCanBeJavadocTag
+ *
+ */
+@StatelessCheck
+<span class="fc" id="L84">public class RightCurlyCheck extends AbstractCheck {</span>
+
+    /**
+     * A key is pointing to the warning message text in &quot;messages.properties&quot;
+     * file.
+     */
+    public static final String MSG_KEY_LINE_BREAK_BEFORE = &quot;line.break.before&quot;;
+
+    /**
+     * A key is pointing to the warning message text in &quot;messages.properties&quot;
+     * file.
+     */
+    public static final String MSG_KEY_LINE_ALONE = &quot;line.alone&quot;;
+
+    /**
+     * A key is pointing to the warning message text in &quot;messages.properties&quot;
+     * file.
+     */
+    public static final String MSG_KEY_LINE_SAME = &quot;line.same&quot;;
+
+    /**
+     * Specify the policy on placement of a right curly brace (&lt;code&gt;'}'&lt;/code&gt;).
+     * @noinspection HtmlTagCanBeJavadocTag
+     */
+<span class="fc" id="L108">    private RightCurlyOption option = RightCurlyOption.SAME;</span>
+
+    /**
+     * Setter to specify the policy on placement of a right curly brace (&lt;code&gt;'}'&lt;/code&gt;).
+     * @param optionStr string to decode option from
+     * @throws IllegalArgumentException if unable to decode
+     * @noinspection HtmlTagCanBeJavadocTag
+     */
+    public void setOption(String optionStr) {
+<span class="fc" id="L117">        option = RightCurlyOption.valueOf(optionStr.trim().toUpperCase(Locale.ENGLISH));</span>
+<span class="fc" id="L118">    }</span>
+
+    @Override
+    public int[] getDefaultTokens() {
+<span class="fc" id="L122">        return new int[] {</span>
+            TokenTypes.LITERAL_TRY,
+            TokenTypes.LITERAL_CATCH,
+            TokenTypes.LITERAL_FINALLY,
+            TokenTypes.LITERAL_IF,
+            TokenTypes.LITERAL_ELSE,
+        };
+    }
+
+    @Override
+    public int[] getAcceptableTokens() {
+<span class="fc" id="L133">        return new int[] {</span>
+            TokenTypes.LITERAL_TRY,
+            TokenTypes.LITERAL_CATCH,
+            TokenTypes.LITERAL_FINALLY,
+            TokenTypes.LITERAL_IF,
+            TokenTypes.LITERAL_ELSE,
+            TokenTypes.CLASS_DEF,
+            TokenTypes.METHOD_DEF,
+            TokenTypes.CTOR_DEF,
+            TokenTypes.LITERAL_FOR,
+            TokenTypes.LITERAL_WHILE,
+            TokenTypes.LITERAL_DO,
+            TokenTypes.STATIC_INIT,
+            TokenTypes.INSTANCE_INIT,
+        };
+    }
+
+    @Override
+    public int[] getRequiredTokens() {
+<span class="fc" id="L152">        return CommonUtil.EMPTY_INT_ARRAY;</span>
+    }
+
+    @Override
+    public void visitToken(DetailAST ast) {
+<span class="fc" id="L157">        final Details details = Details.getDetails(ast);</span>
+<span class="fc" id="L158">        final DetailAST rcurly = details.rcurly;</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (rcurly != null) {</span>
+<span class="fc" id="L161">            final String violation = validate(details);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            if (!violation.isEmpty()) {</span>
+<span class="fc" id="L163">                log(rcurly, violation, &quot;}&quot;, rcurly.getColumnNo() + 1);</span>
+            }
+        }
+<span class="fc" id="L166">    }</span>
+
+    /**
+     * Does general validation.
+     * @param details for validation.
+     * @return violation message or empty string
+     *     if there was not violation during validation.
+     */
+    private String validate(Details details) {
+<span class="fc" id="L175">        String violation = &quot;&quot;;</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (shouldHaveLineBreakBefore(option, details)) {</span>
+<span class="fc" id="L177">            violation = MSG_KEY_LINE_BREAK_BEFORE;</span>
+        }
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        else if (shouldBeOnSameLine(option, details)) {</span>
+<span class="fc" id="L180">            violation = MSG_KEY_LINE_SAME;</span>
+        }
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        else if (shouldBeAloneOnLine(option, details, getLine(details.rcurly.getLineNo() - 1))) {</span>
+<span class="fc" id="L183">            violation = MSG_KEY_LINE_ALONE;</span>
+        }
+<span class="fc" id="L185">        return violation;</span>
+    }
+
+    /**
+     * Checks whether a right curly should have a line break before.
+     * @param bracePolicy option for placing the right curly brace.
+     * @param details details for validation.
+     * @return true if a right curly should have a line break before.
+     */
+    private static boolean shouldHaveLineBreakBefore(RightCurlyOption bracePolicy,
+                                                     Details details) {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        return bracePolicy == RightCurlyOption.SAME</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">                &amp;&amp; !hasLineBreakBefore(details.rcurly)</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">                &amp;&amp; details.lcurly.getLineNo() != details.rcurly.getLineNo();</span>
+    }
+
+    /**
+     * Checks that a right curly should be on the same line as the next statement.
+     * @param bracePolicy option for placing the right curly brace
+     * @param details Details for validation
+     * @return true if a right curly should be alone on a line.
+     */
+    private static boolean shouldBeOnSameLine(RightCurlyOption bracePolicy, Details details) {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        return bracePolicy == RightCurlyOption.SAME</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">                &amp;&amp; !details.shouldCheckLastRcurly</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">                &amp;&amp; details.rcurly.getLineNo() != details.nextToken.getLineNo();</span>
+    }
+
+    /**
+     * Checks that a right curly should be alone on a line.
+     * @param bracePolicy option for placing the right curly brace
+     * @param details Details for validation
+     * @param targetSrcLine A string with contents of rcurly's line
+     * @return true if a right curly should be alone on a line.
+     */
+    private static boolean shouldBeAloneOnLine(RightCurlyOption bracePolicy,
+                                               Details details,
+                                               String targetSrcLine) {
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        return bracePolicy == RightCurlyOption.ALONE</span>
+<span class="fc bfc" id="L224" title="All 4 branches covered.">                    &amp;&amp; shouldBeAloneOnLineWithAloneOption(details, targetSrcLine)</span>
+                || bracePolicy == RightCurlyOption.ALONE_OR_SINGLELINE
+<span class="fc bfc" id="L226" title="All 2 branches covered.">                    &amp;&amp; shouldBeAloneOnLineWithAloneOrSinglelineOption(details, targetSrcLine)</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">                || details.shouldCheckLastRcurly</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">                    &amp;&amp; details.rcurly.getLineNo() == details.nextToken.getLineNo();</span>
+    }
+
+    /**
+     * Whether right curly should be alone on line when ALONE option is used.
+     * @param details details for validation.
+     * @param targetSrcLine A string with contents of rcurly's line
+     * @return true, if right curly should be alone on line when ALONE option is used.
+     */
+    private static boolean shouldBeAloneOnLineWithAloneOption(Details details,
+                                                              String targetSrcLine) {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        return !isAloneOnLine(details, targetSrcLine)</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                &amp;&amp; !isEmptyBody(details.lcurly);</span>
+    }
+
+    /**
+     * Whether right curly should be alone on line when ALONE_OR_SINGLELINE option is used.
+     * @param details details for validation.
+     * @param targetSrcLine A string with contents of rcurly's line
+     * @return true, if right curly should be alone on line
+     *         when ALONE_OR_SINGLELINE option is used.
+     */
+    private static boolean shouldBeAloneOnLineWithAloneOrSinglelineOption(Details details,
+                                                                          String targetSrcLine) {
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        return !isAloneOnLine(details, targetSrcLine)</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                &amp;&amp; !isSingleLineBlock(details)</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">                &amp;&amp; !isEmptyBody(details.lcurly);</span>
+    }
+
+    /**
+     * Checks whether right curly is alone on a line.
+     * @param details for validation.
+     * @param targetSrcLine A string with contents of rcurly's line
+     * @return true if right curly is alone on a line.
+     */
+    private static boolean isAloneOnLine(Details details, String targetSrcLine) {
+<span class="fc" id="L264">        final DetailAST rcurly = details.rcurly;</span>
+<span class="fc" id="L265">        final DetailAST nextToken = details.nextToken;</span>
+<span class="fc bfc" id="L266" title="All 4 branches covered.">        return (rcurly.getLineNo() != nextToken.getLineNo() || skipDoubleBraceInstInit(details))</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">                &amp;&amp; CommonUtil.hasWhitespaceBefore(details.rcurly.getColumnNo(), targetSrcLine);</span>
+    }
+
+    /**
+     * This method determines if the double brace initialization should be skipped over by the
+     * check. Double brace initializations are treated differently. The corresponding inner
+     * rcurly is treated as if it was alone on line even when it may be followed by another
+     * rcurly and a semi, raising no violations.
+     * &lt;i&gt;Please do note though that the line should not contain anything other than the following
+     * right curly and the semi following it or else violations will be raised.&lt;/i&gt;
+     * Only the kind of double brace initializations shown in the following example code will be
+     * skipped over:&lt;br&gt;
+     * &lt;pre&gt;
+     *     {@code Map&lt;String, String&gt; map = new LinkedHashMap&lt;&gt;() {{
+     *           put(&quot;alpha&quot;, &quot;man&quot;);
+     *       }}; // no violation}
+     * &lt;/pre&gt;
+     *
+     * @param details {@link Details} object containing the details relevant to the rcurly
+     * @return if the double brace initialization rcurly should be skipped over by the check
+     */
+    private static boolean skipDoubleBraceInstInit(Details details) {
+<span class="fc" id="L289">        final DetailAST rcurly = details.rcurly;</span>
+<span class="fc" id="L290">        final DetailAST tokenAfterNextToken = Details.getNextToken(details.nextToken);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">        return rcurly.getParent().getParent().getType() == TokenTypes.INSTANCE_INIT</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">                &amp;&amp; details.nextToken.getType() == TokenTypes.RCURLY</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">                &amp;&amp; tokenAfterNextToken.getType() == TokenTypes.SEMI</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                &amp;&amp; rcurly.getLineNo() != Details.getNextToken(tokenAfterNextToken).getLineNo();</span>
+
+    }
+
+    /**
+     * Checks whether block has a single-line format.
+     * @param details for validation.
+     * @return true if block has single-line format.
+     */
+    private static boolean isSingleLineBlock(Details details) {
+<span class="fc" id="L304">        final DetailAST rcurly = details.rcurly;</span>
+<span class="fc" id="L305">        final DetailAST lcurly = details.lcurly;</span>
+<span class="fc" id="L306">        DetailAST nextToken = details.nextToken;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        while (nextToken.getType() == TokenTypes.LITERAL_ELSE) {</span>
+<span class="fc" id="L308">            nextToken = Details.getNextToken(nextToken);</span>
+        }
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (nextToken.getType() == TokenTypes.DO_WHILE) {</span>
+<span class="fc" id="L311">            final DetailAST doWhileSemi = nextToken.getParent().getLastChild();</span>
+<span class="fc" id="L312">            nextToken = Details.getNextToken(doWhileSemi);</span>
+        }
+<span class="fc bfc" id="L314" title="All 2 branches covered.">        return rcurly.getLineNo() == lcurly.getLineNo()</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">                &amp;&amp; rcurly.getLineNo() != nextToken.getLineNo();</span>
+    }
+
+    /**
+     * Checks if definition body is empty.
+     * @param lcurly left curly.
+     * @return true if definition body is empty.
+     */
+    private static boolean isEmptyBody(DetailAST lcurly) {
+<span class="fc" id="L324">        boolean result = false;</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (lcurly.getParent().getType() == TokenTypes.OBJBLOCK) {</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">            if (lcurly.getNextSibling().getType() == TokenTypes.RCURLY) {</span>
+<span class="fc" id="L327">                result = true;</span>
+            }
+        }
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        else if (lcurly.getFirstChild().getType() == TokenTypes.RCURLY) {</span>
+<span class="fc" id="L331">            result = true;</span>
+        }
+<span class="fc" id="L333">        return result;</span>
+    }
+
+    /**
+     * Checks if right curly has line break before.
+     * @param rightCurly right curly token.
+     * @return true, if right curly has line break before.
+     */
+    private static boolean hasLineBreakBefore(DetailAST rightCurly) {
+<span class="fc" id="L342">        final DetailAST previousToken = rightCurly.getPreviousSibling();</span>
+<span class="fc bfc" id="L343" title="All 2 branches covered.">        return previousToken == null</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">                || rightCurly.getLineNo() != previousToken.getLineNo();</span>
+    }
+
+    /**
+     * Structure that contains all details for validation.
+     */
+    private static final class Details {
+
+        /** Right curly. */
+        private final DetailAST rcurly;
+        /** Left curly. */
+        private final DetailAST lcurly;
+        /** Next token. */
+        private final DetailAST nextToken;
+        /** Should check last right curly. */
+        private final boolean shouldCheckLastRcurly;
+
+        /**
+         * Constructor.
+         * @param lcurly the lcurly of the token whose details are being collected
+         * @param rcurly the rcurly of the token whose details are being collected
+         * @param nextToken the token after the token whose details are being collected
+         * @param shouldCheckLastRcurly boolean value to determine if to check last rcurly
+         */
+        private Details(DetailAST lcurly, DetailAST rcurly,
+<span class="fc" id="L369">                        DetailAST nextToken, boolean shouldCheckLastRcurly) {</span>
+<span class="fc" id="L370">            this.lcurly = lcurly;</span>
+<span class="fc" id="L371">            this.rcurly = rcurly;</span>
+<span class="fc" id="L372">            this.nextToken = nextToken;</span>
+<span class="fc" id="L373">            this.shouldCheckLastRcurly = shouldCheckLastRcurly;</span>
+<span class="fc" id="L374">        }</span>
+
+        /**
+         * Collects validation Details.
+         * @param ast a {@code DetailAST} value
+         * @return object containing all details to make a validation
+         */
+        private static Details getDetails(DetailAST ast) {
+            final Details details;
+<span class="fc bfc" id="L383" title="All 4 branches covered.">            switch (ast.getType()) {</span>
+                case TokenTypes.LITERAL_TRY:
+                case TokenTypes.LITERAL_CATCH:
+                case TokenTypes.LITERAL_FINALLY:
+<span class="fc" id="L387">                    details = getDetailsForTryCatchFinally(ast);</span>
+<span class="fc" id="L388">                    break;</span>
+                case TokenTypes.LITERAL_IF:
+                case TokenTypes.LITERAL_ELSE:
+<span class="fc" id="L391">                    details = getDetailsForIfElse(ast);</span>
+<span class="fc" id="L392">                    break;</span>
+                case TokenTypes.LITERAL_DO:
+                case TokenTypes.LITERAL_WHILE:
+                case TokenTypes.LITERAL_FOR:
+<span class="fc" id="L396">                    details = getDetailsForLoops(ast);</span>
+<span class="fc" id="L397">                    break;</span>
+                default:
+<span class="fc" id="L399">                    details = getDetailsForOthers(ast);</span>
+                    break;
+            }
+<span class="fc" id="L402">            return details;</span>
+        }
+
+        /**
+         * Collects validation details for LITERAL_TRY, LITERAL_CATCH, and LITERAL_FINALLY.
+         * @param ast a {@code DetailAST} value
+         * @return object containing all details to make a validation
+         */
+        private static Details getDetailsForTryCatchFinally(DetailAST ast) {
+<span class="fc" id="L411">            boolean shouldCheckLastRcurly = false;</span>
+            final DetailAST rcurly;
+            final DetailAST lcurly;
+            DetailAST nextToken;
+<span class="fc" id="L415">            final int tokenType = ast.getType();</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">            if (tokenType == TokenTypes.LITERAL_TRY) {</span>
+<span class="fc bfc" id="L417" title="All 2 branches covered.">                if (ast.getFirstChild().getType() == TokenTypes.RESOURCE_SPECIFICATION) {</span>
+<span class="fc" id="L418">                    lcurly = ast.getFirstChild().getNextSibling();</span>
+                }
+                else {
+<span class="fc" id="L421">                    lcurly = ast.getFirstChild();</span>
+                }
+<span class="fc" id="L423">                nextToken = lcurly.getNextSibling();</span>
+<span class="fc" id="L424">                rcurly = lcurly.getLastChild();</span>
+
+<span class="fc bfc" id="L426" title="All 2 branches covered.">                if (nextToken == null) {</span>
+<span class="fc" id="L427">                    shouldCheckLastRcurly = true;</span>
+<span class="fc" id="L428">                    nextToken = getNextToken(ast);</span>
+                }
+            }
+<span class="fc bfc" id="L431" title="All 2 branches covered.">            else if (tokenType == TokenTypes.LITERAL_CATCH) {</span>
+<span class="fc" id="L432">                nextToken = ast.getNextSibling();</span>
+<span class="fc" id="L433">                lcurly = ast.getLastChild();</span>
+<span class="fc" id="L434">                rcurly = lcurly.getLastChild();</span>
+<span class="fc bfc" id="L435" title="All 2 branches covered.">                if (nextToken == null) {</span>
+<span class="fc" id="L436">                    shouldCheckLastRcurly = true;</span>
+<span class="fc" id="L437">                    nextToken = getNextToken(ast);</span>
+                }
+            }
+            else {
+<span class="fc" id="L441">                shouldCheckLastRcurly = true;</span>
+<span class="fc" id="L442">                nextToken = getNextToken(ast);</span>
+<span class="fc" id="L443">                lcurly = ast.getFirstChild();</span>
+<span class="fc" id="L444">                rcurly = lcurly.getLastChild();</span>
+            }
+<span class="fc" id="L446">            return new Details(lcurly, rcurly, nextToken, shouldCheckLastRcurly);</span>
+        }
+
+        /**
+         * Collects validation details for LITERAL_IF and LITERAL_ELSE.
+         * @param ast a {@code DetailAST} value
+         * @return object containing all details to make a validation
+         */
+        private static Details getDetailsForIfElse(DetailAST ast) {
+<span class="fc" id="L455">            boolean shouldCheckLastRcurly = false;</span>
+            final DetailAST lcurly;
+            DetailAST nextToken;
+<span class="fc" id="L458">            final int tokenType = ast.getType();</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">            if (tokenType == TokenTypes.LITERAL_IF) {</span>
+<span class="fc" id="L460">                nextToken = ast.findFirstToken(TokenTypes.LITERAL_ELSE);</span>
+<span class="fc bfc" id="L461" title="All 2 branches covered.">                if (nextToken == null) {</span>
+<span class="fc" id="L462">                    shouldCheckLastRcurly = true;</span>
+<span class="fc" id="L463">                    nextToken = getNextToken(ast);</span>
+<span class="fc" id="L464">                    lcurly = ast.getLastChild();</span>
+                }
+                else {
+<span class="fc" id="L467">                    lcurly = nextToken.getPreviousSibling();</span>
+                }
+            }
+            else {
+<span class="fc" id="L471">                shouldCheckLastRcurly = true;</span>
+<span class="fc" id="L472">                nextToken = getNextToken(ast);</span>
+<span class="fc" id="L473">                lcurly = ast.getFirstChild();</span>
+            }
+<span class="fc" id="L475">            DetailAST rcurly = null;</span>
+<span class="fc bfc" id="L476" title="All 2 branches covered.">            if (lcurly.getType() == TokenTypes.SLIST) {</span>
+<span class="fc" id="L477">                rcurly = lcurly.getLastChild();</span>
+            }
+<span class="fc" id="L479">            return new Details(lcurly, rcurly, nextToken, shouldCheckLastRcurly);</span>
+        }
+
+        /**
+         * Collects validation details for CLASS_DEF, METHOD DEF, CTOR_DEF, STATIC_INIT, and
+         * INSTANCE_INIT.
+         * @param ast a {@code DetailAST} value
+         * @return an object containing all details to make a validation
+         */
+        private static Details getDetailsForOthers(DetailAST ast) {
+<span class="fc" id="L489">            DetailAST rcurly = null;</span>
+            final DetailAST lcurly;
+<span class="fc" id="L491">            final int tokenType = ast.getType();</span>
+<span class="fc bfc" id="L492" title="All 2 branches covered.">            if (tokenType == TokenTypes.CLASS_DEF) {</span>
+<span class="fc" id="L493">                final DetailAST child = ast.getLastChild();</span>
+<span class="fc" id="L494">                lcurly = child.getFirstChild();</span>
+<span class="fc" id="L495">                rcurly = child.getLastChild();</span>
+<span class="fc" id="L496">            }</span>
+            else {
+<span class="fc" id="L498">                lcurly = ast.findFirstToken(TokenTypes.SLIST);</span>
+<span class="fc bfc" id="L499" title="All 2 branches covered.">                if (lcurly != null) {</span>
+                    // SLIST could be absent if method is abstract
+<span class="fc" id="L501">                    rcurly = lcurly.getLastChild();</span>
+                }
+            }
+<span class="fc" id="L504">            return new Details(lcurly, rcurly, getNextToken(ast), false);</span>
+        }
+
+        /**
+         * Collects validation details for loops' tokens.
+         * @param ast a {@code DetailAST} value
+         * @return an object containing all details to make a validation
+         */
+        private static Details getDetailsForLoops(DetailAST ast) {
+<span class="fc" id="L513">            DetailAST rcurly = null;</span>
+            final DetailAST lcurly;
+            final DetailAST nextToken;
+<span class="fc" id="L516">            final int tokenType = ast.getType();</span>
+<span class="fc bfc" id="L517" title="All 2 branches covered.">            if (tokenType == TokenTypes.LITERAL_DO) {</span>
+<span class="fc" id="L518">                nextToken = ast.findFirstToken(TokenTypes.DO_WHILE);</span>
+<span class="fc" id="L519">                lcurly = ast.findFirstToken(TokenTypes.SLIST);</span>
+<span class="fc bfc" id="L520" title="All 2 branches covered.">                if (lcurly != null) {</span>
+<span class="fc" id="L521">                    rcurly = lcurly.getLastChild();</span>
+                }
+            }
+            else {
+<span class="fc" id="L525">                lcurly = ast.findFirstToken(TokenTypes.SLIST);</span>
+<span class="fc bfc" id="L526" title="All 2 branches covered.">                if (lcurly != null) {</span>
+                    // SLIST could be absent in code like &quot;while(true);&quot;
+<span class="fc" id="L528">                    rcurly = lcurly.getLastChild();</span>
+                }
+<span class="fc" id="L530">                nextToken = getNextToken(ast);</span>
+            }
+<span class="fc" id="L532">            return new Details(lcurly, rcurly, nextToken, false);</span>
+        }
+
+        /**
+         * Finds next token after the given one.
+         * @param ast the given node.
+         * @return the token which represents next lexical item.
+         */
+        private static DetailAST getNextToken(DetailAST ast) {
+<span class="fc" id="L541">            DetailAST next = null;</span>
+<span class="fc" id="L542">            DetailAST parent = ast;</span>
+<span class="fc bfc" id="L543" title="All 4 branches covered.">            while (next == null &amp;&amp; parent != null) {</span>
+<span class="fc" id="L544">                next = parent.getNextSibling();</span>
+<span class="fc" id="L545">                parent = parent.getParent();</span>
+            }
+<span class="fc bfc" id="L547" title="All 2 branches covered.">            if (next == null) {</span>
+                // a DetailAST object with DetailAST#NOT_INITIALIZED for line and column numbers
+                // that no 'actual' DetailAST objects can have.
+<span class="fc" id="L550">                next = new DetailAST();</span>
+            }
+            else {
+<span class="fc" id="L553">                next = CheckUtil.getFirstNode(next);</span>
+            }
+<span class="fc" id="L555">            return next;</span>
+        }
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
