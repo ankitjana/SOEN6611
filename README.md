@@ -1,4 +1,6 @@
 # SOEN6611
+SOEN_6611
+Software Measurement - SOEN 6611 Team Q: Satgur Singh, Tarundeep Kaur, Vikramjit Singh, Ankit Jana, Yuhua Jiang, Farid Omarzadeh
 Software Measurement Summer 2019:
  Selected Metrics and Correlation analysis:
 
