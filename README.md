@@ -8,6 +8,13 @@ Metric 3: Mutation Score
 Metric 4: Cyclomatic Complexity
 Metric 5: Code churn 
 Metric 6: Post-Release Defect Density
+Six open source projects used for the project are:
+1) Apache common collections
+2) Apache common configuration
+3) JFreechart
+4) Apache Commons IO
+5) Checkstyle
+6) Jsoup
 
 
  
