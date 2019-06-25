@@ -1,0 +1,1515 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HtmlTreeBuilderState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.parser</a> &gt; <span class="el_source">HtmlTreeBuilderState.java</span></div><h1>HtmlTreeBuilderState.java</h1><pre class="source lang-java linenums">package org.jsoup.parser;
+
+import org.jsoup.helper.StringUtil;
+import org.jsoup.nodes.*;
+
+import java.util.ArrayList;
+
+/**
+ * The Tree Builder's current state. Each state embodies the processing for the state, and transitions to other states.
+ */
+<span class="fc" id="L11">enum HtmlTreeBuilderState {</span>
+<span class="fc" id="L12">    Initial {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L14" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L15">                return true; // ignore whitespace</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">            } else if (t.isComment()) {</span>
+<span class="fc" id="L17">                tb.insert(t.asComment());</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">            } else if (t.isDoctype()) {</span>
+                // todo: parse error check on expected doctypes
+                // todo: quirk state check on doctype ids
+<span class="fc" id="L21">                Token.Doctype d = t.asDoctype();</span>
+<span class="fc" id="L22">                DocumentType doctype = new DocumentType(</span>
+<span class="fc" id="L23">                    tb.settings.normalizeTag(d.getName()), d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(), tb.getBaseUri());</span>
+<span class="fc" id="L24">                tb.getDocument().appendChild(doctype);</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">                if (d.isForceQuirks())</span>
+<span class="fc" id="L26">                    tb.getDocument().quirksMode(Document.QuirksMode.quirks);</span>
+<span class="fc" id="L27">                tb.transition(BeforeHtml);</span>
+<span class="fc" id="L28">            } else {</span>
+                // todo: check not iframe srcdoc
+<span class="fc" id="L30">                tb.transition(BeforeHtml);</span>
+<span class="fc" id="L31">                return tb.process(t); // re-process token</span>
+            }
+<span class="fc" id="L33">            return true;</span>
+        }
+    },
+<span class="fc" id="L36">    BeforeHtml {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            if (t.isDoctype()) {</span>
+<span class="nc" id="L39">                tb.error(this);</span>
+<span class="nc" id="L40">                return false;</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            } else if (t.isComment()) {</span>
+<span class="nc" id="L42">                tb.insert(t.asComment());</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            } else if (isWhitespace(t)) {</span>
+<span class="fc" id="L44">                return true; // ignore whitespace</span>
+<span class="fc bfc" id="L45" title="All 4 branches covered.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="fc" id="L46">                tb.insert(t.asStartTag());</span>
+<span class="fc" id="L47">                tb.transition(BeforeHead);</span>
+<span class="pc bpc" id="L48" title="3 of 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; (StringUtil.in(t.asEndTag().normalName(), &quot;head&quot;, &quot;body&quot;, &quot;html&quot;, &quot;br&quot;))) {</span>
+<span class="nc" id="L49">                return anythingElse(t, tb);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            } else if (t.isEndTag()) {</span>
+<span class="nc" id="L51">                tb.error(this);</span>
+<span class="nc" id="L52">                return false;</span>
+            } else {
+<span class="fc" id="L54">                return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L56">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L60">            tb.insertStartTag(&quot;html&quot;);</span>
+<span class="fc" id="L61">            tb.transition(BeforeHead);</span>
+<span class="fc" id="L62">            return tb.process(t);</span>
+        }
+    },
+<span class="fc" id="L65">    BeforeHead {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L68">                return true;</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            } else if (t.isComment()) {</span>
+<span class="nc" id="L70">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L72">                tb.error(this);</span>
+<span class="nc" id="L73">                return false;</span>
+<span class="pc bpc" id="L74" title="1 of 4 branches missed.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L75">                return InBody.process(t, tb); // does not transition</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;head&quot;)) {</span>
+<span class="fc" id="L77">                Element head = tb.insert(t.asStartTag());</span>
+<span class="fc" id="L78">                tb.setHeadElement(head);</span>
+<span class="fc" id="L79">                tb.transition(InHead);</span>
+<span class="pc bpc" id="L80" title="3 of 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; (StringUtil.in(t.asEndTag().normalName(), &quot;head&quot;, &quot;body&quot;, &quot;html&quot;, &quot;br&quot;))) {</span>
+<span class="nc" id="L81">                tb.processStartTag(&quot;head&quot;);</span>
+<span class="nc" id="L82">                return tb.process(t);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            } else if (t.isEndTag()) {</span>
+<span class="nc" id="L84">                tb.error(this);</span>
+<span class="nc" id="L85">                return false;</span>
+            } else {
+<span class="fc" id="L87">                tb.processStartTag(&quot;head&quot;);</span>
+<span class="fc" id="L88">                return tb.process(t);</span>
+            }
+<span class="fc" id="L90">            return true;</span>
+        }
+    },
+<span class="fc" id="L93">    InHead {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L96">                tb.insert(t.asCharacter());</span>
+<span class="fc" id="L97">                return true;</span>
+            }
+<span class="pc bpc" id="L99" title="1 of 5 branches missed.">            switch (t.type) {</span>
+                case Comment:
+<span class="fc" id="L101">                    tb.insert(t.asComment());</span>
+<span class="fc" id="L102">                    break;</span>
+                case Doctype:
+<span class="nc" id="L104">                    tb.error(this);</span>
+<span class="nc" id="L105">                    return false;</span>
+                case StartTag:
+<span class="fc" id="L107">                    Token.StartTag start = t.asStartTag();</span>
+<span class="fc" id="L108">                    String name = start.normalName();</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">                    if (name.equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L110">                        return InBody.process(t, tb);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;base&quot;, &quot;basefont&quot;, &quot;bgsound&quot;, &quot;command&quot;, &quot;link&quot;)) {</span>
+<span class="fc" id="L112">                        Element el = tb.insertEmpty(start);</span>
+                        // jsoup special: update base the frist time it is seen
+<span class="fc bfc" id="L114" title="All 4 branches covered.">                        if (name.equals(&quot;base&quot;) &amp;&amp; el.hasAttr(&quot;href&quot;))</span>
+<span class="fc" id="L115">                            tb.maybeSetBaseUri(el);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                    } else if (name.equals(&quot;meta&quot;)) {</span>
+<span class="fc" id="L117">                        Element meta = tb.insertEmpty(start);</span>
+                        // todo: charset switches
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                    } else if (name.equals(&quot;title&quot;)) {</span>
+<span class="fc" id="L120">                        handleRcData(start, tb);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;noframes&quot;, &quot;style&quot;)) {</span>
+<span class="fc" id="L122">                        handleRawtext(start, tb);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">                    } else if (name.equals(&quot;noscript&quot;)) {</span>
+                        // else if noscript &amp;&amp; scripting flag = true: rawtext (jsoup doesn't run script, to handle as noscript)
+<span class="fc" id="L125">                        tb.insert(start);</span>
+<span class="fc" id="L126">                        tb.transition(InHeadNoscript);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">                    } else if (name.equals(&quot;script&quot;)) {</span>
+                        // skips some script rules as won't execute them
+
+<span class="fc" id="L130">                        tb.tokeniser.transition(TokeniserState.ScriptData);</span>
+<span class="fc" id="L131">                        tb.markInsertionMode();</span>
+<span class="fc" id="L132">                        tb.transition(Text);</span>
+<span class="fc" id="L133">                        tb.insert(start);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;head&quot;)) {</span>
+<span class="nc" id="L135">                        tb.error(this);</span>
+<span class="nc" id="L136">                        return false;</span>
+                    } else {
+<span class="fc" id="L138">                        return anythingElse(t, tb);</span>
+                    }
+                    break;
+                case EndTag:
+<span class="fc" id="L142">                    Token.EndTag end = t.asEndTag();</span>
+<span class="fc" id="L143">                    name = end.normalName();</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">                    if (name.equals(&quot;head&quot;)) {</span>
+<span class="fc" id="L145">                        tb.pop();</span>
+<span class="fc" id="L146">                        tb.transition(AfterHead);</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">                    } else if (StringUtil.in(name, &quot;body&quot;, &quot;html&quot;, &quot;br&quot;)) {</span>
+<span class="nc" id="L148">                        return anythingElse(t, tb);</span>
+                    } else {
+<span class="fc" id="L150">                        tb.error(this);</span>
+<span class="fc" id="L151">                        return false;</span>
+                    }
+                    break;
+                default:
+<span class="fc" id="L155">                    return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L157">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, TreeBuilder tb) {
+<span class="fc" id="L161">            tb.processEndTag(&quot;head&quot;);</span>
+<span class="fc" id="L162">            return tb.process(t);</span>
+        }
+    },
+<span class="fc" id="L165">    InHeadNoscript {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (t.isDoctype()) {</span>
+<span class="nc" id="L168">                tb.error(this);</span>
+<span class="pc bpc" id="L169" title="1 of 4 branches missed.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L170">                return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L171" title="All 4 branches covered.">            } else if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;noscript&quot;)) {</span>
+<span class="fc" id="L172">                tb.pop();</span>
+<span class="fc" id="L173">                tb.transition(InHead);</span>
+<span class="pc bpc" id="L174" title="3 of 8 branches missed.">            } else if (isWhitespace(t) || t.isComment() || (t.isStartTag() &amp;&amp; StringUtil.in(t.asStartTag().normalName(),</span>
+                    &quot;basefont&quot;, &quot;bgsound&quot;, &quot;link&quot;, &quot;meta&quot;, &quot;noframes&quot;, &quot;style&quot;))) {
+<span class="nc" id="L176">                return tb.process(t, InHead);</span>
+<span class="pc bpc" id="L177" title="1 of 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;br&quot;)) {</span>
+<span class="nc" id="L178">                return anythingElse(t, tb);</span>
+<span class="pc bpc" id="L179" title="1 of 6 branches missed.">            } else if ((t.isStartTag() &amp;&amp; StringUtil.in(t.asStartTag().normalName(), &quot;head&quot;, &quot;noscript&quot;)) || t.isEndTag()) {</span>
+<span class="fc" id="L180">                tb.error(this);</span>
+<span class="fc" id="L181">                return false;</span>
+            } else {
+<span class="fc" id="L183">                return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L185">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L189">            tb.error(this);</span>
+<span class="fc" id="L190">            tb.insert(new Token.Character().data(t.toString()));</span>
+<span class="fc" id="L191">            return true;</span>
+        }
+    },
+<span class="fc" id="L194">    AfterHead {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L197">                tb.insert(t.asCharacter());</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            } else if (t.isComment()) {</span>
+<span class="nc" id="L199">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L201">                tb.error(this);</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            } else if (t.isStartTag()) {</span>
+<span class="fc" id="L203">                Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L204">                String name = startTag.normalName();</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">                if (name.equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L206">                    return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">                } else if (name.equals(&quot;body&quot;)) {</span>
+<span class="fc" id="L208">                    tb.insert(startTag);</span>
+<span class="fc" id="L209">                    tb.framesetOk(false);</span>
+<span class="fc" id="L210">                    tb.transition(InBody);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">                } else if (name.equals(&quot;frameset&quot;)) {</span>
+<span class="fc" id="L212">                    tb.insert(startTag);</span>
+<span class="fc" id="L213">                    tb.transition(InFrameset);</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">                } else if (StringUtil.in(name, &quot;base&quot;, &quot;basefont&quot;, &quot;bgsound&quot;, &quot;link&quot;, &quot;meta&quot;, &quot;noframes&quot;, &quot;script&quot;, &quot;style&quot;, &quot;title&quot;)) {</span>
+<span class="nc" id="L215">                    tb.error(this);</span>
+<span class="nc" id="L216">                    Element head = tb.getHeadElement();</span>
+<span class="nc" id="L217">                    tb.push(head);</span>
+<span class="nc" id="L218">                    tb.process(t, InHead);</span>
+<span class="nc" id="L219">                    tb.removeFromStack(head);</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">                } else if (name.equals(&quot;head&quot;)) {</span>
+<span class="nc" id="L221">                    tb.error(this);</span>
+<span class="nc" id="L222">                    return false;</span>
+                } else {
+<span class="fc" id="L224">                    anythingElse(t, tb);</span>
+                }
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            } else if (t.isEndTag()) {</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                if (StringUtil.in(t.asEndTag().normalName(), &quot;body&quot;, &quot;html&quot;)) {</span>
+<span class="fc" id="L228">                    anythingElse(t, tb);</span>
+                } else {
+<span class="nc" id="L230">                    tb.error(this);</span>
+<span class="nc" id="L231">                    return false;</span>
+                }
+            } else {
+<span class="fc" id="L234">                anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L236">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L240">            tb.processStartTag(&quot;body&quot;);</span>
+<span class="fc" id="L241">            tb.framesetOk(true);</span>
+<span class="fc" id="L242">            return tb.process(t);</span>
+        }
+    },
+<span class="fc" id="L245">    InBody {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L247" title="All 6 branches covered.">            switch (t.type) {</span>
+                case Character: {
+<span class="fc" id="L249">                    Token.Character c = t.asCharacter();</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                    if (c.getData().equals(nullString)) {</span>
+                        // todo confirm that check
+<span class="nc" id="L252">                        tb.error(this);</span>
+<span class="nc" id="L253">                        return false;</span>
+<span class="fc bfc" id="L254" title="All 4 branches covered.">                    } else if (tb.framesetOk() &amp;&amp; isWhitespace(c)) { // don't check if whitespace if frames already closed</span>
+<span class="fc" id="L255">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L256">                        tb.insert(c);</span>
+                    } else {
+<span class="fc" id="L258">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L259">                        tb.insert(c);</span>
+<span class="fc" id="L260">                        tb.framesetOk(false);</span>
+                    }
+<span class="fc" id="L262">                    break;</span>
+                }
+                case Comment: {
+<span class="fc" id="L265">                    tb.insert(t.asComment());</span>
+<span class="fc" id="L266">                    break;</span>
+                }
+                case Doctype: {
+<span class="fc" id="L269">                    tb.error(this);</span>
+<span class="fc" id="L270">                    return false;</span>
+                }
+                case StartTag:
+<span class="fc" id="L273">                    Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L274">                    String name = startTag.normalName();</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">                    if (name.equals(&quot;a&quot;)) {</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">                        if (tb.getActiveFormattingElement(&quot;a&quot;) != null) {</span>
+<span class="fc" id="L277">                            tb.error(this);</span>
+<span class="fc" id="L278">                            tb.processEndTag(&quot;a&quot;);</span>
+
+                            // still on stack?
+<span class="fc" id="L281">                            Element remainingA = tb.getFromStack(&quot;a&quot;);</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                            if (remainingA != null) {</span>
+<span class="nc" id="L283">                                tb.removeFromActiveFormattingElements(remainingA);</span>
+<span class="nc" id="L284">                                tb.removeFromStack(remainingA);</span>
+                            }
+                        }
+<span class="fc" id="L287">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L288">                        Element a = tb.insert(startTag);</span>
+<span class="fc" id="L289">                        tb.pushActiveFormattingElements(a);</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartEmptyFormatters)) {</span>
+<span class="fc" id="L291">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L292">                        tb.insertEmpty(startTag);</span>
+<span class="fc" id="L293">                        tb.framesetOk(false);</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartPClosers)) {</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="fc" id="L296">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L298">                        tb.insert(startTag);</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">                    } else if (name.equals(&quot;span&quot;)) {</span>
+                        // same as final else, but short circuits lots of checks
+<span class="fc" id="L301">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L302">                        tb.insert(startTag);</span>
+<span class="fc bfc" id="L303" title="All 2 branches covered.">                    } else if (name.equals(&quot;li&quot;)) {</span>
+<span class="fc" id="L304">                        tb.framesetOk(false);</span>
+<span class="fc" id="L305">                        ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">                        for (int i = stack.size() - 1; i &gt; 0; i--) {</span>
+<span class="fc" id="L307">                            Element el = stack.get(i);</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">                            if (el.nodeName().equals(&quot;li&quot;)) {</span>
+<span class="fc" id="L309">                                tb.processEndTag(&quot;li&quot;);</span>
+<span class="fc" id="L310">                                break;</span>
+                            }
+<span class="fc bfc" id="L312" title="All 4 branches covered.">                            if (tb.isSpecial(el) &amp;&amp; !StringUtil.inSorted(el.nodeName(), Constants.InBodyStartLiBreakers))</span>
+<span class="fc" id="L313">                                break;</span>
+                        }
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L316">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L318">                        tb.insert(startTag);</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">                    } else if (name.equals(&quot;html&quot;)) {</span>
+<span class="fc" id="L320">                        tb.error(this);</span>
+                        // merge attributes onto real html
+<span class="fc" id="L322">                        Element html = tb.getStack().get(0);</span>
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">                        for (Attribute attribute : startTag.getAttributes()) {</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                            if (!html.hasAttr(attribute.getKey()))</span>
+<span class="nc" id="L325">                                html.attributes().put(attribute);</span>
+<span class="nc" id="L326">                        }</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartToHead)) {</span>
+<span class="fc" id="L328">                        return tb.process(t, InHead);</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">                    } else if (name.equals(&quot;body&quot;)) {</span>
+<span class="fc" id="L330">                        tb.error(this);</span>
+<span class="fc" id="L331">                        ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+<span class="pc bpc" id="L332" title="1 of 6 branches missed.">                        if (stack.size() == 1 || (stack.size() &gt; 2 &amp;&amp; !stack.get(1).nodeName().equals(&quot;body&quot;))) {</span>
+                            // only in fragment case
+<span class="fc" id="L334">                            return false; // ignore</span>
+                        } else {
+<span class="fc" id="L336">                            tb.framesetOk(false);</span>
+<span class="fc" id="L337">                            Element body = stack.get(1);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                            for (Attribute attribute : startTag.getAttributes()) {</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">                                if (!body.hasAttr(attribute.getKey()))</span>
+<span class="fc" id="L340">                                    body.attributes().put(attribute);</span>
+<span class="fc" id="L341">                            }</span>
+                        }
+<span class="fc bfc" id="L343" title="All 2 branches covered.">                    } else if (name.equals(&quot;frameset&quot;)) {</span>
+<span class="fc" id="L344">                        tb.error(this);</span>
+<span class="fc" id="L345">                        ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+<span class="pc bpc" id="L346" title="5 of 6 branches missed.">                        if (stack.size() == 1 || (stack.size() &gt; 2 &amp;&amp; !stack.get(1).nodeName().equals(&quot;body&quot;))) {</span>
+                            // only in fragment case
+<span class="fc" id="L348">                            return false; // ignore</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                        } else if (!tb.framesetOk()) {</span>
+<span class="nc" id="L350">                            return false; // ignore frameset</span>
+                        } else {
+<span class="nc" id="L352">                            Element second = stack.get(1);</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">                            if (second.parent() != null)</span>
+<span class="nc" id="L354">                                second.remove();</span>
+                            // pop up to html element
+<span class="nc bnc" id="L356" title="All 2 branches missed.">                            while (stack.size() &gt; 1)</span>
+<span class="nc" id="L357">                                stack.remove(stack.size()-1);</span>
+<span class="nc" id="L358">                            tb.insert(startTag);</span>
+<span class="nc" id="L359">                            tb.transition(InFrameset);</span>
+                        }
+<span class="pc bfc" id="L361" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.Headings)) {</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L363">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc bfc" id="L365" title="All 2 branches covered.">                        if (StringUtil.inSorted(tb.currentElement().nodeName(), Constants.Headings)) {</span>
+<span class="fc" id="L366">                            tb.error(this);</span>
+<span class="fc" id="L367">                            tb.pop();</span>
+                        }
+<span class="fc" id="L369">                        tb.insert(startTag);</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartPreListing)) {</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="fc" id="L372">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L374">                        tb.insert(startTag);</span>
+                        // todo: ignore LF if next token
+<span class="fc" id="L376">                        tb.framesetOk(false);</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">                    } else if (name.equals(&quot;form&quot;)) {</span>
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">                        if (tb.getFormElement() != null) {</span>
+<span class="nc" id="L379">                            tb.error(this);</span>
+<span class="nc" id="L380">                            return false;</span>
+                        }
+<span class="pc bpc" id="L382" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L383">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L385">                        tb.insertForm(startTag, true);</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.DdDt)) {</span>
+<span class="fc" id="L387">                        tb.framesetOk(false);</span>
+<span class="fc" id="L388">                        ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">                        for (int i = stack.size() - 1; i &gt; 0; i--) {</span>
+<span class="fc" id="L390">                            Element el = stack.get(i);</span>
+<span class="fc bfc" id="L391" title="All 2 branches covered.">                            if (StringUtil.inSorted(el.nodeName(), Constants.DdDt)) {</span>
+<span class="fc" id="L392">                                tb.processEndTag(el.nodeName());</span>
+<span class="fc" id="L393">                                break;</span>
+                            }
+<span class="pc bpc" id="L395" title="2 of 4 branches missed.">                            if (tb.isSpecial(el) &amp;&amp; !StringUtil.inSorted(el.nodeName(), Constants.InBodyStartLiBreakers))</span>
+<span class="fc" id="L396">                                break;</span>
+                        }
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L399">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L401">                        tb.insert(startTag);</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;plaintext&quot;)) {</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L404">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="nc" id="L406">                        tb.insert(startTag);</span>
+<span class="nc" id="L407">                        tb.tokeniser.transition(TokeniserState.PLAINTEXT); // once in, never gets out</span>
+<span class="fc bfc" id="L408" title="All 2 branches covered.">                    } else if (name.equals(&quot;button&quot;)) {</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;button&quot;)) {</span>
+                            // close and reprocess
+<span class="nc" id="L411">                            tb.error(this);</span>
+<span class="nc" id="L412">                            tb.processEndTag(&quot;button&quot;);</span>
+<span class="nc" id="L413">                            tb.process(startTag);</span>
+                        } else {
+<span class="fc" id="L415">                            tb.reconstructFormattingElements();</span>
+<span class="fc" id="L416">                            tb.insert(startTag);</span>
+<span class="fc" id="L417">                            tb.framesetOk(false);</span>
+                        }
+<span class="fc bfc" id="L419" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.Formatters)) {</span>
+<span class="fc" id="L420">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L421">                        Element el = tb.insert(startTag);</span>
+<span class="fc" id="L422">                        tb.pushActiveFormattingElements(el);</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">                    } else if (name.equals(&quot;nobr&quot;)) {</span>
+<span class="fc" id="L424">                        tb.reconstructFormattingElements();</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">                        if (tb.inScope(&quot;nobr&quot;)) {</span>
+<span class="nc" id="L426">                            tb.error(this);</span>
+<span class="nc" id="L427">                            tb.processEndTag(&quot;nobr&quot;);</span>
+<span class="nc" id="L428">                            tb.reconstructFormattingElements();</span>
+                        }
+<span class="fc" id="L430">                        Element el = tb.insert(startTag);</span>
+<span class="fc" id="L431">                        tb.pushActiveFormattingElements(el);</span>
+<span class="fc bfc" id="L432" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartApplets)) {</span>
+<span class="fc" id="L433">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L434">                        tb.insert(startTag);</span>
+<span class="fc" id="L435">                        tb.insertMarkerToFormattingElements();</span>
+<span class="fc" id="L436">                        tb.framesetOk(false);</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">                    } else if (name.equals(&quot;table&quot;)) {</span>
+<span class="pc bpc" id="L438" title="2 of 4 branches missed.">                        if (tb.getDocument().quirksMode() != Document.QuirksMode.quirks &amp;&amp; tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L439">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L441">                        tb.insert(startTag);</span>
+<span class="fc" id="L442">                        tb.framesetOk(false);</span>
+<span class="fc" id="L443">                        tb.transition(InTable);</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">                    } else if (name.equals(&quot;input&quot;)) {</span>
+<span class="fc" id="L445">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L446">                        Element el = tb.insertEmpty(startTag);</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">                        if (!el.attr(&quot;type&quot;).equalsIgnoreCase(&quot;hidden&quot;))</span>
+<span class="fc" id="L448">                            tb.framesetOk(false);</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartMedia)) {</span>
+<span class="nc" id="L450">                        tb.insertEmpty(startTag);</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">                    } else if (name.equals(&quot;hr&quot;)) {</span>
+<span class="pc bpc" id="L452" title="1 of 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L453">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="fc" id="L455">                        tb.insertEmpty(startTag);</span>
+<span class="fc" id="L456">                        tb.framesetOk(false);</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">                    } else if (name.equals(&quot;image&quot;)) {</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">                        if (tb.getFromStack(&quot;svg&quot;) == null)</span>
+<span class="fc" id="L459">                            return tb.process(startTag.name(&quot;img&quot;)); // change &lt;image&gt; to &lt;img&gt;, unless in svg</span>
+                        else
+<span class="fc" id="L461">                            tb.insert(startTag);</span>
+<span class="fc bfc" id="L462" title="All 2 branches covered.">                    } else if (name.equals(&quot;isindex&quot;)) {</span>
+                        // how much do we care about the early 90s?
+<span class="fc" id="L464">                        tb.error(this);</span>
+<span class="pc bpc" id="L465" title="1 of 2 branches missed.">                        if (tb.getFormElement() != null)</span>
+<span class="nc" id="L466">                            return false;</span>
+
+<span class="fc" id="L468">                        tb.tokeniser.acknowledgeSelfClosingFlag();</span>
+<span class="fc" id="L469">                        tb.processStartTag(&quot;form&quot;);</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">                        if (startTag.attributes.hasKey(&quot;action&quot;)) {</span>
+<span class="fc" id="L471">                            Element form = tb.getFormElement();</span>
+<span class="fc" id="L472">                            form.attr(&quot;action&quot;, startTag.attributes.get(&quot;action&quot;));</span>
+                        }
+<span class="fc" id="L474">                        tb.processStartTag(&quot;hr&quot;);</span>
+<span class="fc" id="L475">                        tb.processStartTag(&quot;label&quot;);</span>
+                        // hope you like english.
+<span class="pc bpc" id="L477" title="1 of 2 branches missed.">                        String prompt = startTag.attributes.hasKey(&quot;prompt&quot;) ?</span>
+<span class="nc" id="L478">                                startTag.attributes.get(&quot;prompt&quot;) :</span>
+<span class="fc" id="L479">                                &quot;This is a searchable index. Enter search keywords: &quot;;</span>
+
+<span class="fc" id="L481">                        tb.process(new Token.Character().data(prompt));</span>
+
+                        // input
+<span class="fc" id="L484">                        Attributes inputAttribs = new Attributes();</span>
+<span class="fc bfc" id="L485" title="All 2 branches covered.">                        for (Attribute attr : startTag.attributes) {</span>
+<span class="pc bpc" id="L486" title="1 of 2 branches missed.">                            if (!StringUtil.inSorted(attr.getKey(), Constants.InBodyStartInputAttribs))</span>
+<span class="nc" id="L487">                                inputAttribs.put(attr);</span>
+<span class="fc" id="L488">                        }</span>
+<span class="fc" id="L489">                        inputAttribs.put(&quot;name&quot;, &quot;isindex&quot;);</span>
+<span class="fc" id="L490">                        tb.processStartTag(&quot;input&quot;, inputAttribs);</span>
+<span class="fc" id="L491">                        tb.processEndTag(&quot;label&quot;);</span>
+<span class="fc" id="L492">                        tb.processStartTag(&quot;hr&quot;);</span>
+<span class="fc" id="L493">                        tb.processEndTag(&quot;form&quot;);</span>
+<span class="fc bfc" id="L494" title="All 2 branches covered.">                    } else if (name.equals(&quot;textarea&quot;)) {</span>
+<span class="fc" id="L495">                        tb.insert(startTag);</span>
+                        // todo: If the next token is a U+000A LINE FEED (LF) character token, then ignore that token and move on to the next one. (Newlines at the start of textarea elements are ignored as an authoring convenience.)
+<span class="fc" id="L497">                        tb.tokeniser.transition(TokeniserState.Rcdata);</span>
+<span class="fc" id="L498">                        tb.markInsertionMode();</span>
+<span class="fc" id="L499">                        tb.framesetOk(false);</span>
+<span class="fc" id="L500">                        tb.transition(Text);</span>
+<span class="pc bpc" id="L501" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;xmp&quot;)) {</span>
+<span class="nc bnc" id="L502" title="All 2 branches missed.">                        if (tb.inButtonScope(&quot;p&quot;)) {</span>
+<span class="nc" id="L503">                            tb.processEndTag(&quot;p&quot;);</span>
+                        }
+<span class="nc" id="L505">                        tb.reconstructFormattingElements();</span>
+<span class="nc" id="L506">                        tb.framesetOk(false);</span>
+<span class="nc" id="L507">                        handleRawtext(startTag, tb);</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">                    } else if (name.equals(&quot;iframe&quot;)) {</span>
+<span class="fc" id="L509">                        tb.framesetOk(false);</span>
+<span class="fc" id="L510">                        handleRawtext(startTag, tb);</span>
+<span class="pc bpc" id="L511" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;noembed&quot;)) {</span>
+                        // also handle noscript if script enabled
+<span class="nc" id="L513">                        handleRawtext(startTag, tb);</span>
+<span class="fc bfc" id="L514" title="All 2 branches covered.">                    } else if (name.equals(&quot;select&quot;)) {</span>
+<span class="fc" id="L515">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L516">                        tb.insert(startTag);</span>
+<span class="fc" id="L517">                        tb.framesetOk(false);</span>
+
+<span class="fc" id="L519">                        HtmlTreeBuilderState state = tb.state();</span>
+<span class="pc bpc" id="L520" title="5 of 10 branches missed.">                        if (state.equals(InTable) || state.equals(InCaption) || state.equals(InTableBody) || state.equals(InRow) || state.equals(InCell))</span>
+<span class="nc" id="L521">                            tb.transition(InSelectInTable);</span>
+                        else
+<span class="fc" id="L523">                            tb.transition(InSelect);</span>
+<span class="pc bpc" id="L524" title="1 of 2 branches missed.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartOptions)) {</span>
+<span class="nc bnc" id="L525" title="All 2 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;option&quot;))</span>
+<span class="nc" id="L526">                            tb.processEndTag(&quot;option&quot;);</span>
+<span class="nc" id="L527">                        tb.reconstructFormattingElements();</span>
+<span class="nc" id="L528">                        tb.insert(startTag);</span>
+<span class="pc bpc" id="L529" title="1 of 2 branches missed.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartRuby)) {</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">                        if (tb.inScope(&quot;ruby&quot;)) {</span>
+<span class="nc" id="L531">                            tb.generateImpliedEndTags();</span>
+<span class="nc bnc" id="L532" title="All 2 branches missed.">                            if (!tb.currentElement().nodeName().equals(&quot;ruby&quot;)) {</span>
+<span class="nc" id="L533">                                tb.error(this);</span>
+<span class="nc" id="L534">                                tb.popStackToBefore(&quot;ruby&quot;); // i.e. close up to but not include name</span>
+                            }
+<span class="nc" id="L536">                            tb.insert(startTag);</span>
+                        }
+<span class="pc bpc" id="L538" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;math&quot;)) {</span>
+<span class="nc" id="L539">                        tb.reconstructFormattingElements();</span>
+                        // todo: handle A start tag whose tag name is &quot;math&quot; (i.e. foreign, mathml)
+<span class="nc" id="L541">                        tb.insert(startTag);</span>
+<span class="nc" id="L542">                        tb.tokeniser.acknowledgeSelfClosingFlag();</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">                    } else if (name.equals(&quot;svg&quot;)) {</span>
+<span class="fc" id="L544">                        tb.reconstructFormattingElements();</span>
+                        // todo: handle A start tag whose tag name is &quot;svg&quot; (xlink, svg)
+<span class="fc" id="L546">                        tb.insert(startTag);</span>
+<span class="fc" id="L547">                        tb.tokeniser.acknowledgeSelfClosingFlag();</span>
+<span class="fc bfc" id="L548" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartDrop)) {</span>
+<span class="fc" id="L549">                        tb.error(this);</span>
+<span class="fc" id="L550">                        return false;</span>
+                    } else {
+<span class="fc" id="L552">                        tb.reconstructFormattingElements();</span>
+<span class="fc" id="L553">                        tb.insert(startTag);</span>
+                    }
+<span class="fc" id="L555">                    break;</span>
+
+                case EndTag:
+<span class="fc" id="L558">                    Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L559">                    name = endTag.normalName();</span>
+<span class="fc bfc" id="L560" title="All 2 branches covered.">                    if (StringUtil.inSorted(name, Constants.InBodyEndAdoptionFormatters)) {</span>
+                        // Adoption Agency Algorithm.
+<span class="pc bpc" id="L562" title="1 of 2 branches missed.">                        for (int i = 0; i &lt; 8; i++) {</span>
+<span class="fc" id="L563">                            Element formatEl = tb.getActiveFormattingElement(name);</span>
+<span class="fc bfc" id="L564" title="All 2 branches covered.">                            if (formatEl == null)</span>
+<span class="fc" id="L565">                                return anyOtherEndTag(t, tb);</span>
+<span class="fc bfc" id="L566" title="All 2 branches covered.">                            else if (!tb.onStack(formatEl)) {</span>
+<span class="fc" id="L567">                                tb.error(this);</span>
+<span class="fc" id="L568">                                tb.removeFromActiveFormattingElements(formatEl);</span>
+<span class="fc" id="L569">                                return true;</span>
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">                            } else if (!tb.inScope(formatEl.nodeName())) {</span>
+<span class="nc" id="L571">                                tb.error(this);</span>
+<span class="nc" id="L572">                                return false;</span>
+<span class="fc bfc" id="L573" title="All 2 branches covered.">                            } else if (tb.currentElement() != formatEl)</span>
+<span class="fc" id="L574">                                tb.error(this);</span>
+
+<span class="fc" id="L576">                            Element furthestBlock = null;</span>
+<span class="fc" id="L577">                            Element commonAncestor = null;</span>
+<span class="fc" id="L578">                            boolean seenFormattingElement = false;</span>
+<span class="fc" id="L579">                            ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+                            // the spec doesn't limit to &lt; 64, but in degenerate cases (9000+ stack depth) this prevents
+                            // run-aways
+<span class="fc" id="L582">                            final int stackSize = stack.size();</span>
+<span class="pc bpc" id="L583" title="1 of 4 branches missed.">                            for (int si = 0; si &lt; stackSize &amp;&amp; si &lt; 64; si++) {</span>
+<span class="fc" id="L584">                                Element el = stack.get(si);</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">                                if (el == formatEl) {</span>
+<span class="fc" id="L586">                                    commonAncestor = stack.get(si - 1);</span>
+<span class="fc" id="L587">                                    seenFormattingElement = true;</span>
+<span class="fc bfc" id="L588" title="All 4 branches covered.">                                } else if (seenFormattingElement &amp;&amp; tb.isSpecial(el)) {</span>
+<span class="fc" id="L589">                                    furthestBlock = el;</span>
+<span class="fc" id="L590">                                    break;</span>
+                                }
+                            }
+<span class="fc bfc" id="L593" title="All 2 branches covered.">                            if (furthestBlock == null) {</span>
+<span class="fc" id="L594">                                tb.popStackToClose(formatEl.nodeName());</span>
+<span class="fc" id="L595">                                tb.removeFromActiveFormattingElements(formatEl);</span>
+<span class="fc" id="L596">                                return true;</span>
+                            }
+
+                            // todo: Let a bookmark note the position of the formatting element in the list of active formatting elements relative to the elements on either side of it in the list.
+                            // does that mean: int pos of format el in list?
+<span class="fc" id="L601">                            Element node = furthestBlock;</span>
+<span class="fc" id="L602">                            Element lastNode = furthestBlock;</span>
+<span class="pc bpc" id="L603" title="1 of 2 branches missed.">                            for (int j = 0; j &lt; 3; j++) {</span>
+<span class="pc bpc" id="L604" title="1 of 2 branches missed.">                                if (tb.onStack(node))</span>
+<span class="fc" id="L605">                                    node = tb.aboveOnStack(node);</span>
+<span class="pc bpc" id="L606" title="1 of 2 branches missed.">                                if (!tb.isInActiveFormattingElements(node)) { // note no bookmark check</span>
+<span class="nc" id="L607">                                    tb.removeFromStack(node);</span>
+<span class="nc" id="L608">                                    continue;</span>
+<span class="pc bpc" id="L609" title="1 of 2 branches missed.">                                } else if (node == formatEl)</span>
+<span class="fc" id="L610">                                    break;</span>
+
+<span class="nc" id="L612">                                Element replacement = new Element(Tag.valueOf(node.nodeName(), ParseSettings.preserveCase), tb.getBaseUri());</span>
+                                // case will follow the original node (so honours ParseSettings)
+<span class="nc" id="L614">                                tb.replaceActiveFormattingElement(node, replacement);</span>
+<span class="nc" id="L615">                                tb.replaceOnStack(node, replacement);</span>
+<span class="nc" id="L616">                                node = replacement;</span>
+
+<span class="nc bnc" id="L618" title="All 2 branches missed.">                                if (lastNode == furthestBlock) {</span>
+                                    // todo: move the aforementioned bookmark to be immediately after the new node in the list of active formatting elements.
+                                    // not getting how this bookmark both straddles the element above, but is inbetween here...
+                                }
+<span class="nc bnc" id="L622" title="All 2 branches missed.">                                if (lastNode.parent() != null)</span>
+<span class="nc" id="L623">                                    lastNode.remove();</span>
+<span class="nc" id="L624">                                node.appendChild(lastNode);</span>
+
+<span class="nc" id="L626">                                lastNode = node;</span>
+                            }
+
+<span class="pc bpc" id="L629" title="1 of 2 branches missed.">                            if (StringUtil.inSorted(commonAncestor.nodeName(), Constants.InBodyEndTableFosters)) {</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">                                if (lastNode.parent() != null)</span>
+<span class="nc" id="L631">                                    lastNode.remove();</span>
+<span class="nc" id="L632">                                tb.insertInFosterParent(lastNode);</span>
+                            } else {
+<span class="pc bpc" id="L634" title="1 of 2 branches missed.">                                if (lastNode.parent() != null)</span>
+<span class="fc" id="L635">                                    lastNode.remove();</span>
+<span class="fc" id="L636">                                commonAncestor.appendChild(lastNode);</span>
+                            }
+
+<span class="fc" id="L639">                            Element adopter = new Element(formatEl.tag(), tb.getBaseUri());</span>
+<span class="fc" id="L640">                            adopter.attributes().addAll(formatEl.attributes());</span>
+<span class="fc" id="L641">                            Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodeSize()]);</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">                            for (Node childNode : childNodes) {</span>
+<span class="fc" id="L643">                                adopter.appendChild(childNode); // append will reparent. thus the clone to avoid concurrent mod.</span>
+                            }
+<span class="fc" id="L645">                            furthestBlock.appendChild(adopter);</span>
+<span class="fc" id="L646">                            tb.removeFromActiveFormattingElements(formatEl);</span>
+                            // todo: insert the new element into the list of active formatting elements at the position of the aforementioned bookmark.
+<span class="fc" id="L648">                            tb.removeFromStack(formatEl);</span>
+<span class="fc" id="L649">                            tb.insertOnStackAfter(furthestBlock, adopter);</span>
+                        }
+<span class="fc bfc" id="L651" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.InBodyEndClosers)) {</span>
+<span class="fc bfc" id="L652" title="All 2 branches covered.">                        if (!tb.inScope(name)) {</span>
+                            // nothing to close
+<span class="fc" id="L654">                            tb.error(this);</span>
+<span class="fc" id="L655">                            return false;</span>
+                        } else {
+<span class="fc" id="L657">                            tb.generateImpliedEndTags();</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="fc" id="L659">                                tb.error(this);</span>
+<span class="fc" id="L660">                            tb.popStackToClose(name);</span>
+                        }
+<span class="fc bfc" id="L662" title="All 2 branches covered.">                    } else if (name.equals(&quot;span&quot;)) {</span>
+                        // same as final fall through, but saves short circuit
+<span class="fc" id="L664">                        return anyOtherEndTag(t, tb);</span>
+<span class="fc bfc" id="L665" title="All 2 branches covered.">                    } else if (name.equals(&quot;li&quot;)) {</span>
+<span class="pc bpc" id="L666" title="1 of 2 branches missed.">                        if (!tb.inListItemScope(name)) {</span>
+<span class="nc" id="L667">                            tb.error(this);</span>
+<span class="nc" id="L668">                            return false;</span>
+                        } else {
+<span class="fc" id="L670">                            tb.generateImpliedEndTags(name);</span>
+<span class="pc bpc" id="L671" title="1 of 2 branches missed.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="nc" id="L672">                                tb.error(this);</span>
+<span class="fc" id="L673">                            tb.popStackToClose(name);</span>
+                        }
+<span class="fc bfc" id="L675" title="All 2 branches covered.">                    } else if (name.equals(&quot;body&quot;)) {</span>
+<span class="fc bfc" id="L676" title="All 2 branches covered.">                        if (!tb.inScope(&quot;body&quot;)) {</span>
+<span class="fc" id="L677">                            tb.error(this);</span>
+<span class="fc" id="L678">                            return false;</span>
+                        } else {
+                            // todo: error if stack contains something not dd, dt, li, optgroup, option, p, rp, rt, tbody, td, tfoot, th, thead, tr, body, html
+<span class="fc" id="L681">                            tb.transition(AfterBody);</span>
+                        }
+<span class="fc bfc" id="L683" title="All 2 branches covered.">                    } else if (name.equals(&quot;html&quot;)) {</span>
+<span class="fc" id="L684">                        boolean notIgnored = tb.processEndTag(&quot;body&quot;);</span>
+<span class="fc bfc" id="L685" title="All 2 branches covered.">                        if (notIgnored)</span>
+<span class="fc" id="L686">                            return tb.process(endTag);</span>
+<span class="fc bfc" id="L687" title="All 2 branches covered.">                    } else if (name.equals(&quot;form&quot;)) {</span>
+<span class="fc" id="L688">                        Element currentForm = tb.getFormElement();</span>
+<span class="fc" id="L689">                        tb.setFormElement(null);</span>
+<span class="pc bpc" id="L690" title="1 of 4 branches missed.">                        if (currentForm == null || !tb.inScope(name)) {</span>
+<span class="fc" id="L691">                            tb.error(this);</span>
+<span class="fc" id="L692">                            return false;</span>
+                        } else {
+<span class="fc" id="L694">                            tb.generateImpliedEndTags();</span>
+<span class="pc bpc" id="L695" title="1 of 2 branches missed.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="nc" id="L696">                                tb.error(this);</span>
+                            // remove currentForm from stack. will shift anything under up.
+<span class="fc" id="L698">                            tb.removeFromStack(currentForm);</span>
+                        }
+<span class="fc bfc" id="L700" title="All 2 branches covered.">                    } else if (name.equals(&quot;p&quot;)) {</span>
+<span class="fc bfc" id="L701" title="All 2 branches covered.">                        if (!tb.inButtonScope(name)) {</span>
+<span class="fc" id="L702">                            tb.error(this);</span>
+<span class="fc" id="L703">                            tb.processStartTag(name); // if no p to close, creates an empty &lt;p&gt;&lt;/p&gt;</span>
+<span class="fc" id="L704">                            return tb.process(endTag);</span>
+                        } else {
+<span class="fc" id="L706">                            tb.generateImpliedEndTags(name);</span>
+<span class="fc bfc" id="L707" title="All 2 branches covered.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="fc" id="L708">                                tb.error(this);</span>
+<span class="fc" id="L709">                            tb.popStackToClose(name);</span>
+                        }
+<span class="fc bfc" id="L711" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.DdDt)) {</span>
+<span class="pc bpc" id="L712" title="1 of 2 branches missed.">                        if (!tb.inScope(name)) {</span>
+<span class="nc" id="L713">                            tb.error(this);</span>
+<span class="nc" id="L714">                            return false;</span>
+                        } else {
+<span class="fc" id="L716">                            tb.generateImpliedEndTags(name);</span>
+<span class="pc bpc" id="L717" title="1 of 2 branches missed.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="nc" id="L718">                                tb.error(this);</span>
+<span class="fc" id="L719">                            tb.popStackToClose(name);</span>
+                        }
+<span class="fc bfc" id="L721" title="All 2 branches covered.">                    } else if (StringUtil.inSorted(name, Constants.Headings)) {</span>
+<span class="fc bfc" id="L722" title="All 2 branches covered.">                        if (!tb.inScope(Constants.Headings)) {</span>
+<span class="fc" id="L723">                            tb.error(this);</span>
+<span class="fc" id="L724">                            return false;</span>
+                        } else {
+<span class="fc" id="L726">                            tb.generateImpliedEndTags(name);</span>
+<span class="fc bfc" id="L727" title="All 2 branches covered.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="fc" id="L728">                                tb.error(this);</span>
+<span class="fc" id="L729">                            tb.popStackToClose(Constants.Headings);</span>
+                        }
+<span class="pc bpc" id="L731" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;sarcasm&quot;)) {</span>
+                        // *sigh*
+<span class="nc" id="L733">                        return anyOtherEndTag(t, tb);</span>
+<span class="pc bpc" id="L734" title="1 of 2 branches missed.">                    } else if (StringUtil.inSorted(name, Constants.InBodyStartApplets)) {</span>
+<span class="nc bnc" id="L735" title="All 2 branches missed.">                        if (!tb.inScope(&quot;name&quot;)) {</span>
+<span class="nc bnc" id="L736" title="All 2 branches missed.">                            if (!tb.inScope(name)) {</span>
+<span class="nc" id="L737">                                tb.error(this);</span>
+<span class="nc" id="L738">                                return false;</span>
+                            }
+<span class="nc" id="L740">                            tb.generateImpliedEndTags();</span>
+<span class="nc bnc" id="L741" title="All 2 branches missed.">                            if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="nc" id="L742">                                tb.error(this);</span>
+<span class="nc" id="L743">                            tb.popStackToClose(name);</span>
+<span class="nc" id="L744">                            tb.clearFormattingElementsToLastMarker();</span>
+                        }
+<span class="fc bfc" id="L746" title="All 2 branches covered.">                    } else if (name.equals(&quot;br&quot;)) {</span>
+<span class="fc" id="L747">                        tb.error(this);</span>
+<span class="fc" id="L748">                        tb.processStartTag(&quot;br&quot;);</span>
+<span class="fc" id="L749">                        return false;</span>
+                    } else {
+<span class="fc" id="L751">                        return anyOtherEndTag(t, tb);</span>
+                    }
+
+                    break;
+                case EOF:
+                    // todo: error if stack contains something not dd, dt, li, p, tbody, td, tfoot, th, thead, tr, body, html
+                    // stop parsing
+                    break;
+            }
+<span class="fc" id="L760">            return true;</span>
+        }
+
+        boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L764">            String name = t.asEndTag().name(); // matches with case sensitivity if enabled</span>
+<span class="fc" id="L765">            ArrayList&lt;Element&gt; stack = tb.getStack();</span>
+<span class="pc bpc" id="L766" title="1 of 2 branches missed.">            for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L767">                Element node = stack.get(pos);</span>
+<span class="fc bfc" id="L768" title="All 2 branches covered.">                if (node.nodeName().equals(name)) {</span>
+<span class="fc" id="L769">                    tb.generateImpliedEndTags(name);</span>
+<span class="pc bpc" id="L770" title="1 of 2 branches missed.">                    if (!name.equals(tb.currentElement().nodeName()))</span>
+<span class="nc" id="L771">                        tb.error(this);</span>
+<span class="fc" id="L772">                    tb.popStackToClose(name);</span>
+<span class="fc" id="L773">                    break;</span>
+                } else {
+<span class="fc bfc" id="L775" title="All 2 branches covered.">                    if (tb.isSpecial(node)) {</span>
+<span class="fc" id="L776">                        tb.error(this);</span>
+<span class="fc" id="L777">                        return false;</span>
+                    }
+                }
+            }
+<span class="fc" id="L781">            return true;</span>
+        }
+    },
+<span class="fc" id="L784">    Text {</span>
+        // in script, style etc. normally treated as data tags
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L787" title="All 2 branches covered.">            if (t.isCharacter()) {</span>
+<span class="fc" id="L788">                tb.insert(t.asCharacter());</span>
+<span class="fc bfc" id="L789" title="All 2 branches covered.">            } else if (t.isEOF()) {</span>
+<span class="fc" id="L790">                tb.error(this);</span>
+                // if current node is script: already started
+<span class="fc" id="L792">                tb.pop();</span>
+<span class="fc" id="L793">                tb.transition(tb.originalState());</span>
+<span class="fc" id="L794">                return tb.process(t);</span>
+<span class="pc bpc" id="L795" title="1 of 2 branches missed.">            } else if (t.isEndTag()) {</span>
+                // if: An end tag whose tag name is &quot;script&quot; -- scripting nesting level, if evaluating scripts
+<span class="fc" id="L797">                tb.pop();</span>
+<span class="fc" id="L798">                tb.transition(tb.originalState());</span>
+            }
+<span class="fc" id="L800">            return true;</span>
+        }
+    },
+<span class="fc" id="L803">    InTable {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L805" title="All 2 branches covered.">            if (t.isCharacter()) {</span>
+<span class="fc" id="L806">                tb.newPendingTableCharacters();</span>
+<span class="fc" id="L807">                tb.markInsertionMode();</span>
+<span class="fc" id="L808">                tb.transition(InTableText);</span>
+<span class="fc" id="L809">                return tb.process(t);</span>
+<span class="fc bfc" id="L810" title="All 2 branches covered.">            } else if (t.isComment()) {</span>
+<span class="fc" id="L811">                tb.insert(t.asComment());</span>
+<span class="fc" id="L812">                return true;</span>
+<span class="pc bpc" id="L813" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L814">                tb.error(this);</span>
+<span class="nc" id="L815">                return false;</span>
+<span class="fc bfc" id="L816" title="All 2 branches covered.">            } else if (t.isStartTag()) {</span>
+<span class="fc" id="L817">                Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L818">                String name = startTag.normalName();</span>
+<span class="fc bfc" id="L819" title="All 2 branches covered.">                if (name.equals(&quot;caption&quot;)) {</span>
+<span class="fc" id="L820">                    tb.clearStackToTableContext();</span>
+<span class="fc" id="L821">                    tb.insertMarkerToFormattingElements();</span>
+<span class="fc" id="L822">                    tb.insert(startTag);</span>
+<span class="fc" id="L823">                    tb.transition(InCaption);</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">                } else if (name.equals(&quot;colgroup&quot;)) {</span>
+<span class="fc" id="L825">                    tb.clearStackToTableContext();</span>
+<span class="fc" id="L826">                    tb.insert(startTag);</span>
+<span class="fc" id="L827">                    tb.transition(InColumnGroup);</span>
+<span class="pc bpc" id="L828" title="1 of 2 branches missed.">                } else if (name.equals(&quot;col&quot;)) {</span>
+<span class="nc" id="L829">                    tb.processStartTag(&quot;colgroup&quot;);</span>
+<span class="nc" id="L830">                    return tb.process(t);</span>
+<span class="fc bfc" id="L831" title="All 2 branches covered.">                } else if (StringUtil.in(name, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;)) {</span>
+<span class="fc" id="L832">                    tb.clearStackToTableContext();</span>
+<span class="fc" id="L833">                    tb.insert(startTag);</span>
+<span class="fc" id="L834">                    tb.transition(InTableBody);</span>
+<span class="fc bfc" id="L835" title="All 2 branches covered.">                } else if (StringUtil.in(name, &quot;td&quot;, &quot;th&quot;, &quot;tr&quot;)) {</span>
+<span class="fc" id="L836">                    tb.processStartTag(&quot;tbody&quot;);</span>
+<span class="fc" id="L837">                    return tb.process(t);</span>
+<span class="fc bfc" id="L838" title="All 2 branches covered.">                } else if (name.equals(&quot;table&quot;)) {</span>
+<span class="fc" id="L839">                    tb.error(this);</span>
+<span class="fc" id="L840">                    boolean processed = tb.processEndTag(&quot;table&quot;);</span>
+<span class="pc bpc" id="L841" title="1 of 2 branches missed.">                    if (processed) // only ignored if in fragment</span>
+<span class="fc" id="L842">                        return tb.process(t);</span>
+<span class="pc bpc" id="L843" title="1 of 2 branches missed.">                } else if (StringUtil.in(name, &quot;style&quot;, &quot;script&quot;)) {</span>
+<span class="nc" id="L844">                    return tb.process(t, InHead);</span>
+<span class="fc bfc" id="L845" title="All 2 branches covered.">                } else if (name.equals(&quot;input&quot;)) {</span>
+<span class="pc bpc" id="L846" title="1 of 2 branches missed.">                    if (!startTag.attributes.get(&quot;type&quot;).equalsIgnoreCase(&quot;hidden&quot;)) {</span>
+<span class="nc" id="L847">                        return anythingElse(t, tb);</span>
+                    } else {
+<span class="fc" id="L849">                        tb.insertEmpty(startTag);</span>
+                    }
+<span class="fc bfc" id="L851" title="All 2 branches covered.">                } else if (name.equals(&quot;form&quot;)) {</span>
+<span class="fc" id="L852">                    tb.error(this);</span>
+<span class="pc bpc" id="L853" title="1 of 2 branches missed.">                    if (tb.getFormElement() != null)</span>
+<span class="nc" id="L854">                        return false;</span>
+                    else {
+<span class="fc" id="L856">                        tb.insertForm(startTag, false);</span>
+                    }
+                } else {
+<span class="fc" id="L859">                    return anythingElse(t, tb);</span>
+                }
+<span class="fc" id="L861">                return true; // todo: check if should return processed http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable</span>
+<span class="fc bfc" id="L862" title="All 2 branches covered.">            } else if (t.isEndTag()) {</span>
+<span class="fc" id="L863">                Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L864">                String name = endTag.normalName();</span>
+
+<span class="fc bfc" id="L866" title="All 2 branches covered.">                if (name.equals(&quot;table&quot;)) {</span>
+<span class="pc bpc" id="L867" title="1 of 2 branches missed.">                    if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L868">                        tb.error(this);</span>
+<span class="nc" id="L869">                        return false;</span>
+                    } else {
+<span class="fc" id="L871">                        tb.popStackToClose(&quot;table&quot;);</span>
+                    }
+<span class="fc" id="L873">                    tb.resetInsertionMode();</span>
+<span class="fc bfc" id="L874" title="All 2 branches covered.">                } else if (StringUtil.in(name,</span>
+                        &quot;body&quot;, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;html&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;, &quot;tr&quot;)) {
+<span class="fc" id="L876">                    tb.error(this);</span>
+<span class="fc" id="L877">                    return false;</span>
+                } else {
+<span class="fc" id="L879">                    return anythingElse(t, tb);</span>
+                }
+<span class="fc" id="L881">                return true; // todo: as above todo</span>
+<span class="pc bpc" id="L882" title="1 of 2 branches missed.">            } else if (t.isEOF()) {</span>
+<span class="pc bpc" id="L883" title="1 of 2 branches missed.">                if (tb.currentElement().nodeName().equals(&quot;html&quot;))</span>
+<span class="fc" id="L884">                    tb.error(this);</span>
+<span class="fc" id="L885">                return true; // stops parsing</span>
+            }
+<span class="nc" id="L887">            return anythingElse(t, tb);</span>
+        }
+
+        boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L891">            tb.error(this);</span>
+            boolean processed;
+<span class="fc bfc" id="L893" title="All 2 branches covered.">            if (StringUtil.in(tb.currentElement().nodeName(), &quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;)) {</span>
+<span class="fc" id="L894">                tb.setFosterInserts(true);</span>
+<span class="fc" id="L895">                processed = tb.process(t, InBody);</span>
+<span class="fc" id="L896">                tb.setFosterInserts(false);</span>
+            } else {
+<span class="fc" id="L898">                processed = tb.process(t, InBody);</span>
+            }
+<span class="fc" id="L900">            return processed;</span>
+        }
+    },
+<span class="fc" id="L903">    InTableText {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L905" title="All 2 branches covered.">            switch (t.type) {</span>
+                case Character:
+<span class="fc" id="L907">                    Token.Character c = t.asCharacter();</span>
+<span class="pc bpc" id="L908" title="1 of 2 branches missed.">                    if (c.getData().equals(nullString)) {</span>
+<span class="nc" id="L909">                        tb.error(this);</span>
+<span class="nc" id="L910">                        return false;</span>
+                    } else {
+<span class="fc" id="L912">                        tb.getPendingTableCharacters().add(c.getData());</span>
+                    }
+<span class="fc" id="L914">                    break;</span>
+                default:
+                    // todo - don't really like the way these table character data lists are built
+<span class="pc bpc" id="L917" title="1 of 2 branches missed.">                    if (tb.getPendingTableCharacters().size() &gt; 0) {</span>
+<span class="fc bfc" id="L918" title="All 2 branches covered.">                        for (String character : tb.getPendingTableCharacters()) {</span>
+<span class="fc bfc" id="L919" title="All 2 branches covered.">                            if (!isWhitespace(character)) {</span>
+                                // InTable anything else section:
+<span class="fc" id="L921">                                tb.error(this);</span>
+<span class="fc bfc" id="L922" title="All 2 branches covered.">                                if (StringUtil.in(tb.currentElement().nodeName(), &quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;)) {</span>
+<span class="fc" id="L923">                                    tb.setFosterInserts(true);</span>
+<span class="fc" id="L924">                                    tb.process(new Token.Character().data(character), InBody);</span>
+<span class="fc" id="L925">                                    tb.setFosterInserts(false);</span>
+                                } else {
+<span class="fc" id="L927">                                    tb.process(new Token.Character().data(character), InBody);</span>
+                                }
+                            } else
+<span class="fc" id="L930">                                tb.insert(new Token.Character().data(character));</span>
+<span class="fc" id="L931">                        }</span>
+<span class="fc" id="L932">                        tb.newPendingTableCharacters();</span>
+                    }
+<span class="fc" id="L934">                    tb.transition(tb.originalState());</span>
+<span class="fc" id="L935">                    return tb.process(t);</span>
+            }
+<span class="fc" id="L937">            return true;</span>
+        }
+    },
+<span class="fc" id="L940">    InCaption {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L942" title="All 4 branches covered.">            if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;caption&quot;)) {</span>
+<span class="fc" id="L943">                Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L944">                String name = endTag.normalName();</span>
+<span class="pc bpc" id="L945" title="1 of 2 branches missed.">                if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L946">                    tb.error(this);</span>
+<span class="nc" id="L947">                    return false;</span>
+                } else {
+<span class="fc" id="L949">                    tb.generateImpliedEndTags();</span>
+<span class="pc bpc" id="L950" title="1 of 2 branches missed.">                    if (!tb.currentElement().nodeName().equals(&quot;caption&quot;))</span>
+<span class="nc" id="L951">                        tb.error(this);</span>
+<span class="fc" id="L952">                    tb.popStackToClose(&quot;caption&quot;);</span>
+<span class="fc" id="L953">                    tb.clearFormattingElementsToLastMarker();</span>
+<span class="fc" id="L954">                    tb.transition(InTable);</span>
+                }
+<span class="fc" id="L956">            } else if ((</span>
+<span class="fc bfc" id="L957" title="All 4 branches covered.">                    t.isStartTag() &amp;&amp; StringUtil.in(t.asStartTag().normalName(),</span>
+                            &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;, &quot;tr&quot;) ||
+<span class="pc bpc" id="L959" title="1 of 4 branches missed.">                            t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;table&quot;))</span>
+                    ) {
+<span class="fc" id="L961">                tb.error(this);</span>
+<span class="fc" id="L962">                boolean processed = tb.processEndTag(&quot;caption&quot;);</span>
+<span class="pc bpc" id="L963" title="1 of 2 branches missed.">                if (processed)</span>
+<span class="fc" id="L964">                    return tb.process(t);</span>
+<span class="pc bpc" id="L965" title="1 of 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; StringUtil.in(t.asEndTag().normalName(),</span>
+                    &quot;body&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;html&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;, &quot;tr&quot;)) {
+<span class="nc" id="L967">                tb.error(this);</span>
+<span class="nc" id="L968">                return false;</span>
+            } else {
+<span class="fc" id="L970">                return tb.process(t, InBody);</span>
+            }
+<span class="fc" id="L972">            return true;</span>
+        }
+    },
+<span class="fc" id="L975">    InColumnGroup {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L977" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L978">                tb.insert(t.asCharacter());</span>
+<span class="fc" id="L979">                return true;</span>
+            }
+<span class="pc bpc" id="L981" title="4 of 6 branches missed.">            switch (t.type) {</span>
+                case Comment:
+<span class="nc" id="L983">                    tb.insert(t.asComment());</span>
+<span class="nc" id="L984">                    break;</span>
+                case Doctype:
+<span class="nc" id="L986">                    tb.error(this);</span>
+<span class="nc" id="L987">                    break;</span>
+                case StartTag:
+<span class="fc" id="L989">                    Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L990">                    String name = startTag.normalName();</span>
+<span class="pc bpc" id="L991" title="1 of 2 branches missed.">                    if (name.equals(&quot;html&quot;))</span>
+<span class="nc" id="L992">                        return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L993" title="All 2 branches covered.">                    else if (name.equals(&quot;col&quot;))</span>
+<span class="fc" id="L994">                        tb.insertEmpty(startTag);</span>
+                    else
+<span class="fc" id="L996">                        return anythingElse(t, tb);</span>
+                    break;
+                case EndTag:
+<span class="fc" id="L999">                    Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L1000">                    name = endTag.normalName();</span>
+<span class="pc bpc" id="L1001" title="1 of 2 branches missed.">                    if (name.equals(&quot;colgroup&quot;)) {</span>
+<span class="pc bpc" id="L1002" title="1 of 2 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;html&quot;)) { // frag case</span>
+<span class="nc" id="L1003">                            tb.error(this);</span>
+<span class="nc" id="L1004">                            return false;</span>
+                        } else {
+<span class="fc" id="L1006">                            tb.pop();</span>
+<span class="fc" id="L1007">                            tb.transition(InTable);</span>
+                        }
+                    } else
+<span class="nc" id="L1010">                        return anythingElse(t, tb);</span>
+                    break;
+                case EOF:
+<span class="nc bnc" id="L1013" title="All 2 branches missed.">                    if (tb.currentElement().nodeName().equals(&quot;html&quot;))</span>
+<span class="nc" id="L1014">                        return true; // stop parsing; frag case</span>
+                    else
+<span class="nc" id="L1016">                        return anythingElse(t, tb);</span>
+                default:
+<span class="nc" id="L1018">                    return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L1020">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, TreeBuilder tb) {
+<span class="fc" id="L1024">            boolean processed = tb.processEndTag(&quot;colgroup&quot;);</span>
+<span class="pc bpc" id="L1025" title="1 of 2 branches missed.">            if (processed) // only ignored in frag case</span>
+<span class="fc" id="L1026">                return tb.process(t);</span>
+<span class="nc" id="L1027">            return true;</span>
+        }
+    },
+<span class="fc" id="L1030">    InTableBody {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1032" title="All 3 branches covered.">            switch (t.type) {</span>
+                case StartTag:
+<span class="fc" id="L1034">                    Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L1035">                    String name = startTag.normalName();</span>
+<span class="fc bfc" id="L1036" title="All 2 branches covered.">                    if (name.equals(&quot;tr&quot;)) {</span>
+<span class="fc" id="L1037">                        tb.clearStackToTableBodyContext();</span>
+<span class="fc" id="L1038">                        tb.insert(startTag);</span>
+<span class="fc" id="L1039">                        tb.transition(InRow);</span>
+<span class="fc bfc" id="L1040" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;th&quot;, &quot;td&quot;)) {</span>
+<span class="fc" id="L1041">                        tb.error(this);</span>
+<span class="fc" id="L1042">                        tb.processStartTag(&quot;tr&quot;);</span>
+<span class="fc" id="L1043">                        return tb.process(startTag);</span>
+<span class="fc bfc" id="L1044" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;)) {</span>
+<span class="fc" id="L1045">                        return exitTableBody(t, tb);</span>
+                    } else
+<span class="fc" id="L1047">                        return anythingElse(t, tb);</span>
+                    break;
+                case EndTag:
+<span class="fc" id="L1050">                    Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L1051">                    name = endTag.normalName();</span>
+<span class="fc bfc" id="L1052" title="All 2 branches covered.">                    if (StringUtil.in(name, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;)) {</span>
+<span class="pc bpc" id="L1053" title="1 of 2 branches missed.">                        if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L1054">                            tb.error(this);</span>
+<span class="nc" id="L1055">                            return false;</span>
+                        } else {
+<span class="fc" id="L1057">                            tb.clearStackToTableBodyContext();</span>
+<span class="fc" id="L1058">                            tb.pop();</span>
+<span class="fc" id="L1059">                            tb.transition(InTable);</span>
+                        }
+<span class="fc bfc" id="L1061" title="All 2 branches covered.">                    } else if (name.equals(&quot;table&quot;)) {</span>
+<span class="fc" id="L1062">                        return exitTableBody(t, tb);</span>
+<span class="fc bfc" id="L1063" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;body&quot;, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;html&quot;, &quot;td&quot;, &quot;th&quot;, &quot;tr&quot;)) {</span>
+<span class="fc" id="L1064">                        tb.error(this);</span>
+<span class="fc" id="L1065">                        return false;</span>
+                    } else
+<span class="fc" id="L1067">                        return anythingElse(t, tb);</span>
+                    break;
+                default:
+<span class="fc" id="L1070">                    return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L1072">            return true;</span>
+        }
+
+        private boolean exitTableBody(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L1076" title="3 of 6 branches missed.">            if (!(tb.inTableScope(&quot;tbody&quot;) || tb.inTableScope(&quot;thead&quot;) || tb.inScope(&quot;tfoot&quot;))) {</span>
+                // frag case
+<span class="nc" id="L1078">                tb.error(this);</span>
+<span class="nc" id="L1079">                return false;</span>
+            }
+<span class="fc" id="L1081">            tb.clearStackToTableBodyContext();</span>
+<span class="fc" id="L1082">            tb.processEndTag(tb.currentElement().nodeName()); // tbody, tfoot, thead</span>
+<span class="fc" id="L1083">            return tb.process(t);</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L1087">            return tb.process(t, InTable);</span>
+        }
+    },
+<span class="fc" id="L1090">    InRow {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1092" title="All 2 branches covered.">            if (t.isStartTag()) {</span>
+<span class="fc" id="L1093">                Token.StartTag startTag = t.asStartTag();</span>
+<span class="fc" id="L1094">                String name = startTag.normalName();</span>
+
+<span class="fc bfc" id="L1096" title="All 2 branches covered.">                if (StringUtil.in(name, &quot;th&quot;, &quot;td&quot;)) {</span>
+<span class="fc" id="L1097">                    tb.clearStackToTableRowContext();</span>
+<span class="fc" id="L1098">                    tb.insert(startTag);</span>
+<span class="fc" id="L1099">                    tb.transition(InCell);</span>
+<span class="fc" id="L1100">                    tb.insertMarkerToFormattingElements();</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">                } else if (StringUtil.in(name, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;)) {</span>
+<span class="fc" id="L1102">                    return handleMissingTr(t, tb);</span>
+                } else {
+<span class="fc" id="L1104">                    return anythingElse(t, tb);</span>
+                }
+<span class="fc bfc" id="L1106" title="All 2 branches covered.">            } else if (t.isEndTag()) {</span>
+<span class="fc" id="L1107">                Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L1108">                String name = endTag.normalName();</span>
+
+<span class="fc bfc" id="L1110" title="All 2 branches covered.">                if (name.equals(&quot;tr&quot;)) {</span>
+<span class="pc bpc" id="L1111" title="1 of 2 branches missed.">                    if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L1112">                        tb.error(this); // frag</span>
+<span class="nc" id="L1113">                        return false;</span>
+                    }
+<span class="fc" id="L1115">                    tb.clearStackToTableRowContext();</span>
+<span class="fc" id="L1116">                    tb.pop(); // tr</span>
+<span class="fc" id="L1117">                    tb.transition(InTableBody);</span>
+<span class="pc bpc" id="L1118" title="1 of 2 branches missed.">                } else if (name.equals(&quot;table&quot;)) {</span>
+<span class="fc" id="L1119">                    return handleMissingTr(t, tb);</span>
+<span class="nc bnc" id="L1120" title="All 2 branches missed.">                } else if (StringUtil.in(name, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;)) {</span>
+<span class="nc bnc" id="L1121" title="All 2 branches missed.">                    if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L1122">                        tb.error(this);</span>
+<span class="nc" id="L1123">                        return false;</span>
+                    }
+<span class="nc" id="L1125">                    tb.processEndTag(&quot;tr&quot;);</span>
+<span class="nc" id="L1126">                    return tb.process(t);</span>
+<span class="nc bnc" id="L1127" title="All 2 branches missed.">                } else if (StringUtil.in(name, &quot;body&quot;, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;html&quot;, &quot;td&quot;, &quot;th&quot;)) {</span>
+<span class="nc" id="L1128">                    tb.error(this);</span>
+<span class="nc" id="L1129">                    return false;</span>
+                } else {
+<span class="nc" id="L1131">                    return anythingElse(t, tb);</span>
+                }
+<span class="fc" id="L1133">            } else {</span>
+<span class="fc" id="L1134">                return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L1136">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L1140">            return tb.process(t, InTable);</span>
+        }
+
+        private boolean handleMissingTr(Token t, TreeBuilder tb) {
+<span class="fc" id="L1144">            boolean processed = tb.processEndTag(&quot;tr&quot;);</span>
+<span class="pc bpc" id="L1145" title="1 of 2 branches missed.">            if (processed)</span>
+<span class="fc" id="L1146">                return tb.process(t);</span>
+            else
+<span class="nc" id="L1148">                return false;</span>
+        }
+    },
+<span class="fc" id="L1151">    InCell {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1153" title="All 2 branches covered.">            if (t.isEndTag()) {</span>
+<span class="fc" id="L1154">                Token.EndTag endTag = t.asEndTag();</span>
+<span class="fc" id="L1155">                String name = endTag.normalName();</span>
+
+<span class="fc bfc" id="L1157" title="All 2 branches covered.">                if (StringUtil.in(name, &quot;td&quot;, &quot;th&quot;)) {</span>
+<span class="pc bpc" id="L1158" title="1 of 2 branches missed.">                    if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L1159">                        tb.error(this);</span>
+<span class="nc" id="L1160">                        tb.transition(InRow); // might not be in scope if empty: &lt;td /&gt; and processing fake end tag</span>
+<span class="nc" id="L1161">                        return false;</span>
+                    }
+<span class="fc" id="L1163">                    tb.generateImpliedEndTags();</span>
+<span class="fc bfc" id="L1164" title="All 2 branches covered.">                    if (!tb.currentElement().nodeName().equals(name))</span>
+<span class="fc" id="L1165">                        tb.error(this);</span>
+<span class="fc" id="L1166">                    tb.popStackToClose(name);</span>
+<span class="fc" id="L1167">                    tb.clearFormattingElementsToLastMarker();</span>
+<span class="fc" id="L1168">                    tb.transition(InRow);</span>
+<span class="pc bpc" id="L1169" title="1 of 2 branches missed.">                } else if (StringUtil.in(name, &quot;body&quot;, &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;html&quot;)) {</span>
+<span class="nc" id="L1170">                    tb.error(this);</span>
+<span class="nc" id="L1171">                    return false;</span>
+<span class="fc bfc" id="L1172" title="All 2 branches covered.">                } else if (StringUtil.in(name, &quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;)) {</span>
+<span class="pc bpc" id="L1173" title="1 of 2 branches missed.">                    if (!tb.inTableScope(name)) {</span>
+<span class="nc" id="L1174">                        tb.error(this);</span>
+<span class="nc" id="L1175">                        return false;</span>
+                    }
+<span class="fc" id="L1177">                    closeCell(tb);</span>
+<span class="fc" id="L1178">                    return tb.process(t);</span>
+                } else {
+<span class="fc" id="L1180">                    return anythingElse(t, tb);</span>
+                }
+<span class="fc bfc" id="L1182" title="All 2 branches covered.">            } else if (t.isStartTag() &amp;&amp;</span>
+<span class="fc bfc" id="L1183" title="All 2 branches covered.">                    StringUtil.in(t.asStartTag().normalName(),</span>
+                            &quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;, &quot;tr&quot;)) {
+<span class="pc bpc" id="L1185" title="1 of 4 branches missed.">                if (!(tb.inTableScope(&quot;td&quot;) || tb.inTableScope(&quot;th&quot;))) {</span>
+<span class="nc" id="L1186">                    tb.error(this);</span>
+<span class="nc" id="L1187">                    return false;</span>
+                }
+<span class="fc" id="L1189">                closeCell(tb);</span>
+<span class="fc" id="L1190">                return tb.process(t);</span>
+            } else {
+<span class="fc" id="L1192">                return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L1194">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L1198">            return tb.process(t, InBody);</span>
+        }
+
+        private void closeCell(HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1202" title="All 2 branches covered.">            if (tb.inTableScope(&quot;td&quot;))</span>
+<span class="fc" id="L1203">                tb.processEndTag(&quot;td&quot;);</span>
+            else
+<span class="fc" id="L1205">                tb.processEndTag(&quot;th&quot;); // only here if th or td in scope</span>
+<span class="fc" id="L1206">        }</span>
+    },
+<span class="fc" id="L1208">    InSelect {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L1210" title="3 of 7 branches missed.">            switch (t.type) {</span>
+                case Character:
+<span class="fc" id="L1212">                    Token.Character c = t.asCharacter();</span>
+<span class="pc bpc" id="L1213" title="1 of 2 branches missed.">                    if (c.getData().equals(nullString)) {</span>
+<span class="nc" id="L1214">                        tb.error(this);</span>
+<span class="nc" id="L1215">                        return false;</span>
+                    } else {
+<span class="fc" id="L1217">                        tb.insert(c);</span>
+                    }
+<span class="fc" id="L1219">                    break;</span>
+                case Comment:
+<span class="nc" id="L1221">                    tb.insert(t.asComment());</span>
+<span class="nc" id="L1222">                    break;</span>
+                case Doctype:
+<span class="nc" id="L1224">                    tb.error(this);</span>
+<span class="nc" id="L1225">                    return false;</span>
+                case StartTag:
+<span class="fc" id="L1227">                    Token.StartTag start = t.asStartTag();</span>
+<span class="fc" id="L1228">                    String name = start.normalName();</span>
+<span class="pc bpc" id="L1229" title="1 of 2 branches missed.">                    if (name.equals(&quot;html&quot;))</span>
+<span class="nc" id="L1230">                        return tb.process(start, InBody);</span>
+<span class="fc bfc" id="L1231" title="All 2 branches covered.">                    else if (name.equals(&quot;option&quot;)) {</span>
+<span class="fc bfc" id="L1232" title="All 2 branches covered.">                        if (tb.currentElement().nodeName().equals(&quot;option&quot;))</span>
+<span class="fc" id="L1233">                            tb.processEndTag(&quot;option&quot;);</span>
+<span class="fc" id="L1234">                        tb.insert(start);</span>
+<span class="pc bpc" id="L1235" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;optgroup&quot;)) {</span>
+<span class="nc bnc" id="L1236" title="All 2 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;option&quot;))</span>
+<span class="nc" id="L1237">                            tb.processEndTag(&quot;option&quot;);</span>
+<span class="nc bnc" id="L1238" title="All 2 branches missed.">                        else if (tb.currentElement().nodeName().equals(&quot;optgroup&quot;))</span>
+<span class="nc" id="L1239">                            tb.processEndTag(&quot;optgroup&quot;);</span>
+<span class="nc" id="L1240">                        tb.insert(start);</span>
+<span class="pc bpc" id="L1241" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;select&quot;)) {</span>
+<span class="nc" id="L1242">                        tb.error(this);</span>
+<span class="nc" id="L1243">                        return tb.processEndTag(&quot;select&quot;);</span>
+<span class="fc bfc" id="L1244" title="All 2 branches covered.">                    } else if (StringUtil.in(name, &quot;input&quot;, &quot;keygen&quot;, &quot;textarea&quot;)) {</span>
+<span class="fc" id="L1245">                        tb.error(this);</span>
+<span class="pc bpc" id="L1246" title="1 of 2 branches missed.">                        if (!tb.inSelectScope(&quot;select&quot;))</span>
+<span class="nc" id="L1247">                            return false; // frag</span>
+<span class="fc" id="L1248">                        tb.processEndTag(&quot;select&quot;);</span>
+<span class="fc" id="L1249">                        return tb.process(start);</span>
+<span class="pc bpc" id="L1250" title="1 of 2 branches missed.">                    } else if (name.equals(&quot;script&quot;)) {</span>
+<span class="nc" id="L1251">                        return tb.process(t, InHead);</span>
+                    } else {
+<span class="fc" id="L1253">                        return anythingElse(t, tb);</span>
+                    }
+                    break;
+                case EndTag:
+<span class="fc" id="L1257">                    Token.EndTag end = t.asEndTag();</span>
+<span class="fc" id="L1258">                    name = end.normalName();</span>
+<span class="pc bpc" id="L1259" title="1 of 2 branches missed.">                    if (name.equals(&quot;optgroup&quot;)) {</span>
+<span class="nc bnc" id="L1260" title="All 6 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;option&quot;) &amp;&amp; tb.aboveOnStack(tb.currentElement()) != null &amp;&amp; tb.aboveOnStack(tb.currentElement()).nodeName().equals(&quot;optgroup&quot;))</span>
+<span class="nc" id="L1261">                            tb.processEndTag(&quot;option&quot;);</span>
+<span class="nc bnc" id="L1262" title="All 2 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;optgroup&quot;))</span>
+<span class="nc" id="L1263">                            tb.pop();</span>
+                        else
+<span class="nc" id="L1265">                            tb.error(this);</span>
+<span class="fc bfc" id="L1266" title="All 2 branches covered.">                    } else if (name.equals(&quot;option&quot;)) {</span>
+<span class="pc bpc" id="L1267" title="1 of 2 branches missed.">                        if (tb.currentElement().nodeName().equals(&quot;option&quot;))</span>
+<span class="fc" id="L1268">                            tb.pop();</span>
+                        else
+<span class="nc" id="L1270">                            tb.error(this);</span>
+<span class="fc bfc" id="L1271" title="All 2 branches covered.">                    } else if (name.equals(&quot;select&quot;)) {</span>
+<span class="pc bpc" id="L1272" title="1 of 2 branches missed.">                        if (!tb.inSelectScope(name)) {</span>
+<span class="nc" id="L1273">                            tb.error(this);</span>
+<span class="nc" id="L1274">                            return false;</span>
+                        } else {
+<span class="fc" id="L1276">                            tb.popStackToClose(name);</span>
+<span class="fc" id="L1277">                            tb.resetInsertionMode();</span>
+                        }
+                    } else
+<span class="fc" id="L1280">                        return anythingElse(t, tb);</span>
+                    break;
+                case EOF:
+<span class="pc bpc" id="L1283" title="1 of 2 branches missed.">                    if (!tb.currentElement().nodeName().equals(&quot;html&quot;))</span>
+<span class="fc" id="L1284">                        tb.error(this);</span>
+                    break;
+                default:
+<span class="nc" id="L1287">                    return anythingElse(t, tb);</span>
+            }
+<span class="fc" id="L1289">            return true;</span>
+        }
+
+        private boolean anythingElse(Token t, HtmlTreeBuilder tb) {
+<span class="fc" id="L1293">            tb.error(this);</span>
+<span class="fc" id="L1294">            return false;</span>
+        }
+    },
+<span class="fc" id="L1297">    InSelectInTable {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="nc bnc" id="L1299" title="All 4 branches missed.">            if (t.isStartTag() &amp;&amp; StringUtil.in(t.asStartTag().normalName(), &quot;caption&quot;, &quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;, &quot;td&quot;, &quot;th&quot;)) {</span>
+<span class="nc" id="L1300">                tb.error(this);</span>
+<span class="nc" id="L1301">                tb.processEndTag(&quot;select&quot;);</span>
+<span class="nc" id="L1302">                return tb.process(t);</span>
+<span class="nc bnc" id="L1303" title="All 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; StringUtil.in(t.asEndTag().normalName(), &quot;caption&quot;, &quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;, &quot;td&quot;, &quot;th&quot;)) {</span>
+<span class="nc" id="L1304">                tb.error(this);</span>
+<span class="nc bnc" id="L1305" title="All 2 branches missed.">                if (tb.inTableScope(t.asEndTag().normalName())) {</span>
+<span class="nc" id="L1306">                    tb.processEndTag(&quot;select&quot;);</span>
+<span class="nc" id="L1307">                    return (tb.process(t));</span>
+                } else
+<span class="nc" id="L1309">                    return false;</span>
+            } else {
+<span class="nc" id="L1311">                return tb.process(t, InSelect);</span>
+            }
+        }
+    },
+<span class="fc" id="L1315">    AfterBody {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1317" title="All 2 branches covered.">            if (isWhitespace(t)) {</span>
+<span class="fc" id="L1318">                return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L1319" title="All 2 branches covered.">            } else if (t.isComment()) {</span>
+<span class="fc" id="L1320">                tb.insert(t.asComment()); // into html node</span>
+<span class="pc bpc" id="L1321" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L1322">                tb.error(this);</span>
+<span class="nc" id="L1323">                return false;</span>
+<span class="fc bfc" id="L1324" title="All 4 branches covered.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="fc" id="L1325">                return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L1326" title="All 4 branches covered.">            } else if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="pc bpc" id="L1327" title="1 of 2 branches missed.">                if (tb.isFragmentParsing()) {</span>
+<span class="nc" id="L1328">                    tb.error(this);</span>
+<span class="nc" id="L1329">                    return false;</span>
+                } else {
+<span class="fc" id="L1331">                    tb.transition(AfterAfterBody);</span>
+                }
+<span class="fc bfc" id="L1333" title="All 2 branches covered.">            } else if (t.isEOF()) {</span>
+                // chillax! we're done
+            } else {
+<span class="fc" id="L1336">                tb.error(this);</span>
+<span class="fc" id="L1337">                tb.transition(InBody);</span>
+<span class="fc" id="L1338">                return tb.process(t);</span>
+            }
+<span class="fc" id="L1340">            return true;</span>
+        }
+    },
+<span class="fc" id="L1343">    InFrameset {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L1345" title="1 of 2 branches missed.">            if (isWhitespace(t)) {</span>
+<span class="nc" id="L1346">                tb.insert(t.asCharacter());</span>
+<span class="pc bpc" id="L1347" title="1 of 2 branches missed.">            } else if (t.isComment()) {</span>
+<span class="nc" id="L1348">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L1349" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L1350">                tb.error(this);</span>
+<span class="nc" id="L1351">                return false;</span>
+<span class="fc bfc" id="L1352" title="All 2 branches covered.">            } else if (t.isStartTag()) {</span>
+<span class="fc" id="L1353">                Token.StartTag start = t.asStartTag();</span>
+<span class="fc" id="L1354">                String name = start.normalName();</span>
+<span class="pc bpc" id="L1355" title="1 of 2 branches missed.">                if (name.equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L1356">                    return tb.process(start, InBody);</span>
+<span class="pc bpc" id="L1357" title="1 of 2 branches missed.">                } else if (name.equals(&quot;frameset&quot;)) {</span>
+<span class="nc" id="L1358">                    tb.insert(start);</span>
+<span class="pc bpc" id="L1359" title="1 of 2 branches missed.">                } else if (name.equals(&quot;frame&quot;)) {</span>
+<span class="fc" id="L1360">                    tb.insertEmpty(start);</span>
+<span class="nc bnc" id="L1361" title="All 2 branches missed.">                } else if (name.equals(&quot;noframes&quot;)) {</span>
+<span class="nc" id="L1362">                    return tb.process(start, InHead);</span>
+                } else {
+<span class="nc" id="L1364">                    tb.error(this);</span>
+<span class="nc" id="L1365">                    return false;</span>
+                }
+<span class="pc bpc" id="L1367" title="1 of 4 branches missed.">            } else if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;frameset&quot;)) {</span>
+<span class="pc bpc" id="L1368" title="1 of 2 branches missed.">                if (tb.currentElement().nodeName().equals(&quot;html&quot;)) { // frag</span>
+<span class="nc" id="L1369">                    tb.error(this);</span>
+<span class="nc" id="L1370">                    return false;</span>
+                } else {
+<span class="fc" id="L1372">                    tb.pop();</span>
+<span class="pc bpc" id="L1373" title="2 of 4 branches missed.">                    if (!tb.isFragmentParsing() &amp;&amp; !tb.currentElement().nodeName().equals(&quot;frameset&quot;)) {</span>
+<span class="fc" id="L1374">                        tb.transition(AfterFrameset);</span>
+                    }
+                }
+<span class="pc bpc" id="L1377" title="1 of 2 branches missed.">            } else if (t.isEOF()) {</span>
+<span class="nc bnc" id="L1378" title="All 2 branches missed.">                if (!tb.currentElement().nodeName().equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L1379">                    tb.error(this);</span>
+<span class="nc" id="L1380">                    return true;</span>
+                }
+            } else {
+<span class="fc" id="L1383">                tb.error(this);</span>
+<span class="fc" id="L1384">                return false;</span>
+            }
+<span class="fc" id="L1386">            return true;</span>
+        }
+    },
+<span class="fc" id="L1389">    AfterFrameset {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L1391" title="1 of 2 branches missed.">            if (isWhitespace(t)) {</span>
+<span class="nc" id="L1392">                tb.insert(t.asCharacter());</span>
+<span class="pc bpc" id="L1393" title="1 of 2 branches missed.">            } else if (t.isComment()) {</span>
+<span class="nc" id="L1394">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L1395" title="1 of 2 branches missed.">            } else if (t.isDoctype()) {</span>
+<span class="nc" id="L1396">                tb.error(this);</span>
+<span class="nc" id="L1397">                return false;</span>
+<span class="pc bpc" id="L1398" title="1 of 4 branches missed.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="nc" id="L1399">                return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L1400" title="All 4 branches covered.">            } else if (t.isEndTag() &amp;&amp; t.asEndTag().normalName().equals(&quot;html&quot;)) {</span>
+<span class="fc" id="L1401">                tb.transition(AfterAfterFrameset);</span>
+<span class="pc bpc" id="L1402" title="1 of 4 branches missed.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;noframes&quot;)) {</span>
+<span class="nc" id="L1403">                return tb.process(t, InHead);</span>
+<span class="pc bpc" id="L1404" title="1 of 2 branches missed.">            } else if (t.isEOF()) {</span>
+                // cool your heels, we're complete
+            } else {
+<span class="fc" id="L1407">                tb.error(this);</span>
+<span class="fc" id="L1408">                return false;</span>
+            }
+<span class="fc" id="L1410">            return true;</span>
+        }
+    },
+<span class="fc" id="L1413">    AfterAfterBody {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="fc bfc" id="L1415" title="All 2 branches covered.">            if (t.isComment()) {</span>
+<span class="fc" id="L1416">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L1417" title="2 of 8 branches missed.">            } else if (t.isDoctype() || isWhitespace(t) || (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;))) {</span>
+<span class="fc" id="L1418">                return tb.process(t, InBody);</span>
+<span class="fc bfc" id="L1419" title="All 2 branches covered.">            } else if (t.isEOF()) {</span>
+                // nice work chuck
+            } else {
+<span class="fc" id="L1422">                tb.error(this);</span>
+<span class="fc" id="L1423">                tb.transition(InBody);</span>
+<span class="fc" id="L1424">                return tb.process(t);</span>
+            }
+<span class="fc" id="L1426">            return true;</span>
+        }
+    },
+<span class="fc" id="L1429">    AfterAfterFrameset {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="pc bpc" id="L1431" title="1 of 2 branches missed.">            if (t.isComment()) {</span>
+<span class="nc" id="L1432">                tb.insert(t.asComment());</span>
+<span class="pc bpc" id="L1433" title="5 of 8 branches missed.">            } else if (t.isDoctype() || isWhitespace(t) || (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;html&quot;))) {</span>
+<span class="nc" id="L1434">                return tb.process(t, InBody);</span>
+<span class="pc bpc" id="L1435" title="1 of 2 branches missed.">            } else if (t.isEOF()) {</span>
+                // nice work chuck
+<span class="nc bnc" id="L1437" title="All 4 branches missed.">            } else if (t.isStartTag() &amp;&amp; t.asStartTag().normalName().equals(&quot;noframes&quot;)) {</span>
+<span class="nc" id="L1438">                return tb.process(t, InHead);</span>
+            } else {
+<span class="nc" id="L1440">                tb.error(this);</span>
+<span class="nc" id="L1441">                return false;</span>
+            }
+<span class="fc" id="L1443">            return true;</span>
+        }
+    },
+<span class="fc" id="L1446">    ForeignContent {</span>
+        boolean process(Token t, HtmlTreeBuilder tb) {
+<span class="nc" id="L1448">            return true;</span>
+            // todo: implement. Also; how do we get here?
+        }
+    };
+
+<span class="fc" id="L1453">    private static String nullString = String.valueOf('\u0000');</span>
+
+    abstract boolean process(Token t, HtmlTreeBuilder tb);
+
+    private static boolean isWhitespace(Token t) {
+<span class="fc bfc" id="L1458" title="All 2 branches covered.">        if (t.isCharacter()) {</span>
+<span class="fc" id="L1459">            String data = t.asCharacter().getData();</span>
+<span class="fc" id="L1460">            return isWhitespace(data);</span>
+        }
+<span class="fc" id="L1462">        return false;</span>
+    }
+
+    private static boolean isWhitespace(String data) {
+        // todo: this checks more than spec - &quot;\t&quot;, &quot;\n&quot;, &quot;\f&quot;, &quot;\r&quot;, &quot; &quot;
+<span class="fc bfc" id="L1467" title="All 2 branches covered.">        for (int i = 0; i &lt; data.length(); i++) {</span>
+<span class="fc" id="L1468">            char c = data.charAt(i);</span>
+<span class="fc bfc" id="L1469" title="All 2 branches covered.">            if (!StringUtil.isWhitespace(c))</span>
+<span class="fc" id="L1470">                return false;</span>
+        }
+<span class="fc" id="L1472">        return true;</span>
+    }
+
+    private static void handleRcData(Token.StartTag startTag, HtmlTreeBuilder tb) {
+<span class="fc" id="L1476">        tb.insert(startTag);</span>
+<span class="fc" id="L1477">        tb.tokeniser.transition(TokeniserState.Rcdata);</span>
+<span class="fc" id="L1478">        tb.markInsertionMode();</span>
+<span class="fc" id="L1479">        tb.transition(Text);</span>
+<span class="fc" id="L1480">    }</span>
+
+    private static void handleRawtext(Token.StartTag startTag, HtmlTreeBuilder tb) {
+<span class="fc" id="L1483">        tb.insert(startTag);</span>
+<span class="fc" id="L1484">        tb.tokeniser.transition(TokeniserState.Rawtext);</span>
+<span class="fc" id="L1485">        tb.markInsertionMode();</span>
+<span class="fc" id="L1486">        tb.transition(Text);</span>
+<span class="fc" id="L1487">    }</span>
+
+    // lists of tags to search through. A little harder to read here, but causes less GC than dynamic varargs.
+    // was contributing around 10% of parse GC load.
+    private static final class Constants {
+<span class="fc" id="L1492">        private static final String[] InBodyStartToHead = new String[]{&quot;base&quot;, &quot;basefont&quot;, &quot;bgsound&quot;, &quot;command&quot;, &quot;link&quot;, &quot;meta&quot;, &quot;noframes&quot;, &quot;script&quot;, &quot;style&quot;, &quot;title&quot;};</span>
+<span class="fc" id="L1493">        private static final String[] InBodyStartPClosers = new String[]{&quot;address&quot;, &quot;article&quot;, &quot;aside&quot;, &quot;blockquote&quot;, &quot;center&quot;, &quot;details&quot;, &quot;dir&quot;, &quot;div&quot;, &quot;dl&quot;,</span>
+                &quot;fieldset&quot;, &quot;figcaption&quot;, &quot;figure&quot;, &quot;footer&quot;, &quot;header&quot;, &quot;hgroup&quot;, &quot;menu&quot;, &quot;nav&quot;, &quot;ol&quot;,
+                &quot;p&quot;, &quot;section&quot;, &quot;summary&quot;, &quot;ul&quot;};
+<span class="fc" id="L1496">        private static final String[] Headings = new String[]{&quot;h1&quot;, &quot;h2&quot;, &quot;h3&quot;, &quot;h4&quot;, &quot;h5&quot;, &quot;h6&quot;};</span>
+<span class="fc" id="L1497">        private static final String[] InBodyStartPreListing = new String[]{&quot;pre&quot;, &quot;listing&quot;};</span>
+<span class="fc" id="L1498">        private static final String[] InBodyStartLiBreakers = new String[]{&quot;address&quot;, &quot;div&quot;, &quot;p&quot;};</span>
+<span class="fc" id="L1499">        private static final String[] DdDt = new String[]{&quot;dd&quot;, &quot;dt&quot;};</span>
+<span class="fc" id="L1500">        private static final String[] Formatters = new String[]{&quot;b&quot;, &quot;big&quot;, &quot;code&quot;, &quot;em&quot;, &quot;font&quot;, &quot;i&quot;, &quot;s&quot;, &quot;small&quot;, &quot;strike&quot;, &quot;strong&quot;, &quot;tt&quot;, &quot;u&quot;};</span>
+<span class="fc" id="L1501">        private static final String[] InBodyStartApplets = new String[]{&quot;applet&quot;, &quot;marquee&quot;, &quot;object&quot;};</span>
+<span class="fc" id="L1502">        private static final String[] InBodyStartEmptyFormatters = new String[]{&quot;area&quot;, &quot;br&quot;, &quot;embed&quot;, &quot;img&quot;, &quot;keygen&quot;, &quot;wbr&quot;};</span>
+<span class="fc" id="L1503">        private static final String[] InBodyStartMedia = new String[]{&quot;param&quot;, &quot;source&quot;, &quot;track&quot;};</span>
+<span class="fc" id="L1504">        private static final String[] InBodyStartInputAttribs = new String[]{&quot;name&quot;, &quot;action&quot;, &quot;prompt&quot;};</span>
+<span class="fc" id="L1505">        private static final String[] InBodyStartOptions = new String[]{&quot;optgroup&quot;, &quot;option&quot;};</span>
+<span class="fc" id="L1506">        private static final String[] InBodyStartRuby = new String[]{&quot;rp&quot;, &quot;rt&quot;};</span>
+<span class="fc" id="L1507">        private static final String[] InBodyStartDrop = new String[]{&quot;caption&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;frame&quot;, &quot;head&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;, &quot;tr&quot;};</span>
+<span class="fc" id="L1508">        private static final String[] InBodyEndClosers = new String[]{&quot;address&quot;, &quot;article&quot;, &quot;aside&quot;, &quot;blockquote&quot;, &quot;button&quot;, &quot;center&quot;, &quot;details&quot;, &quot;dir&quot;, &quot;div&quot;,</span>
+                &quot;dl&quot;, &quot;fieldset&quot;, &quot;figcaption&quot;, &quot;figure&quot;, &quot;footer&quot;, &quot;header&quot;, &quot;hgroup&quot;, &quot;listing&quot;, &quot;menu&quot;,
+                &quot;nav&quot;, &quot;ol&quot;, &quot;pre&quot;, &quot;section&quot;, &quot;summary&quot;, &quot;ul&quot;};
+<span class="fc" id="L1511">        private static final String[] InBodyEndAdoptionFormatters = new String[]{&quot;a&quot;, &quot;b&quot;, &quot;big&quot;, &quot;code&quot;, &quot;em&quot;, &quot;font&quot;, &quot;i&quot;, &quot;nobr&quot;, &quot;s&quot;, &quot;small&quot;, &quot;strike&quot;, &quot;strong&quot;, &quot;tt&quot;, &quot;u&quot;};</span>
+<span class="fc" id="L1512">        private static final String[] InBodyEndTableFosters = new String[]{&quot;table&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;tr&quot;};</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

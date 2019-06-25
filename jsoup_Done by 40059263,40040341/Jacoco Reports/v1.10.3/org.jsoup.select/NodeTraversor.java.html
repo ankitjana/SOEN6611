@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NodeTraversor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.select</a> &gt; <span class="el_source">NodeTraversor.java</span></div><h1>NodeTraversor.java</h1><pre class="source lang-java linenums">package org.jsoup.select;
+
+import org.jsoup.nodes.Node;
+
+/**
+ * Depth-first node traversor. Use to iterate through all nodes under and including the specified root node.
+ * &lt;p&gt;
+ * This implementation does not use recursion, so a deep DOM does not risk blowing the stack.
+ * &lt;/p&gt;
+ */
+public class NodeTraversor {
+    private NodeVisitor visitor;
+
+    /**
+     * Create a new traversor.
+     * @param visitor a class implementing the {@link NodeVisitor} interface, to be called when visiting each node.
+     */
+<span class="fc" id="L18">    public NodeTraversor(NodeVisitor visitor) {</span>
+<span class="fc" id="L19">        this.visitor = visitor;</span>
+<span class="fc" id="L20">    }</span>
+
+    /**
+     * Start a depth-first traverse of the root and all of its descendants.
+     * @param root the root node point to traverse.
+     */
+    public void traverse(Node root) {
+<span class="fc" id="L27">        Node node = root;</span>
+<span class="fc" id="L28">        int depth = 0;</span>
+        
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        while (node != null) {</span>
+<span class="fc" id="L31">            visitor.head(node, depth);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">            if (node.childNodeSize() &gt; 0) {</span>
+<span class="fc" id="L33">                node = node.childNode(0);</span>
+<span class="fc" id="L34">                depth++;</span>
+            } else {
+<span class="fc bfc" id="L36" title="All 4 branches covered.">                while (node.nextSibling() == null &amp;&amp; depth &gt; 0) {</span>
+<span class="fc" id="L37">                    visitor.tail(node, depth);</span>
+<span class="fc" id="L38">                    node = node.parentNode();</span>
+<span class="fc" id="L39">                    depth--;</span>
+                }
+<span class="fc" id="L41">                visitor.tail(node, depth);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">                if (node == root)</span>
+<span class="fc" id="L43">                    break;</span>
+<span class="fc" id="L44">                node = node.nextSibling();</span>
+            }
+        }
+<span class="fc" id="L47">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharacterReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.parser</a> &gt; <span class="el_source">CharacterReader.java</span></div><h1>CharacterReader.java</h1><pre class="source lang-java linenums">package org.jsoup.parser;
+
+import org.jsoup.UncheckedIOException;
+import org.jsoup.helper.Validate;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Locale;
+
+/**
+ CharacterReader consumes tokens off a string. Used internally by jsoup. API subject to changes.
+ */
+public final class CharacterReader {
+    static final char EOF = (char) -1;
+    private static final int maxStringCacheLen = 12;
+    static final int maxBufferLen = 1024 * 32; // visible for testing
+    private static final int readAheadLimit = (int) (maxBufferLen * 0.75);
+
+    private final char[] charBuf;
+    private final Reader reader;
+    private int bufLength;
+    private int bufSplitPoint;
+    private int bufPos;
+    private int readerPos;
+<span class="fc" id="L27">    private int bufMark = -1;</span>
+<span class="fc" id="L28">    private final String[] stringCache = new String[512]; // holds reused strings in this doc, to lessen garbage</span>
+
+<span class="fc" id="L30">    public CharacterReader(Reader input, int sz) {</span>
+<span class="fc" id="L31">        Validate.notNull(input);</span>
+<span class="fc" id="L32">        Validate.isTrue(input.markSupported());</span>
+<span class="fc" id="L33">        reader = input;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        charBuf = new char[sz &gt; maxBufferLen ? maxBufferLen : sz];</span>
+<span class="fc" id="L35">        bufferUp();</span>
+
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (isBinary()) {</span>
+<span class="fc" id="L38">            throw new UncheckedIOException(&quot;Input is binary and unsupported&quot;);</span>
+        }
+<span class="fc" id="L40">    }</span>
+
+    public CharacterReader(Reader input) {
+<span class="fc" id="L43">        this(input, maxBufferLen);</span>
+<span class="fc" id="L44">    }</span>
+
+    public CharacterReader(String input) {
+<span class="fc" id="L47">        this(new StringReader(input), input.length());</span>
+<span class="fc" id="L48">    }</span>
+
+    private void bufferUp() {
+<span class="fc" id="L51">        final int pos = bufPos;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (pos &lt; bufSplitPoint)</span>
+<span class="fc" id="L53">            return;</span>
+
+        try {
+<span class="fc" id="L56">            reader.skip(pos);</span>
+<span class="fc" id="L57">            reader.mark(maxBufferLen);</span>
+<span class="fc" id="L58">            final int read = reader.read(charBuf);</span>
+<span class="fc" id="L59">            reader.reset();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (read != -1) {</span>
+<span class="fc" id="L61">                bufLength = read;</span>
+<span class="fc" id="L62">                readerPos += pos;</span>
+<span class="fc" id="L63">                bufPos = 0;</span>
+<span class="fc" id="L64">                bufMark = -1;</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                bufSplitPoint = bufLength &gt; readAheadLimit ? readAheadLimit : bufLength;</span>
+            }
+<span class="fc" id="L67">        } catch (IOException e) {</span>
+<span class="fc" id="L68">            throw new UncheckedIOException(e);</span>
+<span class="fc" id="L69">        }</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Gets the current cursor position in the content.
+     * @return current position
+     */
+    public int pos() {
+<span class="fc" id="L77">        return readerPos + bufPos;</span>
+    }
+
+    /**
+     * Tests if all the content has been read.
+     * @return true if nothing left to read.
+     */
+    public boolean isEmpty() {
+<span class="fc" id="L85">        bufferUp();</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        return bufPos &gt;= bufLength;</span>
+    }
+
+    private boolean isEmptyNoBufferUp() {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        return bufPos &gt;= bufLength;</span>
+    }
+
+    /**
+     * Get the char at the current position.
+     * @return char
+     */
+    public char current() {
+<span class="fc" id="L98">        bufferUp();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        return isEmptyNoBufferUp() ? EOF : charBuf[bufPos];</span>
+    }
+
+    char consume() {
+<span class="fc" id="L103">        bufferUp();</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        char val = isEmptyNoBufferUp() ? EOF : charBuf[bufPos];</span>
+<span class="fc" id="L105">        bufPos++;</span>
+<span class="fc" id="L106">        return val;</span>
+    }
+
+    void unconsume() {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (bufPos &lt; 1)</span>
+<span class="nc" id="L111">            throw new UncheckedIOException(new IOException(&quot;No buffer left to unconsume&quot;));</span>
+
+<span class="fc" id="L113">        bufPos--;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Moves the current position by one.
+     */
+    public void advance() {
+<span class="fc" id="L120">        bufPos++;</span>
+<span class="fc" id="L121">    }</span>
+
+    void mark() {
+        // extra buffer up, to get as much rewind capacity as possible
+<span class="fc" id="L125">        bufSplitPoint = 0;</span>
+<span class="fc" id="L126">        bufferUp();</span>
+<span class="fc" id="L127">        bufMark = bufPos;</span>
+<span class="fc" id="L128">    }</span>
+
+    void rewindToMark() {
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (bufMark == -1)</span>
+<span class="nc" id="L132">            throw new UncheckedIOException(new IOException(&quot;Mark invalid&quot;));</span>
+
+<span class="fc" id="L134">        bufPos = bufMark;</span>
+<span class="fc" id="L135">    }</span>
+
+    /**
+     * Returns the number of characters between the current position and the next instance of the input char
+     * @param c scan target
+     * @return offset between current position and next instance of target. -1 if not found.
+     */
+    int nextIndexOf(char c) {
+        // doesn't handle scanning for surrogates
+<span class="fc" id="L144">        bufferUp();</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        for (int i = bufPos; i &lt; bufLength; i++) {</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            if (c == charBuf[i])</span>
+<span class="fc" id="L147">                return i - bufPos;</span>
+        }
+<span class="fc" id="L149">        return -1;</span>
+    }
+
+    /**
+     * Returns the number of characters between the current position and the next instance of the input sequence
+     *
+     * @param seq scan target
+     * @return offset between current position and next instance of target. -1 if not found.
+     */
+    int nextIndexOf(CharSequence seq) {
+<span class="fc" id="L159">        bufferUp();</span>
+        // doesn't handle scanning for surrogates
+<span class="fc" id="L161">        char startChar = seq.charAt(0);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        for (int offset = bufPos; offset &lt; bufLength; offset++) {</span>
+            // scan to first instance of startchar:
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (startChar != charBuf[offset])</span>
+<span class="fc bfc" id="L165" title="All 4 branches covered.">                while(++offset &lt; bufLength &amp;&amp; startChar != charBuf[offset]) { /* empty */ }</span>
+<span class="fc" id="L166">            int i = offset + 1;</span>
+<span class="fc" id="L167">            int last = i + seq.length()-1;</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">            if (offset &lt; bufLength &amp;&amp; last &lt;= bufLength) {</span>
+<span class="fc bfc" id="L169" title="All 4 branches covered.">                for (int j = 1; i &lt; last &amp;&amp; seq.charAt(j) == charBuf[i]; i++, j++) { /* empty */ }</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">                if (i == last) // found full sequence</span>
+<span class="fc" id="L171">                    return offset - bufPos;</span>
+            }
+        }
+<span class="fc" id="L174">        return -1;</span>
+    }
+
+    /**
+     * Reads characters up to the specific char.
+     * @param c the delimiter
+     * @return the chars read
+     */
+    public String consumeTo(char c) {
+<span class="fc" id="L183">        int offset = nextIndexOf(c);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (offset != -1) {</span>
+<span class="fc" id="L185">            String consumed = cacheString(charBuf, stringCache, bufPos, offset);</span>
+<span class="fc" id="L186">            bufPos += offset;</span>
+<span class="fc" id="L187">            return consumed;</span>
+        } else {
+<span class="fc" id="L189">            return consumeToEnd();</span>
+        }
+    }
+
+    String consumeTo(String seq) {
+<span class="fc" id="L194">        int offset = nextIndexOf(seq);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (offset != -1) {</span>
+<span class="fc" id="L196">            String consumed = cacheString(charBuf, stringCache, bufPos, offset);</span>
+<span class="fc" id="L197">            bufPos += offset;</span>
+<span class="fc" id="L198">            return consumed;</span>
+        } else {
+<span class="fc" id="L200">            return consumeToEnd();</span>
+        }
+    }
+
+    /**
+     * Read characters until the first of any delimiters is found.
+     * @param chars delimiters to scan for
+     * @return characters read up to the matched delimiter.
+     */
+    public String consumeToAny(final char... chars) {
+<span class="fc" id="L210">        bufferUp();</span>
+<span class="fc" id="L211">        int pos = bufPos;</span>
+<span class="fc" id="L212">        final int start = pos;</span>
+<span class="fc" id="L213">        final int remaining = bufLength;</span>
+<span class="fc" id="L214">        final char[] val = charBuf;</span>
+<span class="fc" id="L215">        final int charLen = chars.length;</span>
+        int i;
+
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        OUTER: while (pos &lt; remaining) {</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">            for (i = 0; i &lt; charLen; i++) {</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                if (val[pos] == chars[i])</span>
+<span class="fc" id="L221">                    break OUTER;</span>
+            }
+<span class="fc" id="L223">            pos++;</span>
+        }
+
+<span class="fc" id="L226">        bufPos = pos;</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        return pos &gt; start ? cacheString(charBuf, stringCache, start, pos -start) : &quot;&quot;;</span>
+    }
+
+    String consumeToAnySorted(final char... chars) {
+<span class="fc" id="L231">        bufferUp();</span>
+<span class="fc" id="L232">        int pos = bufPos;</span>
+<span class="fc" id="L233">        final int start = pos;</span>
+<span class="fc" id="L234">        final int remaining = bufLength;</span>
+<span class="fc" id="L235">        final char[] val = charBuf;</span>
+
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        while (pos &lt; remaining) {</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">            if (Arrays.binarySearch(chars, val[pos]) &gt;= 0)</span>
+<span class="fc" id="L239">                break;</span>
+<span class="fc" id="L240">            pos++;</span>
+        }
+<span class="fc" id="L242">        bufPos = pos;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        return bufPos &gt; start ? cacheString(charBuf, stringCache, start, pos -start) : &quot;&quot;;</span>
+    }
+
+    String consumeData() {
+        // &amp;, &lt;, null
+        //bufferUp(); // no need to bufferUp, just called consume()
+<span class="fc" id="L249">        int pos = bufPos;</span>
+<span class="fc" id="L250">        final int start = pos;</span>
+<span class="fc" id="L251">        final int remaining = bufLength;</span>
+<span class="fc" id="L252">        final char[] val = charBuf;</span>
+
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        OUTER: while (pos &lt; remaining) {</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">            switch (val[pos]) {</span>
+                case '&amp;':
+                case '&lt;':
+                case TokeniserState.nullChar:
+<span class="fc" id="L259">                    break OUTER;</span>
+                default:
+<span class="fc" id="L261">                    pos++;</span>
+            }
+        }
+<span class="fc" id="L264">        bufPos = pos;</span>
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        return pos &gt; start ? cacheString(charBuf, stringCache, start, pos -start) : &quot;&quot;;</span>
+    }
+
+    String consumeTagName() {
+        // '\t', '\n', '\r', '\f', ' ', '/', '&gt;', nullChar
+        // NOTE: out of spec, added '&lt;' to fix common author bugs
+<span class="fc" id="L271">        bufferUp();</span>
+<span class="fc" id="L272">        int pos = bufPos;</span>
+<span class="fc" id="L273">        final int start = pos;</span>
+<span class="fc" id="L274">        final int remaining = bufLength;</span>
+<span class="fc" id="L275">        final char[] val = charBuf;</span>
+
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        OUTER: while (pos &lt; remaining) {</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">            switch (val[pos]) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+                case '/':
+                case '&gt;':
+                case '&lt;':
+                case TokeniserState.nullChar:
+<span class="fc" id="L288">                    break OUTER;</span>
+            }
+<span class="fc" id="L290">            pos++;</span>
+        }
+
+<span class="fc" id="L293">        bufPos = pos;</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">        return pos &gt; start ? cacheString(charBuf, stringCache, start, pos -start) : &quot;&quot;;</span>
+    }
+
+    String consumeToEnd() {
+<span class="fc" id="L298">        bufferUp();</span>
+<span class="fc" id="L299">        String data = cacheString(charBuf, stringCache, bufPos, bufLength - bufPos);</span>
+<span class="fc" id="L300">        bufPos = bufLength;</span>
+<span class="fc" id="L301">        return data;</span>
+    }
+
+    String consumeLetterSequence() {
+<span class="fc" id="L305">        bufferUp();</span>
+<span class="fc" id="L306">        int start = bufPos;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        while (bufPos &lt; bufLength) {</span>
+<span class="fc" id="L308">            char c = charBuf[bufPos];</span>
+<span class="pc bpc" id="L309" title="2 of 10 branches missed.">            if ((c &gt;= 'A' &amp;&amp; c &lt;= 'Z') || (c &gt;= 'a' &amp;&amp; c &lt;= 'z') || Character.isLetter(c))</span>
+<span class="fc" id="L310">                bufPos++;</span>
+            else
+                break;
+<span class="fc" id="L313">        }</span>
+
+<span class="fc" id="L315">        return cacheString(charBuf, stringCache, start, bufPos - start);</span>
+    }
+
+    String consumeLetterThenDigitSequence() {
+<span class="fc" id="L319">        bufferUp();</span>
+<span class="fc" id="L320">        int start = bufPos;</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        while (bufPos &lt; bufLength) {</span>
+<span class="fc" id="L322">            char c = charBuf[bufPos];</span>
+<span class="pc bpc" id="L323" title="2 of 10 branches missed.">            if ((c &gt;= 'A' &amp;&amp; c &lt;= 'Z') || (c &gt;= 'a' &amp;&amp; c &lt;= 'z') || Character.isLetter(c))</span>
+<span class="fc" id="L324">                bufPos++;</span>
+            else
+                break;
+<span class="fc" id="L327">        }</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        while (!isEmptyNoBufferUp()) {</span>
+<span class="fc" id="L329">            char c = charBuf[bufPos];</span>
+<span class="fc bfc" id="L330" title="All 4 branches covered.">            if (c &gt;= '0' &amp;&amp; c &lt;= '9')</span>
+<span class="fc" id="L331">                bufPos++;</span>
+            else
+                break;
+<span class="fc" id="L334">        }</span>
+
+<span class="fc" id="L336">        return cacheString(charBuf, stringCache, start, bufPos - start);</span>
+    }
+
+    String consumeHexSequence() {
+<span class="fc" id="L340">        bufferUp();</span>
+<span class="fc" id="L341">        int start = bufPos;</span>
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">        while (bufPos &lt; bufLength) {</span>
+<span class="fc" id="L343">            char c = charBuf[bufPos];</span>
+<span class="pc bpc" id="L344" title="2 of 12 branches missed.">            if ((c &gt;= '0' &amp;&amp; c &lt;= '9') || (c &gt;= 'A' &amp;&amp; c &lt;= 'F') || (c &gt;= 'a' &amp;&amp; c &lt;= 'f'))</span>
+<span class="fc" id="L345">                bufPos++;</span>
+            else
+                break;
+<span class="fc" id="L348">        }</span>
+<span class="fc" id="L349">        return cacheString(charBuf, stringCache, start, bufPos - start);</span>
+    }
+
+    String consumeDigitSequence() {
+<span class="fc" id="L353">        bufferUp();</span>
+<span class="fc" id="L354">        int start = bufPos;</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        while (bufPos &lt; bufLength) {</span>
+<span class="fc" id="L356">            char c = charBuf[bufPos];</span>
+<span class="fc bfc" id="L357" title="All 4 branches covered.">            if (c &gt;= '0' &amp;&amp; c &lt;= '9')</span>
+<span class="fc" id="L358">                bufPos++;</span>
+            else
+                break;
+<span class="fc" id="L361">        }</span>
+<span class="fc" id="L362">        return cacheString(charBuf, stringCache, start, bufPos - start);</span>
+    }
+
+    boolean matches(char c) {
+<span class="fc bfc" id="L366" title="All 4 branches covered.">        return !isEmpty() &amp;&amp; charBuf[bufPos] == c;</span>
+
+    }
+
+    boolean matches(String seq) {
+<span class="fc" id="L371">        bufferUp();</span>
+<span class="fc" id="L372">        int scanLength = seq.length();</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (scanLength &gt; bufLength - bufPos)</span>
+<span class="fc" id="L374">            return false;</span>
+
+<span class="fc bfc" id="L376" title="All 2 branches covered.">        for (int offset = 0; offset &lt; scanLength; offset++)</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">            if (seq.charAt(offset) != charBuf[bufPos +offset])</span>
+<span class="fc" id="L378">                return false;</span>
+<span class="fc" id="L379">        return true;</span>
+    }
+
+    boolean matchesIgnoreCase(String seq) {
+<span class="fc" id="L383">        bufferUp();</span>
+<span class="fc" id="L384">        int scanLength = seq.length();</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        if (scanLength &gt; bufLength - bufPos)</span>
+<span class="fc" id="L386">            return false;</span>
+
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        for (int offset = 0; offset &lt; scanLength; offset++) {</span>
+<span class="fc" id="L389">            char upScan = Character.toUpperCase(seq.charAt(offset));</span>
+<span class="fc" id="L390">            char upTarget = Character.toUpperCase(charBuf[bufPos + offset]);</span>
+<span class="fc bfc" id="L391" title="All 2 branches covered.">            if (upScan != upTarget)</span>
+<span class="fc" id="L392">                return false;</span>
+        }
+<span class="fc" id="L394">        return true;</span>
+    }
+
+    boolean matchesAny(char... seq) {
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">        if (isEmpty())</span>
+<span class="nc" id="L399">            return false;</span>
+
+<span class="fc" id="L401">        bufferUp();</span>
+<span class="fc" id="L402">        char c = charBuf[bufPos];</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">        for (char seek : seq) {</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">            if (seek == c)</span>
+<span class="fc" id="L405">                return true;</span>
+        }
+<span class="fc" id="L407">        return false;</span>
+    }
+
+    boolean matchesAnySorted(char[] seq) {
+<span class="fc" id="L411">        bufferUp();</span>
+<span class="pc bpc" id="L412" title="1 of 4 branches missed.">        return !isEmpty() &amp;&amp; Arrays.binarySearch(seq, charBuf[bufPos]) &gt;= 0;</span>
+    }
+
+    boolean matchesLetter() {
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (isEmpty())</span>
+<span class="fc" id="L417">            return false;</span>
+<span class="fc" id="L418">        char c = charBuf[bufPos];</span>
+<span class="fc bfc" id="L419" title="All 10 branches covered.">        return (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') || (c &gt;= 'a' &amp;&amp; c &lt;= 'z') || Character.isLetter(c);</span>
+    }
+
+    boolean matchesDigit() {
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">        if (isEmpty())</span>
+<span class="nc" id="L424">            return false;</span>
+<span class="fc" id="L425">        char c = charBuf[bufPos];</span>
+<span class="pc bpc" id="L426" title="2 of 4 branches missed.">        return (c &gt;= '0' &amp;&amp; c &lt;= '9');</span>
+    }
+
+    boolean matchConsume(String seq) {
+<span class="fc" id="L430">        bufferUp();</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">        if (matches(seq)) {</span>
+<span class="fc" id="L432">            bufPos += seq.length();</span>
+<span class="fc" id="L433">            return true;</span>
+        } else {
+<span class="fc" id="L435">            return false;</span>
+        }
+    }
+
+    boolean matchConsumeIgnoreCase(String seq) {
+<span class="fc bfc" id="L440" title="All 2 branches covered.">        if (matchesIgnoreCase(seq)) {</span>
+<span class="fc" id="L441">            bufPos += seq.length();</span>
+<span class="fc" id="L442">            return true;</span>
+        } else {
+<span class="fc" id="L444">            return false;</span>
+        }
+    }
+
+    boolean containsIgnoreCase(String seq) {
+        // used to check presence of &lt;/title&gt;, &lt;/style&gt;. only finds consistent case.
+<span class="fc" id="L450">        String loScan = seq.toLowerCase(Locale.ENGLISH);</span>
+<span class="fc" id="L451">        String hiScan = seq.toUpperCase(Locale.ENGLISH);</span>
+<span class="fc bfc" id="L452" title="All 4 branches covered.">        return (nextIndexOf(loScan) &gt; -1) || (nextIndexOf(hiScan) &gt; -1);</span>
+    }
+
+    private static final int numNullsConsideredBinary = 10; // conservative
+
+    /**
+     *  Heuristic to determine if the current buffer looks like binary content. Reader will already hopefully be
+     *  decoded correctly, so a bunch of NULLs indicates a binary file
+     */
+    boolean isBinary() {
+<span class="fc" id="L462">        int nullsSeen = 0;</span>
+
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        for (int i = bufPos; i &lt; bufLength; i++) {</span>
+<span class="fc bfc" id="L465" title="All 2 branches covered.">            if (charBuf[i] == '\0')</span>
+<span class="fc" id="L466">                nullsSeen++;</span>
+        }
+
+<span class="fc bfc" id="L469" title="All 2 branches covered.">        return nullsSeen &gt;= numNullsConsideredBinary;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L474">        return new String(charBuf, bufPos, bufLength - bufPos);</span>
+    }
+
+    /**
+     * Caches short strings, as a flywheel pattern, to reduce GC load. Just for this doc, to prevent leaks.
+     * &lt;p /&gt;
+     * Simplistic, and on hash collisions just falls back to creating a new string, vs a full HashMap with Entry list.
+     * That saves both having to create objects as hash keys, and running through the entry list, at the expense of
+     * some more duplicates.
+     */
+    private static String cacheString(final char[] charBuf, final String[] stringCache, final int start, final int count) {
+        // limit (no cache):
+<span class="fc bfc" id="L486" title="All 2 branches covered.">        if (count &gt; maxStringCacheLen)</span>
+<span class="fc" id="L487">            return new String(charBuf, start, count);</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if (count &lt; 1)</span>
+<span class="fc" id="L489">            return &quot;&quot;;</span>
+
+        // calculate hash:
+<span class="fc" id="L492">        int hash = 0;</span>
+<span class="fc" id="L493">        int offset = start;</span>
+<span class="fc bfc" id="L494" title="All 2 branches covered.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="fc" id="L495">            hash = 31 * hash + charBuf[offset++];</span>
+        }
+
+        // get from cache
+<span class="fc" id="L499">        final int index = hash &amp; stringCache.length - 1;</span>
+<span class="fc" id="L500">        String cached = stringCache[index];</span>
+
+<span class="fc bfc" id="L502" title="All 2 branches covered.">        if (cached == null) { // miss, add</span>
+<span class="fc" id="L503">            cached = new String(charBuf, start, count);</span>
+<span class="fc" id="L504">            stringCache[index] = cached;</span>
+        } else { // hashcode hit, check equality
+<span class="fc bfc" id="L506" title="All 2 branches covered.">            if (rangeEquals(charBuf, start, count, cached)) { // hit</span>
+<span class="fc" id="L507">                return cached;</span>
+            } else { // hashcode conflict
+<span class="fc" id="L509">                cached = new String(charBuf, start, count);</span>
+<span class="fc" id="L510">                stringCache[index] = cached; // update the cache, as recently used strings are more likely to show up again</span>
+            }
+        }
+<span class="fc" id="L513">        return cached;</span>
+    }
+
+    /**
+     * Check if the value of the provided range equals the string.
+     */
+    static boolean rangeEquals(final char[] charBuf, final int start, int count, final String cached) {
+<span class="fc bfc" id="L520" title="All 2 branches covered.">        if (count == cached.length()) {</span>
+<span class="fc" id="L521">            int i = start;</span>
+<span class="fc" id="L522">            int j = 0;</span>
+<span class="fc bfc" id="L523" title="All 2 branches covered.">            while (count-- != 0) {</span>
+<span class="fc bfc" id="L524" title="All 2 branches covered.">                if (charBuf[i++] != cached.charAt(j++))</span>
+<span class="fc" id="L525">                    return false;</span>
+            }
+<span class="fc" id="L527">            return true;</span>
+        }
+<span class="fc" id="L529">        return false;</span>
+    }
+
+    // just used for testing
+    boolean rangeEquals(final int start, final int count, final String cached) {
+<span class="fc" id="L534">        return rangeEquals(charBuf, start, count, cached);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

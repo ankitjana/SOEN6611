@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HtmlTreeBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.parser</a> &gt; <span class="el_source">HtmlTreeBuilder.java</span></div><h1>HtmlTreeBuilder.java</h1><pre class="source lang-java linenums">package org.jsoup.parser;
+
+import org.jsoup.helper.StringUtil;
+import org.jsoup.helper.Validate;
+import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.DataNode;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.FormElement;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.jsoup.helper.StringUtil.inSorted;
+
+/**
+ * HTML Tree Builder; creates a DOM from Tokens.
+ */
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">public class HtmlTreeBuilder extends TreeBuilder {</span>
+    // tag searches. must be sorted, used in inSorted. MUST update HtmlTreeBuilderTest if more arrays are added.
+<span class="fc" id="L26">    static final String[] TagsSearchInScope = new String[]{&quot;applet&quot;, &quot;caption&quot;, &quot;html&quot;, &quot;marquee&quot;, &quot;object&quot;, &quot;table&quot;, &quot;td&quot;, &quot;th&quot;};</span>
+<span class="fc" id="L27">    static final String[] TagSearchList = new String[]{&quot;ol&quot;, &quot;ul&quot;};</span>
+<span class="fc" id="L28">    static final String[] TagSearchButton = new String[]{&quot;button&quot;};</span>
+<span class="fc" id="L29">    static final String[] TagSearchTableScope = new String[]{&quot;html&quot;, &quot;table&quot;};</span>
+<span class="fc" id="L30">    static final String[] TagSearchSelectScope = new String[]{&quot;optgroup&quot;, &quot;option&quot;};</span>
+<span class="fc" id="L31">    static final String[] TagSearchEndTags = new String[]{&quot;dd&quot;, &quot;dt&quot;, &quot;li&quot;, &quot;optgroup&quot;, &quot;option&quot;, &quot;p&quot;, &quot;rp&quot;, &quot;rt&quot;};</span>
+<span class="fc" id="L32">    static final String[] TagSearchSpecial = new String[]{&quot;address&quot;, &quot;applet&quot;, &quot;area&quot;, &quot;article&quot;, &quot;aside&quot;, &quot;base&quot;, &quot;basefont&quot;, &quot;bgsound&quot;,</span>
+        &quot;blockquote&quot;, &quot;body&quot;, &quot;br&quot;, &quot;button&quot;, &quot;caption&quot;, &quot;center&quot;, &quot;col&quot;, &quot;colgroup&quot;, &quot;command&quot;, &quot;dd&quot;,
+        &quot;details&quot;, &quot;dir&quot;, &quot;div&quot;, &quot;dl&quot;, &quot;dt&quot;, &quot;embed&quot;, &quot;fieldset&quot;, &quot;figcaption&quot;, &quot;figure&quot;, &quot;footer&quot;, &quot;form&quot;,
+        &quot;frame&quot;, &quot;frameset&quot;, &quot;h1&quot;, &quot;h2&quot;, &quot;h3&quot;, &quot;h4&quot;, &quot;h5&quot;, &quot;h6&quot;, &quot;head&quot;, &quot;header&quot;, &quot;hgroup&quot;, &quot;hr&quot;, &quot;html&quot;,
+        &quot;iframe&quot;, &quot;img&quot;, &quot;input&quot;, &quot;isindex&quot;, &quot;li&quot;, &quot;link&quot;, &quot;listing&quot;, &quot;marquee&quot;, &quot;menu&quot;, &quot;meta&quot;, &quot;nav&quot;,
+        &quot;noembed&quot;, &quot;noframes&quot;, &quot;noscript&quot;, &quot;object&quot;, &quot;ol&quot;, &quot;p&quot;, &quot;param&quot;, &quot;plaintext&quot;, &quot;pre&quot;, &quot;script&quot;,
+        &quot;section&quot;, &quot;select&quot;, &quot;style&quot;, &quot;summary&quot;, &quot;table&quot;, &quot;tbody&quot;, &quot;td&quot;, &quot;textarea&quot;, &quot;tfoot&quot;, &quot;th&quot;, &quot;thead&quot;,
+        &quot;title&quot;, &quot;tr&quot;, &quot;ul&quot;, &quot;wbr&quot;, &quot;xmp&quot;};
+
+    public static final int MaxScopeSearchDepth = 100; // prevents the parser bogging down in exceptionally broken pages
+
+    private HtmlTreeBuilderState state; // the current state
+    private HtmlTreeBuilderState originalState; // original / marked state
+
+    private boolean baseUriSetFromDoc;
+    private Element headElement; // the current head element
+    private FormElement formElement; // the current form element
+    private Element contextElement; // fragment parse context -- could be null even if fragment parsing
+    private ArrayList&lt;Element&gt; formattingElements; // active (open) formatting elements
+    private List&lt;String&gt; pendingTableCharacters; // chars in table to be shifted out
+    private Token.EndTag emptyEnd; // reused empty end tag
+
+    private boolean framesetOk; // if ok to go into frameset
+    private boolean fosterInserts; // if next inserts should be fostered
+    private boolean fragmentParsing; // if parsing a fragment of html
+
+<span class="fc" id="L58">    HtmlTreeBuilder() {}</span>
+
+    ParseSettings defaultSettings() {
+<span class="fc" id="L61">        return ParseSettings.htmlDefault;</span>
+    }
+
+    @Override
+    protected void initialiseParse(Reader input, String baseUri, ParseErrorList errors, ParseSettings settings) {
+<span class="fc" id="L66">        super.initialiseParse(input, baseUri, errors, settings);</span>
+
+        // this is a bit mucky. todo - probably just create new parser objects to ensure all reset.
+<span class="fc" id="L69">        state = HtmlTreeBuilderState.Initial;</span>
+<span class="fc" id="L70">        originalState = null;</span>
+<span class="fc" id="L71">        baseUriSetFromDoc = false;</span>
+<span class="fc" id="L72">        headElement = null;</span>
+<span class="fc" id="L73">        formElement = null;</span>
+<span class="fc" id="L74">        contextElement = null;</span>
+<span class="fc" id="L75">        formattingElements = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L76">        pendingTableCharacters = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L77">        emptyEnd = new Token.EndTag();</span>
+<span class="fc" id="L78">        framesetOk = true;</span>
+<span class="fc" id="L79">        fosterInserts = false;</span>
+<span class="fc" id="L80">        fragmentParsing = false;</span>
+<span class="fc" id="L81">    }</span>
+
+    List&lt;Node&gt; parseFragment(String inputFragment, Element context, String baseUri, ParseErrorList errors, ParseSettings settings) {
+        // context may be null
+<span class="fc" id="L85">        state = HtmlTreeBuilderState.Initial;</span>
+<span class="fc" id="L86">        initialiseParse(new StringReader(inputFragment), baseUri, errors, settings);</span>
+<span class="fc" id="L87">        contextElement = context;</span>
+<span class="fc" id="L88">        fragmentParsing = true;</span>
+<span class="fc" id="L89">        Element root = null;</span>
+
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (context != null) {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            if (context.ownerDocument() != null) // quirks setup:</span>
+<span class="fc" id="L93">                doc.quirksMode(context.ownerDocument().quirksMode());</span>
+
+            // initialise the tokeniser state:
+<span class="fc" id="L96">            String contextTag = context.tagName();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            if (StringUtil.in(contextTag, &quot;title&quot;, &quot;textarea&quot;))</span>
+<span class="fc" id="L98">                tokeniser.transition(TokeniserState.Rcdata);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            else if (StringUtil.in(contextTag, &quot;iframe&quot;, &quot;noembed&quot;, &quot;noframes&quot;, &quot;style&quot;, &quot;xmp&quot;))</span>
+<span class="nc" id="L100">                tokeniser.transition(TokeniserState.Rawtext);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            else if (contextTag.equals(&quot;script&quot;))</span>
+<span class="nc" id="L102">                tokeniser.transition(TokeniserState.ScriptData);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            else if (contextTag.equals((&quot;noscript&quot;)))</span>
+<span class="nc" id="L104">                tokeniser.transition(TokeniserState.Data); // if scripting enabled, rawtext</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">            else if (contextTag.equals(&quot;plaintext&quot;))</span>
+<span class="nc" id="L106">                tokeniser.transition(TokeniserState.Data);</span>
+            else
+<span class="fc" id="L108">                tokeniser.transition(TokeniserState.Data); // default</span>
+
+<span class="fc" id="L110">            root = new Element(Tag.valueOf(&quot;html&quot;, settings), baseUri);</span>
+<span class="fc" id="L111">            doc.appendChild(root);</span>
+<span class="fc" id="L112">            stack.add(root);</span>
+<span class="fc" id="L113">            resetInsertionMode();</span>
+
+            // setup form element to nearest form on context (up ancestor chain). ensures form controls are associated
+            // with form correctly
+<span class="fc" id="L117">            Elements contextChain = context.parents();</span>
+<span class="fc" id="L118">            contextChain.add(0, context);</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            for (Element parent: contextChain) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                if (parent instanceof FormElement) {</span>
+<span class="fc" id="L121">                    formElement = (FormElement) parent;</span>
+<span class="fc" id="L122">                    break;</span>
+                }
+<span class="fc" id="L124">            }</span>
+        }
+
+<span class="fc" id="L127">        runParser();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (context != null)</span>
+<span class="fc" id="L129">            return root.childNodes();</span>
+        else
+<span class="fc" id="L131">            return doc.childNodes();</span>
+    }
+
+    @Override
+    protected boolean process(Token token) {
+<span class="fc" id="L136">        currentToken = token;</span>
+<span class="fc" id="L137">        return this.state.process(token, this);</span>
+    }
+
+    boolean process(Token token, HtmlTreeBuilderState state) {
+<span class="fc" id="L141">        currentToken = token;</span>
+<span class="fc" id="L142">        return state.process(token, this);</span>
+    }
+
+    void transition(HtmlTreeBuilderState state) {
+<span class="fc" id="L146">        this.state = state;</span>
+<span class="fc" id="L147">    }</span>
+
+    HtmlTreeBuilderState state() {
+<span class="fc" id="L150">        return state;</span>
+    }
+
+    void markInsertionMode() {
+<span class="fc" id="L154">        originalState = state;</span>
+<span class="fc" id="L155">    }</span>
+
+    HtmlTreeBuilderState originalState() {
+<span class="fc" id="L158">        return originalState;</span>
+    }
+
+    void framesetOk(boolean framesetOk) {
+<span class="fc" id="L162">        this.framesetOk = framesetOk;</span>
+<span class="fc" id="L163">    }</span>
+
+    boolean framesetOk() {
+<span class="fc" id="L166">        return framesetOk;</span>
+    }
+
+    Document getDocument() {
+<span class="fc" id="L170">        return doc;</span>
+    }
+
+    String getBaseUri() {
+<span class="fc" id="L174">        return baseUri;</span>
+    }
+
+    void maybeSetBaseUri(Element base) {
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (baseUriSetFromDoc) // only listen to the first &lt;base href&gt; in parse</span>
+<span class="fc" id="L179">            return;</span>
+
+<span class="fc" id="L181">        String href = base.absUrl(&quot;href&quot;);</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        if (href.length() != 0) { // ignore &lt;base target&gt; etc</span>
+<span class="fc" id="L183">            baseUri = href;</span>
+<span class="fc" id="L184">            baseUriSetFromDoc = true;</span>
+<span class="fc" id="L185">            doc.setBaseUri(href); // set on the doc so doc.createElement(Tag) will get updated base, and to update all descendants</span>
+        }
+<span class="fc" id="L187">    }</span>
+
+    boolean isFragmentParsing() {
+<span class="fc" id="L190">        return fragmentParsing;</span>
+    }
+
+    void error(HtmlTreeBuilderState state) {
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (errors.canAddError())</span>
+<span class="fc" id="L195">            errors.add(new ParseError(reader.pos(), &quot;Unexpected token [%s] when in state [%s]&quot;, currentToken.tokenType(), state));</span>
+<span class="fc" id="L196">    }</span>
+
+    Element insert(Token.StartTag startTag) {
+        // handle empty unknown tags
+        // when the spec expects an empty tag, will directly hit insertEmpty, so won't generate this fake end tag.
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (startTag.isSelfClosing()) {</span>
+<span class="fc" id="L202">            Element el = insertEmpty(startTag);</span>
+<span class="fc" id="L203">            stack.add(el);</span>
+<span class="fc" id="L204">            tokeniser.transition(TokeniserState.Data); // handles &lt;script /&gt;, otherwise needs breakout steps from script data</span>
+<span class="fc" id="L205">            tokeniser.emit(emptyEnd.reset().name(el.tagName()));  // ensure we get out of whatever state we are in. emitted for yielded processing</span>
+<span class="fc" id="L206">            return el;</span>
+        }
+        
+<span class="fc" id="L209">        Element el = new Element(Tag.valueOf(startTag.name(), settings), baseUri, settings.normalizeAttributes(startTag.attributes));</span>
+<span class="fc" id="L210">        insert(el);</span>
+<span class="fc" id="L211">        return el;</span>
+    }
+
+    Element insertStartTag(String startTagName) {
+<span class="fc" id="L215">        Element el = new Element(Tag.valueOf(startTagName, settings), baseUri);</span>
+<span class="fc" id="L216">        insert(el);</span>
+<span class="fc" id="L217">        return el;</span>
+    }
+
+    void insert(Element el) {
+<span class="fc" id="L221">        insertNode(el);</span>
+<span class="fc" id="L222">        stack.add(el);</span>
+<span class="fc" id="L223">    }</span>
+
+    Element insertEmpty(Token.StartTag startTag) {
+<span class="fc" id="L226">        Tag tag = Tag.valueOf(startTag.name(), settings);</span>
+<span class="fc" id="L227">        Element el = new Element(tag, baseUri, startTag.attributes);</span>
+<span class="fc" id="L228">        insertNode(el);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (startTag.isSelfClosing()) {</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">            if (tag.isKnownTag()) {</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">                if (!tag.isEmpty())</span>
+<span class="fc" id="L232">                    tokeniser.error(&quot;Tag cannot be self closing; not a void tag&quot;);</span>
+            }
+            else // unknown tag, remember this is self closing for output
+<span class="fc" id="L235">                tag.setSelfClosing();</span>
+        }
+<span class="fc" id="L237">        return el;</span>
+    }
+
+    FormElement insertForm(Token.StartTag startTag, boolean onStack) {
+<span class="fc" id="L241">        Tag tag = Tag.valueOf(startTag.name(), settings);</span>
+<span class="fc" id="L242">        FormElement el = new FormElement(tag, baseUri, startTag.attributes);</span>
+<span class="fc" id="L243">        setFormElement(el);</span>
+<span class="fc" id="L244">        insertNode(el);</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (onStack)</span>
+<span class="fc" id="L246">            stack.add(el);</span>
+<span class="fc" id="L247">        return el;</span>
+    }
+
+    void insert(Token.Comment commentToken) {
+<span class="fc" id="L251">        Comment comment = new Comment(commentToken.getData());</span>
+<span class="fc" id="L252">        insertNode(comment);</span>
+<span class="fc" id="L253">    }</span>
+
+    void insert(Token.Character characterToken) {
+        Node node;
+        // characters in script and style go in as datanodes, not text nodes
+<span class="fc" id="L258">        String tagName = currentElement().tagName();</span>
+<span class="fc bfc" id="L259" title="All 4 branches covered.">        if (tagName.equals(&quot;script&quot;) || tagName.equals(&quot;style&quot;))</span>
+<span class="fc" id="L260">            node = new DataNode(characterToken.getData());</span>
+        else
+<span class="fc" id="L262">            node = new TextNode(characterToken.getData());</span>
+<span class="fc" id="L263">        currentElement().appendChild(node); // doesn't use insertNode, because we don't foster these; and will always have a stack.</span>
+<span class="fc" id="L264">    }</span>
+
+    private void insertNode(Node node) {
+        // if the stack hasn't been set up yet, elements (doctype, comments) go into the doc
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (stack.size() == 0)</span>
+<span class="fc" id="L269">            doc.appendChild(node);</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        else if (isFosterInserts())</span>
+<span class="fc" id="L271">            insertInFosterParent(node);</span>
+        else
+<span class="fc" id="L273">            currentElement().appendChild(node);</span>
+
+        // connect form controls to their form element
+<span class="fc bfc" id="L276" title="All 4 branches covered.">        if (node instanceof Element &amp;&amp; ((Element) node).tag().isFormListed()) {</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (formElement != null)</span>
+<span class="fc" id="L278">                formElement.addElement((Element) node);</span>
+        }
+<span class="fc" id="L280">    }</span>
+
+    Element pop() {
+<span class="fc" id="L283">        int size = stack.size();</span>
+<span class="fc" id="L284">        return stack.remove(size-1);</span>
+    }
+
+    void push(Element element) {
+<span class="nc" id="L288">        stack.add(element);</span>
+<span class="nc" id="L289">    }</span>
+
+    ArrayList&lt;Element&gt; getStack() {
+<span class="fc" id="L292">        return stack;</span>
+    }
+
+    boolean onStack(Element el) {
+<span class="fc" id="L296">        return isElementInQueue(stack, el);</span>
+    }
+
+    private boolean isElementInQueue(ArrayList&lt;Element&gt; queue, Element element) {
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        for (int pos = queue.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L301">            Element next = queue.get(pos);</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            if (next == element) {</span>
+<span class="fc" id="L303">                return true;</span>
+            }
+        }
+<span class="fc" id="L306">        return false;</span>
+    }
+
+    Element getFromStack(String elName) {
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L311">            Element next = stack.get(pos);</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">            if (next.nodeName().equals(elName)) {</span>
+<span class="fc" id="L313">                return next;</span>
+            }
+        }
+<span class="fc" id="L316">        return null;</span>
+    }
+
+    boolean removeFromStack(Element el) {
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L321">            Element next = stack.get(pos);</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">            if (next == el) {</span>
+<span class="fc" id="L323">                stack.remove(pos);</span>
+<span class="fc" id="L324">                return true;</span>
+            }
+        }
+<span class="nc" id="L327">        return false;</span>
+    }
+
+    void popStackToClose(String elName) {
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L332">            Element next = stack.get(pos);</span>
+<span class="fc" id="L333">            stack.remove(pos);</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">            if (next.nodeName().equals(elName))</span>
+<span class="fc" id="L335">                break;</span>
+        }
+<span class="fc" id="L337">    }</span>
+
+    // elnames is sorted, comes from Constants
+    void popStackToClose(String... elNames) {
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L342">            Element next = stack.get(pos);</span>
+<span class="fc" id="L343">            stack.remove(pos);</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">            if (inSorted(next.nodeName(), elNames))</span>
+<span class="fc" id="L345">                break;</span>
+        }
+<span class="fc" id="L347">    }</span>
+
+    void popStackToBefore(String elName) {
+<span class="nc bnc" id="L350" title="All 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="nc" id="L351">            Element next = stack.get(pos);</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">            if (next.nodeName().equals(elName)) {</span>
+<span class="nc" id="L353">                break;</span>
+            } else {
+<span class="nc" id="L355">                stack.remove(pos);</span>
+            }
+        }
+<span class="nc" id="L358">    }</span>
+
+    void clearStackToTableContext() {
+<span class="fc" id="L361">        clearStackToContext(&quot;table&quot;);</span>
+<span class="fc" id="L362">    }</span>
+
+    void clearStackToTableBodyContext() {
+<span class="fc" id="L365">        clearStackToContext(&quot;tbody&quot;, &quot;tfoot&quot;, &quot;thead&quot;, &quot;template&quot;);</span>
+<span class="fc" id="L366">    }</span>
+
+    void clearStackToTableRowContext() {
+<span class="fc" id="L369">        clearStackToContext(&quot;tr&quot;, &quot;template&quot;);</span>
+<span class="fc" id="L370">    }</span>
+
+    private void clearStackToContext(String... nodeNames) {
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L374">            Element next = stack.get(pos);</span>
+<span class="fc bfc" id="L375" title="All 4 branches covered.">            if (StringUtil.in(next.nodeName(), nodeNames) || next.nodeName().equals(&quot;html&quot;))</span>
+<span class="fc" id="L376">                break;</span>
+            else
+<span class="fc" id="L378">                stack.remove(pos);</span>
+        }
+<span class="fc" id="L380">    }</span>
+
+    Element aboveOnStack(Element el) {
+<span class="pc bpc" id="L383" title="2 of 4 branches missed.">        assert onStack(el);</span>
+<span class="pc bpc" id="L384" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L385">            Element next = stack.get(pos);</span>
+<span class="pc bpc" id="L386" title="1 of 2 branches missed.">            if (next == el) {</span>
+<span class="fc" id="L387">                return stack.get(pos-1);</span>
+            }
+        }
+<span class="nc" id="L390">        return null;</span>
+    }
+
+    void insertOnStackAfter(Element after, Element in) {
+<span class="fc" id="L394">        int i = stack.lastIndexOf(after);</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">        Validate.isTrue(i != -1);</span>
+<span class="fc" id="L396">        stack.add(i+1, in);</span>
+<span class="fc" id="L397">    }</span>
+
+    void replaceOnStack(Element out, Element in) {
+<span class="nc" id="L400">        replaceInQueue(stack, out, in);</span>
+<span class="nc" id="L401">    }</span>
+
+    private void replaceInQueue(ArrayList&lt;Element&gt; queue, Element out, Element in) {
+<span class="nc" id="L404">        int i = queue.lastIndexOf(out);</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">        Validate.isTrue(i != -1);</span>
+<span class="nc" id="L406">        queue.set(i, in);</span>
+<span class="nc" id="L407">    }</span>
+
+    void resetInsertionMode() {
+<span class="fc" id="L410">        boolean last = false;</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L412">            Element node = stack.get(pos);</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">            if (pos == 0) {</span>
+<span class="fc" id="L414">                last = true;</span>
+<span class="fc" id="L415">                node = contextElement;</span>
+            }
+<span class="fc" id="L417">            String name = node.nodeName();</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">            if (&quot;select&quot;.equals(name)) {</span>
+<span class="nc" id="L419">                transition(HtmlTreeBuilderState.InSelect);</span>
+<span class="nc" id="L420">                break; // frag</span>
+<span class="pc bpc" id="L421" title="1 of 6 branches missed.">            } else if ((&quot;td&quot;.equals(name) || &quot;th&quot;.equals(name) &amp;&amp; !last)) {</span>
+<span class="fc" id="L422">                transition(HtmlTreeBuilderState.InCell);</span>
+<span class="fc" id="L423">                break;</span>
+<span class="pc bpc" id="L424" title="1 of 2 branches missed.">            } else if (&quot;tr&quot;.equals(name)) {</span>
+<span class="nc" id="L425">                transition(HtmlTreeBuilderState.InRow);</span>
+<span class="nc" id="L426">                break;</span>
+<span class="pc bpc" id="L427" title="2 of 6 branches missed.">            } else if (&quot;tbody&quot;.equals(name) || &quot;thead&quot;.equals(name) || &quot;tfoot&quot;.equals(name)) {</span>
+<span class="fc" id="L428">                transition(HtmlTreeBuilderState.InTableBody);</span>
+<span class="fc" id="L429">                break;</span>
+<span class="pc bpc" id="L430" title="1 of 2 branches missed.">            } else if (&quot;caption&quot;.equals(name)) {</span>
+<span class="nc" id="L431">                transition(HtmlTreeBuilderState.InCaption);</span>
+<span class="nc" id="L432">                break;</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">            } else if (&quot;colgroup&quot;.equals(name)) {</span>
+<span class="nc" id="L434">                transition(HtmlTreeBuilderState.InColumnGroup);</span>
+<span class="nc" id="L435">                break; // frag</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">            } else if (&quot;table&quot;.equals(name)) {</span>
+<span class="nc" id="L437">                transition(HtmlTreeBuilderState.InTable);</span>
+<span class="nc" id="L438">                break;</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">            } else if (&quot;head&quot;.equals(name)) {</span>
+<span class="fc" id="L440">                transition(HtmlTreeBuilderState.InBody);</span>
+<span class="fc" id="L441">                break; // frag</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">            } else if (&quot;body&quot;.equals(name)) {</span>
+<span class="fc" id="L443">                transition(HtmlTreeBuilderState.InBody);</span>
+<span class="fc" id="L444">                break;</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">            } else if (&quot;frameset&quot;.equals(name)) {</span>
+<span class="nc" id="L446">                transition(HtmlTreeBuilderState.InFrameset);</span>
+<span class="nc" id="L447">                break; // frag</span>
+<span class="pc bpc" id="L448" title="1 of 2 branches missed.">            } else if (&quot;html&quot;.equals(name)) {</span>
+<span class="nc" id="L449">                transition(HtmlTreeBuilderState.BeforeHead);</span>
+<span class="nc" id="L450">                break; // frag</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">            } else if (last) {</span>
+<span class="fc" id="L452">                transition(HtmlTreeBuilderState.InBody);</span>
+<span class="fc" id="L453">                break; // frag</span>
+            }
+        }
+<span class="fc" id="L456">    }</span>
+
+    // todo: tidy up in specific scope methods
+<span class="fc" id="L459">    private String[] specificScopeTarget = {null};</span>
+
+    private boolean inSpecificScope(String targetName, String[] baseTypes, String[] extraTypes) {
+<span class="fc" id="L462">        specificScopeTarget[0] = targetName;</span>
+<span class="fc" id="L463">        return inSpecificScope(specificScopeTarget, baseTypes, extraTypes);</span>
+    }
+
+    private boolean inSpecificScope(String[] targetNames, String[] baseTypes, String[] extraTypes) {
+<span class="fc" id="L467">        int depth = stack.size() -1;</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">        if (depth &gt; MaxScopeSearchDepth) {</span>
+<span class="fc" id="L469">            depth = MaxScopeSearchDepth;</span>
+        }
+<span class="pc bpc" id="L471" title="1 of 2 branches missed.">        for (int pos = depth; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L472">            Element el = stack.get(pos);</span>
+<span class="fc" id="L473">            String elName = el.nodeName();</span>
+<span class="fc bfc" id="L474" title="All 2 branches covered.">            if (inSorted(elName, targetNames))</span>
+<span class="fc" id="L475">                return true;</span>
+<span class="fc bfc" id="L476" title="All 2 branches covered.">            if (inSorted(elName, baseTypes))</span>
+<span class="fc" id="L477">                return false;</span>
+<span class="fc bfc" id="L478" title="All 4 branches covered.">            if (extraTypes != null &amp;&amp; inSorted(elName, extraTypes))</span>
+<span class="fc" id="L479">                return false;</span>
+        }
+<span class="nc" id="L481">        Validate.fail(&quot;Should not be reachable&quot;);</span>
+<span class="nc" id="L482">        return false;</span>
+    }
+
+    boolean inScope(String[] targetNames) {
+<span class="fc" id="L486">        return inSpecificScope(targetNames, TagsSearchInScope, null);</span>
+    }
+
+    boolean inScope(String targetName) {
+<span class="fc" id="L490">        return inScope(targetName, null);</span>
+    }
+
+    boolean inScope(String targetName, String[] extras) {
+<span class="fc" id="L494">        return inSpecificScope(targetName, TagsSearchInScope, extras);</span>
+        // todo: in mathml namespace: mi, mo, mn, ms, mtext annotation-xml
+        // todo: in svg namespace: forignOjbect, desc, title
+    }
+
+    boolean inListItemScope(String targetName) {
+<span class="fc" id="L500">        return inScope(targetName, TagSearchList);</span>
+    }
+
+    boolean inButtonScope(String targetName) {
+<span class="fc" id="L504">        return inScope(targetName, TagSearchButton);</span>
+    }
+
+    boolean inTableScope(String targetName) {
+<span class="fc" id="L508">        return inSpecificScope(targetName, TagSearchTableScope, null);</span>
+    }
+
+    boolean inSelectScope(String targetName) {
+<span class="pc bpc" id="L512" title="1 of 2 branches missed.">        for (int pos = stack.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L513">            Element el = stack.get(pos);</span>
+<span class="fc" id="L514">            String elName = el.nodeName();</span>
+<span class="fc bfc" id="L515" title="All 2 branches covered.">            if (elName.equals(targetName))</span>
+<span class="fc" id="L516">                return true;</span>
+<span class="pc bpc" id="L517" title="1 of 2 branches missed.">            if (!inSorted(elName, TagSearchSelectScope)) // all elements except</span>
+<span class="nc" id="L518">                return false;</span>
+        }
+<span class="nc" id="L520">        Validate.fail(&quot;Should not be reachable&quot;);</span>
+<span class="nc" id="L521">        return false;</span>
+    }
+
+    void setHeadElement(Element headElement) {
+<span class="fc" id="L525">        this.headElement = headElement;</span>
+<span class="fc" id="L526">    }</span>
+
+    Element getHeadElement() {
+<span class="nc" id="L529">        return headElement;</span>
+    }
+
+    boolean isFosterInserts() {
+<span class="fc" id="L533">        return fosterInserts;</span>
+    }
+
+    void setFosterInserts(boolean fosterInserts) {
+<span class="fc" id="L537">        this.fosterInserts = fosterInserts;</span>
+<span class="fc" id="L538">    }</span>
+
+    FormElement getFormElement() {
+<span class="fc" id="L541">        return formElement;</span>
+    }
+
+    void setFormElement(FormElement formElement) {
+<span class="fc" id="L545">        this.formElement = formElement;</span>
+<span class="fc" id="L546">    }</span>
+
+    void newPendingTableCharacters() {
+<span class="fc" id="L549">        pendingTableCharacters = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L550">    }</span>
+
+    List&lt;String&gt; getPendingTableCharacters() {
+<span class="fc" id="L553">        return pendingTableCharacters;</span>
+    }
+
+    void setPendingTableCharacters(List&lt;String&gt; pendingTableCharacters) {
+<span class="nc" id="L557">        this.pendingTableCharacters = pendingTableCharacters;</span>
+<span class="nc" id="L558">    }</span>
+
+    /**
+     11.2.5.2 Closing elements that have implied end tags&lt;p/&gt;
+     When the steps below require the UA to generate implied end tags, then, while the current node is a dd element, a
+     dt element, an li element, an option element, an optgroup element, a p element, an rp element, or an rt element,
+     the UA must pop the current node off the stack of open elements.
+
+     @param excludeTag If a step requires the UA to generate implied end tags but lists an element to exclude from the
+     process, then the UA must perform the above steps as if that element was not in the above list.
+     */
+    void generateImpliedEndTags(String excludeTag) {
+<span class="fc bfc" id="L570" title="All 4 branches covered.">        while ((excludeTag != null &amp;&amp; !currentElement().nodeName().equals(excludeTag)) &amp;&amp;</span>
+<span class="fc bfc" id="L571" title="All 2 branches covered.">                inSorted(currentElement().nodeName(), TagSearchEndTags))</span>
+<span class="fc" id="L572">            pop();</span>
+<span class="fc" id="L573">    }</span>
+
+    void generateImpliedEndTags() {
+<span class="fc" id="L576">        generateImpliedEndTags(null);</span>
+<span class="fc" id="L577">    }</span>
+
+    boolean isSpecial(Element el) {
+        // todo: mathml's mi, mo, mn
+        // todo: svg's foreigObject, desc, title
+<span class="fc" id="L582">        String name = el.nodeName();</span>
+<span class="fc" id="L583">        return inSorted(name, TagSearchSpecial);</span>
+    }
+
+    Element lastFormattingElement() {
+<span class="fc bfc" id="L587" title="All 2 branches covered.">        return formattingElements.size() &gt; 0 ? formattingElements.get(formattingElements.size()-1) : null;</span>
+    }
+
+    Element removeLastFormattingElement() {
+<span class="fc" id="L591">        int size = formattingElements.size();</span>
+<span class="pc bpc" id="L592" title="1 of 2 branches missed.">        if (size &gt; 0)</span>
+<span class="fc" id="L593">            return formattingElements.remove(size-1);</span>
+        else
+<span class="nc" id="L595">            return null;</span>
+    }
+
+    // active formatting elements
+    void pushActiveFormattingElements(Element in) {
+<span class="fc" id="L600">        int numSeen = 0;</span>
+<span class="fc bfc" id="L601" title="All 2 branches covered.">        for (int pos = formattingElements.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L602">            Element el = formattingElements.get(pos);</span>
+<span class="fc bfc" id="L603" title="All 2 branches covered.">            if (el == null) // marker</span>
+<span class="fc" id="L604">                break;</span>
+
+<span class="fc bfc" id="L606" title="All 2 branches covered.">            if (isSameFormattingElement(in, el))</span>
+<span class="fc" id="L607">                numSeen++;</span>
+
+<span class="fc bfc" id="L609" title="All 2 branches covered.">            if (numSeen == 3) {</span>
+<span class="fc" id="L610">                formattingElements.remove(pos);</span>
+<span class="fc" id="L611">                break;</span>
+            }
+        }
+<span class="fc" id="L614">        formattingElements.add(in);</span>
+<span class="fc" id="L615">    }</span>
+
+    private boolean isSameFormattingElement(Element a, Element b) {
+        // same if: same namespace, tag, and attributes. Element.equals only checks tag, might in future check children
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        return a.nodeName().equals(b.nodeName()) &amp;&amp;</span>
+                // a.namespace().equals(b.namespace()) &amp;&amp;
+<span class="fc bfc" id="L621" title="All 2 branches covered.">                a.attributes().equals(b.attributes());</span>
+        // todo: namespaces
+    }
+
+    void reconstructFormattingElements() {
+<span class="fc" id="L626">        Element last = lastFormattingElement();</span>
+<span class="fc bfc" id="L627" title="All 4 branches covered.">        if (last == null || onStack(last))</span>
+<span class="fc" id="L628">            return;</span>
+
+<span class="fc" id="L630">        Element entry = last;</span>
+<span class="fc" id="L631">        int size = formattingElements.size();</span>
+<span class="fc" id="L632">        int pos = size - 1;</span>
+<span class="fc" id="L633">        boolean skip = false;</span>
+        while (true) {
+<span class="fc bfc" id="L635" title="All 2 branches covered.">            if (pos == 0) { // step 4. if none before, skip to 8</span>
+<span class="fc" id="L636">                skip = true;</span>
+<span class="fc" id="L637">                break;</span>
+            }
+<span class="fc" id="L639">            entry = formattingElements.get(--pos); // step 5. one earlier than entry</span>
+<span class="pc bpc" id="L640" title="1 of 4 branches missed.">            if (entry == null || onStack(entry)) // step 6 - neither marker nor on stack</span>
+<span class="nc" id="L641">                break; // jump to 8, else continue back to 4</span>
+        }
+        while(true) {
+<span class="fc bfc" id="L644" title="All 2 branches covered.">            if (!skip) // step 7: on later than entry</span>
+<span class="fc" id="L645">                entry = formattingElements.get(++pos);</span>
+<span class="fc" id="L646">            Validate.notNull(entry); // should not occur, as we break at last element</span>
+
+            // 8. create new element from element, 9 insert into current node, onto stack
+<span class="fc" id="L649">            skip = false; // can only skip increment from 4.</span>
+<span class="fc" id="L650">            Element newEl = insertStartTag(entry.nodeName()); // todo: avoid fostering here?</span>
+            // newEl.namespace(entry.namespace()); // todo: namespaces
+<span class="fc" id="L652">            newEl.attributes().addAll(entry.attributes());</span>
+
+            // 10. replace entry with new entry
+<span class="fc" id="L655">            formattingElements.set(pos, newEl);</span>
+
+            // 11
+<span class="fc bfc" id="L658" title="All 2 branches covered.">            if (pos == size-1) // if not last entry in list, jump to 7</span>
+<span class="fc" id="L659">                break;</span>
+<span class="fc" id="L660">        }</span>
+<span class="fc" id="L661">    }</span>
+
+    void clearFormattingElementsToLastMarker() {
+<span class="pc bpc" id="L664" title="1 of 2 branches missed.">        while (!formattingElements.isEmpty()) {</span>
+<span class="fc" id="L665">            Element el = removeLastFormattingElement();</span>
+<span class="pc bpc" id="L666" title="1 of 2 branches missed.">            if (el == null)</span>
+<span class="fc" id="L667">                break;</span>
+<span class="nc" id="L668">        }</span>
+<span class="fc" id="L669">    }</span>
+
+    void removeFromActiveFormattingElements(Element el) {
+<span class="pc bpc" id="L672" title="1 of 2 branches missed.">        for (int pos = formattingElements.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L673">            Element next = formattingElements.get(pos);</span>
+<span class="fc bfc" id="L674" title="All 2 branches covered.">            if (next == el) {</span>
+<span class="fc" id="L675">                formattingElements.remove(pos);</span>
+<span class="fc" id="L676">                break;</span>
+            }
+        }
+<span class="fc" id="L679">    }</span>
+
+    boolean isInActiveFormattingElements(Element el) {
+<span class="fc" id="L682">        return isElementInQueue(formattingElements, el);</span>
+    }
+
+    Element getActiveFormattingElement(String nodeName) {
+<span class="fc bfc" id="L686" title="All 2 branches covered.">        for (int pos = formattingElements.size() -1; pos &gt;= 0; pos--) {</span>
+<span class="fc" id="L687">            Element next = formattingElements.get(pos);</span>
+<span class="fc bfc" id="L688" title="All 2 branches covered.">            if (next == null) // scope marker</span>
+<span class="fc" id="L689">                break;</span>
+<span class="fc bfc" id="L690" title="All 2 branches covered.">            else if (next.nodeName().equals(nodeName))</span>
+<span class="fc" id="L691">                return next;</span>
+        }
+<span class="fc" id="L693">        return null;</span>
+    }
+
+    void replaceActiveFormattingElement(Element out, Element in) {
+<span class="nc" id="L697">        replaceInQueue(formattingElements, out, in);</span>
+<span class="nc" id="L698">    }</span>
+
+    void insertMarkerToFormattingElements() {
+<span class="fc" id="L701">        formattingElements.add(null);</span>
+<span class="fc" id="L702">    }</span>
+
+    void insertInFosterParent(Node in) {
+        Element fosterParent;
+<span class="fc" id="L706">        Element lastTable = getFromStack(&quot;table&quot;);</span>
+<span class="fc" id="L707">        boolean isLastTableParent = false;</span>
+<span class="pc bpc" id="L708" title="1 of 2 branches missed.">        if (lastTable != null) {</span>
+<span class="pc bpc" id="L709" title="1 of 2 branches missed.">            if (lastTable.parent() != null) {</span>
+<span class="fc" id="L710">                fosterParent = lastTable.parent();</span>
+<span class="fc" id="L711">                isLastTableParent = true;</span>
+            } else
+<span class="nc" id="L713">                fosterParent = aboveOnStack(lastTable);</span>
+        } else { // no table == frag
+<span class="nc" id="L715">            fosterParent = stack.get(0);</span>
+        }
+
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">        if (isLastTableParent) {</span>
+<span class="fc" id="L719">            Validate.notNull(lastTable); // last table cannot be null by this point.</span>
+<span class="fc" id="L720">            lastTable.before(in);</span>
+        }
+        else
+<span class="nc" id="L723">            fosterParent.appendChild(in);</span>
+<span class="fc" id="L724">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L728">        return &quot;TreeBuilder{&quot; +</span>
+                &quot;currentToken=&quot; + currentToken +
+                &quot;, state=&quot; + state +
+<span class="nc" id="L731">                &quot;, currentElement=&quot; + currentElement() +</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

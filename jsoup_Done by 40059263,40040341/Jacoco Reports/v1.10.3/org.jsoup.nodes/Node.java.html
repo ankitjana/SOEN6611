@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Node.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.nodes</a> &gt; <span class="el_source">Node.java</span></div><h1>Node.java</h1><pre class="source lang-java linenums">package org.jsoup.nodes;
+
+import org.jsoup.SerializationException;
+import org.jsoup.helper.ChangeNotifyingArrayList;
+import org.jsoup.helper.StringUtil;
+import org.jsoup.helper.Validate;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.NodeTraversor;
+import org.jsoup.select.NodeVisitor;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.jsoup.internal.Normalizer.lowerCase;
+
+/**
+ The base, abstract Node model. Elements, Documents, Comments etc are all Node instances.
+
+ @author Jonathan Hedley, jonathan@hedley.net */
+public abstract class Node implements Cloneable {
+<span class="fc" id="L25">    private static final List&lt;Node&gt; EMPTY_NODES = Collections.emptyList();</span>
+    Node parentNode;
+    List&lt;Node&gt; childNodes;
+    Attributes attributes;
+    String baseUri;
+    int siblingIndex;
+
+    /**
+     Create a new Node.
+     @param baseUri base URI
+     @param attributes attributes (not null, but may be empty)
+     */
+<span class="fc" id="L37">    protected Node(String baseUri, Attributes attributes) {</span>
+<span class="fc" id="L38">        Validate.notNull(baseUri);</span>
+<span class="fc" id="L39">        Validate.notNull(attributes);</span>
+        
+<span class="fc" id="L41">        childNodes = EMPTY_NODES;</span>
+<span class="fc" id="L42">        this.baseUri = baseUri.trim();</span>
+<span class="fc" id="L43">        this.attributes = attributes;</span>
+<span class="fc" id="L44">    }</span>
+
+    protected Node(String baseUri) {
+<span class="fc" id="L47">        this(baseUri, new Attributes());</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Default constructor. Doesn't setup base uri, children, or attributes; use with caution.
+     */
+<span class="fc" id="L53">    protected Node() {</span>
+<span class="fc" id="L54">        childNodes = EMPTY_NODES;</span>
+<span class="fc" id="L55">        attributes = null;</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     Get the node name of this node. Use for debugging purposes and not logic switching (for that, use instanceof).
+     @return node name
+     */
+    public abstract String nodeName();
+
+    /**
+     * Get an attribute's value by its key. &lt;b&gt;Case insensitive&lt;/b&gt;
+     * &lt;p&gt;
+     * To get an absolute URL from an attribute that may be a relative URL, prefix the key with &lt;code&gt;&lt;b&gt;abs&lt;/b&gt;&lt;/code&gt;,
+     * which is a shortcut to the {@link #absUrl} method.
+     * &lt;/p&gt;
+     * E.g.:
+     * &lt;blockquote&gt;&lt;code&gt;String url = a.attr(&quot;abs:href&quot;);&lt;/code&gt;&lt;/blockquote&gt;
+     * 
+     * @param attributeKey The attribute key.
+     * @return The attribute, or empty string if not present (to avoid nulls).
+     * @see #attributes()
+     * @see #hasAttr(String)
+     * @see #absUrl(String)
+     */
+    public String attr(String attributeKey) {
+<span class="fc" id="L80">        Validate.notNull(attributeKey);</span>
+
+<span class="fc" id="L82">        String val = attributes.getIgnoreCase(attributeKey);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (val.length() &gt; 0)</span>
+<span class="fc" id="L84">            return val;</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        else if (lowerCase(attributeKey).startsWith(&quot;abs:&quot;))</span>
+<span class="fc" id="L86">            return absUrl(attributeKey.substring(&quot;abs:&quot;.length()));</span>
+<span class="fc" id="L87">        else return &quot;&quot;;</span>
+    }
+
+    /**
+     * Get all of the element's attributes.
+     * @return attributes (which implements iterable, in same order as presented in original HTML).
+     */
+    public Attributes attributes() {
+<span class="fc" id="L95">        return attributes;</span>
+    }
+
+    /**
+     * Set an attribute (key=value). If the attribute already exists, it is replaced.
+     * @param attributeKey The attribute key.
+     * @param attributeValue The attribute value.
+     * @return this (for chaining)
+     */
+    public Node attr(String attributeKey, String attributeValue) {
+<span class="fc" id="L105">        attributes.put(attributeKey, attributeValue);</span>
+<span class="fc" id="L106">        return this;</span>
+    }
+
+    /**
+     * Test if this element has an attribute. &lt;b&gt;Case insensitive&lt;/b&gt;
+     * @param attributeKey The attribute key to check.
+     * @return true if the attribute exists, false if not.
+     */
+    public boolean hasAttr(String attributeKey) {
+<span class="fc" id="L115">        Validate.notNull(attributeKey);</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (attributeKey.startsWith(&quot;abs:&quot;)) {</span>
+<span class="fc" id="L118">            String key = attributeKey.substring(&quot;abs:&quot;.length());</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">            if (attributes.hasKeyIgnoreCase(key) &amp;&amp; !absUrl(key).equals(&quot;&quot;))</span>
+<span class="fc" id="L120">                return true;</span>
+        }
+<span class="fc" id="L122">        return attributes.hasKeyIgnoreCase(attributeKey);</span>
+    }
+
+    /**
+     * Remove an attribute from this element.
+     * @param attributeKey The attribute to remove.
+     * @return this (for chaining)
+     */
+    public Node removeAttr(String attributeKey) {
+<span class="fc" id="L131">        Validate.notNull(attributeKey);</span>
+<span class="fc" id="L132">        attributes.removeIgnoreCase(attributeKey);</span>
+<span class="fc" id="L133">        return this;</span>
+    }
+
+    /**
+     * Clear (remove) all of the attributes in this node.
+     * @return this, for chaining
+     */
+    public Node clearAttributes() {
+<span class="fc" id="L141">        Iterator&lt;Attribute&gt; it = attributes.iterator();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L143">            it.next();</span>
+<span class="fc" id="L144">            it.remove();</span>
+        }
+<span class="fc" id="L146">        return this;</span>
+    }
+
+    /**
+     Get the base URI of this node.
+     @return base URI
+     */
+    public String baseUri() {
+<span class="fc" id="L154">        return baseUri;</span>
+    }
+
+    /**
+     Update the base URI of this node and all of its descendants.
+     @param baseUri base URI to set
+     */
+    public void setBaseUri(final String baseUri) {
+<span class="fc" id="L162">        Validate.notNull(baseUri);</span>
+
+<span class="fc" id="L164">        traverse(new NodeVisitor() {</span>
+            public void head(Node node, int depth) {
+<span class="fc" id="L166">                node.baseUri = baseUri;</span>
+<span class="fc" id="L167">            }</span>
+
+            public void tail(Node node, int depth) {
+<span class="fc" id="L170">            }</span>
+        });
+<span class="fc" id="L172">    }</span>
+
+    /**
+     * Get an absolute URL from a URL attribute that may be relative (i.e. an &lt;code&gt;&amp;lt;a href&amp;gt;&lt;/code&gt; or
+     * &lt;code&gt;&amp;lt;img src&amp;gt;&lt;/code&gt;).
+     * &lt;p&gt;
+     * E.g.: &lt;code&gt;String absUrl = linkEl.absUrl(&quot;href&quot;);&lt;/code&gt;
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * If the attribute value is already absolute (i.e. it starts with a protocol, like
+     * &lt;code&gt;http://&lt;/code&gt; or &lt;code&gt;https://&lt;/code&gt; etc), and it successfully parses as a URL, the attribute is
+     * returned directly. Otherwise, it is treated as a URL relative to the element's {@link #baseUri}, and made
+     * absolute using that.
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * As an alternate, you can use the {@link #attr} method with the &lt;code&gt;abs:&lt;/code&gt; prefix, e.g.:
+     * &lt;code&gt;String absUrl = linkEl.attr(&quot;abs:href&quot;);&lt;/code&gt;
+     * &lt;/p&gt;
+     * 
+     * @param attributeKey The attribute key
+     * @return An absolute URL if one could be made, or an empty string (not null) if the attribute was missing or
+     * could not be made successfully into a URL.
+     * @see #attr
+     * @see java.net.URL#URL(java.net.URL, String)
+     */
+    public String absUrl(String attributeKey) {
+<span class="fc" id="L198">        Validate.notEmpty(attributeKey);</span>
+
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (!hasAttr(attributeKey)) {</span>
+<span class="fc" id="L201">            return &quot;&quot;; // nothing to make absolute with</span>
+        } else {
+<span class="fc" id="L203">            return StringUtil.resolve(baseUri, attr(attributeKey));</span>
+        }
+    }
+
+    /**
+     Get a child node by its 0-based index.
+     @param index index of child node
+     @return the child node at this index. Throws a {@code IndexOutOfBoundsException} if the index is out of bounds.
+     */
+    public Node childNode(int index) {
+<span class="fc" id="L213">        return childNodes.get(index);</span>
+    }
+
+    /**
+     Get this node's children. Presented as an unmodifiable list: new children can not be added, but the child nodes
+     themselves can be manipulated.
+     @return list of children. If no children, returns an empty list.
+     */
+    public List&lt;Node&gt; childNodes() {
+<span class="fc" id="L222">        return Collections.unmodifiableList(childNodes);</span>
+    }
+
+    /**
+     * Returns a deep copy of this node's children. Changes made to these nodes will not be reflected in the original
+     * nodes
+     * @return a deep copy of this node's children
+     */
+    public List&lt;Node&gt; childNodesCopy() {
+<span class="fc" id="L231">        List&lt;Node&gt; children = new ArrayList&lt;Node&gt;(childNodes.size());</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        for (Node node : childNodes) {</span>
+<span class="fc" id="L233">            children.add(node.clone());</span>
+<span class="fc" id="L234">        }</span>
+<span class="fc" id="L235">        return children;</span>
+    }
+
+    /**
+     * Get the number of child nodes that this node holds.
+     * @return the number of child nodes that this node holds.
+     */
+    public final int childNodeSize() {
+<span class="fc" id="L243">        return childNodes.size();</span>
+    }
+    
+    protected Node[] childNodesAsArray() {
+<span class="fc" id="L247">        return childNodes.toArray(new Node[childNodeSize()]);</span>
+    }
+
+    /**
+     Gets this node's parent node.
+     @return parent node; or null if no parent.
+     */
+    public Node parent() {
+<span class="fc" id="L255">        return parentNode;</span>
+    }
+
+    /**
+     Gets this node's parent node. Not overridable by extending classes, so useful if you really just need the Node type.
+     @return parent node; or null if no parent.
+     */
+    public final Node parentNode() {
+<span class="fc" id="L263">        return parentNode;</span>
+    }
+
+    /**
+     * Get this node's root node; that is, its topmost ancestor. If this node is the top ancestor, returns {@code this}.
+     * @return topmost ancestor.
+     */
+    public Node root() {
+<span class="fc" id="L271">        Node node = this;</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        while (node.parentNode != null)</span>
+<span class="fc" id="L273">            node = node.parentNode;</span>
+<span class="fc" id="L274">        return node;</span>
+    }
+    
+    /**
+     * Gets the Document associated with this Node. 
+     * @return the Document associated with this Node, or null if there is no such Document.
+     */
+    public Document ownerDocument() {
+<span class="fc" id="L282">        Node root = root();</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        return (root instanceof Document) ? (Document) root : null;</span>
+    }
+    
+    /**
+     * Remove (delete) this node from the DOM tree. If this node has children, they are also removed.
+     */
+    public void remove() {
+<span class="fc" id="L290">        Validate.notNull(parentNode);</span>
+<span class="fc" id="L291">        parentNode.removeChild(this);</span>
+<span class="fc" id="L292">    }</span>
+
+    /**
+     * Insert the specified HTML into the DOM before this node (i.e. as a preceding sibling).
+     * @param html HTML to add before this node
+     * @return this node, for chaining
+     * @see #after(String)
+     */
+    public Node before(String html) {
+<span class="fc" id="L301">        addSiblingHtml(siblingIndex, html);</span>
+<span class="fc" id="L302">        return this;</span>
+    }
+
+    /**
+     * Insert the specified node into the DOM before this node (i.e. as a preceding sibling).
+     * @param node to add before this node
+     * @return this node, for chaining
+     * @see #after(Node)
+     */
+    public Node before(Node node) {
+<span class="fc" id="L312">        Validate.notNull(node);</span>
+<span class="fc" id="L313">        Validate.notNull(parentNode);</span>
+
+<span class="fc" id="L315">        parentNode.addChildren(siblingIndex, node);</span>
+<span class="fc" id="L316">        return this;</span>
+    }
+
+    /**
+     * Insert the specified HTML into the DOM after this node (i.e. as a following sibling).
+     * @param html HTML to add after this node
+     * @return this node, for chaining
+     * @see #before(String)
+     */
+    public Node after(String html) {
+<span class="fc" id="L326">        addSiblingHtml(siblingIndex + 1, html);</span>
+<span class="fc" id="L327">        return this;</span>
+    }
+
+    /**
+     * Insert the specified node into the DOM after this node (i.e. as a following sibling).
+     * @param node to add after this node
+     * @return this node, for chaining
+     * @see #before(Node)
+     */
+    public Node after(Node node) {
+<span class="fc" id="L337">        Validate.notNull(node);</span>
+<span class="fc" id="L338">        Validate.notNull(parentNode);</span>
+
+<span class="fc" id="L340">        parentNode.addChildren(siblingIndex + 1, node);</span>
+<span class="fc" id="L341">        return this;</span>
+    }
+
+    private void addSiblingHtml(int index, String html) {
+<span class="fc" id="L345">        Validate.notNull(html);</span>
+<span class="fc" id="L346">        Validate.notNull(parentNode);</span>
+
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">        Element context = parent() instanceof Element ? (Element) parent() : null;        </span>
+<span class="fc" id="L349">        List&lt;Node&gt; nodes = Parser.parseFragment(html, context, baseUri());</span>
+<span class="fc" id="L350">        parentNode.addChildren(index, nodes.toArray(new Node[nodes.size()]));</span>
+<span class="fc" id="L351">    }</span>
+
+    /**
+     Wrap the supplied HTML around this node.
+     @param html HTML to wrap around this element, e.g. {@code &lt;div class=&quot;head&quot;&gt;&lt;/div&gt;}. Can be arbitrarily deep.
+     @return this node, for chaining.
+     */
+    public Node wrap(String html) {
+<span class="fc" id="L359">        Validate.notEmpty(html);</span>
+
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">        Element context = parent() instanceof Element ? (Element) parent() : null;</span>
+<span class="fc" id="L362">        List&lt;Node&gt; wrapChildren = Parser.parseFragment(html, context, baseUri());</span>
+<span class="fc" id="L363">        Node wrapNode = wrapChildren.get(0);</span>
+<span class="pc bpc" id="L364" title="2 of 4 branches missed.">        if (wrapNode == null || !(wrapNode instanceof Element)) // nothing to wrap with; noop</span>
+<span class="nc" id="L365">            return null;</span>
+
+<span class="fc" id="L367">        Element wrap = (Element) wrapNode;</span>
+<span class="fc" id="L368">        Element deepest = getDeepChild(wrap);</span>
+<span class="fc" id="L369">        parentNode.replaceChild(this, wrap);</span>
+<span class="fc" id="L370">        deepest.addChildren(this);</span>
+
+        // remainder (unbalanced wrap, like &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; -- The &lt;p&gt; is remainder
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (wrapChildren.size() &gt; 0) {</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">            for (int i = 0; i &lt; wrapChildren.size(); i++) {</span>
+<span class="fc" id="L375">                Node remainder = wrapChildren.get(i);</span>
+<span class="fc" id="L376">                remainder.parentNode.removeChild(remainder);</span>
+<span class="fc" id="L377">                wrap.appendChild(remainder);</span>
+            }
+        }
+<span class="fc" id="L380">        return this;</span>
+    }
+
+    /**
+     * Removes this node from the DOM, and moves its children up into the node's parent. This has the effect of dropping
+     * the node but keeping its children.
+     * &lt;p&gt;
+     * For example, with the input html:
+     * &lt;/p&gt;
+     * &lt;p&gt;{@code &lt;div&gt;One &lt;span&gt;Two &lt;b&gt;Three&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;}&lt;/p&gt;
+     * Calling {@code element.unwrap()} on the {@code span} element will result in the html:
+     * &lt;p&gt;{@code &lt;div&gt;One Two &lt;b&gt;Three&lt;/b&gt;&lt;/div&gt;}&lt;/p&gt;
+     * and the {@code &quot;Two &quot;} {@link TextNode} being returned.
+     * 
+     * @return the first child of this node, after the node has been unwrapped. Null if the node had no children.
+     * @see #remove()
+     * @see #wrap(String)
+     */
+    public Node unwrap() {
+<span class="fc" id="L399">        Validate.notNull(parentNode);</span>
+
+<span class="fc bfc" id="L401" title="All 2 branches covered.">        Node firstChild = childNodes.size() &gt; 0 ? childNodes.get(0) : null;</span>
+<span class="fc" id="L402">        parentNode.addChildren(siblingIndex, this.childNodesAsArray());</span>
+<span class="fc" id="L403">        this.remove();</span>
+
+<span class="fc" id="L405">        return firstChild;</span>
+    }
+
+    private Element getDeepChild(Element el) {
+<span class="fc" id="L409">        List&lt;Element&gt; children = el.children();</span>
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        if (children.size() &gt; 0)</span>
+<span class="fc" id="L411">            return getDeepChild(children.get(0));</span>
+        else
+<span class="fc" id="L413">            return el;</span>
+    }
+
+    void nodelistChanged() {
+        // Element overrides this to clear its shadow children elements
+<span class="fc" id="L418">    }</span>
+    
+    /**
+     * Replace this node in the DOM with the supplied node.
+     * @param in the node that will will replace the existing node.
+     */
+    public void replaceWith(Node in) {
+<span class="fc" id="L425">        Validate.notNull(in);</span>
+<span class="fc" id="L426">        Validate.notNull(parentNode);</span>
+<span class="fc" id="L427">        parentNode.replaceChild(this, in);</span>
+<span class="fc" id="L428">    }</span>
+
+    protected void setParentNode(Node parentNode) {
+<span class="fc" id="L431">        Validate.notNull(parentNode);</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        if (this.parentNode != null)</span>
+<span class="nc" id="L433">            this.parentNode.removeChild(this);</span>
+<span class="fc" id="L434">        this.parentNode = parentNode;</span>
+<span class="fc" id="L435">    }</span>
+
+    protected void replaceChild(Node out, Node in) {
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">        Validate.isTrue(out.parentNode == this);</span>
+<span class="fc" id="L439">        Validate.notNull(in);</span>
+<span class="fc bfc" id="L440" title="All 2 branches covered.">        if (in.parentNode != null)</span>
+<span class="fc" id="L441">            in.parentNode.removeChild(in);</span>
+        
+<span class="fc" id="L443">        final int index = out.siblingIndex;</span>
+<span class="fc" id="L444">        childNodes.set(index, in);</span>
+<span class="fc" id="L445">        in.parentNode = this;</span>
+<span class="fc" id="L446">        in.setSiblingIndex(index);</span>
+<span class="fc" id="L447">        out.parentNode = null;</span>
+<span class="fc" id="L448">    }</span>
+
+    protected void removeChild(Node out) {
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">        Validate.isTrue(out.parentNode == this);</span>
+<span class="fc" id="L452">        final int index = out.siblingIndex;</span>
+<span class="fc" id="L453">        childNodes.remove(index);</span>
+<span class="fc" id="L454">        reindexChildren(index);</span>
+<span class="fc" id="L455">        out.parentNode = null;</span>
+<span class="fc" id="L456">    }</span>
+
+    protected void addChildren(Node... children) {
+        //most used. short circuit addChildren(int), which hits reindex children and array copy
+<span class="fc bfc" id="L460" title="All 2 branches covered.">        for (Node child: children) {</span>
+<span class="fc" id="L461">            reparentChild(child);</span>
+<span class="fc" id="L462">            ensureChildNodes();</span>
+<span class="fc" id="L463">            childNodes.add(child);</span>
+<span class="fc" id="L464">            child.setSiblingIndex(childNodes.size()-1);</span>
+        }
+<span class="fc" id="L466">    }</span>
+
+    protected void addChildren(int index, Node... children) {
+<span class="fc" id="L469">        Validate.noNullElements(children);</span>
+<span class="fc" id="L470">        ensureChildNodes();</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">        for (int i = children.length - 1; i &gt;= 0; i--) {</span>
+<span class="fc" id="L472">            Node in = children[i];</span>
+<span class="fc" id="L473">            reparentChild(in);</span>
+<span class="fc" id="L474">            childNodes.add(index, in);</span>
+<span class="fc" id="L475">            reindexChildren(index);</span>
+        }
+<span class="fc" id="L477">    }</span>
+
+    protected void ensureChildNodes() {
+<span class="fc bfc" id="L480" title="All 2 branches covered.">        if (childNodes == EMPTY_NODES) {</span>
+<span class="fc" id="L481">            childNodes = new NodeList(4);</span>
+        }
+<span class="fc" id="L483">    }</span>
+
+    protected void reparentChild(Node child) {
+<span class="fc bfc" id="L486" title="All 2 branches covered.">        if (child.parentNode != null)</span>
+<span class="fc" id="L487">            child.parentNode.removeChild(child);</span>
+<span class="fc" id="L488">        child.setParentNode(this);</span>
+<span class="fc" id="L489">    }</span>
+    
+    private void reindexChildren(int start) {
+<span class="fc bfc" id="L492" title="All 2 branches covered.">        for (int i = start; i &lt; childNodes.size(); i++) {</span>
+<span class="fc" id="L493">            childNodes.get(i).setSiblingIndex(i);</span>
+        }
+<span class="fc" id="L495">    }</span>
+    
+    /**
+     Retrieves this node's sibling nodes. Similar to {@link #childNodes()  node.parent.childNodes()}, but does not
+     include this node (a node is not a sibling of itself).
+     @return node siblings. If the node has no parent, returns an empty list.
+     */
+    public List&lt;Node&gt; siblingNodes() {
+<span class="fc bfc" id="L503" title="All 2 branches covered.">        if (parentNode == null)</span>
+<span class="fc" id="L504">            return Collections.emptyList();</span>
+
+<span class="fc" id="L506">        List&lt;Node&gt; nodes = parentNode.childNodes;</span>
+<span class="fc" id="L507">        List&lt;Node&gt; siblings = new ArrayList&lt;Node&gt;(nodes.size() - 1);</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">        for (Node node: nodes)</span>
+<span class="fc bfc" id="L509" title="All 2 branches covered.">            if (node != this)</span>
+<span class="fc" id="L510">                siblings.add(node);</span>
+<span class="fc" id="L511">        return siblings;</span>
+    }
+
+    /**
+     Get this node's next sibling.
+     @return next sibling, or null if this is the last sibling
+     */
+    public Node nextSibling() {
+<span class="fc bfc" id="L519" title="All 2 branches covered.">        if (parentNode == null)</span>
+<span class="fc" id="L520">            return null; // root</span>
+        
+<span class="fc" id="L522">        final List&lt;Node&gt; siblings = parentNode.childNodes;</span>
+<span class="fc" id="L523">        final int index = siblingIndex+1;</span>
+<span class="fc bfc" id="L524" title="All 2 branches covered.">        if (siblings.size() &gt; index)</span>
+<span class="fc" id="L525">            return siblings.get(index);</span>
+        else
+<span class="fc" id="L527">            return null;</span>
+    }
+
+    /**
+     Get this node's previous sibling.
+     @return the previous sibling, or null if this is the first sibling
+     */
+    public Node previousSibling() {
+<span class="pc bpc" id="L535" title="1 of 2 branches missed.">        if (parentNode == null)</span>
+<span class="fc" id="L536">            return null; // root</span>
+
+<span class="nc bnc" id="L538" title="All 2 branches missed.">        if (siblingIndex &gt; 0)</span>
+<span class="nc" id="L539">            return parentNode.childNodes.get(siblingIndex-1);</span>
+        else
+<span class="nc" id="L541">            return null;</span>
+    }
+
+    /**
+     * Get the list index of this node in its node sibling list. I.e. if this is the first node
+     * sibling, returns 0.
+     * @return position in node sibling list
+     * @see org.jsoup.nodes.Element#elementSiblingIndex()
+     */
+    public int siblingIndex() {
+<span class="fc" id="L551">        return siblingIndex;</span>
+    }
+    
+    protected void setSiblingIndex(int siblingIndex) {
+<span class="fc" id="L555">        this.siblingIndex = siblingIndex;</span>
+<span class="fc" id="L556">    }</span>
+
+    /**
+     * Perform a depth-first traversal through this node and its descendants.
+     * @param nodeVisitor the visitor callbacks to perform on each node
+     * @return this node, for chaining
+     */
+    public Node traverse(NodeVisitor nodeVisitor) {
+<span class="fc" id="L564">        Validate.notNull(nodeVisitor);</span>
+<span class="fc" id="L565">        NodeTraversor traversor = new NodeTraversor(nodeVisitor);</span>
+<span class="fc" id="L566">        traversor.traverse(this);</span>
+<span class="fc" id="L567">        return this;</span>
+    }
+
+    /**
+     Get the outer HTML of this node.
+     @return HTML
+     */
+    public String outerHtml() {
+<span class="fc" id="L575">        StringBuilder accum = new StringBuilder(128);</span>
+<span class="fc" id="L576">        outerHtml(accum);</span>
+<span class="fc" id="L577">        return accum.toString();</span>
+    }
+
+    protected void outerHtml(Appendable accum) {
+<span class="fc" id="L581">        new NodeTraversor(new OuterHtmlVisitor(accum, getOutputSettings())).traverse(this);</span>
+<span class="fc" id="L582">    }</span>
+
+    // if this node has no document (or parent), retrieve the default output settings
+    Document.OutputSettings getOutputSettings() {
+<span class="fc" id="L586">        Document owner = ownerDocument();</span>
+<span class="fc bfc" id="L587" title="All 2 branches covered.">        return owner != null ? owner.outputSettings() : (new Document(&quot;&quot;)).outputSettings();</span>
+    }
+
+    /**
+     Get the outer HTML of this node.
+     @param accum accumulator to place HTML into
+     @throws IOException if appending to the given accumulator fails.
+     */
+    abstract void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException;
+
+    abstract void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) throws IOException;
+
+    /**
+     * Write this node and its children to the given {@link Appendable}.
+     *
+     * @param appendable the {@link Appendable} to write to.
+     * @return the supplied {@link Appendable}, for chaining.
+     */
+    public &lt;T extends Appendable&gt; T html(T appendable) {
+<span class="nc" id="L606">        outerHtml(appendable);</span>
+<span class="nc" id="L607">        return appendable;</span>
+    }
+    
+	public String toString() {
+<span class="nc" id="L611">        return outerHtml();</span>
+    }
+
+    protected void indent(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+<span class="fc" id="L615">        accum.append(&quot;\n&quot;).append(StringUtil.padding(depth * out.indentAmount()));</span>
+<span class="fc" id="L616">    }</span>
+
+    /**
+     * Check if this node is the same instance of another (object identity test).
+     * @param o other object to compare to
+     * @return true if the content of this node is the same as the other
+     * @see Node#hasSameValue(Object) to compare nodes by their value
+     */
+    @Override
+    public boolean equals(Object o) {
+        // implemented just so that javadoc is clear this is an identity test
+<span class="fc bfc" id="L627" title="All 2 branches covered.">        return this == o;</span>
+    }
+
+    /**
+     * Check if this node is has the same content as another node. A node is considered the same if its name, attributes and content match the
+     * other node; particularly its position in the tree does not influence its similarity.
+     * @param o other object to compare to
+     * @return true if the content of this node is the same as the other
+     */
+
+    public boolean hasSameValue(Object o) {
+<span class="pc bpc" id="L638" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L639" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+
+<span class="fc" id="L641">        return this.outerHtml().equals(((Node) o).outerHtml());</span>
+    }
+
+    /**
+     * Create a stand-alone, deep copy of this node, and all of its children. The cloned node will have no siblings or
+     * parent node. As a stand-alone object, any changes made to the clone or any of its children will not impact the
+     * original node.
+     * &lt;p&gt;
+     * The cloned node may be adopted into another Document or node structure using {@link Element#appendChild(Node)}.
+     * @return stand-alone cloned node
+     */
+    @Override
+    public Node clone() {
+<span class="fc" id="L654">        Node thisClone = doClone(null); // splits for orphan</span>
+
+        // Queue up nodes that need their children cloned (BFS).
+<span class="fc" id="L657">        LinkedList&lt;Node&gt; nodesToProcess = new LinkedList&lt;Node&gt;();</span>
+<span class="fc" id="L658">        nodesToProcess.add(thisClone);</span>
+
+<span class="fc bfc" id="L660" title="All 2 branches covered.">        while (!nodesToProcess.isEmpty()) {</span>
+<span class="fc" id="L661">            Node currParent = nodesToProcess.remove();</span>
+
+<span class="fc bfc" id="L663" title="All 2 branches covered.">            for (int i = 0; i &lt; currParent.childNodes.size(); i++) {</span>
+<span class="fc" id="L664">                Node childClone = currParent.childNodes.get(i).doClone(currParent);</span>
+<span class="fc" id="L665">                currParent.childNodes.set(i, childClone);</span>
+<span class="fc" id="L666">                nodesToProcess.add(childClone);</span>
+            }
+<span class="fc" id="L668">        }</span>
+
+<span class="fc" id="L670">        return thisClone;</span>
+    }
+
+    /*
+     * Return a clone of the node using the given parent (which can be null).
+     * Not a deep copy of children.
+     */
+    protected Node doClone(Node parent) {
+        Node clone;
+
+        try {
+<span class="fc" id="L681">            clone = (Node) super.clone();</span>
+<span class="nc" id="L682">        } catch (CloneNotSupportedException e) {</span>
+<span class="nc" id="L683">            throw new RuntimeException(e);</span>
+<span class="fc" id="L684">        }</span>
+
+<span class="fc" id="L686">        clone.parentNode = parent; // can be null, to create an orphan split</span>
+<span class="fc bfc" id="L687" title="All 2 branches covered.">        clone.siblingIndex = parent == null ? 0 : siblingIndex;</span>
+<span class="fc bfc" id="L688" title="All 2 branches covered.">        clone.attributes = attributes != null ? attributes.clone() : null;</span>
+<span class="fc" id="L689">        clone.baseUri = baseUri;</span>
+<span class="fc" id="L690">        clone.childNodes = new NodeList(childNodes.size());</span>
+
+<span class="fc bfc" id="L692" title="All 2 branches covered.">        for (Node child: childNodes)</span>
+<span class="fc" id="L693">            clone.childNodes.add(child);</span>
+
+<span class="fc" id="L695">        return clone;</span>
+    }
+
+    private static class OuterHtmlVisitor implements NodeVisitor {
+        private Appendable accum;
+        private Document.OutputSettings out;
+
+<span class="fc" id="L702">        OuterHtmlVisitor(Appendable accum, Document.OutputSettings out) {</span>
+<span class="fc" id="L703">            this.accum = accum;</span>
+<span class="fc" id="L704">            this.out = out;</span>
+<span class="fc" id="L705">        }</span>
+
+        public void head(Node node, int depth) {
+            try {
+<span class="fc" id="L709">				node.outerHtmlHead(accum, depth, out);</span>
+<span class="nc" id="L710">			} catch (IOException exception) {</span>
+<span class="nc" id="L711">				throw new SerializationException(exception);</span>
+<span class="fc" id="L712">			}</span>
+<span class="fc" id="L713">        }</span>
+
+        public void tail(Node node, int depth) {
+<span class="fc bfc" id="L716" title="All 2 branches covered.">            if (!node.nodeName().equals(&quot;#text&quot;)) { // saves a void hit.</span>
+				try {
+<span class="fc" id="L718">					node.outerHtmlTail(accum, depth, out);</span>
+<span class="nc" id="L719">				} catch (IOException exception) {</span>
+<span class="nc" id="L720">					throw new SerializationException(exception);</span>
+<span class="fc" id="L721">				}</span>
+            }
+<span class="fc" id="L723">        }</span>
+    }
+
+    private final class NodeList extends ChangeNotifyingArrayList&lt;Node&gt; {
+<span class="fc" id="L727">        NodeList(int initialCapacity) {</span>
+<span class="fc" id="L728">            super(initialCapacity);</span>
+<span class="fc" id="L729">        }</span>
+
+        public void onContentsChanged() {
+<span class="fc" id="L732">            nodelistChanged();</span>
+<span class="fc" id="L733">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

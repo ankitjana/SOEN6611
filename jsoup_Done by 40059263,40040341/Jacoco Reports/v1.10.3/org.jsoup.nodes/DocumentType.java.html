@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DocumentType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.nodes</a> &gt; <span class="el_source">DocumentType.java</span></div><h1>DocumentType.java</h1><pre class="source lang-java linenums">package org.jsoup.nodes;
+
+import java.io.IOException;
+
+import org.jsoup.helper.StringUtil;
+import org.jsoup.nodes.Document.OutputSettings.*;
+
+/**
+ * A {@code &lt;!DOCTYPE&gt;} node.
+ */
+public class DocumentType extends Node {
+    public static final String PUBLIC_KEY = &quot;PUBLIC&quot;;
+    public static final String SYSTEM_KEY = &quot;SYSTEM&quot;;
+    private static final String NAME = &quot;name&quot;;
+    private static final String PUB_SYS_KEY = &quot;pubSysKey&quot;; // PUBLIC or SYSTEM
+    private static final String PUBLIC_ID = &quot;publicId&quot;;
+    private static final String SYSTEM_ID = &quot;systemId&quot;;
+    // todo: quirk mode from publicId and systemId
+
+    /**
+     * Create a new doctype element.
+     * @param name the doctype's name
+     * @param publicId the doctype's public ID
+     * @param systemId the doctype's system ID
+     * @param baseUri the doctype's base URI
+     */
+    public DocumentType(String name, String publicId, String systemId, String baseUri) {
+<span class="fc" id="L28">        super(baseUri);</span>
+
+<span class="fc" id="L30">        attr(NAME, name);</span>
+<span class="fc" id="L31">        attr(PUBLIC_ID, publicId);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (has(PUBLIC_ID)) {</span>
+<span class="fc" id="L33">            attr(PUB_SYS_KEY, PUBLIC_KEY);</span>
+        }
+<span class="fc" id="L35">        attr(SYSTEM_ID, systemId);</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * Create a new doctype element.
+     * @param name the doctype's name
+     * @param publicId the doctype's public ID
+     * @param systemId the doctype's system ID
+     * @param baseUri the doctype's base URI
+     */
+    public DocumentType(String name, String pubSysKey, String publicId, String systemId, String baseUri) {
+<span class="fc" id="L46">        super(baseUri);</span>
+
+<span class="fc" id="L48">        attr(NAME, name);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (pubSysKey != null) {</span>
+<span class="fc" id="L50">            attr(PUB_SYS_KEY, pubSysKey);</span>
+        }
+<span class="fc" id="L52">        attr(PUBLIC_ID, publicId);</span>
+<span class="fc" id="L53">        attr(SYSTEM_ID, systemId);</span>
+<span class="fc" id="L54">    }</span>
+
+    @Override
+    public String nodeName() {
+<span class="fc" id="L58">        return &quot;#doctype&quot;;</span>
+    }
+
+    @Override
+    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+<span class="fc bfc" id="L63" title="All 6 branches covered.">        if (out.syntax() == Syntax.html &amp;&amp; !has(PUBLIC_ID) &amp;&amp; !has(SYSTEM_ID)) {</span>
+            // looks like a html5 doctype, go lowercase for aesthetics
+<span class="fc" id="L65">            accum.append(&quot;&lt;!doctype&quot;);</span>
+        } else {
+<span class="fc" id="L67">            accum.append(&quot;&lt;!DOCTYPE&quot;);</span>
+        }
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (has(NAME))</span>
+<span class="fc" id="L70">            accum.append(&quot; &quot;).append(attr(NAME));</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (has(PUB_SYS_KEY))</span>
+<span class="fc" id="L72">            accum.append(&quot; &quot;).append(attr(PUB_SYS_KEY));</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (has(PUBLIC_ID))</span>
+<span class="fc" id="L74">            accum.append(&quot; \&quot;&quot;).append(attr(PUBLIC_ID)).append('&quot;');</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (has(SYSTEM_ID))</span>
+<span class="fc" id="L76">            accum.append(&quot; \&quot;&quot;).append(attr(SYSTEM_ID)).append('&quot;');</span>
+<span class="fc" id="L77">        accum.append('&gt;');</span>
+<span class="fc" id="L78">    }</span>
+
+    @Override
+    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+<span class="fc" id="L82">    }</span>
+
+    private boolean has(final String attribute) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        return !StringUtil.isBlank(attr(attribute));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
