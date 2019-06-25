@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Attributes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.nodes</a> &gt; <span class="el_source">Attributes.java</span></div><h1>Attributes.java</h1><pre class="source lang-java linenums">package org.jsoup.nodes;
+
+import org.jsoup.SerializationException;
+import org.jsoup.helper.Validate;
+
+import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * The attributes of an Element.
+ * &lt;p&gt;
+ * Attributes are treated as a map: there can be only one value associated with an attribute key/name.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * Attribute name and value comparisons are  &lt;b&gt;case sensitive&lt;/b&gt;. By default for HTML, attribute names are
+ * normalized to lower-case on parsing. That means you should use lower-case strings when referring to attributes by
+ * name.
+ * &lt;/p&gt;
+ *
+ * @author Jonathan Hedley, jonathan@hedley.net
+ */
+<span class="fc" id="L30">public class Attributes implements Iterable&lt;Attribute&gt;, Cloneable {</span>
+    protected static final String dataPrefix = &quot;data-&quot;;
+
+<span class="fc" id="L33">    private LinkedHashMap&lt;String, Attribute&gt; attributes = null;</span>
+    // linked hash map to preserve insertion order.
+    // null be default as so many elements have no attributes -- saves a good chunk of memory
+
+    /**
+     Get an attribute value by key.
+     @param key the (case-sensitive) attribute key
+     @return the attribute value if set; or empty string if not set.
+     @see #hasKey(String)
+     */
+    public String get(String key) {
+<span class="fc" id="L44">        Validate.notEmpty(key);</span>
+
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (attributes == null)</span>
+<span class="nc" id="L47">            return &quot;&quot;;</span>
+
+<span class="fc" id="L49">        Attribute attr = attributes.get(key);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        return attr != null ? attr.getValue() : &quot;&quot;;</span>
+    }
+
+    /**
+     * Get an attribute's value by case-insensitive key
+     * @param key the attribute name
+     * @return the first matching attribute value if set; or empty string if not set.
+     */
+    public String getIgnoreCase(String key) {
+<span class="fc" id="L59">        Validate.notEmpty(key);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L61">            return &quot;&quot;;</span>
+
+<span class="fc" id="L63">        Attribute attr = attributes.get(key);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (attr != null)</span>
+<span class="fc" id="L65">            return attr.getValue();</span>
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        for (String attrKey : attributes.keySet()) {</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            if (attrKey.equalsIgnoreCase(key))</span>
+<span class="fc" id="L69">                return attributes.get(attrKey).getValue();</span>
+<span class="fc" id="L70">        }</span>
+<span class="fc" id="L71">        return &quot;&quot;;</span>
+    }
+
+    /**
+     Set a new attribute, or replace an existing one by key.
+     @param key attribute key
+     @param value attribute value
+     */
+    public void put(String key, String value) {
+<span class="fc" id="L80">        Attribute attr = new Attribute(key, value);</span>
+<span class="fc" id="L81">        put(attr);</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+    Set a new boolean attribute, remove attribute if value is false.
+    @param key attribute key
+    @param value attribute value
+    */
+    public void put(String key, boolean value) {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (value)</span>
+<span class="fc" id="L91">            put(new BooleanAttribute(key));</span>
+        else
+<span class="fc" id="L93">            remove(key);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     Set a new attribute, or replace an existing one by key.
+     @param attribute attribute
+     */
+    public void put(Attribute attribute) {
+<span class="fc" id="L101">        Validate.notNull(attribute);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L103">             attributes = new LinkedHashMap&lt;String, Attribute&gt;(2);</span>
+<span class="fc" id="L104">        attributes.put(attribute.getKey(), attribute);</span>
+<span class="fc" id="L105">    }</span>
+
+    /**
+     Remove an attribute by key. &lt;b&gt;Case sensitive.&lt;/b&gt;
+     @param key attribute key to remove
+     */
+    public void remove(String key) {
+<span class="fc" id="L112">        Validate.notEmpty(key);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (attributes == null)</span>
+<span class="nc" id="L114">            return;</span>
+<span class="fc" id="L115">        attributes.remove(key);</span>
+<span class="fc" id="L116">    }</span>
+
+    /**
+     Remove an attribute by key. &lt;b&gt;Case insensitive.&lt;/b&gt;
+     @param key attribute key to remove
+     */
+    public void removeIgnoreCase(String key) {
+<span class="fc" id="L123">        Validate.notEmpty(key);</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (attributes == null)</span>
+<span class="nc" id="L125">            return;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        for (Iterator&lt;String&gt; it = attributes.keySet().iterator(); it.hasNext(); ) {</span>
+<span class="fc" id="L127">            String attrKey = it.next();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            if (attrKey.equalsIgnoreCase(key))</span>
+<span class="fc" id="L129">                it.remove();</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     Tests if these attributes contain an attribute with this key.
+     @param key case-sensitive key to check for
+     @return true if key exists, false otherwise
+     */
+    public boolean hasKey(String key) {
+<span class="pc bpc" id="L139" title="1 of 4 branches missed.">        return attributes != null &amp;&amp; attributes.containsKey(key);</span>
+    }
+
+    /**
+     Tests if these attributes contain an attribute with this key.
+     @param key key to check for
+     @return true if key exists, false otherwise
+     */
+    public boolean hasKeyIgnoreCase(String key) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L149">            return false;</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (String attrKey : attributes.keySet()) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            if (attrKey.equalsIgnoreCase(key))</span>
+<span class="fc" id="L152">                return true;</span>
+<span class="fc" id="L153">        }</span>
+<span class="fc" id="L154">        return false;</span>
+    }
+
+    /**
+     Get the number of attributes in this set.
+     @return size
+     */
+    public int size() {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L163">            return 0;</span>
+<span class="fc" id="L164">        return attributes.size();</span>
+    }
+
+    /**
+     Add all the attributes from the incoming set to this set.
+     @param incoming attributes to add to these attributes.
+     */
+    public void addAll(Attributes incoming) {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (incoming.size() == 0)</span>
+<span class="fc" id="L173">            return;</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L175">            attributes = new LinkedHashMap&lt;String, Attribute&gt;(incoming.size());</span>
+<span class="fc" id="L176">        attributes.putAll(incoming.attributes);</span>
+<span class="fc" id="L177">    }</span>
+
+    public Iterator&lt;Attribute&gt; iterator() {
+<span class="pc bpc" id="L180" title="1 of 4 branches missed.">        if (attributes == null || attributes.isEmpty()) {</span>
+<span class="fc" id="L181">            return Collections.&lt;Attribute&gt;emptyList().iterator();</span>
+        }
+
+<span class="fc" id="L184">        return attributes.values().iterator();</span>
+    }
+
+    /**
+     Get the attributes as a List, for iteration. Do not modify the keys of the attributes via this view, as changes
+     to keys will not be recognised in the containing set.
+     @return an view of the attributes as a List.
+     */
+    public List&lt;Attribute&gt; asList() {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L194">            return Collections.emptyList();</span>
+
+<span class="fc" id="L196">        List&lt;Attribute&gt; list = new ArrayList&lt;Attribute&gt;(attributes.size());</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        for (Map.Entry&lt;String, Attribute&gt; entry : attributes.entrySet()) {</span>
+<span class="fc" id="L198">            list.add(entry.getValue());</span>
+<span class="fc" id="L199">        }</span>
+<span class="fc" id="L200">        return Collections.unmodifiableList(list);</span>
+    }
+
+    /**
+     * Retrieves a filtered view of attributes that are HTML5 custom data attributes; that is, attributes with keys
+     * starting with {@code data-}.
+     * @return map of custom data attributes.
+     */
+    public Map&lt;String, String&gt; dataset() {
+<span class="fc" id="L209">        return new Dataset();</span>
+    }
+
+    /**
+     Get the HTML representation of these attributes.
+     @return HTML
+     @throws SerializationException if the HTML representation of the attributes cannot be constructed.
+     */
+    public String html() {
+<span class="fc" id="L218">        StringBuilder accum = new StringBuilder();</span>
+        try {
+<span class="fc" id="L220">            html(accum, (new Document(&quot;&quot;)).outputSettings()); // output settings a bit funky, but this html() seldom used</span>
+<span class="nc" id="L221">        } catch (IOException e) { // ought never happen</span>
+<span class="nc" id="L222">            throw new SerializationException(e);</span>
+<span class="fc" id="L223">        }</span>
+<span class="fc" id="L224">        return accum.toString();</span>
+    }
+
+    void html(Appendable accum, Document.OutputSettings out) throws IOException {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L229">            return;</span>
+
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        for (Map.Entry&lt;String, Attribute&gt; entry : attributes.entrySet()) {</span>
+<span class="fc" id="L232">            Attribute attribute = entry.getValue();</span>
+<span class="fc" id="L233">            accum.append(&quot; &quot;);</span>
+<span class="fc" id="L234">            attribute.html(accum, out);</span>
+<span class="fc" id="L235">        }</span>
+<span class="fc" id="L236">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L240">        return html();</span>
+    }
+
+    /**
+     * Checks if these attributes are equal to another set of attributes, by comparing the two sets
+     * @param o attributes to compare with
+     * @return if both sets of attributes have the same content
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">        if (!(o instanceof Attributes)) return false;</span>
+
+<span class="fc" id="L253">        Attributes that = (Attributes) o;</span>
+
+<span class="fc bfc" id="L255" title="All 6 branches covered.">        return !(attributes != null ? !attributes.equals(that.attributes) : that.attributes != null);</span>
+    }
+
+    /**
+     * Calculates the hashcode of these attributes, by iterating all attributes and summing their hashcodes.
+     * @return calculated hashcode
+     */
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        return attributes != null ? attributes.hashCode() : 0;</span>
+    }
+
+    @Override
+    public Attributes clone() {
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (attributes == null)</span>
+<span class="fc" id="L270">            return new Attributes();</span>
+
+        Attributes clone;
+        try {
+<span class="fc" id="L274">            clone = (Attributes) super.clone();</span>
+<span class="nc" id="L275">        } catch (CloneNotSupportedException e) {</span>
+<span class="nc" id="L276">            throw new RuntimeException(e);</span>
+<span class="fc" id="L277">        }</span>
+<span class="fc" id="L278">        clone.attributes = new LinkedHashMap&lt;String, Attribute&gt;(attributes.size());</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        for (Attribute attribute: this)</span>
+<span class="fc" id="L280">            clone.attributes.put(attribute.getKey(), attribute.clone());</span>
+<span class="fc" id="L281">        return clone;</span>
+    }
+
+    private class Dataset extends AbstractMap&lt;String, String&gt; {
+
+<span class="fc" id="L286">        private Dataset() {</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">            if (attributes == null)</span>
+<span class="nc" id="L288">                attributes = new LinkedHashMap&lt;String, Attribute&gt;(2);</span>
+<span class="fc" id="L289">        }</span>
+
+        @Override
+        public Set&lt;Entry&lt;String, String&gt;&gt; entrySet() {
+<span class="fc" id="L293">            return new EntrySet();</span>
+        }
+
+        @Override
+        public String put(String key, String value) {
+<span class="fc" id="L298">            String dataKey = dataKey(key);</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">            String oldValue = hasKey(dataKey) ? attributes.get(dataKey).getValue() : null;</span>
+<span class="fc" id="L300">            Attribute attr = new Attribute(dataKey, value);</span>
+<span class="fc" id="L301">            attributes.put(dataKey, attr);</span>
+<span class="fc" id="L302">            return oldValue;</span>
+        }
+
+<span class="fc" id="L305">        private class EntrySet extends AbstractSet&lt;Map.Entry&lt;String, String&gt;&gt; {</span>
+
+            @Override
+            public Iterator&lt;Map.Entry&lt;String, String&gt;&gt; iterator() {
+<span class="fc" id="L309">                return new DatasetIterator();</span>
+            }
+
+           @Override
+            public int size() {
+<span class="fc" id="L314">                int count = 0;</span>
+<span class="fc" id="L315">                Iterator iter = new DatasetIterator();</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">                while (iter.hasNext())</span>
+<span class="fc" id="L317">                    count++;</span>
+<span class="fc" id="L318">                return count;</span>
+            }
+        }
+
+<span class="fc" id="L322">        private class DatasetIterator implements Iterator&lt;Map.Entry&lt;String, String&gt;&gt; {</span>
+<span class="fc" id="L323">            private Iterator&lt;Attribute&gt; attrIter = attributes.values().iterator();</span>
+            private Attribute attr;
+            public boolean hasNext() {
+<span class="fc bfc" id="L326" title="All 2 branches covered.">                while (attrIter.hasNext()) {</span>
+<span class="fc" id="L327">                    attr = attrIter.next();</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">                    if (attr.isDataAttribute()) return true;</span>
+                }
+<span class="fc" id="L330">                return false;</span>
+            }
+
+            public Entry&lt;String, String&gt; next() {
+<span class="fc" id="L334">                return new Attribute(attr.getKey().substring(dataPrefix.length()), attr.getValue());</span>
+            }
+
+            public void remove() {
+<span class="fc" id="L338">                attributes.remove(attr.getKey());</span>
+<span class="fc" id="L339">            }</span>
+        }
+    }
+
+    private static String dataKey(String key) {
+<span class="fc" id="L344">        return dataPrefix + key;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

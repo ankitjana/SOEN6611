@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tokeniser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.parser</a> &gt; <span class="el_source">Tokeniser.java</span></div><h1>Tokeniser.java</h1><pre class="source lang-java linenums">package org.jsoup.parser;
+
+import org.jsoup.helper.Validate;
+import org.jsoup.nodes.Entities;
+
+import java.util.Arrays;
+
+/**
+ * Readers the input stream into tokens.
+ */
+final class Tokeniser {
+    static final char replacementChar = '\uFFFD'; // replaces null character
+<span class="fc" id="L13">    private static final char[] notCharRefCharsSorted = new char[]{'\t', '\n', '\r', '\f', ' ', '&lt;', '&amp;'};</span>
+
+    static {
+<span class="fc" id="L16">        Arrays.sort(notCharRefCharsSorted);</span>
+<span class="fc" id="L17">    }</span>
+
+    private final CharacterReader reader; // html input
+    private final ParseErrorList errors; // errors found while tokenising
+
+<span class="fc" id="L22">    private TokeniserState state = TokeniserState.Data; // current tokenisation state</span>
+    private Token emitPending; // the token we are about to emit on next read
+<span class="fc" id="L24">    private boolean isEmitPending = false;</span>
+<span class="fc" id="L25">    private String charsString = null; // characters pending an emit. Will fall to charsBuilder if more than one</span>
+<span class="fc" id="L26">    private StringBuilder charsBuilder = new StringBuilder(1024); // buffers characters to output as one token, if more than one emit per read</span>
+<span class="fc" id="L27">    StringBuilder dataBuffer = new StringBuilder(1024); // buffers data looking for &lt;/script&gt;</span>
+
+    Token.Tag tagPending; // tag we are building up
+<span class="fc" id="L30">    Token.StartTag startPending = new Token.StartTag();</span>
+<span class="fc" id="L31">    Token.EndTag endPending = new Token.EndTag();</span>
+<span class="fc" id="L32">    Token.Character charPending = new Token.Character();</span>
+<span class="fc" id="L33">    Token.Doctype doctypePending = new Token.Doctype(); // doctype building up</span>
+<span class="fc" id="L34">    Token.Comment commentPending = new Token.Comment(); // comment building up</span>
+    private String lastStartTag; // the last start tag emitted, to test appropriate end tag
+<span class="fc" id="L36">    private boolean selfClosingFlagAcknowledged = true;</span>
+
+<span class="fc" id="L38">    Tokeniser(CharacterReader reader, ParseErrorList errors) {</span>
+<span class="fc" id="L39">        this.reader = reader;</span>
+<span class="fc" id="L40">        this.errors = errors;</span>
+<span class="fc" id="L41">    }</span>
+
+    Token read() {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (!selfClosingFlagAcknowledged) {</span>
+<span class="fc" id="L45">            error(&quot;Self closing flag not acknowledged&quot;);</span>
+<span class="fc" id="L46">            selfClosingFlagAcknowledged = true;</span>
+        }
+
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        while (!isEmitPending)</span>
+<span class="fc" id="L50">            state.read(this, reader);</span>
+
+        // if emit is pending, a non-character token was found: return any chars in buffer, and leave token for next read:
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (charsBuilder.length() &gt; 0) {</span>
+<span class="fc" id="L54">            String str = charsBuilder.toString();</span>
+<span class="fc" id="L55">            charsBuilder.delete(0, charsBuilder.length());</span>
+<span class="fc" id="L56">            charsString = null;</span>
+<span class="fc" id="L57">            return charPending.data(str);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        } else if (charsString != null) {</span>
+<span class="fc" id="L59">            Token token = charPending.data(charsString);</span>
+<span class="fc" id="L60">            charsString = null;</span>
+<span class="fc" id="L61">            return token;</span>
+        } else {
+<span class="fc" id="L63">            isEmitPending = false;</span>
+<span class="fc" id="L64">            return emitPending;</span>
+        }
+    }
+
+    void emit(Token token) {
+<span class="fc" id="L69">        Validate.isFalse(isEmitPending, &quot;There is an unread token pending!&quot;);</span>
+
+<span class="fc" id="L71">        emitPending = token;</span>
+<span class="fc" id="L72">        isEmitPending = true;</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (token.type == Token.TokenType.StartTag) {</span>
+<span class="fc" id="L75">            Token.StartTag startTag = (Token.StartTag) token;</span>
+<span class="fc" id="L76">            lastStartTag = startTag.tagName;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (startTag.selfClosing)</span>
+<span class="fc" id="L78">                selfClosingFlagAcknowledged = false;</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        } else if (token.type == Token.TokenType.EndTag) {</span>
+<span class="fc" id="L80">            Token.EndTag endTag = (Token.EndTag) token;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (endTag.attributes != null)</span>
+<span class="fc" id="L82">                error(&quot;Attributes incorrectly present on end tag&quot;);</span>
+        }
+<span class="fc" id="L84">    }</span>
+
+    void emit(final String str) {
+        // buffer strings up until last string token found, to emit only one token for a run of character refs etc.
+        // does not set isEmitPending; read checks that
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (charsString == null) {</span>
+<span class="fc" id="L90">            charsString = str;</span>
+        }
+        else {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (charsBuilder.length() == 0) { // switching to string builder as more than one emit before read</span>
+<span class="fc" id="L94">                charsBuilder.append(charsString);</span>
+            }
+<span class="fc" id="L96">            charsBuilder.append(str);</span>
+        }
+<span class="fc" id="L98">    }</span>
+
+    void emit(char[] chars) {
+<span class="nc" id="L101">        emit(String.valueOf(chars));</span>
+<span class="nc" id="L102">    }</span>
+
+    void emit(int[] codepoints) {
+<span class="fc" id="L105">        emit(new String(codepoints, 0, codepoints.length));</span>
+<span class="fc" id="L106">    }</span>
+
+    void emit(char c) {
+<span class="fc" id="L109">        emit(String.valueOf(c));</span>
+<span class="fc" id="L110">    }</span>
+
+    TokeniserState getState() {
+<span class="nc" id="L113">        return state;</span>
+    }
+
+    void transition(TokeniserState state) {
+<span class="fc" id="L117">        this.state = state;</span>
+<span class="fc" id="L118">    }</span>
+
+    void advanceTransition(TokeniserState state) {
+<span class="fc" id="L121">        reader.advance();</span>
+<span class="fc" id="L122">        this.state = state;</span>
+<span class="fc" id="L123">    }</span>
+
+    void acknowledgeSelfClosingFlag() {
+<span class="fc" id="L126">        selfClosingFlagAcknowledged = true;</span>
+<span class="fc" id="L127">    }</span>
+
+<span class="fc" id="L129">    final private int[] codepointHolder = new int[1]; // holder to not have to keep creating arrays</span>
+<span class="fc" id="L130">    final private int[] multipointHolder = new int[2];</span>
+    int[] consumeCharacterReference(Character additionalAllowedCharacter, boolean inAttribute) {
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (reader.isEmpty())</span>
+<span class="nc" id="L133">            return null;</span>
+<span class="fc bfc" id="L134" title="All 4 branches covered.">        if (additionalAllowedCharacter != null &amp;&amp; additionalAllowedCharacter == reader.current())</span>
+<span class="fc" id="L135">            return null;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (reader.matchesAnySorted(notCharRefCharsSorted))</span>
+<span class="fc" id="L137">            return null;</span>
+
+<span class="fc" id="L139">        final int[] codeRef = codepointHolder;</span>
+<span class="fc" id="L140">        reader.mark();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (reader.matchConsume(&quot;#&quot;)) { // numbered</span>
+<span class="fc" id="L142">            boolean isHexMode = reader.matchConsumeIgnoreCase(&quot;X&quot;);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            String numRef = isHexMode ? reader.consumeHexSequence() : reader.consumeDigitSequence();</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">            if (numRef.length() == 0) { // didn't match anything</span>
+<span class="nc" id="L145">                characterReferenceError(&quot;numeric reference with no numerals&quot;);</span>
+<span class="nc" id="L146">                reader.rewindToMark();</span>
+<span class="nc" id="L147">                return null;</span>
+            }
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (!reader.matchConsume(&quot;;&quot;))</span>
+<span class="fc" id="L150">                characterReferenceError(&quot;missing semicolon&quot;); // missing semi</span>
+<span class="fc" id="L151">            int charval = -1;</span>
+            try {
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                int base = isHexMode ? 16 : 10;</span>
+<span class="fc" id="L154">                charval = Integer.valueOf(numRef, base);</span>
+<span class="nc" id="L155">            } catch (NumberFormatException e) {</span>
+<span class="fc" id="L156">            } // skip</span>
+<span class="pc bpc" id="L157" title="3 of 8 branches missed.">            if (charval == -1 || (charval &gt;= 0xD800 &amp;&amp; charval &lt;= 0xDFFF) || charval &gt; 0x10FFFF) {</span>
+<span class="nc" id="L158">                characterReferenceError(&quot;character outside of valid range&quot;);</span>
+<span class="nc" id="L159">                codeRef[0] = replacementChar;</span>
+<span class="nc" id="L160">                return codeRef;</span>
+            } else {
+                // todo: implement number replacement table
+                // todo: check for extra illegal unicode points as parse errors
+<span class="fc" id="L164">                codeRef[0] = charval;</span>
+<span class="fc" id="L165">                return codeRef;</span>
+            }
+        } else { // named
+            // get as many letters as possible, and look for matching entities.
+<span class="fc" id="L169">            String nameRef = reader.consumeLetterThenDigitSequence();</span>
+<span class="fc" id="L170">            boolean looksLegit = reader.matches(';');</span>
+            // found if a base named entity without a ;, or an extended entity with the ;.
+<span class="fc bfc" id="L172" title="All 6 branches covered.">            boolean found = (Entities.isBaseNamedEntity(nameRef) || (Entities.isNamedEntity(nameRef) &amp;&amp; looksLegit));</span>
+
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            if (!found) {</span>
+<span class="fc" id="L175">                reader.rewindToMark();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                if (looksLegit) // named with semicolon</span>
+<span class="fc" id="L177">                    characterReferenceError(String.format(&quot;invalid named referenece '%s'&quot;, nameRef));</span>
+<span class="fc" id="L178">                return null;</span>
+            }
+<span class="pc bpc" id="L180" title="2 of 8 branches missed.">            if (inAttribute &amp;&amp; (reader.matchesLetter() || reader.matchesDigit() || reader.matchesAny('=', '-', '_'))) {</span>
+                // don't want that to match
+<span class="fc" id="L182">                reader.rewindToMark();</span>
+<span class="fc" id="L183">                return null;</span>
+            }
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (!reader.matchConsume(&quot;;&quot;))</span>
+<span class="fc" id="L186">                characterReferenceError(&quot;missing semicolon&quot;); // missing semi</span>
+<span class="fc" id="L187">            int numChars = Entities.codepointsForName(nameRef, multipointHolder);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            if (numChars == 1) {</span>
+<span class="fc" id="L189">                codeRef[0] = multipointHolder[0];</span>
+<span class="fc" id="L190">                return codeRef;</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">            } else if (numChars ==2) {</span>
+<span class="fc" id="L192">                return multipointHolder;</span>
+            } else {
+<span class="nc" id="L194">                Validate.fail(&quot;Unexpected characters returned for &quot; + nameRef);</span>
+<span class="nc" id="L195">                return multipointHolder;</span>
+            }
+        }
+    }
+
+    Token.Tag createTagPending(boolean start) {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        tagPending = start ? startPending.reset() : endPending.reset();</span>
+<span class="fc" id="L202">        return tagPending;</span>
+    }
+
+    void emitTagPending() {
+<span class="fc" id="L206">        tagPending.finaliseTag();</span>
+<span class="fc" id="L207">        emit(tagPending);</span>
+<span class="fc" id="L208">    }</span>
+
+    void createCommentPending() {
+<span class="fc" id="L211">        commentPending.reset();</span>
+<span class="fc" id="L212">    }</span>
+
+    void emitCommentPending() {
+<span class="fc" id="L215">        emit(commentPending);</span>
+<span class="fc" id="L216">    }</span>
+
+    void createDoctypePending() {
+<span class="fc" id="L219">        doctypePending.reset();</span>
+<span class="fc" id="L220">    }</span>
+
+    void emitDoctypePending() {
+<span class="fc" id="L223">        emit(doctypePending);</span>
+<span class="fc" id="L224">    }</span>
+
+    void createTempBuffer() {
+<span class="fc" id="L227">        Token.reset(dataBuffer);</span>
+<span class="fc" id="L228">    }</span>
+
+    boolean isAppropriateEndTagToken() {
+<span class="fc bfc" id="L231" title="All 4 branches covered.">        return lastStartTag != null &amp;&amp; tagPending.name().equalsIgnoreCase(lastStartTag);</span>
+    }
+
+    String appropriateEndTagName() {
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (lastStartTag == null)</span>
+<span class="fc" id="L236">            return null;</span>
+<span class="fc" id="L237">        return lastStartTag;</span>
+    }
+
+    void error(TokeniserState state) {
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (errors.canAddError())</span>
+<span class="nc" id="L242">            errors.add(new ParseError(reader.pos(), &quot;Unexpected character '%s' in input state [%s]&quot;, reader.current(), state));</span>
+<span class="fc" id="L243">    }</span>
+
+    void eofError(TokeniserState state) {
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if (errors.canAddError())</span>
+<span class="fc" id="L247">            errors.add(new ParseError(reader.pos(), &quot;Unexpectedly reached end of file (EOF) in input state [%s]&quot;, state));</span>
+<span class="fc" id="L248">    }</span>
+
+    private void characterReferenceError(String message) {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (errors.canAddError())</span>
+<span class="fc" id="L252">            errors.add(new ParseError(reader.pos(), &quot;Invalid character reference: %s&quot;, message));</span>
+<span class="fc" id="L253">    }</span>
+
+    private void error(String errorMsg) {
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (errors.canAddError())</span>
+<span class="fc" id="L257">            errors.add(new ParseError(reader.pos(), errorMsg));</span>
+<span class="fc" id="L258">    }</span>
+
+    boolean currentNodeInHtmlNS() {
+        // todo: implement namespaces correctly
+<span class="nc" id="L262">        return true;</span>
+        // Element currentNode = currentNode();
+        // return currentNode != null &amp;&amp; currentNode.namespace().equals(&quot;HTML&quot;);
+    }
+
+    /**
+     * Utility method to consume reader and unescape entities found within.
+     * @param inAttribute
+     * @return unescaped string from reader
+     */
+    String unescapeEntities(boolean inAttribute) {
+<span class="fc" id="L273">        StringBuilder builder = new StringBuilder();</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        while (!reader.isEmpty()) {</span>
+<span class="fc" id="L275">            builder.append(reader.consumeTo('&amp;'));</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">            if (reader.matches('&amp;')) {</span>
+<span class="fc" id="L277">                reader.consume();</span>
+<span class="fc" id="L278">                int[] c = consumeCharacterReference(null, inAttribute);</span>
+<span class="pc bpc" id="L279" title="1 of 4 branches missed.">                if (c == null || c.length==0)</span>
+<span class="fc" id="L280">                    builder.append('&amp;');</span>
+                else {
+<span class="fc" id="L282">                    builder.appendCodePoint(c[0]);</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">                    if (c.length == 2)</span>
+<span class="fc" id="L284">                        builder.appendCodePoint(c[1]);</span>
+                }
+
+<span class="fc" id="L287">            }</span>
+        }
+<span class="fc" id="L289">        return builder.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

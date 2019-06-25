@@ -1,0 +1,1782 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FindBugs Report</title>
+<style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+		</style>
+</head>
+<body>
+<h1>FindBugs Report</h1>
+<p>Produced using <a href="http://findbugs.sourceforge.net">FindBugs</a>3.0.1.</p>
+<p>Project: 
+			jsoup[jsoup]</p>
+<h2>Metrics</h2>
+<p>16689 lines of code analyzed,
+	in 314 classes, 
+	in 10 packages.</p>
+<table width="500" cellpadding="5" cellspacing="2">
+<tr class="tableheader">
+<th align="left">Metric</th>
+<th align="right">Total</th>
+<th align="right">Density*</th>
+</tr>
+<tr class="tablerow0">
+<td>High Priority Warnings</td>
+<td align="right">7</td>
+<td align="right">0.42</td>
+</tr>
+<tr class="tablerow1">
+<td>Medium Priority Warnings</td>
+<td align="right">69</td>
+<td align="right">4.13</td>
+</tr>
+<tr class="$totalClass">
+<td>
+<b>Total Warnings</b>
+</td>
+<td align="right">
+<b>76</b>
+</td>
+<td align="right">
+<b>4.55</b>
+</td>
+</tr>
+</table>
+<p>
+<i>(* Defects per Thousand lines of non-commenting source statements)</i>
+</p>
+<p>
+<br/>
+<br/>
+</p>
+<h2>Summary</h2>
+<table width="500" cellpadding="5" cellspacing="2">
+<tr class="tableheader">
+<th align="left">Warning Type</th>
+<th align="right">Number</th>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+</td>
+<td align="right">19</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<a href="#Warnings_CORRECTNESS">Correctness Warnings</a>
+</td>
+<td align="right">6</td>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_EXPERIMENTAL">Experimental Warnings</a>
+</td>
+<td align="right">2</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<a href="#Warnings_I18N">Internationalization Warnings</a>
+</td>
+<td align="right">1</td>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+</td>
+<td align="right">1</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<a href="#Warnings_PERFORMANCE">Performance Warnings</a>
+</td>
+<td align="right">4</td>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_STYLE">Dodgy code Warnings</a>
+</td>
+<td align="right">43</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<b>Total</b>
+</td>
+<td align="right">
+<b>76</b>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h1>Warnings</h1>
+<p>Click on each warning link to see a full description of the issue, and
+	    details of how to resolve it.</p>
+<h2>
+<a name="Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CN_IDIOM_NO_SUPER_CALL">clone method does not call super.clone()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.select.Elements.clone() does not call super.clone()<br/>
+<br/>
+<br/>In file Elements.java,
+					
+						lines 48
+						    to 53<br/>In class org.jsoup.select.Elements<br/>In method org.jsoup.select.Elements.clone()<br/>At Elements.java:[lines 48-53]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#ES_COMPARING_STRINGS_WITH_EQ">Comparison of String objects using == or !=</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Comparison of String objects using == or != in org.jsoup.nodes.Entities.appendEncoded(Appendable, Entities$EscapeMode, int) <br/>
+<br/>
+<br/>In file Entities.java,
+					
+						line 250<br/>In class org.jsoup.nodes.Entities<br/>In method org.jsoup.nodes.Entities.appendEncoded(Appendable, Entities$EscapeMode, int)<br/>Actual type String<br/>String constant ""<br/>Value loaded from name<br/>At Entities.java:[line 250]<br/>At Entities.java:[line 250]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.CDataNode inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file CDataNode.java,
+					
+						lines 12
+						    to 43<br/>In class org.jsoup.nodes.CDataNode<br/>At CDataNode.java:[lines 12-43]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.Comment inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file Comment.java,
+					
+						lines 9
+						    to 55<br/>In class org.jsoup.nodes.Comment<br/>At Comment.java:[lines 9-55]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.DataNode inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file DataNode.java,
+					
+						lines 9
+						    to 70<br/>In class org.jsoup.nodes.DataNode<br/>At DataNode.java:[lines 9-70]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.Document inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file Document.java,
+					
+						lines 18
+						    to 574<br/>In class org.jsoup.nodes.Document<br/>At Document.java:[lines 18-574]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.DocumentType inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file DocumentType.java,
+					
+						lines 12
+						    to 107<br/>In class org.jsoup.nodes.DocumentType<br/>At DocumentType.java:[lines 12-107]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.Element inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file Element.java,
+					
+						lines 40
+						    to 1456<br/>In class org.jsoup.nodes.Element<br/>At Element.java:[lines 40-1456]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.FormElement inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file FormElement.java,
+					
+						lines 18
+						    to 111<br/>In class org.jsoup.nodes.FormElement<br/>At FormElement.java:[lines 18-111]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.PseudoTextElement inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file PseudoTextElement.java,
+					
+						lines 14
+						    to 23<br/>In class org.jsoup.nodes.PseudoTextElement<br/>At PseudoTextElement.java:[lines 14-23]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.TextNode inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file TextNode.java,
+					
+						lines 12
+						    to 144<br/>In class org.jsoup.nodes.TextNode<br/>At TextNode.java:[lines 12-144]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.XmlDeclaration inherits equals and uses Object.hashCode()<br/>
+<br/>
+<br/>In file XmlDeclaration.java,
+					
+						lines 11
+						    to 89<br/>In class org.jsoup.nodes.XmlDeclaration<br/>At XmlDeclaration.java:[lines 11-89]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#NM_METHOD_NAMING_CONVENTION">Method names should start with a lower case letter</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>The method name org.jsoup.nodes.DocumentTest.DocumentsWithSameContentAreEqual() doesn't start with a lower case letter<br/>
+<br/>
+<br/>In file DocumentTest.java,
+					
+						lines 175
+						    to 183<br/>In class org.jsoup.nodes.DocumentTest<br/>In method org.jsoup.nodes.DocumentTest.DocumentsWithSameContentAreEqual()<br/>At DocumentTest.java:[lines 175-183]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#NM_METHOD_NAMING_CONVENTION">Method names should start with a lower case letter</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>The method name org.jsoup.nodes.DocumentTest.DocumentsWithSameContentAreVerifialbe() doesn't start with a lower case letter<br/>
+<br/>
+<br/>In file DocumentTest.java,
+					
+						lines 186
+						    to 192<br/>In class org.jsoup.nodes.DocumentTest<br/>In method org.jsoup.nodes.DocumentTest.DocumentsWithSameContentAreVerifialbe()<br/>At DocumentTest.java:[lines 186-192]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#SR_NOT_CHECKED">Method ignores results of InputStream.skip()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.helper.DataUtil.parseInputStream(InputStream, String, String, Parser) ignores result of java.io.BufferedReader.skip(long)<br/>
+<br/>
+<br/>In file DataUtil.java,
+					
+						line 151<br/>In class org.jsoup.helper.DataUtil<br/>In method org.jsoup.helper.DataUtil.parseInputStream(InputStream, String, String, Parser)<br/>Called method java.io.BufferedReader.skip(long)<br/>At DataUtil.java:[line 151]<br/>At DataUtil.java:[line 151]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#SR_NOT_CHECKED">Method ignores results of InputStream.skip()</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.parser.CharacterReader.bufferUp() ignores result of java.io.Reader.skip(long)<br/>
+<br/>
+<br/>In file CharacterReader.java,
+					
+						line 51<br/>In class org.jsoup.parser.CharacterReader<br/>In method org.jsoup.parser.CharacterReader.bufferUp()<br/>Called method java.io.Reader.skip(long)<br/>At CharacterReader.java:[line 51]<br/>At CharacterReader.java:[line 51]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#SE_COMPARATOR_SHOULD_BE_SERIALIZABLE">Comparator doesn't implement Serializable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.BuildEntities$ByCode implements Comparator but not Serializable<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						lines 115
+						    to 131<br/>In class org.jsoup.nodes.BuildEntities$ByCode<br/>At BuildEntities.java:[lines 115-131]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#SE_COMPARATOR_SHOULD_BE_SERIALIZABLE">Comparator doesn't implement Serializable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.BuildEntities$ByName implements Comparator but not Serializable<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						lines 109
+						    to 111<br/>In class org.jsoup.nodes.BuildEntities$ByName<br/>At BuildEntities.java:[lines 109-111]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#SE_BAD_FIELD">Non-transient non-serializable instance field in serializable class</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Class org.jsoup.nodes.Element$NodeList defines non-transient non-serializable instance field owner<br/>
+<br/>
+<br/>In file Element.java,
+					
+						lines 
+						    to <br/>In class org.jsoup.nodes.Element$NodeList<br/>Field org.jsoup.nodes.Element$NodeList.owner<br/>Actual type org.jsoup.nodes.Element<br/>In Element.java</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_CORRECTNESS">Correctness Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#NP_NULL_PARAM_DEREF">Method call passes null for non-null parameter</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Null passed for non-null parameter of StringUtil.resolve(URL, String) in org.jsoup.helper.HttpConnection$Response.execute(Connection$Request, HttpConnection$Response)<br/>
+<br/>
+<br/>In file HttpConnection.java,
+					
+						line 767<br/>In class org.jsoup.helper.HttpConnection$Response<br/>In method org.jsoup.helper.HttpConnection$Response.execute(Connection$Request, HttpConnection$Response)<br/>Called method org.jsoup.helper.StringUtil.resolve(URL, String)<br/>Argument 2 might be null but must not be null<br/>Value loaded from location<br/>Method invoked at HttpConnection.java:[line 767]<br/>Known null at HttpConnection.java:[line 765]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#NP_UNWRITTEN_FIELD">Read of unwritten field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Read of unwritten field codepoints in org.jsoup.nodes.BuildEntities$ByCode.compare(BuildEntities$CharacterRef, BuildEntities$CharacterRef)<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						line 119<br/>In class org.jsoup.nodes.BuildEntities$ByCode<br/>In method org.jsoup.nodes.BuildEntities$ByCode.compare(BuildEntities$CharacterRef, BuildEntities$CharacterRef)<br/>Field org.jsoup.nodes.BuildEntities$CharacterRef.codepoints<br/>At BuildEntities.java:[line 119]<br/>At BuildEntities.java:[line 119]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#NP_UNWRITTEN_FIELD">Read of unwritten field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Read of unwritten field codepoints in org.jsoup.nodes.BuildEntities$CharacterRef.toString()<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						line 97<br/>In class org.jsoup.nodes.BuildEntities$CharacterRef<br/>In method org.jsoup.nodes.BuildEntities$CharacterRef.toString()<br/>Field org.jsoup.nodes.BuildEntities$CharacterRef.codepoints<br/>At BuildEntities.java:[line 97]<br/>At BuildEntities.java:[line 97]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS">Method call passes null for non-null parameter</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Null passed for non-null parameter of Element.insertChildren(int, Collection) in org.jsoup.nodes.ElementTest.insertChildrenArgumentValidation()<br/>
+<br/>
+<br/>In file ElementTest.java,
+					
+						line 810<br/>In class org.jsoup.nodes.ElementTest<br/>In method org.jsoup.nodes.ElementTest.insertChildrenArgumentValidation()<br/>Called method org.jsoup.nodes.Element.insertChildren(int, Collection)<br/>At ElementTest.java:[line 810]<br/>Argument 2 is definitely null but must not be null<br/>Definite null passed to dangerous method call target org.jsoup.nodes.Element.insertChildren(int, Collection)</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE">Nullcheck of value previously dereferenced</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Nullcheck of Attribute.parent at line 87 of value previously dereferenced in org.jsoup.nodes.Attribute.setValue(String)<br/>
+<br/>
+<br/>In file Attribute.java,
+					
+						line 86<br/>In class org.jsoup.nodes.Attribute<br/>In method org.jsoup.nodes.Attribute.setValue(String)<br/>Value loaded from field org.jsoup.nodes.Attribute.parent<br/>At Attribute.java:[line 86]<br/>Redundant null check at Attribute.java:[line 87]<br/>Redundant null check at Attribute.java:[line 87]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#UWF_UNWRITTEN_FIELD">Unwritten field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unwritten field: org.jsoup.nodes.BuildEntities$CharacterRef.codepoints<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						line 97<br/>In class org.jsoup.nodes.BuildEntities$CharacterRef<br/>Field org.jsoup.nodes.BuildEntities$CharacterRef.codepoints<br/>At BuildEntities.java:[line 97]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_EXPERIMENTAL">Experimental Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#OBL_UNSATISFIED_OBLIGATION">Method may fail to clean up stream or resource</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.integration.ConnectTest.postFiles() may fail to clean up java.io.InputStream<br/>
+<br/>
+<br/>In file ConnectTest.java,
+					
+						line 291<br/>In class org.jsoup.integration.ConnectTest<br/>In method org.jsoup.integration.ConnectTest.postFiles()<br/>Reference type java.io.InputStream<br/>2 instances of obligation remaining<br/>Obligation to clean up resource created at ConnectTest.java:[line 291] is not discharged<br/>Path continues at ConnectTest.java:[line 292]<br/>Obligation to clean up resource created at ConnectTest.java:[line 292] is not discharged<br/>Path continues at ConnectTest.java:[line 293]<br/>Path continues at ConnectTest.java:[line 294]<br/>Path continues at ConnectTest.java:[line 296]<br/>Path continues at ConnectTest.java:[line 298]<br/>Path continues at ConnectTest.java:[line 299]<br/>Path continues at ConnectTest.java:[line 300]<br/>Path continues at ConnectTest.java:[line 301]<br/>Path continues at ConnectTest.java:[line 308]<br/>Path continues at ConnectTest.java:[line 309]<br/>Path continues at ConnectTest.java:[line 310]<br/>Path continues at ConnectTest.java:[line 311]<br/>Path continues at ConnectTest.java:[line 313]<br/>Path continues at ConnectTest.java:[line 314]<br/>Path continues at ConnectTest.java:[line 326]<br/>Remaining obligations: {InputStream x 2}</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE">Method may fail to clean up stream or resource on checked exception</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.nodes.BuildEntities.persist(String, ArrayList) may fail to clean up java.io.Writer on checked exception<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						line 78<br/>In class org.jsoup.nodes.BuildEntities<br/>In method org.jsoup.nodes.BuildEntities.persist(String, ArrayList)<br/>Reference type java.io.Writer<br/>1 instances of obligation remaining<br/>Obligation to clean up resource created at BuildEntities.java:[line 78] is not discharged<br/>Path continues at BuildEntities.java:[line 79]<br/>Remaining obligations: {Writer x 1}</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_I18N">Internationalization Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DM_DEFAULT_ENCODING">Reliance on default encoding</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Found reliance on default encoding in org.jsoup.nodes.BuildEntities.persist(String, ArrayList): new java.io.FileWriter(File, boolean)<br/>
+<br/>
+<br/>In file BuildEntities.java,
+					
+						line 78<br/>In class org.jsoup.nodes.BuildEntities<br/>In method org.jsoup.nodes.BuildEntities.persist(String, ArrayList)<br/>Called method new java.io.FileWriter(File, boolean)<br/>At BuildEntities.java:[line 78]<br/>At BuildEntities.java:[line 78]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#MS_SHOULD_BE_FINAL">Field isn't final but should be</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>org.jsoup.integration.UrlConnectTest.browserUa isn't final but should be<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 38<br/>In class org.jsoup.integration.UrlConnectTest<br/>Field org.jsoup.integration.UrlConnectTest.browserUa<br/>At UrlConnectTest.java:[line 38]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_PERFORMANCE">Performance Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DM_BOXED_PRIMITIVE_FOR_PARSING">Boxing/unboxing to parse a primitive</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Boxing/unboxing to parse a primitive org.jsoup.integration.servlets.SlowRider.doGet(HttpServletRequest, HttpServletResponse)<br/>
+<br/>
+<br/>In file SlowRider.java,
+					
+						line 30<br/>In class org.jsoup.integration.servlets.SlowRider<br/>In method org.jsoup.integration.servlets.SlowRider.doGet(HttpServletRequest, HttpServletResponse)<br/>Called method Integer.intValue()<br/>Should call Integer.parseInt(String) instead<br/>At SlowRider.java:[line 30]<br/>At SlowRider.java:[line 30]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#HSC_HUGE_SHARED_STRING_CONSTANT">Huge string constants is duplicated across multiple class files</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>org.jsoup.nodes.EntitiesData.fullPoints is initialized to a string constant 31800 characters long that is duplicated in 2 other class files<br/>
+<br/>
+<br/>In file EntitiesData.java,
+					
+						lines 
+						    to <br/>In class org.jsoup.nodes.EntitiesData<br/>Field org.jsoup.nodes.EntitiesData.fullPoints<br/>Value 31800<br/>Occurs 2 times<br/>In class org.jsoup.nodes.Entities$EscapeMode<br/>In EntitiesData.java</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#SIC_INNER_SHOULD_BE_STATIC">Should be a static inner class</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Should org.jsoup.examples.HtmlToPlainText$FormattingVisitor be a _static_ inner class?<br/>
+<br/>
+<br/>In file HtmlToPlainText.java,
+					
+						lines 69
+						    to 127<br/>In class org.jsoup.examples.HtmlToPlainText$FormattingVisitor<br/>At HtmlToPlainText.java:[lines 69-127]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#WMI_WRONG_MAP_ITERATOR">Inefficient use of keySet iterator instead of entrySet iterator</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.safety.Whitelist.removeAttributes(String, String[]) makes inefficient use of keySet iterator instead of entrySet iterator<br/>
+<br/>
+<br/>In file Whitelist.java,
+					
+						line 310<br/>In class org.jsoup.safety.Whitelist<br/>In method org.jsoup.safety.Whitelist.removeAttributes(String, String[])<br/>Field org.jsoup.safety.Whitelist.attributes<br/>At Whitelist.java:[line 310]<br/>At Whitelist.java:[line 310]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="Warnings_STYLE">Dodgy code Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Dead store to fail in org.jsoup.nodes.DocumentTypeTest.constructorValidationOkWithBlankName()<br/>
+<br/>
+<br/>In file DocumentTypeTest.java,
+					
+						line 17<br/>In class org.jsoup.nodes.DocumentTypeTest<br/>In method org.jsoup.nodes.DocumentTypeTest.constructorValidationOkWithBlankName()<br/>Local variable named fail<br/>At DocumentTypeTest.java:[line 17]<br/>At DocumentTypeTest.java:[line 17]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Dead store to fail in org.jsoup.nodes.DocumentTypeTest.constructorValidationOkWithBlankPublicAndSystemIds()<br/>
+<br/>
+<br/>In file DocumentTypeTest.java,
+					
+						line 27<br/>In class org.jsoup.nodes.DocumentTypeTest<br/>In method org.jsoup.nodes.DocumentTypeTest.constructorValidationOkWithBlankPublicAndSystemIds()<br/>Local variable named fail<br/>At DocumentTypeTest.java:[line 27]<br/>At DocumentTypeTest.java:[line 27]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Dead store to fail in org.jsoup.nodes.DocumentTypeTest.constructorValidationThrowsExceptionOnNulls()<br/>
+<br/>
+<br/>In file DocumentTypeTest.java,
+					
+						line 22<br/>In class org.jsoup.nodes.DocumentTypeTest<br/>In method org.jsoup.nodes.DocumentTypeTest.constructorValidationThrowsExceptionOnNulls()<br/>Local variable named fail<br/>At DocumentTypeTest.java:[line 22]<br/>At DocumentTypeTest.java:[line 22]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DB_DUPLICATE_BRANCHES">Method uses the same code for two branches</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>org.jsoup.parser.HtmlTreeBuilder.parseFragment(String, Element, String, ParseErrorList, ParseSettings) uses the same code for two branches<br/>
+<br/>
+<br/>In file HtmlTreeBuilder.java,
+					
+						line 105<br/>In class org.jsoup.parser.HtmlTreeBuilder<br/>In method org.jsoup.parser.HtmlTreeBuilder.parseFragment(String, Element, String, ParseErrorList, ParseSettings)<br/>At HtmlTreeBuilder.java:[line 105]<br/>At HtmlTreeBuilder.java:[line 107]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to con in org.jsoup.helper.HttpConnectionTest.throwsOnMalformedUrl()<br/>
+<br/>
+<br/>In file HttpConnectionTest.java,
+					
+						line 163<br/>In class org.jsoup.helper.HttpConnectionTest<br/>In method org.jsoup.helper.HttpConnectionTest.throwsOnMalformedUrl()<br/>Local variable named con<br/>At HttpConnectionTest.java:[line 163]<br/>At HttpConnectionTest.java:[line 163]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to out in org.jsoup.helper.W3CDomTest.convertsGoogleLocation()<br/>
+<br/>
+<br/>In file W3CDomTest.java,
+					
+						line 59<br/>In class org.jsoup.helper.W3CDomTest<br/>In method org.jsoup.helper.W3CDomTest.convertsGoogleLocation()<br/>Local variable named out<br/>At W3CDomTest.java:[line 59]<br/>At W3CDomTest.java:[line 59]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to w3Doc in org.jsoup.helper.W3CDomTest.handlesInvalidAttributeNames()<br/>
+<br/>
+<br/>In file W3CDomTest.java,
+					
+						line 136<br/>In class org.jsoup.helper.W3CDomTest<br/>In method org.jsoup.helper.W3CDomTest.handlesInvalidAttributeNames()<br/>Local variable named w3Doc<br/>At W3CDomTest.java:[line 136]<br/>At W3CDomTest.java:[line 136]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to body in org.jsoup.integration.ConnectTest.bodyAfterParseThrowsValidationError()<br/>
+<br/>
+<br/>In file ConnectTest.java,
+					
+						line 341<br/>In class org.jsoup.integration.ConnectTest<br/>In method org.jsoup.integration.ConnectTest.bodyAfterParseThrowsValidationError()<br/>Local variable named body<br/>At ConnectTest.java:[line 341]<br/>At ConnectTest.java:[line 341]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.ConnectTest.bodyAfterParseThrowsValidationError()<br/>
+<br/>
+<br/>In file ConnectTest.java,
+					
+						line 340<br/>In class org.jsoup.integration.ConnectTest<br/>In method org.jsoup.integration.ConnectTest.bodyAfterParseThrowsValidationError()<br/>Local variable named doc<br/>At ConnectTest.java:[line 340]<br/>At ConnectTest.java:[line 340]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.ConnectTest.exceptOnUnsupportedProtocol()<br/>
+<br/>
+<br/>In file ConnectTest.java,
+					
+						line 73<br/>In class org.jsoup.integration.ConnectTest<br/>In method org.jsoup.integration.ConnectTest.exceptOnUnsupportedProtocol()<br/>Local variable named e<br/>At ConnectTest.java:[line 73]<br/>At ConnectTest.java:[line 73]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc2 in org.jsoup.integration.ConnectTest.parseParseThrowsValidates()<br/>
+<br/>
+<br/>In file ConnectTest.java,
+					
+						line 359<br/>In class org.jsoup.integration.ConnectTest<br/>In method org.jsoup.integration.ConnectTest.parseParseThrowsValidates()<br/>Local variable named doc2<br/>At ConnectTest.java:[line 359]<br/>At ConnectTest.java:[line 359]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.UrlConnectTest.exceptOnUnknownContentType()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 56<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.exceptOnUnknownContentType()<br/>Local variable named e<br/>At UrlConnectTest.java:[line 56]<br/>At UrlConnectTest.java:[line 56]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.handles200WithNoContent()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 217<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.handles200WithNoContent()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 217]<br/>At UrlConnectTest.java:[line 217]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.handlesEscapedRedirectUrls()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 637<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.handlesEscapedRedirectUrls()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 637]<br/>At UrlConnectTest.java:[line 637]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.ignores200WithNoContentExceptionIfSoConfigured()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 198<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.ignores200WithNoContentExceptionIfSoConfigured()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 198]<br/>At UrlConnectTest.java:[line 198]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.ignores500WithNoContentExceptionIfSoConfigured()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 189<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.ignores500WithNoContentExceptionIfSoConfigured()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 189]<br/>At UrlConnectTest.java:[line 189]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.UrlConnectTest.invalidProxyFails()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 504<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.invalidProxyFails()<br/>Local variable named e<br/>At UrlConnectTest.java:[line 504]<br/>At UrlConnectTest.java:[line 504]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.UrlConnectTest.maximumRedirects()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 242<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.maximumRedirects()<br/>Local variable named e<br/>At UrlConnectTest.java:[line 242]<br/>At UrlConnectTest.java:[line 242]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.shouldWorkForCharsetInExtraAttribute()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 340<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.shouldWorkForCharsetInExtraAttribute()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 340]<br/>At UrlConnectTest.java:[line 340]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.integration.UrlConnectTest.shouldWorkForDuplicateCharsetInTag()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 372<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.shouldWorkForDuplicateCharsetInTag()<br/>Local variable named doc<br/>At UrlConnectTest.java:[line 372]<br/>At UrlConnectTest.java:[line 372]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.UrlConnectTest.throwsExceptionOnError()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 155<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.throwsExceptionOnError()<br/>Local variable named e<br/>At UrlConnectTest.java:[line 155]<br/>At UrlConnectTest.java:[line 155]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.integration.UrlConnectTest.throwsIfRequestBodyForGet()<br/>
+<br/>
+<br/>In file UrlConnectTest.java,
+					
+						line 528<br/>In class org.jsoup.integration.UrlConnectTest<br/>In method org.jsoup.integration.UrlConnectTest.throwsIfRequestBodyForGet()<br/>Local variable named e<br/>At UrlConnectTest.java:[line 528]<br/>At UrlConnectTest.java:[line 528]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to e in org.jsoup.nodes.FormElementTest.actionWithNoBaseUri()<br/>
+<br/>
+<br/>In file FormElementTest.java,
+					
+						line 84<br/>In class org.jsoup.nodes.FormElementTest<br/>In method org.jsoup.nodes.FormElementTest.actionWithNoBaseUri()<br/>Local variable named e<br/>At FormElementTest.java:[line 84]<br/>At FormElementTest.java:[line 84]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.parser.HtmlParserTest.noErrorsByDefault()<br/>
+<br/>
+<br/>In file HtmlParserTest.java,
+					
+						line 829<br/>In class org.jsoup.parser.HtmlParserTest<br/>In method org.jsoup.parser.HtmlParserTest.noErrorsByDefault()<br/>Local variable named doc<br/>At HtmlParserTest.java:[line 829]<br/>At HtmlParserTest.java:[line 829]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to html in org.jsoup.parser.HtmlParserTest.testNormalisesIsIndex()<br/>
+<br/>
+<br/>In file HtmlParserTest.java,
+					
+						line 1012<br/>In class org.jsoup.parser.HtmlParserTest<br/>In method org.jsoup.parser.HtmlParserTest.testNormalisesIsIndex()<br/>Local variable named html<br/>At HtmlParserTest.java:[line 1012]<br/>At HtmlParserTest.java:[line 1012]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to document in org.jsoup.parser.HtmlParserTest.testSelectWithOption()<br/>
+<br/>
+<br/>In file HtmlParserTest.java,
+					
+						line 129<br/>In class org.jsoup.parser.HtmlParserTest<br/>In method org.jsoup.parser.HtmlParserTest.testSelectWithOption()<br/>Local variable named document<br/>At HtmlParserTest.java:[line 129]<br/>At HtmlParserTest.java:[line 129]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.parser.HtmlParserTest.tracksErrorsWhenRequested()<br/>
+<br/>
+<br/>In file HtmlParserTest.java,
+					
+						line 803<br/>In class org.jsoup.parser.HtmlParserTest<br/>In method org.jsoup.parser.HtmlParserTest.tracksErrorsWhenRequested()<br/>Local variable named doc<br/>At HtmlParserTest.java:[line 803]<br/>At HtmlParserTest.java:[line 803]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to doc in org.jsoup.parser.HtmlParserTest.tracksLimitedErrorsWhenRequested()<br/>
+<br/>
+<br/>In file HtmlParserTest.java,
+					
+						line 817<br/>In class org.jsoup.parser.HtmlParserTest<br/>In method org.jsoup.parser.HtmlParserTest.tracksLimitedErrorsWhenRequested()<br/>Local variable named doc<br/>At HtmlParserTest.java:[line 817]<br/>At HtmlParserTest.java:[line 817]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to parse in org.jsoup.select.QueryParserTest.exceptionOnUncloseAttribute()<br/>
+<br/>
+<br/>In file QueryParserTest.java,
+					
+						line 44<br/>In class org.jsoup.select.QueryParserTest<br/>In method org.jsoup.select.QueryParserTest.exceptionOnUncloseAttribute()<br/>Local variable named parse<br/>At QueryParserTest.java:[line 44]<br/>At QueryParserTest.java:[line 44]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Dead store to parse in org.jsoup.select.QueryParserTest.testParsesSingleQuoteInContains()<br/>
+<br/>
+<br/>In file QueryParserTest.java,
+					
+						line 48<br/>In class org.jsoup.select.QueryParserTest<br/>In method org.jsoup.select.QueryParserTest.testParsesSingleQuoteInContains()<br/>Local variable named parse<br/>At QueryParserTest.java:[line 48]<br/>At QueryParserTest.java:[line 48]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#NS_NON_SHORT_CIRCUIT">Questionable use of non-short-circuit logic</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Questionable use of non-short-circuit logic in org.jsoup.helper.HttpConnection$Base.looksLikeUtf8(byte[])<br/>
+<br/>
+<br/>In file HttpConnection.java,
+					
+						line 412<br/>In class org.jsoup.helper.HttpConnection$Base<br/>In method org.jsoup.helper.HttpConnection$Base.looksLikeUtf8(byte[])<br/>At HttpConnection.java:[line 412]<br/>At HttpConnection.java:[line 412]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#REC_CATCH_EXCEPTION">Exception is caught when Exception is not thrown</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Exception is caught when Exception is not thrown in org.jsoup.helper.HttpConnection.encodeUrl(URL)<br/>
+<br/>
+<br/>In file HttpConnection.java,
+					
+						line 107<br/>In class org.jsoup.helper.HttpConnection<br/>In method org.jsoup.helper.HttpConnection.encodeUrl(URL)<br/>At HttpConnection.java:[line 107]<br/>At HttpConnection.java:[line 107]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#RV_RETURN_VALUE_IGNORED_INFERRED">Method ignores return value, is this OK?</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Return value of Element.appendElement(String) ignored, is this OK in org.jsoup.nodes.Document.createShell(String)<br/>
+<br/>
+<br/>In file Document.java,
+					
+						line 45<br/>In class org.jsoup.nodes.Document<br/>In method org.jsoup.nodes.Document.createShell(String)<br/>Called method org.jsoup.nodes.Element.appendElement(String)<br/>At Document.java:[line 45]<br/>At Document.java:[line 45]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#RV_RETURN_VALUE_IGNORED_INFERRED">Method ignores return value, is this OK?</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Return value of Element.appendElement(String) ignored, is this OK in org.jsoup.nodes.Document.normalise()<br/>
+<br/>
+<br/>In file Document.java,
+					
+						line 122<br/>In class org.jsoup.nodes.Document<br/>In method org.jsoup.nodes.Document.normalise()<br/>Called method org.jsoup.nodes.Element.appendElement(String)<br/>At Document.java:[line 122]<br/>At Document.java:[line 122]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#RV_RETURN_VALUE_IGNORED_INFERRED">Method ignores return value, is this OK?</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Return value of Element.prependElement(String) ignored, is this OK in org.jsoup.nodes.Document.normalise()<br/>
+<br/>
+<br/>In file Document.java,
+					
+						line 120<br/>In class org.jsoup.nodes.Document<br/>In method org.jsoup.nodes.Document.normalise()<br/>Called method org.jsoup.nodes.Element.prependElement(String)<br/>At Document.java:[line 120]<br/>At Document.java:[line 120]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT">Return value of method without side effect is ignored</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Return value of new org.jsoup.integration.ParseTest() ignored, but method has no side effect<br/>
+<br/>
+<br/>In file DocumentTest.java,
+					
+						line 107<br/>In class org.jsoup.nodes.DocumentTest<br/>In method org.jsoup.nodes.DocumentTest.testLocation()<br/>Called method new org.jsoup.integration.ParseTest()<br/>At DocumentTest.java:[line 107]<br/>At DocumentTest.java:[line 107]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#RV_RETURN_VALUE_IGNORED_INFERRED">Method ignores return value, is this OK?</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Return value of Element.appendElement(String) ignored, is this OK in org.jsoup.nodes.ElementTest.appendMustCorrectlyMoveChildrenInsideOneParentElement()<br/>
+<br/>
+<br/>In file ElementTest.java,
+					
+						line 980<br/>In class org.jsoup.nodes.ElementTest<br/>In method org.jsoup.nodes.ElementTest.appendMustCorrectlyMoveChildrenInsideOneParentElement()<br/>Called method org.jsoup.nodes.Element.appendElement(String)<br/>At ElementTest.java:[line 980]<br/>At ElementTest.java:[line 980]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#SF_SWITCH_FALLTHROUGH">Switch statement found where one case falls through to the next case</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Switch statement found in org.jsoup.parser.TokeniserState$51.read(Tokeniser, CharacterReader) where one case falls through to the next case<br/>
+<br/>
+<br/>In file TokeniserState.java,
+					
+						lines 1102
+						    to 1105<br/>In class org.jsoup.parser.TokeniserState$51<br/>In method org.jsoup.parser.TokeniserState$51.read(Tokeniser, CharacterReader)<br/>At TokeniserState.java:[lines 1102-1105]<br/>At TokeniserState.java:[lines 1102-1105]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unread public/protected field: org.jsoup.helper.HttpConnectionTest.rule<br/>
+<br/>
+<br/>In file HttpConnectionTest.java,
+					
+						line 27<br/>In class org.jsoup.helper.HttpConnectionTest<br/>Field org.jsoup.helper.HttpConnectionTest.rule<br/>At HttpConnectionTest.java:[line 27]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unread public/protected field: org.jsoup.parser.ParserSettingsTest.rule<br/>
+<br/>
+<br/>In file ParserSettingsTest.java,
+					
+						line 12<br/>In class org.jsoup.parser.ParserSettingsTest<br/>Field org.jsoup.parser.ParserSettingsTest.rule<br/>At ParserSettingsTest.java:[line 12]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unread public/protected field: org.jsoup.parser.TagTest.rule<br/>
+<br/>
+<br/>In file TagTest.java,
+					
+						line 14<br/>In class org.jsoup.parser.TagTest<br/>Field org.jsoup.parser.TagTest.rule<br/>At TagTest.java:[line 14]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unread public/protected field: org.jsoup.safety.CleanerTest.rule<br/>
+<br/>
+<br/>In file CleanerTest.java,
+					
+						line 19<br/>In class org.jsoup.safety.CleanerTest<br/>Field org.jsoup.safety.CleanerTest.rule<br/>At CleanerTest.java:[line 19]</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Unread public/protected field: org.jsoup.select.SelectorTest.rule<br/>
+<br/>
+<br/>In file SelectorTest.java,
+					
+						line 19<br/>In class org.jsoup.select.SelectorTest<br/>Field org.jsoup.select.SelectorTest.rule<br/>At SelectorTest.java:[line 19]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<p>
+<br/>
+<br/>
+</p>
+<h1>
+<a name="Details">Warning Types</a>
+</h1>
+<h2>
+<a name="DM_BOXED_PRIMITIVE_FOR_PARSING">Boxing/unboxing to parse a primitive</a>
+</h2>
+
+  <p>A boxed primitive is created from a String, just to extract the unboxed primitive value.
+  It is more efficient to just call the static parseXXX method.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="CN_IDIOM_NO_SUPER_CALL">clone method does not call super.clone()</a>
+</h2>
+
+<p> This non-final class defines a clone() method that does not call super.clone().
+If this class ("<i>A</i>") is extended by a subclass ("<i>B</i>"),
+and the subclass <i>B</i> calls super.clone(), then it is likely that
+<i>B</i>'s clone() method will return an object of type <i>A</i>,
+which violates the standard contract for clone().</p>
+
+<p> If all clone() methods call super.clone(), then they are guaranteed
+to use Object.clone(), which always returns an object of the correct type.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="DB_DUPLICATE_BRANCHES">Method uses the same code for two branches</a>
+</h2>
+      
+      <p>
+      This method uses the same code to implement two branches of a conditional branch.
+    Check to ensure that this isn't a coding mistake.
+      </p>
+      
+   
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="DLS_DEAD_LOCAL_STORE">Dead store to local variable</a>
+</h2>
+
+<p>
+This instruction assigns a value to a local variable,
+but the value is not read or used in any subsequent instruction.
+Often, this indicates an error, because the value computed is never
+used.
+</p>
+<p>
+Note that Sun's javac compiler often generates dead stores for
+final local variables.  Because FindBugs is a bytecode-based tool,
+there is no easy way to eliminate these false positives.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="DM_DEFAULT_ENCODING">Reliance on default encoding</a>
+</h2>
+
+<p> Found a call to a method which will perform a byte to String (or String to byte) conversion, and will assume that the default platform encoding is suitable. This will cause the application behaviour to vary between platforms. Use an alternative API and specify a charset name or Charset object explicitly.  </p>
+
+      
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="ES_COMPARING_STRINGS_WITH_EQ">Comparison of String objects using == or !=</a>
+</h2>
+
+  <p>This code compares <code>java.lang.String</code> objects for reference
+equality using the == or != operators.
+Unless both strings are either constants in a source file, or have been
+interned using the <code>String.intern()</code> method, the same string
+value may be represented by two different String objects. Consider
+using the <code>equals(Object)</code> method instead.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="HE_INHERITS_EQUALS_USE_HASHCODE">Class inherits equals() and uses Object.hashCode()</a>
+</h2>
+
+  <p> This class inherits <code>equals(Object)</code> from an abstract
+  superclass, and <code>hashCode()</code> from
+<code>java.lang.Object</code> (which returns
+  the identity hash code, an arbitrary value assigned to the object
+  by the VM).&nbsp; Therefore, the class is very likely to violate the
+  invariant that equal objects must have equal hashcodes.</p>
+
+  <p>If you don't want to define a hashCode method, and/or don't
+   believe the object will ever be put into a HashMap/Hashtable,
+   define the <code>hashCode()</code> method
+   to throw <code>UnsupportedOperationException</code>.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="HSC_HUGE_SHARED_STRING_CONSTANT">Huge string constants is duplicated across multiple class files</a>
+</h2>
+      
+      <p>
+    A large String constant is duplicated across multiple class files.
+    This is likely because a final field is initialized to a String constant, and the Java language
+    mandates that all references to a final field from other classes be inlined into
+that classfile. See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6447475">JDK bug 6447475</a>
+    for a description of an occurrence of this bug in the JDK and how resolving it reduced
+    the size of the JDK by 1 megabyte.
+</p>
+      
+   
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="MS_SHOULD_BE_FINAL">Field isn't final but should be</a>
+</h2>
+
+   <p>
+This static field public but not final, and
+could be changed by malicious code or
+        by accident from another package.
+        The field could be made final to avoid
+        this vulnerability.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="NM_METHOD_NAMING_CONVENTION">Method names should start with a lower case letter</a>
+</h2>
+
+  <p>
+Methods should be verbs, in mixed case with the first letter lowercase, with the first letter of each internal word capitalized.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS">Method call passes null for non-null parameter</a>
+</h2>
+      
+      <p>
+      A possibly-null value is passed at a call site where all known
+      target methods require the parameter to be non-null.
+    Either the parameter is annotated as a parameter that should
+    always be non-null, or analysis has shown that it will always be
+    dereferenced.
+      </p>
+      
+   
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="NP_NULL_PARAM_DEREF">Method call passes null for non-null parameter</a>
+</h2>
+      
+      <p>
+      This method call passes a null value for a non-null method parameter.
+    Either the parameter is annotated as a parameter that should
+    always be non-null, or analysis has shown that it will always be
+    dereferenced.
+      </p>
+      
+   
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="NP_UNWRITTEN_FIELD">Read of unwritten field</a>
+</h2>
+
+  <p> The program is dereferencing a field that does not seem to ever have a non-null value written to it.
+Unless the field is initialized via some mechanism not seen by the analysis,
+dereferencing this value will generate a null pointer exception.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="NS_NON_SHORT_CIRCUIT">Questionable use of non-short-circuit logic</a>
+</h2>
+
+  <p> This code seems to be using non-short-circuit logic (e.g., &amp;
+or |)
+rather than short-circuit logic (&amp;&amp; or ||).
+Non-short-circuit logic causes both sides of the expression
+to be evaluated even when the result can be inferred from
+knowing the left-hand side. This can be less efficient and
+can result in errors if the left-hand side guards cases
+when evaluating the right-hand side can generate an error.
+
+<p>See <a href="http://java.sun.com/docs/books/jls/third_edition/html/expressions.html#15.22.2">the Java
+Language Specification</a> for details
+
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="OBL_UNSATISFIED_OBLIGATION">Method may fail to clean up stream or resource</a>
+</h2>
+          
+          <p>
+          This method may fail to clean up (close, dispose of) a stream,
+          database object, or other
+          resource requiring an explicit cleanup operation.
+          </p>
+
+          <p>
+          In general, if a method opens a stream or other resource,
+          the method should use a try/finally block to ensure that
+          the stream or resource is cleaned up before the method
+          returns.
+          </p>
+
+          <p>
+          This bug pattern is essentially the same as the
+          OS_OPEN_STREAM and ODR_OPEN_DATABASE_RESOURCE
+          bug patterns, but is based on a different
+          (and hopefully better) static analysis technique.
+          We are interested is getting feedback about the
+          usefulness of this bug pattern.
+          To send feedback, either:
+          </p>
+          <ul>
+            <li>send email to findbugs@cs.umd.edu</li>
+            <li>file a bug report: <a href="http://findbugs.sourceforge.net/reportingBugs.html">http://findbugs.sourceforge.net/reportingBugs.html</a></li>
+          </ul>
+
+          <p>
+          In particular,
+          the false-positive suppression heuristics for this
+          bug pattern have not been extensively tuned, so
+          reports about false positives are helpful to us.
+          </p>
+
+          <p>
+          See Weimer and Necula, <i>Finding and Preventing Run-Time Error Handling Mistakes</i>, for
+          a description of the analysis technique.
+          </p>
+          
+      
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE">Method may fail to clean up stream or resource on checked exception</a>
+</h2>
+          
+          <p>
+          This method may fail to clean up (close, dispose of) a stream,
+          database object, or other
+          resource requiring an explicit cleanup operation.
+          </p>
+
+          <p>
+          In general, if a method opens a stream or other resource,
+          the method should use a try/finally block to ensure that
+          the stream or resource is cleaned up before the method
+          returns.
+          </p>
+
+          <p>
+          This bug pattern is essentially the same as the
+          OS_OPEN_STREAM and ODR_OPEN_DATABASE_RESOURCE
+          bug patterns, but is based on a different
+          (and hopefully better) static analysis technique.
+          We are interested is getting feedback about the
+          usefulness of this bug pattern.
+          To send feedback, either:
+          </p>
+          <ul>
+            <li>send email to findbugs@cs.umd.edu</li>
+            <li>file a bug report: <a href="http://findbugs.sourceforge.net/reportingBugs.html">http://findbugs.sourceforge.net/reportingBugs.html</a></li>
+          </ul>
+
+          <p>
+          In particular,
+          the false-positive suppression heuristics for this
+          bug pattern have not been extensively tuned, so
+          reports about false positives are helpful to us.
+          </p>
+
+          <p>
+          See Weimer and Necula, <i>Finding and Preventing Run-Time Error Handling Mistakes</i>, for
+          a description of the analysis technique.
+          </p>
+          
+      
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE">Nullcheck of value previously dereferenced</a>
+</h2>
+
+<p> A value is checked here to see whether it is null, but this value can't
+be null because it was previously dereferenced and if it were null a null pointer
+exception would have occurred at the earlier dereference.
+Essentially, this code and the previous dereference
+disagree as to whether this value is allowed to be null. Either the check is redundant
+or the previous dereference is erroneous.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="REC_CATCH_EXCEPTION">Exception is caught when Exception is not thrown</a>
+</h2>
+  
+  <p>
+  This method uses a try-catch block that catches Exception objects, but Exception is not
+  thrown within the try block, and RuntimeException is not explicitly caught.  It is a common bug pattern to
+  say try { ... } catch (Exception e) { something } as a shorthand for catching a number of types of exception
+  each of whose catch blocks is identical, but this construct also accidentally catches RuntimeException as well,
+  masking potential bugs.
+  </p>
+  <p>A better approach is to either explicitly catch the specific exceptions that are thrown,
+  or to explicitly catch RuntimeException exception, rethrow it, and then catch all non-Runtime Exceptions, as shown below:</p>
+  <pre>
+  try {
+    ...
+  } catch (RuntimeException e) {
+    throw e;
+  } catch (Exception e) {
+    ... deal with all non-runtime exceptions ...
+  }</pre>
+  
+     
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="SR_NOT_CHECKED">Method ignores results of InputStream.skip()</a>
+</h2>
+
+  <p> This method ignores the return value of
+  <code>java.io.InputStream.skip()</code> which can skip multiple bytes.&nbsp;
+  If the return value is not checked, the caller will not be able to correctly
+  handle the case where fewer bytes were skipped than the caller requested.&nbsp;
+  This is a particularly insidious kind of bug, because in many programs,
+  skips from input streams usually do skip the full amount of data requested,
+  causing the program to fail only sporadically. With Buffered streams, however,
+  skip() will only skip data in the buffer, and will routinely fail to skip the
+  requested number of bytes.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="RV_RETURN_VALUE_IGNORED_INFERRED">Method ignores return value, is this OK?</a>
+</h2>
+
+<p>This code calls a method and ignores the return value. The return value
+is the same type as the type the method is invoked on, and from our analysis it looks
+like the return value might be important (e.g., like ignoring the
+return value of <code>String.toLowerCase()</code>).
+</p>
+<p>We are guessing that ignoring the return value might be a bad idea just from
+a simple analysis of the body of the method. You can use a @CheckReturnValue annotation
+to instruct FindBugs as to whether ignoring the return value of this method
+is important or acceptable.
+</p>
+<p>Please investigate this closely to decide whether it is OK to ignore the return value.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT">Return value of method without side effect is ignored</a>
+</h2>
+
+<p>This code calls a method and ignores the return value. However our analysis shows that
+the method (including its implementations in subclasses if any) does not produce any effect 
+other than return value. Thus this call can be removed.
+</p>
+<p>We are trying to reduce the false positives as much as possible, but in some cases this warning might be wrong.
+Common false-positive cases include:</p>
+<p>- The method is designed to be overridden and produce a side effect in other projects which are out of the scope of the analysis.</p>
+<p>- The method is called to trigger the class loading which may have a side effect.</p>
+<p>- The method is called just to get some exception.</p>
+<p>If you feel that our assumption is incorrect, you can use a @CheckReturnValue annotation
+to instruct FindBugs that ignoring the return value of this method is acceptable.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE">Comparator doesn't implement Serializable</a>
+</h2>
+
+  <p> This class implements the <code>Comparator</code> interface. You
+should consider whether or not it should also implement the <code>Serializable</code>
+interface. If a comparator is used to construct an ordered collection
+such as a <code>TreeMap</code>, then the <code>TreeMap</code>
+will be serializable only if the comparator is also serializable.
+As most comparators have little or no state, making them serializable
+is generally easy and good defensive programming.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="SE_BAD_FIELD">Non-transient non-serializable instance field in serializable class</a>
+</h2>
+
+<p> This Serializable class defines a non-primitive instance field which is neither transient,
+Serializable, or <code>java.lang.Object</code>, and does not appear to implement
+the <code>Externalizable</code> interface or the
+<code>readObject()</code> and <code>writeObject()</code> methods.&nbsp;
+Objects of this class will not be deserialized correctly if a non-Serializable
+object is stored in this field.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="SF_SWITCH_FALLTHROUGH">Switch statement found where one case falls through to the next case</a>
+</h2>
+
+  <p> This method contains a switch statement where one case branch will fall through to the next case.
+  Usually you need to end this case with a break or return.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="SIC_INNER_SHOULD_BE_STATIC">Should be a static inner class</a>
+</h2>
+
+  <p> This class is an inner class, but does not use its embedded reference
+  to the object which created it.&nbsp; This reference makes the instances
+  of the class larger, and may keep the reference to the creator object
+  alive longer than necessary.&nbsp; If possible, the class should be
+   made static.
+</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD">Unread public/protected field</a>
+</h2>
+
+  <p> This field is never read.&nbsp;
+The field is public or protected, so perhaps
+    it is intended to be used with classes not seen as part of the analysis. If not,
+consider removing it from the class.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="UWF_UNWRITTEN_FIELD">Unwritten field</a>
+</h2>
+
+  <p> This field is never written.&nbsp; All reads of it will return the default
+value. Check for errors (should it have been initialized?), or remove it if it is useless.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="WMI_WRONG_MAP_ITERATOR">Inefficient use of keySet iterator instead of entrySet iterator</a>
+</h2>
+
+<p> This method accesses the value of a Map entry, using a key that was retrieved from
+a keySet iterator. It is more efficient to use an iterator on the entrySet of the map, to avoid the
+Map.get(key) lookup.</p>
+
+        
+<p>
+<br/>
+<br/>
+</p>
+</body>
+</html>

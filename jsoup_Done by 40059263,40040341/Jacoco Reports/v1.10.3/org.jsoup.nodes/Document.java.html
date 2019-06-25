@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Document.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.nodes</a> &gt; <span class="el_source">Document.java</span></div><h1>Document.java</h1><pre class="source lang-java linenums">package org.jsoup.nodes;
+
+import org.jsoup.helper.StringUtil;
+import org.jsoup.helper.Validate;
+import org.jsoup.parser.ParseSettings;
+import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
+
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ A HTML Document.
+
+ @author Jonathan Hedley, jonathan@hedley.net */
+public class Document extends Element {
+<span class="fc" id="L19">    private OutputSettings outputSettings = new OutputSettings();</span>
+<span class="fc" id="L20">    private QuirksMode quirksMode = QuirksMode.noQuirks;</span>
+    private String location;
+<span class="fc" id="L22">    private boolean updateMetaCharset = false;</span>
+
+    /**
+     Create a new, empty Document.
+     @param baseUri base URI of document
+     @see org.jsoup.Jsoup#parse
+     @see #createShell
+     */
+    public Document(String baseUri) {
+<span class="fc" id="L31">        super(Tag.valueOf(&quot;#root&quot;, ParseSettings.htmlDefault), baseUri);</span>
+<span class="fc" id="L32">        this.location = baseUri;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     Create a valid, empty shell of a document, suitable for adding more elements to.
+     @param baseUri baseUri of document
+     @return document with html, head, and body elements.
+     */
+    public static Document createShell(String baseUri) {
+<span class="fc" id="L41">        Validate.notNull(baseUri);</span>
+
+<span class="fc" id="L43">        Document doc = new Document(baseUri);</span>
+<span class="fc" id="L44">        Element html = doc.appendElement(&quot;html&quot;);</span>
+<span class="fc" id="L45">        html.appendElement(&quot;head&quot;);</span>
+<span class="fc" id="L46">        html.appendElement(&quot;body&quot;);</span>
+
+<span class="fc" id="L48">        return doc;</span>
+    }
+
+    /**
+     * Get the URL this Document was parsed from. If the starting URL is a redirect,
+     * this will return the final URL from which the document was served from.
+     * @return location
+     */
+    public String location() {
+<span class="fc" id="L57">     return location;</span>
+    }
+    
+    /**
+     Accessor to the document's {@code head} element.
+     @return {@code head}
+     */
+    public Element head() {
+<span class="fc" id="L65">        return findFirstElementByTagName(&quot;head&quot;, this);</span>
+    }
+
+    /**
+     Accessor to the document's {@code body} element.
+     @return {@code body}
+     */
+    public Element body() {
+<span class="fc" id="L73">        return findFirstElementByTagName(&quot;body&quot;, this);</span>
+    }
+
+    /**
+     Get the string contents of the document's {@code title} element.
+     @return Trimmed title, or empty string if none set.
+     */
+    public String title() {
+        // title is a preserve whitespace tag (for document output), but normalised here
+<span class="fc" id="L82">        Element titleEl = getElementsByTag(&quot;title&quot;).first();</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        return titleEl != null ? StringUtil.normaliseWhitespace(titleEl.text()).trim() : &quot;&quot;;</span>
+    }
+
+    /**
+     Set the document's {@code title} element. Updates the existing element, or adds {@code title} to {@code head} if
+     not present
+     @param title string to set as title
+     */
+    public void title(String title) {
+<span class="fc" id="L92">        Validate.notNull(title);</span>
+<span class="fc" id="L93">        Element titleEl = getElementsByTag(&quot;title&quot;).first();</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (titleEl == null) { // add to head</span>
+<span class="fc" id="L95">            head().appendElement(&quot;title&quot;).text(title);</span>
+        } else {
+<span class="fc" id="L97">            titleEl.text(title);</span>
+        }
+<span class="fc" id="L99">    }</span>
+
+    /**
+     Create a new Element, with this document's base uri. Does not make the new element a child of this document.
+     @param tagName element tag name (e.g. {@code a})
+     @return new element
+     */
+    public Element createElement(String tagName) {
+<span class="fc" id="L107">        return new Element(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());</span>
+    }
+
+    /**
+     Normalise the document. This happens after the parse phase so generally does not need to be called.
+     Moves any text content that is not in the body element into the body.
+     @return this document after normalisation
+     */
+    public Document normalise() {
+<span class="nc" id="L116">        Element htmlEl = findFirstElementByTagName(&quot;html&quot;, this);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (htmlEl == null)</span>
+<span class="nc" id="L118">            htmlEl = appendElement(&quot;html&quot;);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (head() == null)</span>
+<span class="nc" id="L120">            htmlEl.prependElement(&quot;head&quot;);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (body() == null)</span>
+<span class="nc" id="L122">            htmlEl.appendElement(&quot;body&quot;);</span>
+
+        // pull text nodes out of root, html, and head els, and push into body. non-text nodes are already taken care
+        // of. do in inverse order to maintain text order.
+<span class="nc" id="L126">        normaliseTextNodes(head());</span>
+<span class="nc" id="L127">        normaliseTextNodes(htmlEl);</span>
+<span class="nc" id="L128">        normaliseTextNodes(this);</span>
+
+<span class="nc" id="L130">        normaliseStructure(&quot;head&quot;, htmlEl);</span>
+<span class="nc" id="L131">        normaliseStructure(&quot;body&quot;, htmlEl);</span>
+        
+<span class="nc" id="L133">        ensureMetaCharsetElement();</span>
+        
+<span class="nc" id="L135">        return this;</span>
+    }
+
+    // does not recurse.
+    private void normaliseTextNodes(Element element) {
+<span class="nc" id="L140">        List&lt;Node&gt; toMove = new ArrayList&lt;Node&gt;();</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        for (Node node: element.childNodes) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (node instanceof TextNode) {</span>
+<span class="nc" id="L143">                TextNode tn = (TextNode) node;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if (!tn.isBlank())</span>
+<span class="nc" id="L145">                    toMove.add(tn);</span>
+            }
+<span class="nc" id="L147">        }</span>
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        for (int i = toMove.size()-1; i &gt;= 0; i--) {</span>
+<span class="nc" id="L150">            Node node = toMove.get(i);</span>
+<span class="nc" id="L151">            element.removeChild(node);</span>
+<span class="nc" id="L152">            body().prependChild(new TextNode(&quot; &quot;, &quot;&quot;));</span>
+<span class="nc" id="L153">            body().prependChild(node);</span>
+        }
+<span class="nc" id="L155">    }</span>
+
+    // merge multiple &lt;head&gt; or &lt;body&gt; contents into one, delete the remainder, and ensure they are owned by &lt;html&gt;
+    private void normaliseStructure(String tag, Element htmlEl) {
+<span class="nc" id="L159">        Elements elements = this.getElementsByTag(tag);</span>
+<span class="nc" id="L160">        Element master = elements.first(); // will always be available as created above if not existent</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (elements.size() &gt; 1) { // dupes, move contents to master</span>
+<span class="nc" id="L162">            List&lt;Node&gt; toMove = new ArrayList&lt;Node&gt;();</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            for (int i = 1; i &lt; elements.size(); i++) {</span>
+<span class="nc" id="L164">                Node dupe = elements.get(i);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                for (Node node : dupe.childNodes)</span>
+<span class="nc" id="L166">                    toMove.add(node);</span>
+<span class="nc" id="L167">                dupe.remove();</span>
+            }
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            for (Node dupe : toMove)</span>
+<span class="nc" id="L171">                master.appendChild(dupe);</span>
+        }
+        // ensure parented by &lt;html&gt;
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (!master.parent().equals(htmlEl)) {</span>
+<span class="nc" id="L175">            htmlEl.appendChild(master); // includes remove()            </span>
+        }
+<span class="nc" id="L177">    }</span>
+
+    // fast method to get first by tag name, used for html, head, body finders
+    private Element findFirstElementByTagName(String tag, Node node) {
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (node.nodeName().equals(tag))</span>
+<span class="fc" id="L182">            return (Element) node;</span>
+        else {
+<span class="fc bfc" id="L184" title="All 2 branches covered.">            for (Node child: node.childNodes) {</span>
+<span class="fc" id="L185">                Element found = findFirstElementByTagName(tag, child);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">                if (found != null)</span>
+<span class="fc" id="L187">                    return found;</span>
+<span class="fc" id="L188">            }</span>
+        }
+<span class="fc" id="L190">        return null;</span>
+    }
+
+    @Override
+    public String outerHtml() {
+<span class="fc" id="L195">        return super.html(); // no outer wrapper tag</span>
+    }
+
+    /**
+     Set the text of the {@code body} of this document. Any existing nodes within the body will be cleared.
+     @param text unencoded text
+     @return this document
+     */
+    @Override
+    public Element text(String text) {
+<span class="fc" id="L205">        body().text(text); // overridden to not nuke doc structure</span>
+<span class="fc" id="L206">        return this;</span>
+    }
+
+    @Override
+    public String nodeName() {
+<span class="fc" id="L211">        return &quot;#document&quot;;</span>
+    }
+    
+    /**
+     * Sets the charset used in this document. This method is equivalent
+     * to {@link OutputSettings#charset(java.nio.charset.Charset)
+     * OutputSettings.charset(Charset)} but in addition it updates the
+     * charset / encoding element within the document.
+     * 
+     * &lt;p&gt;This enables
+     * {@link #updateMetaCharsetElement(boolean) meta charset update}.&lt;/p&gt;
+     * 
+     * &lt;p&gt;If there's no element with charset / encoding information yet it will
+     * be created. Obsolete charset / encoding definitions are removed!&lt;/p&gt;
+     * 
+     * &lt;p&gt;&lt;b&gt;Elements used:&lt;/b&gt;&lt;/p&gt;
+     * 
+     * &lt;ul&gt;
+     * &lt;li&gt;&lt;b&gt;Html:&lt;/b&gt; &lt;i&gt;&amp;lt;meta charset=&quot;CHARSET&quot;&amp;gt;&lt;/i&gt;&lt;/li&gt;
+     * &lt;li&gt;&lt;b&gt;Xml:&lt;/b&gt; &lt;i&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;CHARSET&quot;&amp;gt;&lt;/i&gt;&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * @param charset Charset
+     * 
+     * @see #updateMetaCharsetElement(boolean) 
+     * @see OutputSettings#charset(java.nio.charset.Charset) 
+     */
+    public void charset(Charset charset) {
+<span class="fc" id="L239">        updateMetaCharsetElement(true);</span>
+<span class="fc" id="L240">        outputSettings.charset(charset);</span>
+<span class="fc" id="L241">        ensureMetaCharsetElement();</span>
+<span class="fc" id="L242">    }</span>
+    
+    /**
+     * Returns the charset used in this document. This method is equivalent
+     * to {@link OutputSettings#charset()}.
+     * 
+     * @return Current Charset
+     * 
+     * @see OutputSettings#charset() 
+     */
+    public Charset charset() {
+<span class="fc" id="L253">        return outputSettings.charset();</span>
+    }
+    
+    /**
+     * Sets whether the element with charset information in this document is
+     * updated on changes through {@link #charset(java.nio.charset.Charset)
+     * Document.charset(Charset)} or not.
+     * 
+     * &lt;p&gt;If set to &lt;tt&gt;false&lt;/tt&gt; &lt;i&gt;(default)&lt;/i&gt; there are no elements
+     * modified.&lt;/p&gt;
+     * 
+     * @param update If &lt;tt&gt;true&lt;/tt&gt; the element updated on charset
+     * changes, &lt;tt&gt;false&lt;/tt&gt; if not
+     * 
+     * @see #charset(java.nio.charset.Charset) 
+     */
+    public void updateMetaCharsetElement(boolean update) {
+<span class="fc" id="L270">        this.updateMetaCharset = update;</span>
+<span class="fc" id="L271">    }</span>
+    
+    /**
+     * Returns whether the element with charset information in this document is
+     * updated on changes through {@link #charset(java.nio.charset.Charset)
+     * Document.charset(Charset)} or not.
+     * 
+     * @return Returns &lt;tt&gt;true&lt;/tt&gt; if the element is updated on charset
+     * changes, &lt;tt&gt;false&lt;/tt&gt; if not
+     */
+    public boolean updateMetaCharsetElement() {
+<span class="fc" id="L282">        return updateMetaCharset;</span>
+    }
+
+    @Override
+    public Document clone() {
+<span class="fc" id="L287">        Document clone = (Document) super.clone();</span>
+<span class="fc" id="L288">        clone.outputSettings = this.outputSettings.clone();</span>
+<span class="fc" id="L289">        return clone;</span>
+    }
+    
+    /**
+     * Ensures a meta charset (html) or xml declaration (xml) with the current
+     * encoding used. This only applies with
+     * {@link #updateMetaCharsetElement(boolean) updateMetaCharset} set to
+     * &lt;tt&gt;true&lt;/tt&gt;, otherwise this method does nothing.
+     * 
+     * &lt;ul&gt;
+     * &lt;li&gt;An existing element gets updated with the current charset&lt;/li&gt;
+     * &lt;li&gt;If there's no element yet it will be inserted&lt;/li&gt;
+     * &lt;li&gt;Obsolete elements are removed&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * &lt;p&gt;&lt;b&gt;Elements used:&lt;/b&gt;&lt;/p&gt;
+     * 
+     * &lt;ul&gt;
+     * &lt;li&gt;&lt;b&gt;Html:&lt;/b&gt; &lt;i&gt;&amp;lt;meta charset=&quot;CHARSET&quot;&amp;gt;&lt;/i&gt;&lt;/li&gt;
+     * &lt;li&gt;&lt;b&gt;Xml:&lt;/b&gt; &lt;i&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;CHARSET&quot;&amp;gt;&lt;/i&gt;&lt;/li&gt;
+     * &lt;/ul&gt;
+     */
+    private void ensureMetaCharsetElement() {
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">        if (updateMetaCharset) {</span>
+<span class="fc" id="L313">            OutputSettings.Syntax syntax = outputSettings().syntax();</span>
+
+<span class="fc bfc" id="L315" title="All 2 branches covered.">            if (syntax == OutputSettings.Syntax.html) {</span>
+<span class="fc" id="L316">                Element metaCharset = select(&quot;meta[charset]&quot;).first();</span>
+
+<span class="fc bfc" id="L318" title="All 2 branches covered.">                if (metaCharset != null) {</span>
+<span class="fc" id="L319">                    metaCharset.attr(&quot;charset&quot;, charset().displayName());</span>
+                } else {
+<span class="fc" id="L321">                    Element head = head();</span>
+
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">                    if (head != null) {</span>
+<span class="fc" id="L324">                        head.appendElement(&quot;meta&quot;).attr(&quot;charset&quot;, charset().displayName());</span>
+                    }
+                }
+
+                // Remove obsolete elements
+<span class="fc" id="L329">                select(&quot;meta[name=charset]&quot;).remove();</span>
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">            } else if (syntax == OutputSettings.Syntax.xml) {</span>
+<span class="fc" id="L331">                Node node = childNodes().get(0);</span>
+
+<span class="fc bfc" id="L333" title="All 2 branches covered.">                if (node instanceof XmlDeclaration) {</span>
+<span class="fc" id="L334">                    XmlDeclaration decl = (XmlDeclaration) node;</span>
+
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                    if (decl.name().equals(&quot;xml&quot;)) {</span>
+<span class="fc" id="L337">                        decl.attr(&quot;encoding&quot;, charset().displayName());</span>
+
+<span class="fc" id="L339">                        final String version = decl.attr(&quot;version&quot;);</span>
+
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">                        if (version != null) {</span>
+<span class="fc" id="L342">                            decl.attr(&quot;version&quot;, &quot;1.0&quot;);</span>
+                        }
+<span class="fc" id="L344">                    } else {</span>
+<span class="nc" id="L345">                        decl = new XmlDeclaration(&quot;xml&quot;, baseUri, false);</span>
+<span class="nc" id="L346">                        decl.attr(&quot;version&quot;, &quot;1.0&quot;);</span>
+<span class="nc" id="L347">                        decl.attr(&quot;encoding&quot;, charset().displayName());</span>
+
+<span class="nc" id="L349">                        prependChild(decl);</span>
+                    }
+<span class="fc" id="L351">                } else {</span>
+<span class="fc" id="L352">                    XmlDeclaration decl = new XmlDeclaration(&quot;xml&quot;, baseUri, false);</span>
+<span class="fc" id="L353">                    decl.attr(&quot;version&quot;, &quot;1.0&quot;);</span>
+<span class="fc" id="L354">                    decl.attr(&quot;encoding&quot;, charset().displayName());</span>
+
+<span class="fc" id="L356">                    prependChild(decl);</span>
+                }
+            }
+        }
+<span class="fc" id="L360">    }</span>
+    
+
+    /**
+     * A Document's output settings control the form of the text() and html() methods.
+     */
+    public static class OutputSettings implements Cloneable {
+        /**
+         * The output serialization syntax.
+         */
+<span class="fc" id="L370">        public enum Syntax {html, xml}</span>
+
+<span class="fc" id="L372">        private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;</span>
+<span class="fc" id="L373">        private Charset charset = Charset.forName(&quot;UTF-8&quot;);</span>
+<span class="fc" id="L374">        private boolean prettyPrint = true;</span>
+<span class="fc" id="L375">        private boolean outline = false;</span>
+<span class="fc" id="L376">        private int indentAmount = 1;</span>
+<span class="fc" id="L377">        private Syntax syntax = Syntax.html;</span>
+
+<span class="fc" id="L379">        public OutputSettings() {}</span>
+        
+        /**
+         * Get the document's current HTML escape mode: &lt;code&gt;base&lt;/code&gt;, which provides a limited set of named HTML
+         * entities and escapes other characters as numbered entities for maximum compatibility; or &lt;code&gt;extended&lt;/code&gt;,
+         * which uses the complete set of HTML named entities.
+         * &lt;p&gt;
+         * The default escape mode is &lt;code&gt;base&lt;/code&gt;.
+         * @return the document's current escape mode
+         */
+        public Entities.EscapeMode escapeMode() {
+<span class="fc" id="L390">            return escapeMode;</span>
+        }
+
+        /**
+         * Set the document's escape mode, which determines how characters are escaped when the output character set
+         * does not support a given character:- using either a named or a numbered escape.
+         * @param escapeMode the new escape mode to use
+         * @return the document's output settings, for chaining
+         */
+        public OutputSettings escapeMode(Entities.EscapeMode escapeMode) {
+<span class="fc" id="L400">            this.escapeMode = escapeMode;</span>
+<span class="fc" id="L401">            return this;</span>
+        }
+
+        /**
+         * Get the document's current output charset, which is used to control which characters are escaped when
+         * generating HTML (via the &lt;code&gt;html()&lt;/code&gt; methods), and which are kept intact.
+         * &lt;p&gt;
+         * Where possible (when parsing from a URL or File), the document's output charset is automatically set to the
+         * input charset. Otherwise, it defaults to UTF-8.
+         * @return the document's current charset.
+         */
+        public Charset charset() {
+<span class="fc" id="L413">            return charset;</span>
+        }
+
+        /**
+         * Update the document's output charset.
+         * @param charset the new charset to use.
+         * @return the document's output settings, for chaining
+         */
+        public OutputSettings charset(Charset charset) {
+<span class="fc" id="L422">            this.charset = charset;</span>
+<span class="fc" id="L423">            return this;</span>
+        }
+
+        /**
+         * Update the document's output charset.
+         * @param charset the new charset (by name) to use.
+         * @return the document's output settings, for chaining
+         */
+        public OutputSettings charset(String charset) {
+<span class="fc" id="L432">            charset(Charset.forName(charset));</span>
+<span class="fc" id="L433">            return this;</span>
+        }
+
+        CharsetEncoder encoder() {
+<span class="fc" id="L437">            return charset.newEncoder();</span>
+        }
+
+        /**
+         * Get the document's current output syntax.
+         * @return current syntax
+         */
+        public Syntax syntax() {
+<span class="fc" id="L445">            return syntax;</span>
+        }
+
+        /**
+         * Set the document's output syntax. Either {@code html}, with empty tags and boolean attributes (etc), or
+         * {@code xml}, with self-closing tags.
+         * @param syntax serialization syntax
+         * @return the document's output settings, for chaining
+         */
+        public OutputSettings syntax(Syntax syntax) {
+<span class="fc" id="L455">            this.syntax = syntax;</span>
+<span class="fc" id="L456">            return this;</span>
+        }
+
+        /**
+         * Get if pretty printing is enabled. Default is true. If disabled, the HTML output methods will not re-format
+         * the output, and the output will generally look like the input.
+         * @return if pretty printing is enabled.
+         */
+        public boolean prettyPrint() {
+<span class="fc" id="L465">            return prettyPrint;</span>
+        }
+
+        /**
+         * Enable or disable pretty printing.
+         * @param pretty new pretty print setting
+         * @return this, for chaining
+         */
+        public OutputSettings prettyPrint(boolean pretty) {
+<span class="fc" id="L474">            prettyPrint = pretty;</span>
+<span class="fc" id="L475">            return this;</span>
+        }
+        
+        /**
+         * Get if outline mode is enabled. Default is false. If enabled, the HTML output methods will consider
+         * all tags as block.
+         * @return if outline mode is enabled.
+         */
+        public boolean outline() {
+<span class="fc" id="L484">            return outline;</span>
+        }
+        
+        /**
+         * Enable or disable HTML outline mode.
+         * @param outlineMode new outline setting
+         * @return this, for chaining
+         */
+        public OutputSettings outline(boolean outlineMode) {
+<span class="fc" id="L493">            outline = outlineMode;</span>
+<span class="fc" id="L494">            return this;</span>
+        }
+
+        /**
+         * Get the current tag indent amount, used when pretty printing.
+         * @return the current indent amount
+         */
+        public int indentAmount() {
+<span class="fc" id="L502">            return indentAmount;</span>
+        }
+
+        /**
+         * Set the indent amount for pretty printing
+         * @param indentAmount number of spaces to use for indenting each level. Must be {@literal &gt;=} 0.
+         * @return this, for chaining
+         */
+        public OutputSettings indentAmount(int indentAmount) {
+<span class="pc bpc" id="L511" title="1 of 2 branches missed.">            Validate.isTrue(indentAmount &gt;= 0);</span>
+<span class="fc" id="L512">            this.indentAmount = indentAmount;</span>
+<span class="fc" id="L513">            return this;</span>
+        }
+
+        @Override
+        public OutputSettings clone() {
+            OutputSettings clone;
+            try {
+<span class="fc" id="L520">                clone = (OutputSettings) super.clone();</span>
+<span class="nc" id="L521">            } catch (CloneNotSupportedException e) {</span>
+<span class="nc" id="L522">                throw new RuntimeException(e);</span>
+<span class="fc" id="L523">            }</span>
+<span class="fc" id="L524">            clone.charset(charset.name()); // new charset and charset encoder</span>
+<span class="fc" id="L525">            clone.escapeMode = Entities.EscapeMode.valueOf(escapeMode.name());</span>
+            // indentAmount, prettyPrint are primitives so object.clone() will handle
+<span class="fc" id="L527">            return clone;</span>
+        }
+    }
+
+    /**
+     * Get the document's current output settings.
+     * @return the document's current output settings.
+     */
+    public OutputSettings outputSettings() {
+<span class="fc" id="L536">        return outputSettings;</span>
+    }
+
+    /**
+     * Set the document's output settings.
+     * @param outputSettings new output settings.
+     * @return this document, for chaining.
+     */
+    public Document outputSettings(OutputSettings outputSettings) {
+<span class="fc" id="L545">        Validate.notNull(outputSettings);</span>
+<span class="fc" id="L546">        this.outputSettings = outputSettings;</span>
+<span class="fc" id="L547">        return this;</span>
+    }
+
+<span class="fc" id="L550">    public enum QuirksMode {</span>
+<span class="fc" id="L551">        noQuirks, quirks, limitedQuirks</span>
+    }
+
+    public QuirksMode quirksMode() {
+<span class="fc" id="L555">        return quirksMode;</span>
+    }
+
+    public Document quirksMode(QuirksMode quirksMode) {
+<span class="fc" id="L559">        this.quirksMode = quirksMode;</span>
+<span class="fc" id="L560">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.helper</a> &gt; <span class="el_source">DataUtil.java</span></div><h1>DataUtil.java</h1><pre class="source lang-java linenums">package org.jsoup.helper;
+
+import org.jsoup.UncheckedIOException;
+import org.jsoup.internal.ConstrainableInputStream;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.XmlDeclaration;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.util.Locale;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Internal static utilities for handling data.
+ *
+ */
+public final class DataUtil {
+<span class="fc" id="L33">    private static final Pattern charsetPattern = Pattern.compile(&quot;(?i)\\bcharset=\\s*(?:[\&quot;'])?([^\\s,;\&quot;']*)&quot;);</span>
+    static final String defaultCharset = &quot;UTF-8&quot;; // used if not found in header or meta charset
+    private static final int firstReadBufferSize = 1024 * 5;
+    static final int bufferSize = 1024 * 32;
+<span class="fc" id="L37">    private static final char[] mimeBoundaryChars =</span>
+<span class="fc" id="L38">            &quot;-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;.toCharArray();</span>
+    static final int boundaryLength = 32;
+
+    private DataUtil() {}
+
+    /**
+     * Loads a file to a Document.
+     * @param in file to load
+     * @param charsetName character set of input
+     * @param baseUri base URI of document, to resolve relative links against
+     * @return Document
+     * @throws IOException on IO error
+     */
+    public static Document load(File in, String charsetName, String baseUri) throws IOException {
+<span class="fc" id="L52">        return parseInputStream(new FileInputStream(in), charsetName, baseUri, Parser.htmlParser());</span>
+    }
+
+    /**
+     * Parses a Document from an input steam.
+     * @param in input stream to parse. You will need to close it.
+     * @param charsetName character set of input
+     * @param baseUri base URI of document, to resolve relative links against
+     * @return Document
+     * @throws IOException on IO error
+     */
+    public static Document load(InputStream in, String charsetName, String baseUri) throws IOException {
+<span class="fc" id="L64">        return parseInputStream(in, charsetName, baseUri, Parser.htmlParser());</span>
+    }
+
+    /**
+     * Parses a Document from an input steam, using the provided Parser.
+     * @param in input stream to parse. You will need to close it.
+     * @param charsetName character set of input
+     * @param baseUri base URI of document, to resolve relative links against
+     * @param parser alternate {@link Parser#xmlParser() parser} to use.
+     * @return Document
+     * @throws IOException on IO error
+     */
+    public static Document load(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException {
+<span class="fc" id="L77">        return parseInputStream(in, charsetName, baseUri, parser);</span>
+    }
+
+    /**
+     * Writes the input stream to the output stream. Doesn't close them.
+     * @param in input stream to read from
+     * @param out output stream to write to
+     * @throws IOException on IO error
+     */
+    static void crossStreams(final InputStream in, final OutputStream out) throws IOException {
+<span class="fc" id="L87">        final byte[] buffer = new byte[bufferSize];</span>
+        int len;
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        while ((len = in.read(buffer)) != -1) {</span>
+<span class="fc" id="L90">            out.write(buffer, 0, len);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    static Document parseInputStream(InputStream input, String charsetName, String baseUri, Parser parser) throws IOException  {
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">        if (input == null) // empty body</span>
+<span class="nc" id="L96">            return new Document(baseUri);</span>
+<span class="fc" id="L97">        input = ConstrainableInputStream.wrap(input, bufferSize, 0);</span>
+
+<span class="fc" id="L99">        Document doc = null;</span>
+<span class="fc" id="L100">        boolean fullyRead = false;</span>
+
+        // read the start of the stream and look for a BOM or meta charset
+<span class="fc" id="L103">        input.mark(bufferSize);</span>
+<span class="fc" id="L104">        ByteBuffer firstBytes = readToByteBuffer(input, firstReadBufferSize - 1); // -1 because we read one more to see if completed. First read is &lt; buffer size, so can't be invalid.</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        fullyRead = input.read() == -1;</span>
+<span class="fc" id="L106">        input.reset();</span>
+
+        // look for BOM - overrides any other header or input
+<span class="fc" id="L109">        BomCharset bomCharset = detectCharsetFromBom(firstBytes);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (bomCharset != null)</span>
+<span class="fc" id="L111">            charsetName = bomCharset.charset;</span>
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (charsetName == null) { // determine from meta. safe first parse as UTF-8</span>
+<span class="fc" id="L114">            String docData = Charset.forName(defaultCharset).decode(firstBytes).toString();</span>
+<span class="fc" id="L115">            doc = parser.parseInput(docData, baseUri);</span>
+
+            // look for &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=gb2312&quot;&gt; or HTML5 &lt;meta charset=&quot;gb2312&quot;&gt;
+<span class="fc" id="L118">            Elements metaElements = doc.select(&quot;meta[http-equiv=content-type], meta[charset]&quot;);</span>
+<span class="fc" id="L119">            String foundCharset = null; // if not found, will keep utf-8 as best attempt</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            for (Element meta : metaElements) {</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">                if (meta.hasAttr(&quot;http-equiv&quot;))</span>
+<span class="fc" id="L122">                    foundCharset = getCharsetFromContentType(meta.attr(&quot;content&quot;));</span>
+<span class="fc bfc" id="L123" title="All 4 branches covered.">                if (foundCharset == null &amp;&amp; meta.hasAttr(&quot;charset&quot;))</span>
+<span class="fc" id="L124">                    foundCharset = meta.attr(&quot;charset&quot;);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (foundCharset != null)</span>
+<span class="fc" id="L126">                    break;</span>
+<span class="fc" id="L127">            }</span>
+
+            // look for &lt;?xml encoding='ISO-8859-1'?&gt;
+<span class="pc bpc" id="L130" title="1 of 6 branches missed.">            if (foundCharset == null &amp;&amp; doc.childNodeSize() &gt; 0 &amp;&amp; doc.childNode(0) instanceof XmlDeclaration) {</span>
+<span class="fc" id="L131">                XmlDeclaration prolog = (XmlDeclaration) doc.childNode(0);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">                if (prolog.name().equals(&quot;xml&quot;))</span>
+<span class="fc" id="L133">                    foundCharset = prolog.attr(&quot;encoding&quot;);</span>
+            }
+<span class="fc" id="L135">            foundCharset = validateCharset(foundCharset);</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">            if (foundCharset != null &amp;&amp; !foundCharset.equalsIgnoreCase(defaultCharset)) { // need to re-decode. (case insensitive check here to match how validate works)</span>
+<span class="fc" id="L137">                foundCharset = foundCharset.trim().replaceAll(&quot;[\&quot;']&quot;, &quot;&quot;);</span>
+<span class="fc" id="L138">                charsetName = foundCharset;</span>
+<span class="fc" id="L139">                doc = null;</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            } else if (!fullyRead) {</span>
+<span class="fc" id="L141">                doc = null;</span>
+            }
+<span class="fc" id="L143">        } else { // specified by content type header (or by user on file load)</span>
+<span class="fc" id="L144">            Validate.notEmpty(charsetName, &quot;Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML&quot;);</span>
+        }
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (doc == null) {</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (charsetName == null)</span>
+<span class="fc" id="L148">                charsetName = defaultCharset;</span>
+<span class="fc" id="L149">            BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetName), bufferSize);</span>
+<span class="fc bfc" id="L150" title="All 4 branches covered.">            if (bomCharset != null &amp;&amp; bomCharset.offset) // creating the buffered reader ignores the input pos, so must skip here</span>
+<span class="fc" id="L151">                reader.skip(1);</span>
+            try {
+<span class="fc" id="L153">                doc = parser.parseInput(reader, baseUri);</span>
+<span class="fc" id="L154">            } catch (UncheckedIOException e) {</span>
+                // io exception when parsing (not seen before because reading the stream as we go)
+<span class="fc" id="L156">                throw e.ioException();</span>
+<span class="fc" id="L157">            }</span>
+<span class="fc" id="L158">            doc.outputSettings().charset(charsetName);</span>
+        }
+<span class="fc" id="L160">        input.close();</span>
+<span class="fc" id="L161">        return doc;</span>
+    }
+
+    /**
+     * Read the input stream into a byte buffer. To deal with slow input streams, you may interrupt the thread this
+     * method is executing on. The data read until being interrupted will be available.
+     * @param inStream the input stream to read from
+     * @param maxSize the maximum size in bytes to read from the stream. Set to 0 to be unlimited.
+     * @return the filled byte buffer
+     * @throws IOException if an exception occurs whilst reading from the input stream.
+     */
+    public static ByteBuffer readToByteBuffer(InputStream inStream, int maxSize) throws IOException {
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        Validate.isTrue(maxSize &gt;= 0, &quot;maxSize must be 0 (unlimited) or larger&quot;);</span>
+<span class="fc" id="L174">        final ConstrainableInputStream input = ConstrainableInputStream.wrap(inStream, bufferSize, maxSize);</span>
+<span class="fc" id="L175">        return input.readToByteBuffer(maxSize);</span>
+    }
+
+    static ByteBuffer readToByteBuffer(InputStream inStream) throws IOException {
+<span class="nc" id="L179">        return readToByteBuffer(inStream, 0);</span>
+    }
+
+    static ByteBuffer readFileToByteBuffer(File file) throws IOException {
+<span class="nc" id="L183">        RandomAccessFile randomAccessFile = null;</span>
+        try {
+<span class="nc" id="L185">            randomAccessFile = new RandomAccessFile(file, &quot;r&quot;);</span>
+<span class="nc" id="L186">            byte[] bytes = new byte[(int) randomAccessFile.length()];</span>
+<span class="nc" id="L187">            randomAccessFile.readFully(bytes);</span>
+<span class="nc" id="L188">            return ByteBuffer.wrap(bytes);</span>
+        } finally {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">            if (randomAccessFile != null)</span>
+<span class="nc" id="L191">                randomAccessFile.close();</span>
+        }
+    }
+
+    static ByteBuffer emptyByteBuffer() {
+<span class="nc" id="L196">        return ByteBuffer.allocate(0);</span>
+    }
+
+    /**
+     * Parse out a charset from a content type header. If the charset is not supported, returns null (so the default
+     * will kick in.)
+     * @param contentType e.g. &quot;text/html; charset=EUC-JP&quot;
+     * @return &quot;EUC-JP&quot;, or null if not found. Charset is trimmed and uppercased.
+     */
+    static String getCharsetFromContentType(String contentType) {
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (contentType == null) return null;</span>
+<span class="fc" id="L207">        Matcher m = charsetPattern.matcher(contentType);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (m.find()) {</span>
+<span class="fc" id="L209">            String charset = m.group(1).trim();</span>
+<span class="fc" id="L210">            charset = charset.replace(&quot;charset=&quot;, &quot;&quot;);</span>
+<span class="fc" id="L211">            return validateCharset(charset);</span>
+        }
+<span class="fc" id="L213">        return null;</span>
+    }
+
+    private static String validateCharset(String cs) {
+<span class="fc bfc" id="L217" title="All 4 branches covered.">        if (cs == null || cs.length() == 0) return null;</span>
+<span class="fc" id="L218">        cs = cs.trim().replaceAll(&quot;[\&quot;']&quot;, &quot;&quot;);</span>
+        try {
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            if (Charset.isSupported(cs)) return cs;</span>
+<span class="fc" id="L221">            cs = cs.toUpperCase(Locale.ENGLISH);</span>
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">            if (Charset.isSupported(cs)) return cs;</span>
+<span class="fc" id="L223">        } catch (IllegalCharsetNameException e) {</span>
+            // if our this charset matching fails.... we just take the default
+<span class="fc" id="L225">        }</span>
+<span class="fc" id="L226">        return null;</span>
+    }
+
+    /**
+     * Creates a random string, suitable for use as a mime boundary
+     */
+    static String mimeBoundary() {
+<span class="fc" id="L233">        final StringBuilder mime = new StringBuilder(boundaryLength);</span>
+<span class="fc" id="L234">        final Random rand = new Random();</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        for (int i = 0; i &lt; boundaryLength; i++) {</span>
+<span class="fc" id="L236">            mime.append(mimeBoundaryChars[rand.nextInt(mimeBoundaryChars.length)]);</span>
+        }
+<span class="fc" id="L238">        return mime.toString();</span>
+    }
+
+    private static BomCharset detectCharsetFromBom(final ByteBuffer byteData) {
+<span class="fc" id="L242">        final Buffer buffer = byteData; // .mark and rewind used to return Buffer, now ByteBuffer, so cast for backward compat</span>
+<span class="fc" id="L243">        buffer.mark();</span>
+<span class="fc" id="L244">        byte[] bom = new byte[4];</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        if (byteData.remaining() &gt;= bom.length) {</span>
+<span class="fc" id="L246">            byteData.get(bom);</span>
+<span class="fc" id="L247">            buffer.rewind();</span>
+        }
+<span class="pc bpc" id="L249" title="4 of 16 branches missed.">        if (bom[0] == 0x00 &amp;&amp; bom[1] == 0x00 &amp;&amp; bom[2] == (byte) 0xFE &amp;&amp; bom[3] == (byte) 0xFF || // BE</span>
+            bom[0] == (byte) 0xFF &amp;&amp; bom[1] == (byte) 0xFE &amp;&amp; bom[2] == 0x00 &amp;&amp; bom[3] == 0x00) { // LE
+<span class="fc" id="L251">            return new BomCharset(&quot;UTF-32&quot;, false); // and I hope it's on your system</span>
+<span class="pc bpc" id="L252" title="1 of 8 branches missed.">        } else if (bom[0] == (byte) 0xFE &amp;&amp; bom[1] == (byte) 0xFF || // BE</span>
+            bom[0] == (byte) 0xFF &amp;&amp; bom[1] == (byte) 0xFE) {
+<span class="fc" id="L254">            return new BomCharset(&quot;UTF-16&quot;, false); // in all Javas</span>
+<span class="pc bpc" id="L255" title="2 of 6 branches missed.">        } else if (bom[0] == (byte) 0xEF &amp;&amp; bom[1] == (byte) 0xBB &amp;&amp; bom[2] == (byte) 0xBF) {</span>
+<span class="fc" id="L256">            return new BomCharset(&quot;UTF-8&quot;, true); // in all Javas</span>
+            // 16 and 32 decoders consume the BOM to determine be/le; utf-8 should be consumed here
+        }
+<span class="fc" id="L259">        return null;</span>
+    }
+
+    private static class BomCharset {
+        private final String charset;
+        private final boolean offset;
+
+<span class="fc" id="L266">        public BomCharset(String charset, boolean offset) {</span>
+<span class="fc" id="L267">            this.charset = charset;</span>
+<span class="fc" id="L268">            this.offset = offset;</span>
+<span class="fc" id="L269">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

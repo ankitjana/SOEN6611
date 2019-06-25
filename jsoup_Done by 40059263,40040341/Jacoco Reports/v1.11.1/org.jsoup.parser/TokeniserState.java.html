@@ -1,0 +1,1735 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokeniserState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jsoup Java HTML Parser</a> &gt; <a href="index.source.html" class="el_package">org.jsoup.parser</a> &gt; <span class="el_source">TokeniserState.java</span></div><h1>TokeniserState.java</h1><pre class="source lang-java linenums">package org.jsoup.parser;
+
+import org.jsoup.nodes.DocumentType;
+
+import java.util.Arrays;
+
+/**
+ * States and transition activations for the Tokeniser.
+ */
+<span class="fc" id="L10">enum TokeniserState {</span>
+<span class="fc" id="L11">    Data {</span>
+        // in data state, gather characters until a character reference or tag is found
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L14" title="All 5 branches covered.">            switch (r.current()) {</span>
+                case '&amp;':
+<span class="fc" id="L16">                    t.advanceTransition(CharacterReferenceInData);</span>
+<span class="fc" id="L17">                    break;</span>
+                case '&lt;':
+<span class="fc" id="L19">                    t.advanceTransition(TagOpen);</span>
+<span class="fc" id="L20">                    break;</span>
+                case nullChar:
+<span class="fc" id="L22">                    t.error(this); // NOT replacement character (oddly?)</span>
+<span class="fc" id="L23">                    t.emit(r.consume());</span>
+<span class="fc" id="L24">                    break;</span>
+                case eof:
+<span class="fc" id="L26">                    t.emit(new Token.EOF());</span>
+<span class="fc" id="L27">                    break;</span>
+                default:
+<span class="fc" id="L29">                    String data = r.consumeData();</span>
+<span class="fc" id="L30">                    t.emit(data);</span>
+                    break;
+            }
+<span class="fc" id="L33">        }</span>
+    },
+<span class="fc" id="L35">    CharacterReferenceInData {</span>
+        // from &amp; in data
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L38">            readCharRef(t, Data);</span>
+<span class="fc" id="L39">        }</span>
+    },
+<span class="fc" id="L41">    Rcdata {</span>
+        /// handles data in title, textarea etc
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L44" title="2 of 5 branches missed.">            switch (r.current()) {</span>
+                case '&amp;':
+<span class="nc" id="L46">                    t.advanceTransition(CharacterReferenceInRcdata);</span>
+<span class="nc" id="L47">                    break;</span>
+                case '&lt;':
+<span class="fc" id="L49">                    t.advanceTransition(RcdataLessthanSign);</span>
+<span class="fc" id="L50">                    break;</span>
+                case nullChar:
+<span class="nc" id="L52">                    t.error(this);</span>
+<span class="nc" id="L53">                    r.advance();</span>
+<span class="nc" id="L54">                    t.emit(replacementChar);</span>
+<span class="nc" id="L55">                    break;</span>
+                case eof:
+<span class="fc" id="L57">                    t.emit(new Token.EOF());</span>
+<span class="fc" id="L58">                    break;</span>
+                default:
+<span class="fc" id="L60">                    String data = r.consumeToAny('&amp;', '&lt;', nullChar);</span>
+<span class="fc" id="L61">                    t.emit(data);</span>
+                    break;
+            }
+<span class="fc" id="L64">        }</span>
+    },
+<span class="fc" id="L66">    CharacterReferenceInRcdata {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L68">            readCharRef(t, Rcdata);</span>
+<span class="nc" id="L69">        }</span>
+    },
+<span class="fc" id="L71">    Rawtext {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L73">            readData(t, r, this, RawtextLessthanSign);</span>
+<span class="fc" id="L74">        }</span>
+    },
+<span class="fc" id="L76">    ScriptData {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L78">            readData(t, r, this, ScriptDataLessthanSign);</span>
+<span class="fc" id="L79">        }</span>
+    },
+<span class="fc" id="L81">    PLAINTEXT {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc bnc" id="L83" title="All 3 branches missed.">            switch (r.current()) {</span>
+                case nullChar:
+<span class="nc" id="L85">                    t.error(this);</span>
+<span class="nc" id="L86">                    r.advance();</span>
+<span class="nc" id="L87">                    t.emit(replacementChar);</span>
+<span class="nc" id="L88">                    break;</span>
+                case eof:
+<span class="nc" id="L90">                    t.emit(new Token.EOF());</span>
+<span class="nc" id="L91">                    break;</span>
+                default:
+<span class="nc" id="L93">                    String data = r.consumeTo(nullChar);</span>
+<span class="nc" id="L94">                    t.emit(data);</span>
+                    break;
+            }
+<span class="nc" id="L97">        }</span>
+    },
+<span class="fc" id="L99">    TagOpen {</span>
+        // from &lt; in data
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L102" title="All 4 branches covered.">            switch (r.current()) {</span>
+                case '!':
+<span class="fc" id="L104">                    t.advanceTransition(MarkupDeclarationOpen);</span>
+<span class="fc" id="L105">                    break;</span>
+                case '/':
+<span class="fc" id="L107">                    t.advanceTransition(EndTagOpen);</span>
+<span class="fc" id="L108">                    break;</span>
+                case '?':
+<span class="fc" id="L110">                    t.advanceTransition(BogusComment);</span>
+<span class="fc" id="L111">                    break;</span>
+                default:
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                    if (r.matchesLetter()) {</span>
+<span class="fc" id="L114">                        t.createTagPending(true);</span>
+<span class="fc" id="L115">                        t.transition(TagName);</span>
+                    } else {
+<span class="fc" id="L117">                        t.error(this);</span>
+<span class="fc" id="L118">                        t.emit('&lt;'); // char that got us here</span>
+<span class="fc" id="L119">                        t.transition(Data);</span>
+                    }
+                    break;
+            }
+<span class="fc" id="L123">        }</span>
+    },
+<span class="fc" id="L125">    EndTagOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if (r.isEmpty()) {</span>
+<span class="nc" id="L128">                t.eofError(this);</span>
+<span class="nc" id="L129">                t.emit(&quot;&lt;/&quot;);</span>
+<span class="nc" id="L130">                t.transition(Data);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            } else if (r.matchesLetter()) {</span>
+<span class="fc" id="L132">                t.createTagPending(false);</span>
+<span class="fc" id="L133">                t.transition(TagName);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            } else if (r.matches('&gt;')) {</span>
+<span class="fc" id="L135">                t.error(this);</span>
+<span class="fc" id="L136">                t.advanceTransition(Data);</span>
+            } else {
+<span class="fc" id="L138">                t.error(this);</span>
+<span class="fc" id="L139">                t.advanceTransition(BogusComment);</span>
+            }
+<span class="fc" id="L141">        }</span>
+    },
+<span class="fc" id="L143">    TagName {</span>
+        // from &lt; or &lt;/ in data, will have start or end tag pending
+        void read(Tokeniser t, CharacterReader r) {
+            // previous TagOpen state did NOT consume, will have a letter char in current
+            //String tagName = r.consumeToAnySorted(tagCharsSorted).toLowerCase();
+<span class="fc" id="L148">            String tagName = r.consumeTagName();</span>
+<span class="fc" id="L149">            t.tagPending.appendTagName(tagName);</span>
+
+<span class="pc bpc" id="L151" title="2 of 6 branches missed.">            switch (r.consume()) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L157">                    t.transition(BeforeAttributeName);</span>
+<span class="fc" id="L158">                    break;</span>
+                case '/':
+<span class="fc" id="L160">                    t.transition(SelfClosingStartTag);</span>
+<span class="fc" id="L161">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L163">                    t.emitTagPending();</span>
+<span class="fc" id="L164">                    t.transition(Data);</span>
+<span class="fc" id="L165">                    break;</span>
+                case nullChar: // replacement
+<span class="nc" id="L167">                    t.tagPending.appendTagName(replacementStr);</span>
+<span class="nc" id="L168">                    break;</span>
+                case eof: // should emit pending tag?
+<span class="fc" id="L170">                    t.eofError(this);</span>
+<span class="fc" id="L171">                    t.transition(Data);</span>
+                // no default, as covered with above consumeToAny
+            }
+<span class="fc" id="L174">        }</span>
+    },
+<span class="fc" id="L176">    RcdataLessthanSign {</span>
+        // from &lt; in rcdata
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">            if (r.matches('/')) {</span>
+<span class="fc" id="L180">                t.createTempBuffer();</span>
+<span class="fc" id="L181">                t.advanceTransition(RCDATAEndTagOpen);</span>
+<span class="fc bfc" id="L182" title="All 6 branches covered.">            } else if (r.matchesLetter() &amp;&amp; t.appropriateEndTagName() != null &amp;&amp; !r.containsIgnoreCase(&quot;&lt;/&quot; + t.appropriateEndTagName())) {</span>
+                // diverge from spec: got a start tag, but there's no appropriate end tag (&lt;/title&gt;), so rather than
+                // consuming to EOF; break out here
+<span class="fc" id="L185">                t.tagPending = t.createTagPending(false).name(t.appropriateEndTagName());</span>
+<span class="fc" id="L186">                t.emitTagPending();</span>
+<span class="fc" id="L187">                r.unconsume(); // undo &quot;&lt;&quot;</span>
+<span class="fc" id="L188">                t.transition(Data);</span>
+            } else {
+<span class="fc" id="L190">                t.emit(&quot;&lt;&quot;);</span>
+<span class="fc" id="L191">                t.transition(Rcdata);</span>
+            }
+<span class="fc" id="L193">        }</span>
+    },
+<span class="fc" id="L195">    RCDATAEndTagOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L198">                t.createTagPending(false);</span>
+<span class="fc" id="L199">                t.tagPending.appendTagName(r.current());</span>
+<span class="fc" id="L200">                t.dataBuffer.append(r.current());</span>
+<span class="fc" id="L201">                t.advanceTransition(RCDATAEndTagName);</span>
+            } else {
+<span class="fc" id="L203">                t.emit(&quot;&lt;/&quot;);</span>
+<span class="fc" id="L204">                t.transition(Rcdata);</span>
+            }
+<span class="fc" id="L206">        }</span>
+    },
+<span class="fc" id="L208">    RCDATAEndTagName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L211">                String name = r.consumeLetterSequence();</span>
+<span class="fc" id="L212">                t.tagPending.appendTagName(name);</span>
+<span class="fc" id="L213">                t.dataBuffer.append(name);</span>
+<span class="fc" id="L214">                return;</span>
+            }
+
+<span class="fc" id="L217">            char c = r.consume();</span>
+<span class="pc bpc" id="L218" title="1 of 4 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">                    if (t.isAppropriateEndTagToken())</span>
+<span class="fc" id="L225">                        t.transition(BeforeAttributeName);</span>
+                    else
+<span class="nc" id="L227">                        anythingElse(t, r);</span>
+<span class="nc" id="L228">                    break;</span>
+                case '/':
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                    if (t.isAppropriateEndTagToken())</span>
+<span class="nc" id="L231">                        t.transition(SelfClosingStartTag);</span>
+                    else
+<span class="nc" id="L233">                        anythingElse(t, r);</span>
+<span class="nc" id="L234">                    break;</span>
+                case '&gt;':
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                    if (t.isAppropriateEndTagToken()) {</span>
+<span class="fc" id="L237">                        t.emitTagPending();</span>
+<span class="fc" id="L238">                        t.transition(Data);</span>
+                    }
+                    else
+<span class="fc" id="L241">                        anythingElse(t, r);</span>
+<span class="fc" id="L242">                    break;</span>
+                default:
+<span class="fc" id="L244">                    anythingElse(t, r);</span>
+            }
+<span class="fc" id="L246">        }</span>
+
+        private void anythingElse(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L249">            t.emit(&quot;&lt;/&quot; + t.dataBuffer.toString());</span>
+<span class="fc" id="L250">            r.unconsume();</span>
+<span class="fc" id="L251">            t.transition(Rcdata);</span>
+<span class="fc" id="L252">        }</span>
+    },
+<span class="fc" id="L254">    RawtextLessthanSign {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            if (r.matches('/')) {</span>
+<span class="fc" id="L257">                t.createTempBuffer();</span>
+<span class="fc" id="L258">                t.advanceTransition(RawtextEndTagOpen);</span>
+            } else {
+<span class="fc" id="L260">                t.emit('&lt;');</span>
+<span class="fc" id="L261">                t.transition(Rawtext);</span>
+            }
+<span class="fc" id="L263">        }</span>
+    },
+<span class="fc" id="L265">    RawtextEndTagOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L267">            readEndTag(t, r, RawtextEndTagName, Rawtext);</span>
+<span class="fc" id="L268">        }</span>
+    },
+<span class="fc" id="L270">    RawtextEndTagName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L272">            handleDataEndTag(t, r, Rawtext);</span>
+<span class="fc" id="L273">        }</span>
+    },
+<span class="fc" id="L275">    ScriptDataLessthanSign {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L277" title="All 3 branches covered.">            switch (r.consume()) {</span>
+                case '/':
+<span class="fc" id="L279">                    t.createTempBuffer();</span>
+<span class="fc" id="L280">                    t.transition(ScriptDataEndTagOpen);</span>
+<span class="fc" id="L281">                    break;</span>
+                case '!':
+<span class="fc" id="L283">                    t.emit(&quot;&lt;!&quot;);</span>
+<span class="fc" id="L284">                    t.transition(ScriptDataEscapeStart);</span>
+<span class="fc" id="L285">                    break;</span>
+                default:
+<span class="fc" id="L287">                    t.emit(&quot;&lt;&quot;);</span>
+<span class="fc" id="L288">                    r.unconsume();</span>
+<span class="fc" id="L289">                    t.transition(ScriptData);</span>
+            }
+<span class="fc" id="L291">        }</span>
+    },
+<span class="fc" id="L293">    ScriptDataEndTagOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L295">            readEndTag(t, r, ScriptDataEndTagName, ScriptData);</span>
+<span class="fc" id="L296">        }</span>
+    },
+<span class="fc" id="L298">    ScriptDataEndTagName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L300">            handleDataEndTag(t, r, ScriptData);</span>
+<span class="fc" id="L301">        }</span>
+    },
+<span class="fc" id="L303">    ScriptDataEscapeStart {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L305" title="All 2 branches covered.">            if (r.matches('-')) {</span>
+<span class="fc" id="L306">                t.emit('-');</span>
+<span class="fc" id="L307">                t.advanceTransition(ScriptDataEscapeStartDash);</span>
+            } else {
+<span class="fc" id="L309">                t.transition(ScriptData);</span>
+            }
+<span class="fc" id="L311">        }</span>
+    },
+<span class="fc" id="L313">    ScriptDataEscapeStartDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">            if (r.matches('-')) {</span>
+<span class="fc" id="L316">                t.emit('-');</span>
+<span class="fc" id="L317">                t.advanceTransition(ScriptDataEscapedDashDash);</span>
+            } else {
+<span class="nc" id="L319">                t.transition(ScriptData);</span>
+            }
+<span class="fc" id="L321">        }</span>
+    },
+<span class="fc" id="L323">    ScriptDataEscaped {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">            if (r.isEmpty()) {</span>
+<span class="nc" id="L326">                t.eofError(this);</span>
+<span class="nc" id="L327">                t.transition(Data);</span>
+<span class="nc" id="L328">                return;</span>
+            }
+
+<span class="pc bpc" id="L331" title="1 of 4 branches missed.">            switch (r.current()) {</span>
+                case '-':
+<span class="fc" id="L333">                    t.emit('-');</span>
+<span class="fc" id="L334">                    t.advanceTransition(ScriptDataEscapedDash);</span>
+<span class="fc" id="L335">                    break;</span>
+                case '&lt;':
+<span class="fc" id="L337">                    t.advanceTransition(ScriptDataEscapedLessthanSign);</span>
+<span class="fc" id="L338">                    break;</span>
+                case nullChar:
+<span class="nc" id="L340">                    t.error(this);</span>
+<span class="nc" id="L341">                    r.advance();</span>
+<span class="nc" id="L342">                    t.emit(replacementChar);</span>
+<span class="nc" id="L343">                    break;</span>
+                default:
+<span class="fc" id="L345">                    String data = r.consumeToAny('-', '&lt;', nullChar);</span>
+<span class="fc" id="L346">                    t.emit(data);</span>
+            }
+<span class="fc" id="L348">        }</span>
+    },
+<span class="fc" id="L350">    ScriptDataEscapedDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">            if (r.isEmpty()) {</span>
+<span class="nc" id="L353">                t.eofError(this);</span>
+<span class="nc" id="L354">                t.transition(Data);</span>
+<span class="nc" id="L355">                return;</span>
+            }
+
+<span class="fc" id="L358">            char c = r.consume();</span>
+<span class="pc bpc" id="L359" title="2 of 4 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="fc" id="L361">                    t.emit(c);</span>
+<span class="fc" id="L362">                    t.transition(ScriptDataEscapedDashDash);</span>
+<span class="fc" id="L363">                    break;</span>
+                case '&lt;':
+<span class="nc" id="L365">                    t.transition(ScriptDataEscapedLessthanSign);</span>
+<span class="nc" id="L366">                    break;</span>
+                case nullChar:
+<span class="nc" id="L368">                    t.error(this);</span>
+<span class="nc" id="L369">                    t.emit(replacementChar);</span>
+<span class="nc" id="L370">                    t.transition(ScriptDataEscaped);</span>
+<span class="nc" id="L371">                    break;</span>
+                default:
+<span class="fc" id="L373">                    t.emit(c);</span>
+<span class="fc" id="L374">                    t.transition(ScriptDataEscaped);</span>
+            }
+<span class="fc" id="L376">        }</span>
+    },
+<span class="fc" id="L378">    ScriptDataEscapedDashDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">            if (r.isEmpty()) {</span>
+<span class="nc" id="L381">                t.eofError(this);</span>
+<span class="nc" id="L382">                t.transition(Data);</span>
+<span class="nc" id="L383">                return;</span>
+            }
+
+<span class="fc" id="L386">            char c = r.consume();</span>
+<span class="pc bpc" id="L387" title="2 of 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="fc" id="L389">                    t.emit(c);</span>
+<span class="fc" id="L390">                    break;</span>
+                case '&lt;':
+<span class="nc" id="L392">                    t.transition(ScriptDataEscapedLessthanSign);</span>
+<span class="nc" id="L393">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L395">                    t.emit(c);</span>
+<span class="fc" id="L396">                    t.transition(ScriptData);</span>
+<span class="fc" id="L397">                    break;</span>
+                case nullChar:
+<span class="nc" id="L399">                    t.error(this);</span>
+<span class="nc" id="L400">                    t.emit(replacementChar);</span>
+<span class="nc" id="L401">                    t.transition(ScriptDataEscaped);</span>
+<span class="nc" id="L402">                    break;</span>
+                default:
+<span class="fc" id="L404">                    t.emit(c);</span>
+<span class="fc" id="L405">                    t.transition(ScriptDataEscaped);</span>
+            }
+<span class="fc" id="L407">        }</span>
+    },
+<span class="fc" id="L409">    ScriptDataEscapedLessthanSign {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L411" title="All 2 branches covered.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L412">                t.createTempBuffer();</span>
+<span class="fc" id="L413">                t.dataBuffer.append(r.current());</span>
+<span class="fc" id="L414">                t.emit(&quot;&lt;&quot; + r.current());</span>
+<span class="fc" id="L415">                t.advanceTransition(ScriptDataDoubleEscapeStart);</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">            } else if (r.matches('/')) {</span>
+<span class="fc" id="L417">                t.createTempBuffer();</span>
+<span class="fc" id="L418">                t.advanceTransition(ScriptDataEscapedEndTagOpen);</span>
+            } else {
+<span class="fc" id="L420">                t.emit('&lt;');</span>
+<span class="fc" id="L421">                t.transition(ScriptDataEscaped);</span>
+            }
+<span class="fc" id="L423">        }</span>
+    },
+<span class="fc" id="L425">    ScriptDataEscapedEndTagOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L428">                t.createTagPending(false);</span>
+<span class="fc" id="L429">                t.tagPending.appendTagName(r.current());</span>
+<span class="fc" id="L430">                t.dataBuffer.append(r.current());</span>
+<span class="fc" id="L431">                t.advanceTransition(ScriptDataEscapedEndTagName);</span>
+            } else {
+<span class="nc" id="L433">                t.emit(&quot;&lt;/&quot;);</span>
+<span class="nc" id="L434">                t.transition(ScriptDataEscaped);</span>
+            }
+<span class="fc" id="L436">        }</span>
+    },
+<span class="fc" id="L438">    ScriptDataEscapedEndTagName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L440">            handleDataEndTag(t, r, ScriptDataEscaped);</span>
+<span class="fc" id="L441">        }</span>
+    },
+<span class="fc" id="L443">    ScriptDataDoubleEscapeStart {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L445">            handleDataDoubleEscapeTag(t, r, ScriptDataDoubleEscaped, ScriptDataEscaped);</span>
+<span class="fc" id="L446">        }</span>
+    },
+<span class="fc" id="L448">    ScriptDataDoubleEscaped {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L450">            char c = r.current();</span>
+<span class="pc bpc" id="L451" title="3 of 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L453">                    t.emit(c);</span>
+<span class="nc" id="L454">                    t.advanceTransition(ScriptDataDoubleEscapedDash);</span>
+<span class="nc" id="L455">                    break;</span>
+                case '&lt;':
+<span class="fc" id="L457">                    t.emit(c);</span>
+<span class="fc" id="L458">                    t.advanceTransition(ScriptDataDoubleEscapedLessthanSign);</span>
+<span class="fc" id="L459">                    break;</span>
+                case nullChar:
+<span class="nc" id="L461">                    t.error(this);</span>
+<span class="nc" id="L462">                    r.advance();</span>
+<span class="nc" id="L463">                    t.emit(replacementChar);</span>
+<span class="nc" id="L464">                    break;</span>
+                case eof:
+<span class="nc" id="L466">                    t.eofError(this);</span>
+<span class="nc" id="L467">                    t.transition(Data);</span>
+<span class="nc" id="L468">                    break;</span>
+                default:
+<span class="fc" id="L470">                    String data = r.consumeToAny('-', '&lt;', nullChar);</span>
+<span class="fc" id="L471">                    t.emit(data);</span>
+            }
+<span class="fc" id="L473">        }</span>
+    },
+<span class="fc" id="L475">    ScriptDataDoubleEscapedDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L477">            char c = r.consume();</span>
+<span class="nc bnc" id="L478" title="All 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L480">                    t.emit(c);</span>
+<span class="nc" id="L481">                    t.transition(ScriptDataDoubleEscapedDashDash);</span>
+<span class="nc" id="L482">                    break;</span>
+                case '&lt;':
+<span class="nc" id="L484">                    t.emit(c);</span>
+<span class="nc" id="L485">                    t.transition(ScriptDataDoubleEscapedLessthanSign);</span>
+<span class="nc" id="L486">                    break;</span>
+                case nullChar:
+<span class="nc" id="L488">                    t.error(this);</span>
+<span class="nc" id="L489">                    t.emit(replacementChar);</span>
+<span class="nc" id="L490">                    t.transition(ScriptDataDoubleEscaped);</span>
+<span class="nc" id="L491">                    break;</span>
+                case eof:
+<span class="nc" id="L493">                    t.eofError(this);</span>
+<span class="nc" id="L494">                    t.transition(Data);</span>
+<span class="nc" id="L495">                    break;</span>
+                default:
+<span class="nc" id="L497">                    t.emit(c);</span>
+<span class="nc" id="L498">                    t.transition(ScriptDataDoubleEscaped);</span>
+            }
+<span class="nc" id="L500">        }</span>
+    },
+<span class="fc" id="L502">    ScriptDataDoubleEscapedDashDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L504">            char c = r.consume();</span>
+<span class="nc bnc" id="L505" title="All 6 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L507">                    t.emit(c);</span>
+<span class="nc" id="L508">                    break;</span>
+                case '&lt;':
+<span class="nc" id="L510">                    t.emit(c);</span>
+<span class="nc" id="L511">                    t.transition(ScriptDataDoubleEscapedLessthanSign);</span>
+<span class="nc" id="L512">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L514">                    t.emit(c);</span>
+<span class="nc" id="L515">                    t.transition(ScriptData);</span>
+<span class="nc" id="L516">                    break;</span>
+                case nullChar:
+<span class="nc" id="L518">                    t.error(this);</span>
+<span class="nc" id="L519">                    t.emit(replacementChar);</span>
+<span class="nc" id="L520">                    t.transition(ScriptDataDoubleEscaped);</span>
+<span class="nc" id="L521">                    break;</span>
+                case eof:
+<span class="nc" id="L523">                    t.eofError(this);</span>
+<span class="nc" id="L524">                    t.transition(Data);</span>
+<span class="nc" id="L525">                    break;</span>
+                default:
+<span class="nc" id="L527">                    t.emit(c);</span>
+<span class="nc" id="L528">                    t.transition(ScriptDataDoubleEscaped);</span>
+            }
+<span class="nc" id="L530">        }</span>
+    },
+<span class="fc" id="L532">    ScriptDataDoubleEscapedLessthanSign {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L534" title="1 of 2 branches missed.">            if (r.matches('/')) {</span>
+<span class="fc" id="L535">                t.emit('/');</span>
+<span class="fc" id="L536">                t.createTempBuffer();</span>
+<span class="fc" id="L537">                t.advanceTransition(ScriptDataDoubleEscapeEnd);</span>
+            } else {
+<span class="nc" id="L539">                t.transition(ScriptDataDoubleEscaped);</span>
+            }
+<span class="fc" id="L541">        }</span>
+    },
+<span class="fc" id="L543">    ScriptDataDoubleEscapeEnd {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L545">            handleDataDoubleEscapeTag(t,r, ScriptDataEscaped, ScriptDataDoubleEscaped);</span>
+<span class="fc" id="L546">        }</span>
+    },
+<span class="fc" id="L548">    BeforeAttributeName {</span>
+        // from tagname &lt;xxx
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L551">            char c = r.consume();</span>
+<span class="pc bpc" id="L552" title="1 of 7 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L558">                    break; // ignore whitespace</span>
+                case '/':
+<span class="fc" id="L560">                    t.transition(SelfClosingStartTag);</span>
+<span class="fc" id="L561">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L563">                    t.emitTagPending();</span>
+<span class="fc" id="L564">                    t.transition(Data);</span>
+<span class="fc" id="L565">                    break;</span>
+                case nullChar:
+<span class="nc" id="L567">                    t.error(this);</span>
+<span class="nc" id="L568">                    t.tagPending.newAttribute();</span>
+<span class="nc" id="L569">                    r.unconsume();</span>
+<span class="nc" id="L570">                    t.transition(AttributeName);</span>
+<span class="nc" id="L571">                    break;</span>
+                case eof:
+<span class="fc" id="L573">                    t.eofError(this);</span>
+<span class="fc" id="L574">                    t.transition(Data);</span>
+<span class="fc" id="L575">                    break;</span>
+                case '&quot;':
+                case '\'':
+                case '&lt;':
+                case '=':
+<span class="fc" id="L580">                    t.error(this);</span>
+<span class="fc" id="L581">                    t.tagPending.newAttribute();</span>
+<span class="fc" id="L582">                    t.tagPending.appendAttributeName(c);</span>
+<span class="fc" id="L583">                    t.transition(AttributeName);</span>
+<span class="fc" id="L584">                    break;</span>
+                default: // A-Z, anything else
+<span class="fc" id="L586">                    t.tagPending.newAttribute();</span>
+<span class="fc" id="L587">                    r.unconsume();</span>
+<span class="fc" id="L588">                    t.transition(AttributeName);</span>
+            }
+<span class="fc" id="L590">        }</span>
+    },
+<span class="fc" id="L592">    AttributeName {</span>
+        // from before attribute name
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L595">            String name = r.consumeToAnySorted(attributeNameCharsSorted);</span>
+<span class="fc" id="L596">            t.tagPending.appendAttributeName(name);</span>
+
+<span class="fc" id="L598">            char c = r.consume();</span>
+<span class="pc bpc" id="L599" title="3 of 8 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L605">                    t.transition(AfterAttributeName);</span>
+<span class="fc" id="L606">                    break;</span>
+                case '/':
+<span class="nc" id="L608">                    t.transition(SelfClosingStartTag);</span>
+<span class="nc" id="L609">                    break;</span>
+                case '=':
+<span class="fc" id="L611">                    t.transition(BeforeAttributeValue);</span>
+<span class="fc" id="L612">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L614">                    t.emitTagPending();</span>
+<span class="fc" id="L615">                    t.transition(Data);</span>
+<span class="fc" id="L616">                    break;</span>
+                case nullChar:
+<span class="nc" id="L618">                    t.error(this);</span>
+<span class="nc" id="L619">                    t.tagPending.appendAttributeName(replacementChar);</span>
+<span class="nc" id="L620">                    break;</span>
+                case eof:
+<span class="fc" id="L622">                    t.eofError(this);</span>
+<span class="fc" id="L623">                    t.transition(Data);</span>
+<span class="fc" id="L624">                    break;</span>
+                case '&quot;':
+                case '\'':
+                case '&lt;':
+<span class="fc" id="L628">                    t.error(this);</span>
+<span class="fc" id="L629">                    t.tagPending.appendAttributeName(c);</span>
+                // no default, as covered in consumeToAny
+            }
+<span class="fc" id="L632">        }</span>
+    },
+<span class="fc" id="L634">    AfterAttributeName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L636">            char c = r.consume();</span>
+<span class="pc bpc" id="L637" title="4 of 8 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+                    // ignore
+<span class="fc" id="L644">                    break;</span>
+                case '/':
+<span class="fc" id="L646">                    t.transition(SelfClosingStartTag);</span>
+<span class="fc" id="L647">                    break;</span>
+                case '=':
+<span class="fc" id="L649">                    t.transition(BeforeAttributeValue);</span>
+<span class="fc" id="L650">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L652">                    t.emitTagPending();</span>
+<span class="nc" id="L653">                    t.transition(Data);</span>
+<span class="nc" id="L654">                    break;</span>
+                case nullChar:
+<span class="nc" id="L656">                    t.error(this);</span>
+<span class="nc" id="L657">                    t.tagPending.appendAttributeName(replacementChar);</span>
+<span class="nc" id="L658">                    t.transition(AttributeName);</span>
+<span class="nc" id="L659">                    break;</span>
+                case eof:
+<span class="nc" id="L661">                    t.eofError(this);</span>
+<span class="nc" id="L662">                    t.transition(Data);</span>
+<span class="nc" id="L663">                    break;</span>
+                case '&quot;':
+                case '\'':
+                case '&lt;':
+<span class="nc" id="L667">                    t.error(this);</span>
+<span class="nc" id="L668">                    t.tagPending.newAttribute();</span>
+<span class="nc" id="L669">                    t.tagPending.appendAttributeName(c);</span>
+<span class="nc" id="L670">                    t.transition(AttributeName);</span>
+<span class="nc" id="L671">                    break;</span>
+                default: // A-Z, anything else
+<span class="fc" id="L673">                    t.tagPending.newAttribute();</span>
+<span class="fc" id="L674">                    r.unconsume();</span>
+<span class="fc" id="L675">                    t.transition(AttributeName);</span>
+            }
+<span class="fc" id="L677">        }</span>
+    },
+<span class="fc" id="L679">    BeforeAttributeValue {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L681">            char c = r.consume();</span>
+<span class="pc bpc" id="L682" title="3 of 9 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+                    // ignore
+<span class="fc" id="L689">                    break;</span>
+                case '&quot;':
+<span class="fc" id="L691">                    t.transition(AttributeValue_doubleQuoted);</span>
+<span class="fc" id="L692">                    break;</span>
+                case '&amp;':
+<span class="nc" id="L694">                    r.unconsume();</span>
+<span class="nc" id="L695">                    t.transition(AttributeValue_unquoted);</span>
+<span class="nc" id="L696">                    break;</span>
+                case '\'':
+<span class="fc" id="L698">                    t.transition(AttributeValue_singleQuoted);</span>
+<span class="fc" id="L699">                    break;</span>
+                case nullChar:
+<span class="fc" id="L701">                    t.error(this);</span>
+<span class="fc" id="L702">                    t.tagPending.appendAttributeValue(replacementChar);</span>
+<span class="fc" id="L703">                    t.transition(AttributeValue_unquoted);</span>
+<span class="fc" id="L704">                    break;</span>
+                case eof:
+<span class="fc" id="L706">                    t.eofError(this);</span>
+<span class="fc" id="L707">                    t.emitTagPending();</span>
+<span class="fc" id="L708">                    t.transition(Data);</span>
+<span class="fc" id="L709">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L711">                    t.error(this);</span>
+<span class="nc" id="L712">                    t.emitTagPending();</span>
+<span class="nc" id="L713">                    t.transition(Data);</span>
+<span class="nc" id="L714">                    break;</span>
+                case '&lt;':
+                case '=':
+                case '`':
+<span class="nc" id="L718">                    t.error(this);</span>
+<span class="nc" id="L719">                    t.tagPending.appendAttributeValue(c);</span>
+<span class="nc" id="L720">                    t.transition(AttributeValue_unquoted);</span>
+<span class="nc" id="L721">                    break;</span>
+                default:
+<span class="fc" id="L723">                    r.unconsume();</span>
+<span class="fc" id="L724">                    t.transition(AttributeValue_unquoted);</span>
+            }
+<span class="fc" id="L726">        }</span>
+    },
+<span class="fc" id="L728">    AttributeValue_doubleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L730">            String value = r.consumeToAny(attributeDoubleValueCharsSorted);</span>
+<span class="fc bfc" id="L731" title="All 2 branches covered.">            if (value.length() &gt; 0)</span>
+<span class="fc" id="L732">                t.tagPending.appendAttributeValue(value);</span>
+            else
+<span class="fc" id="L734">                t.tagPending.setEmptyAttributeValue();</span>
+
+<span class="fc" id="L736">            char c = r.consume();</span>
+<span class="pc bpc" id="L737" title="2 of 5 branches missed.">            switch (c) {</span>
+                case '&quot;':
+<span class="fc" id="L739">                    t.transition(AfterAttributeValue_quoted);</span>
+<span class="fc" id="L740">                    break;</span>
+                case '&amp;':
+<span class="fc" id="L742">                    int[] ref = t.consumeCharacterReference('&quot;', true);</span>
+<span class="fc bfc" id="L743" title="All 2 branches covered.">                    if (ref != null)</span>
+<span class="fc" id="L744">                        t.tagPending.appendAttributeValue(ref);</span>
+                    else
+<span class="fc" id="L746">                        t.tagPending.appendAttributeValue('&amp;');</span>
+<span class="fc" id="L747">                    break;</span>
+                case nullChar:
+<span class="nc" id="L749">                    t.error(this);</span>
+<span class="nc" id="L750">                    t.tagPending.appendAttributeValue(replacementChar);</span>
+<span class="nc" id="L751">                    break;</span>
+                case eof:
+<span class="fc" id="L753">                    t.eofError(this);</span>
+<span class="fc" id="L754">                    t.transition(Data);</span>
+                    break;
+                // no default, handled in consume to any above
+            }
+<span class="fc" id="L758">        }</span>
+    },
+<span class="fc" id="L760">    AttributeValue_singleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L762">            String value = r.consumeToAny(attributeSingleValueCharsSorted);</span>
+<span class="fc bfc" id="L763" title="All 2 branches covered.">            if (value.length() &gt; 0)</span>
+<span class="fc" id="L764">                t.tagPending.appendAttributeValue(value);</span>
+            else
+<span class="fc" id="L766">                t.tagPending.setEmptyAttributeValue();</span>
+
+<span class="fc" id="L768">            char c = r.consume();</span>
+<span class="pc bpc" id="L769" title="3 of 5 branches missed.">            switch (c) {</span>
+                case '\'':
+<span class="fc" id="L771">                    t.transition(AfterAttributeValue_quoted);</span>
+<span class="fc" id="L772">                    break;</span>
+                case '&amp;':
+<span class="fc" id="L774">                    int[] ref = t.consumeCharacterReference('\'', true);</span>
+<span class="fc bfc" id="L775" title="All 2 branches covered.">                    if (ref != null)</span>
+<span class="fc" id="L776">                        t.tagPending.appendAttributeValue(ref);</span>
+                    else
+<span class="fc" id="L778">                        t.tagPending.appendAttributeValue('&amp;');</span>
+<span class="fc" id="L779">                    break;</span>
+                case nullChar:
+<span class="nc" id="L781">                    t.error(this);</span>
+<span class="nc" id="L782">                    t.tagPending.appendAttributeValue(replacementChar);</span>
+<span class="nc" id="L783">                    break;</span>
+                case eof:
+<span class="nc" id="L785">                    t.eofError(this);</span>
+<span class="nc" id="L786">                    t.transition(Data);</span>
+                    break;
+                // no default, handled in consume to any above
+            }
+<span class="fc" id="L790">        }</span>
+    },
+<span class="fc" id="L792">    AttributeValue_unquoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L794">            String value = r.consumeToAnySorted(attributeValueUnquoted);</span>
+<span class="fc bfc" id="L795" title="All 2 branches covered.">            if (value.length() &gt; 0)</span>
+<span class="fc" id="L796">                t.tagPending.appendAttributeValue(value);</span>
+
+<span class="fc" id="L798">            char c = r.consume();</span>
+<span class="pc bpc" id="L799" title="4 of 7 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L805">                    t.transition(BeforeAttributeName);</span>
+<span class="fc" id="L806">                    break;</span>
+                case '&amp;':
+<span class="nc" id="L808">                    int[] ref = t.consumeCharacterReference('&gt;', true);</span>
+<span class="nc bnc" id="L809" title="All 2 branches missed.">                    if (ref != null)</span>
+<span class="nc" id="L810">                        t.tagPending.appendAttributeValue(ref);</span>
+                    else
+<span class="nc" id="L812">                        t.tagPending.appendAttributeValue('&amp;');</span>
+<span class="nc" id="L813">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L815">                    t.emitTagPending();</span>
+<span class="fc" id="L816">                    t.transition(Data);</span>
+<span class="fc" id="L817">                    break;</span>
+                case nullChar:
+<span class="nc" id="L819">                    t.error(this);</span>
+<span class="nc" id="L820">                    t.tagPending.appendAttributeValue(replacementChar);</span>
+<span class="nc" id="L821">                    break;</span>
+                case eof:
+<span class="nc" id="L823">                    t.eofError(this);</span>
+<span class="nc" id="L824">                    t.transition(Data);</span>
+<span class="nc" id="L825">                    break;</span>
+                case '&quot;':
+                case '\'':
+                case '&lt;':
+                case '=':
+                case '`':
+<span class="fc" id="L831">                    t.error(this);</span>
+<span class="fc" id="L832">                    t.tagPending.appendAttributeValue(c);</span>
+                    break;
+                // no default, handled in consume to any above
+            }
+
+<span class="fc" id="L837">        }</span>
+    },
+    // CharacterReferenceInAttributeValue state handled inline
+<span class="fc" id="L840">    AfterAttributeValue_quoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L842">            char c = r.consume();</span>
+<span class="fc bfc" id="L843" title="All 5 branches covered.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L849">                    t.transition(BeforeAttributeName);</span>
+<span class="fc" id="L850">                    break;</span>
+                case '/':
+<span class="fc" id="L852">                    t.transition(SelfClosingStartTag);</span>
+<span class="fc" id="L853">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L855">                    t.emitTagPending();</span>
+<span class="fc" id="L856">                    t.transition(Data);</span>
+<span class="fc" id="L857">                    break;</span>
+                case eof:
+<span class="fc" id="L859">                    t.eofError(this);</span>
+<span class="fc" id="L860">                    t.transition(Data);</span>
+<span class="fc" id="L861">                    break;</span>
+                default:
+<span class="fc" id="L863">                    t.error(this);</span>
+<span class="fc" id="L864">                    r.unconsume();</span>
+<span class="fc" id="L865">                    t.transition(BeforeAttributeName);</span>
+            }
+
+<span class="fc" id="L868">        }</span>
+    },
+<span class="fc" id="L870">    SelfClosingStartTag {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L872">            char c = r.consume();</span>
+<span class="pc bpc" id="L873" title="1 of 3 branches missed.">            switch (c) {</span>
+                case '&gt;':
+<span class="fc" id="L875">                    t.tagPending.selfClosing = true;</span>
+<span class="fc" id="L876">                    t.emitTagPending();</span>
+<span class="fc" id="L877">                    t.transition(Data);</span>
+<span class="fc" id="L878">                    break;</span>
+                case eof:
+<span class="nc" id="L880">                    t.eofError(this);</span>
+<span class="nc" id="L881">                    t.transition(Data);</span>
+<span class="nc" id="L882">                    break;</span>
+                default:
+<span class="fc" id="L884">                    t.error(this);</span>
+<span class="fc" id="L885">                    r.unconsume();</span>
+<span class="fc" id="L886">                    t.transition(BeforeAttributeName);</span>
+            }
+<span class="fc" id="L888">        }</span>
+    },
+<span class="fc" id="L890">    BogusComment {</span>
+        void read(Tokeniser t, CharacterReader r) {
+            // todo: handle bogus comment starting from eof. when does that trigger?
+            // rewind to capture character that lead us here
+<span class="fc" id="L894">            r.unconsume();</span>
+<span class="fc" id="L895">            Token.Comment comment = new Token.Comment();</span>
+<span class="fc" id="L896">            comment.bogus = true;</span>
+<span class="fc" id="L897">            comment.data.append(r.consumeTo('&gt;'));</span>
+            // todo: replace nullChar with replaceChar
+<span class="fc" id="L899">            t.emit(comment);</span>
+<span class="fc" id="L900">            t.advanceTransition(Data);</span>
+<span class="fc" id="L901">        }</span>
+    },
+<span class="fc" id="L903">    MarkupDeclarationOpen {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L905" title="All 2 branches covered.">            if (r.matchConsume(&quot;--&quot;)) {</span>
+<span class="fc" id="L906">                t.createCommentPending();</span>
+<span class="fc" id="L907">                t.transition(CommentStart);</span>
+<span class="fc bfc" id="L908" title="All 2 branches covered.">            } else if (r.matchConsumeIgnoreCase(&quot;DOCTYPE&quot;)) {</span>
+<span class="fc" id="L909">                t.transition(Doctype);</span>
+<span class="pc bpc" id="L910" title="1 of 2 branches missed.">            } else if (r.matchConsume(&quot;[CDATA[&quot;)) {</span>
+                // todo: should actually check current namepspace, and only non-html allows cdata. until namespace
+                // is implemented properly, keep handling as cdata
+                //} else if (!t.currentNodeInHtmlNS() &amp;&amp; r.matchConsume(&quot;[CDATA[&quot;)) {
+<span class="fc" id="L914">                t.transition(CdataSection);</span>
+            } else {
+<span class="nc" id="L916">                t.error(this);</span>
+<span class="nc" id="L917">                t.advanceTransition(BogusComment); // advance so this character gets in bogus comment data's rewind</span>
+            }
+<span class="fc" id="L919">        }</span>
+    },
+<span class="fc" id="L921">    CommentStart {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L923">            char c = r.consume();</span>
+<span class="pc bpc" id="L924" title="4 of 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L926">                    t.transition(CommentStartDash);</span>
+<span class="nc" id="L927">                    break;</span>
+                case nullChar:
+<span class="nc" id="L929">                    t.error(this);</span>
+<span class="nc" id="L930">                    t.commentPending.data.append(replacementChar);</span>
+<span class="nc" id="L931">                    t.transition(Comment);</span>
+<span class="nc" id="L932">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L934">                    t.error(this);</span>
+<span class="nc" id="L935">                    t.emitCommentPending();</span>
+<span class="nc" id="L936">                    t.transition(Data);</span>
+<span class="nc" id="L937">                    break;</span>
+                case eof:
+<span class="nc" id="L939">                    t.eofError(this);</span>
+<span class="nc" id="L940">                    t.emitCommentPending();</span>
+<span class="nc" id="L941">                    t.transition(Data);</span>
+<span class="nc" id="L942">                    break;</span>
+                default:
+<span class="fc" id="L944">                    t.commentPending.data.append(c);</span>
+<span class="fc" id="L945">                    t.transition(Comment);</span>
+            }
+<span class="fc" id="L947">        }</span>
+    },
+<span class="fc" id="L949">    CommentStartDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L951">            char c = r.consume();</span>
+<span class="nc bnc" id="L952" title="All 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L954">                    t.transition(CommentStartDash);</span>
+<span class="nc" id="L955">                    break;</span>
+                case nullChar:
+<span class="nc" id="L957">                    t.error(this);</span>
+<span class="nc" id="L958">                    t.commentPending.data.append(replacementChar);</span>
+<span class="nc" id="L959">                    t.transition(Comment);</span>
+<span class="nc" id="L960">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L962">                    t.error(this);</span>
+<span class="nc" id="L963">                    t.emitCommentPending();</span>
+<span class="nc" id="L964">                    t.transition(Data);</span>
+<span class="nc" id="L965">                    break;</span>
+                case eof:
+<span class="nc" id="L967">                    t.eofError(this);</span>
+<span class="nc" id="L968">                    t.emitCommentPending();</span>
+<span class="nc" id="L969">                    t.transition(Data);</span>
+<span class="nc" id="L970">                    break;</span>
+                default:
+<span class="nc" id="L972">                    t.commentPending.data.append(c);</span>
+<span class="nc" id="L973">                    t.transition(Comment);</span>
+            }
+<span class="nc" id="L975">        }</span>
+    },
+<span class="fc" id="L977">    Comment {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L979">            char c = r.current();</span>
+<span class="fc bfc" id="L980" title="All 4 branches covered.">            switch (c) {</span>
+                case '-':
+<span class="fc" id="L982">                    t.advanceTransition(CommentEndDash);</span>
+<span class="fc" id="L983">                    break;</span>
+                case nullChar:
+<span class="fc" id="L985">                    t.error(this);</span>
+<span class="fc" id="L986">                    r.advance();</span>
+<span class="fc" id="L987">                    t.commentPending.data.append(replacementChar);</span>
+<span class="fc" id="L988">                    break;</span>
+                case eof:
+<span class="fc" id="L990">                    t.eofError(this);</span>
+<span class="fc" id="L991">                    t.emitCommentPending();</span>
+<span class="fc" id="L992">                    t.transition(Data);</span>
+<span class="fc" id="L993">                    break;</span>
+                default:
+<span class="fc" id="L995">                    t.commentPending.data.append(r.consumeToAny('-', nullChar));</span>
+            }
+<span class="fc" id="L997">        }</span>
+    },
+<span class="fc" id="L999">    CommentEndDash {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1001">            char c = r.consume();</span>
+<span class="pc bpc" id="L1002" title="2 of 4 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="fc" id="L1004">                    t.transition(CommentEnd);</span>
+<span class="fc" id="L1005">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1007">                    t.error(this);</span>
+<span class="nc" id="L1008">                    t.commentPending.data.append('-').append(replacementChar);</span>
+<span class="nc" id="L1009">                    t.transition(Comment);</span>
+<span class="nc" id="L1010">                    break;</span>
+                case eof:
+<span class="nc" id="L1012">                    t.eofError(this);</span>
+<span class="nc" id="L1013">                    t.emitCommentPending();</span>
+<span class="nc" id="L1014">                    t.transition(Data);</span>
+<span class="nc" id="L1015">                    break;</span>
+                default:
+<span class="fc" id="L1017">                    t.commentPending.data.append('-').append(c);</span>
+<span class="fc" id="L1018">                    t.transition(Comment);</span>
+            }
+<span class="fc" id="L1020">        }</span>
+    },
+<span class="fc" id="L1022">    CommentEnd {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1024">            char c = r.consume();</span>
+<span class="pc bpc" id="L1025" title="5 of 6 branches missed.">            switch (c) {</span>
+                case '&gt;':
+<span class="fc" id="L1027">                    t.emitCommentPending();</span>
+<span class="fc" id="L1028">                    t.transition(Data);</span>
+<span class="fc" id="L1029">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1031">                    t.error(this);</span>
+<span class="nc" id="L1032">                    t.commentPending.data.append(&quot;--&quot;).append(replacementChar);</span>
+<span class="nc" id="L1033">                    t.transition(Comment);</span>
+<span class="nc" id="L1034">                    break;</span>
+                case '!':
+<span class="nc" id="L1036">                    t.error(this);</span>
+<span class="nc" id="L1037">                    t.transition(CommentEndBang);</span>
+<span class="nc" id="L1038">                    break;</span>
+                case '-':
+<span class="nc" id="L1040">                    t.error(this);</span>
+<span class="nc" id="L1041">                    t.commentPending.data.append('-');</span>
+<span class="nc" id="L1042">                    break;</span>
+                case eof:
+<span class="nc" id="L1044">                    t.eofError(this);</span>
+<span class="nc" id="L1045">                    t.emitCommentPending();</span>
+<span class="nc" id="L1046">                    t.transition(Data);</span>
+<span class="nc" id="L1047">                    break;</span>
+                default:
+<span class="nc" id="L1049">                    t.error(this);</span>
+<span class="nc" id="L1050">                    t.commentPending.data.append(&quot;--&quot;).append(c);</span>
+<span class="nc" id="L1051">                    t.transition(Comment);</span>
+            }
+<span class="fc" id="L1053">        }</span>
+    },
+<span class="fc" id="L1055">    CommentEndBang {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L1057">            char c = r.consume();</span>
+<span class="nc bnc" id="L1058" title="All 5 branches missed.">            switch (c) {</span>
+                case '-':
+<span class="nc" id="L1060">                    t.commentPending.data.append(&quot;--!&quot;);</span>
+<span class="nc" id="L1061">                    t.transition(CommentEndDash);</span>
+<span class="nc" id="L1062">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1064">                    t.emitCommentPending();</span>
+<span class="nc" id="L1065">                    t.transition(Data);</span>
+<span class="nc" id="L1066">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1068">                    t.error(this);</span>
+<span class="nc" id="L1069">                    t.commentPending.data.append(&quot;--!&quot;).append(replacementChar);</span>
+<span class="nc" id="L1070">                    t.transition(Comment);</span>
+<span class="nc" id="L1071">                    break;</span>
+                case eof:
+<span class="nc" id="L1073">                    t.eofError(this);</span>
+<span class="nc" id="L1074">                    t.emitCommentPending();</span>
+<span class="nc" id="L1075">                    t.transition(Data);</span>
+<span class="nc" id="L1076">                    break;</span>
+                default:
+<span class="nc" id="L1078">                    t.commentPending.data.append(&quot;--!&quot;).append(c);</span>
+<span class="nc" id="L1079">                    t.transition(Comment);</span>
+            }
+<span class="nc" id="L1081">        }</span>
+    },
+<span class="fc" id="L1083">    Doctype {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1085">            char c = r.consume();</span>
+<span class="pc bpc" id="L1086" title="2 of 4 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1092">                    t.transition(BeforeDoctypeName);</span>
+<span class="fc" id="L1093">                    break;</span>
+                case eof:
+<span class="nc" id="L1095">                    t.eofError(this);</span>
+                    // note: fall through to &gt; case
+                case '&gt;': // catch invalid &lt;!DOCTYPE&gt;
+<span class="fc" id="L1098">                    t.error(this);</span>
+<span class="fc" id="L1099">                    t.createDoctypePending();</span>
+<span class="fc" id="L1100">                    t.doctypePending.forceQuirks = true;</span>
+<span class="fc" id="L1101">                    t.emitDoctypePending();</span>
+<span class="fc" id="L1102">                    t.transition(Data);</span>
+<span class="fc" id="L1103">                    break;</span>
+                default:
+<span class="nc" id="L1105">                    t.error(this);</span>
+<span class="nc" id="L1106">                    t.transition(BeforeDoctypeName);</span>
+            }
+<span class="fc" id="L1108">        }</span>
+    },
+<span class="fc" id="L1110">    BeforeDoctypeName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L1112" title="All 2 branches covered.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L1113">                t.createDoctypePending();</span>
+<span class="fc" id="L1114">                t.transition(DoctypeName);</span>
+<span class="fc" id="L1115">                return;</span>
+            }
+<span class="fc" id="L1117">            char c = r.consume();</span>
+<span class="pc bpc" id="L1118" title="3 of 4 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="nc" id="L1124">                    break; // ignore whitespace</span>
+                case nullChar:
+<span class="fc" id="L1126">                    t.error(this);</span>
+<span class="fc" id="L1127">                    t.createDoctypePending();</span>
+<span class="fc" id="L1128">                    t.doctypePending.name.append(replacementChar);</span>
+<span class="fc" id="L1129">                    t.transition(DoctypeName);</span>
+<span class="fc" id="L1130">                    break;</span>
+                case eof:
+<span class="nc" id="L1132">                    t.eofError(this);</span>
+<span class="nc" id="L1133">                    t.createDoctypePending();</span>
+<span class="nc" id="L1134">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1135">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1136">                    t.transition(Data);</span>
+<span class="nc" id="L1137">                    break;</span>
+                default:
+<span class="nc" id="L1139">                    t.createDoctypePending();</span>
+<span class="nc" id="L1140">                    t.doctypePending.name.append(c);</span>
+<span class="nc" id="L1141">                    t.transition(DoctypeName);</span>
+            }
+<span class="fc" id="L1143">        }</span>
+    },
+<span class="fc" id="L1145">    DoctypeName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc bfc" id="L1147" title="All 2 branches covered.">            if (r.matchesLetter()) {</span>
+<span class="fc" id="L1148">                String name = r.consumeLetterSequence();</span>
+<span class="fc" id="L1149">                t.doctypePending.name.append(name);</span>
+<span class="fc" id="L1150">                return;</span>
+            }
+<span class="fc" id="L1152">            char c = r.consume();</span>
+<span class="pc bpc" id="L1153" title="3 of 5 branches missed.">            switch (c) {</span>
+                case '&gt;':
+<span class="fc" id="L1155">                    t.emitDoctypePending();</span>
+<span class="fc" id="L1156">                    t.transition(Data);</span>
+<span class="fc" id="L1157">                    break;</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1163">                    t.transition(AfterDoctypeName);</span>
+<span class="fc" id="L1164">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1166">                    t.error(this);</span>
+<span class="nc" id="L1167">                    t.doctypePending.name.append(replacementChar);</span>
+<span class="nc" id="L1168">                    break;</span>
+                case eof:
+<span class="nc" id="L1170">                    t.eofError(this);</span>
+<span class="nc" id="L1171">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1172">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1173">                    t.transition(Data);</span>
+<span class="nc" id="L1174">                    break;</span>
+                default:
+<span class="nc" id="L1176">                    t.doctypePending.name.append(c);</span>
+            }
+<span class="fc" id="L1178">        }</span>
+    },
+<span class="fc" id="L1180">    AfterDoctypeName {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="pc bpc" id="L1182" title="1 of 2 branches missed.">            if (r.isEmpty()) {</span>
+<span class="nc" id="L1183">                t.eofError(this);</span>
+<span class="nc" id="L1184">                t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1185">                t.emitDoctypePending();</span>
+<span class="nc" id="L1186">                t.transition(Data);</span>
+<span class="nc" id="L1187">                return;</span>
+            }
+<span class="fc bfc" id="L1189" title="All 2 branches covered.">            if (r.matchesAny('\t', '\n', '\r', '\f', ' '))</span>
+<span class="fc" id="L1190">                r.advance(); // ignore whitespace</span>
+<span class="pc bpc" id="L1191" title="1 of 2 branches missed.">            else if (r.matches('&gt;')) {</span>
+<span class="nc" id="L1192">                t.emitDoctypePending();</span>
+<span class="nc" id="L1193">                t.advanceTransition(Data);</span>
+<span class="fc bfc" id="L1194" title="All 2 branches covered.">            } else if (r.matchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {</span>
+<span class="fc" id="L1195">                t.doctypePending.pubSysKey = DocumentType.PUBLIC_KEY;</span>
+<span class="fc" id="L1196">                t.transition(AfterDoctypePublicKeyword);</span>
+<span class="pc bpc" id="L1197" title="1 of 2 branches missed.">            } else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {</span>
+<span class="fc" id="L1198">                t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;</span>
+<span class="fc" id="L1199">                t.transition(AfterDoctypeSystemKeyword);</span>
+            } else {
+<span class="nc" id="L1201">                t.error(this);</span>
+<span class="nc" id="L1202">                t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1203">                t.advanceTransition(BogusDoctype);</span>
+            }
+
+<span class="fc" id="L1206">        }</span>
+    },
+<span class="fc" id="L1208">    AfterDoctypePublicKeyword {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1210">            char c = r.consume();</span>
+<span class="pc bpc" id="L1211" title="5 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1217">                    t.transition(BeforeDoctypePublicIdentifier);</span>
+<span class="fc" id="L1218">                    break;</span>
+                case '&quot;':
+<span class="nc" id="L1220">                    t.error(this);</span>
+                    // set public id to empty string
+<span class="nc" id="L1222">                    t.transition(DoctypePublicIdentifier_doubleQuoted);</span>
+<span class="nc" id="L1223">                    break;</span>
+                case '\'':
+<span class="nc" id="L1225">                    t.error(this);</span>
+                    // set public id to empty string
+<span class="nc" id="L1227">                    t.transition(DoctypePublicIdentifier_singleQuoted);</span>
+<span class="nc" id="L1228">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1230">                    t.error(this);</span>
+<span class="nc" id="L1231">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1232">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1233">                    t.transition(Data);</span>
+<span class="nc" id="L1234">                    break;</span>
+                case eof:
+<span class="nc" id="L1236">                    t.eofError(this);</span>
+<span class="nc" id="L1237">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1238">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1239">                    t.transition(Data);</span>
+<span class="nc" id="L1240">                    break;</span>
+                default:
+<span class="nc" id="L1242">                    t.error(this);</span>
+<span class="nc" id="L1243">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1244">                    t.transition(BogusDoctype);</span>
+            }
+<span class="fc" id="L1246">        }</span>
+    },
+<span class="fc" id="L1248">    BeforeDoctypePublicIdentifier {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1250">            char c = r.consume();</span>
+<span class="pc bpc" id="L1251" title="5 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="nc" id="L1257">                    break;</span>
+                case '&quot;':
+                    // set public id to empty string
+<span class="fc" id="L1260">                    t.transition(DoctypePublicIdentifier_doubleQuoted);</span>
+<span class="fc" id="L1261">                    break;</span>
+                case '\'':
+                    // set public id to empty string
+<span class="nc" id="L1264">                    t.transition(DoctypePublicIdentifier_singleQuoted);</span>
+<span class="nc" id="L1265">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1267">                    t.error(this);</span>
+<span class="nc" id="L1268">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1269">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1270">                    t.transition(Data);</span>
+<span class="nc" id="L1271">                    break;</span>
+                case eof:
+<span class="nc" id="L1273">                    t.eofError(this);</span>
+<span class="nc" id="L1274">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1275">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1276">                    t.transition(Data);</span>
+<span class="nc" id="L1277">                    break;</span>
+                default:
+<span class="nc" id="L1279">                    t.error(this);</span>
+<span class="nc" id="L1280">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1281">                    t.transition(BogusDoctype);</span>
+            }
+<span class="fc" id="L1283">        }</span>
+    },
+<span class="fc" id="L1285">    DoctypePublicIdentifier_doubleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1287">            char c = r.consume();</span>
+<span class="pc bpc" id="L1288" title="3 of 5 branches missed.">            switch (c) {</span>
+                case '&quot;':
+<span class="fc" id="L1290">                    t.transition(AfterDoctypePublicIdentifier);</span>
+<span class="fc" id="L1291">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1293">                    t.error(this);</span>
+<span class="nc" id="L1294">                    t.doctypePending.publicIdentifier.append(replacementChar);</span>
+<span class="nc" id="L1295">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1297">                    t.error(this);</span>
+<span class="nc" id="L1298">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1299">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1300">                    t.transition(Data);</span>
+<span class="nc" id="L1301">                    break;</span>
+                case eof:
+<span class="nc" id="L1303">                    t.eofError(this);</span>
+<span class="nc" id="L1304">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1305">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1306">                    t.transition(Data);</span>
+<span class="nc" id="L1307">                    break;</span>
+                default:
+<span class="fc" id="L1309">                    t.doctypePending.publicIdentifier.append(c);</span>
+            }
+<span class="fc" id="L1311">        }</span>
+    },
+<span class="fc" id="L1313">    DoctypePublicIdentifier_singleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L1315">            char c = r.consume();</span>
+<span class="nc bnc" id="L1316" title="All 5 branches missed.">            switch (c) {</span>
+                case '\'':
+<span class="nc" id="L1318">                    t.transition(AfterDoctypePublicIdentifier);</span>
+<span class="nc" id="L1319">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1321">                    t.error(this);</span>
+<span class="nc" id="L1322">                    t.doctypePending.publicIdentifier.append(replacementChar);</span>
+<span class="nc" id="L1323">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1325">                    t.error(this);</span>
+<span class="nc" id="L1326">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1327">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1328">                    t.transition(Data);</span>
+<span class="nc" id="L1329">                    break;</span>
+                case eof:
+<span class="nc" id="L1331">                    t.eofError(this);</span>
+<span class="nc" id="L1332">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1333">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1334">                    t.transition(Data);</span>
+<span class="nc" id="L1335">                    break;</span>
+                default:
+<span class="nc" id="L1337">                    t.doctypePending.publicIdentifier.append(c);</span>
+            }
+<span class="nc" id="L1339">        }</span>
+    },
+<span class="fc" id="L1341">    AfterDoctypePublicIdentifier {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1343">            char c = r.consume();</span>
+<span class="pc bpc" id="L1344" title="4 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1350">                    t.transition(BetweenDoctypePublicAndSystemIdentifiers);</span>
+<span class="fc" id="L1351">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L1353">                    t.emitDoctypePending();</span>
+<span class="fc" id="L1354">                    t.transition(Data);</span>
+<span class="fc" id="L1355">                    break;</span>
+                case '&quot;':
+<span class="nc" id="L1357">                    t.error(this);</span>
+                    // system id empty
+<span class="nc" id="L1359">                    t.transition(DoctypeSystemIdentifier_doubleQuoted);</span>
+<span class="nc" id="L1360">                    break;</span>
+                case '\'':
+<span class="nc" id="L1362">                    t.error(this);</span>
+                    // system id empty
+<span class="nc" id="L1364">                    t.transition(DoctypeSystemIdentifier_singleQuoted);</span>
+<span class="nc" id="L1365">                    break;</span>
+                case eof:
+<span class="nc" id="L1367">                    t.eofError(this);</span>
+<span class="nc" id="L1368">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1369">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1370">                    t.transition(Data);</span>
+<span class="nc" id="L1371">                    break;</span>
+                default:
+<span class="nc" id="L1373">                    t.error(this);</span>
+<span class="nc" id="L1374">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1375">                    t.transition(BogusDoctype);</span>
+            }
+<span class="fc" id="L1377">        }</span>
+    },
+<span class="fc" id="L1379">    BetweenDoctypePublicAndSystemIdentifiers {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1381">            char c = r.consume();</span>
+<span class="pc bpc" id="L1382" title="4 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1388">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1390">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1391">                    t.transition(Data);</span>
+<span class="nc" id="L1392">                    break;</span>
+                case '&quot;':
+<span class="fc" id="L1394">                    t.error(this);</span>
+                    // system id empty
+<span class="fc" id="L1396">                    t.transition(DoctypeSystemIdentifier_doubleQuoted);</span>
+<span class="fc" id="L1397">                    break;</span>
+                case '\'':
+<span class="nc" id="L1399">                    t.error(this);</span>
+                    // system id empty
+<span class="nc" id="L1401">                    t.transition(DoctypeSystemIdentifier_singleQuoted);</span>
+<span class="nc" id="L1402">                    break;</span>
+                case eof:
+<span class="nc" id="L1404">                    t.eofError(this);</span>
+<span class="nc" id="L1405">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1406">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1407">                    t.transition(Data);</span>
+<span class="nc" id="L1408">                    break;</span>
+                default:
+<span class="nc" id="L1410">                    t.error(this);</span>
+<span class="nc" id="L1411">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1412">                    t.transition(BogusDoctype);</span>
+            }
+<span class="fc" id="L1414">        }</span>
+    },
+<span class="fc" id="L1416">    AfterDoctypeSystemKeyword {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1418">            char c = r.consume();</span>
+<span class="pc bpc" id="L1419" title="5 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1425">                    t.transition(BeforeDoctypeSystemIdentifier);</span>
+<span class="fc" id="L1426">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1428">                    t.error(this);</span>
+<span class="nc" id="L1429">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1430">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1431">                    t.transition(Data);</span>
+<span class="nc" id="L1432">                    break;</span>
+                case '&quot;':
+<span class="nc" id="L1434">                    t.error(this);</span>
+                    // system id empty
+<span class="nc" id="L1436">                    t.transition(DoctypeSystemIdentifier_doubleQuoted);</span>
+<span class="nc" id="L1437">                    break;</span>
+                case '\'':
+<span class="nc" id="L1439">                    t.error(this);</span>
+                    // system id empty
+<span class="nc" id="L1441">                    t.transition(DoctypeSystemIdentifier_singleQuoted);</span>
+<span class="nc" id="L1442">                    break;</span>
+                case eof:
+<span class="nc" id="L1444">                    t.eofError(this);</span>
+<span class="nc" id="L1445">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1446">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1447">                    t.transition(Data);</span>
+<span class="nc" id="L1448">                    break;</span>
+                default:
+<span class="nc" id="L1450">                    t.error(this);</span>
+<span class="nc" id="L1451">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1452">                    t.emitDoctypePending();</span>
+            }
+<span class="fc" id="L1454">        }</span>
+    },
+<span class="fc" id="L1456">    BeforeDoctypeSystemIdentifier {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1458">            char c = r.consume();</span>
+<span class="pc bpc" id="L1459" title="5 of 6 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="nc" id="L1465">                    break;</span>
+                case '&quot;':
+                    // set system id to empty string
+<span class="fc" id="L1468">                    t.transition(DoctypeSystemIdentifier_doubleQuoted);</span>
+<span class="fc" id="L1469">                    break;</span>
+                case '\'':
+                    // set public id to empty string
+<span class="nc" id="L1472">                    t.transition(DoctypeSystemIdentifier_singleQuoted);</span>
+<span class="nc" id="L1473">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1475">                    t.error(this);</span>
+<span class="nc" id="L1476">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1477">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1478">                    t.transition(Data);</span>
+<span class="nc" id="L1479">                    break;</span>
+                case eof:
+<span class="nc" id="L1481">                    t.eofError(this);</span>
+<span class="nc" id="L1482">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1483">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1484">                    t.transition(Data);</span>
+<span class="nc" id="L1485">                    break;</span>
+                default:
+<span class="nc" id="L1487">                    t.error(this);</span>
+<span class="nc" id="L1488">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1489">                    t.transition(BogusDoctype);</span>
+            }
+<span class="fc" id="L1491">        }</span>
+    },
+<span class="fc" id="L1493">    DoctypeSystemIdentifier_doubleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1495">            char c = r.consume();</span>
+<span class="pc bpc" id="L1496" title="3 of 5 branches missed.">            switch (c) {</span>
+                case '&quot;':
+<span class="fc" id="L1498">                    t.transition(AfterDoctypeSystemIdentifier);</span>
+<span class="fc" id="L1499">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1501">                    t.error(this);</span>
+<span class="nc" id="L1502">                    t.doctypePending.systemIdentifier.append(replacementChar);</span>
+<span class="nc" id="L1503">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1505">                    t.error(this);</span>
+<span class="nc" id="L1506">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1507">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1508">                    t.transition(Data);</span>
+<span class="nc" id="L1509">                    break;</span>
+                case eof:
+<span class="nc" id="L1511">                    t.eofError(this);</span>
+<span class="nc" id="L1512">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1513">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1514">                    t.transition(Data);</span>
+<span class="nc" id="L1515">                    break;</span>
+                default:
+<span class="fc" id="L1517">                    t.doctypePending.systemIdentifier.append(c);</span>
+            }
+<span class="fc" id="L1519">        }</span>
+    },
+<span class="fc" id="L1521">    DoctypeSystemIdentifier_singleQuoted {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L1523">            char c = r.consume();</span>
+<span class="nc bnc" id="L1524" title="All 5 branches missed.">            switch (c) {</span>
+                case '\'':
+<span class="nc" id="L1526">                    t.transition(AfterDoctypeSystemIdentifier);</span>
+<span class="nc" id="L1527">                    break;</span>
+                case nullChar:
+<span class="nc" id="L1529">                    t.error(this);</span>
+<span class="nc" id="L1530">                    t.doctypePending.systemIdentifier.append(replacementChar);</span>
+<span class="nc" id="L1531">                    break;</span>
+                case '&gt;':
+<span class="nc" id="L1533">                    t.error(this);</span>
+<span class="nc" id="L1534">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1535">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1536">                    t.transition(Data);</span>
+<span class="nc" id="L1537">                    break;</span>
+                case eof:
+<span class="nc" id="L1539">                    t.eofError(this);</span>
+<span class="nc" id="L1540">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1541">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1542">                    t.transition(Data);</span>
+<span class="nc" id="L1543">                    break;</span>
+                default:
+<span class="nc" id="L1545">                    t.doctypePending.systemIdentifier.append(c);</span>
+            }
+<span class="nc" id="L1547">        }</span>
+    },
+<span class="fc" id="L1549">    AfterDoctypeSystemIdentifier {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1551">            char c = r.consume();</span>
+<span class="pc bpc" id="L1552" title="3 of 4 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="nc" id="L1558">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L1560">                    t.emitDoctypePending();</span>
+<span class="fc" id="L1561">                    t.transition(Data);</span>
+<span class="fc" id="L1562">                    break;</span>
+                case eof:
+<span class="nc" id="L1564">                    t.eofError(this);</span>
+<span class="nc" id="L1565">                    t.doctypePending.forceQuirks = true;</span>
+<span class="nc" id="L1566">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1567">                    t.transition(Data);</span>
+<span class="nc" id="L1568">                    break;</span>
+                default:
+<span class="nc" id="L1570">                    t.error(this);</span>
+<span class="nc" id="L1571">                    t.transition(BogusDoctype);</span>
+                    // NOT force quirks
+            }
+<span class="fc" id="L1574">        }</span>
+    },
+<span class="fc" id="L1576">    BogusDoctype {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="nc" id="L1578">            char c = r.consume();</span>
+<span class="nc bnc" id="L1579" title="All 3 branches missed.">            switch (c) {</span>
+                case '&gt;':
+<span class="nc" id="L1581">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1582">                    t.transition(Data);</span>
+<span class="nc" id="L1583">                    break;</span>
+                case eof:
+<span class="nc" id="L1585">                    t.emitDoctypePending();</span>
+<span class="nc" id="L1586">                    t.transition(Data);</span>
+<span class="nc" id="L1587">                    break;</span>
+                default:
+                    // ignore char
+                    break;
+            }
+<span class="nc" id="L1592">        }</span>
+    },
+<span class="fc" id="L1594">    CdataSection {</span>
+        void read(Tokeniser t, CharacterReader r) {
+<span class="fc" id="L1596">            String data = r.consumeTo(&quot;]]&gt;&quot;);</span>
+<span class="fc" id="L1597">            t.emit(data);</span>
+<span class="fc" id="L1598">            r.matchConsume(&quot;]]&gt;&quot;);</span>
+<span class="fc" id="L1599">            t.transition(Data);</span>
+<span class="fc" id="L1600">        }</span>
+    };
+
+
+    abstract void read(Tokeniser t, CharacterReader r);
+
+    static final char nullChar = '\u0000';
+<span class="fc" id="L1607">    private static final char[] attributeSingleValueCharsSorted = new char[]{'\'', '&amp;', nullChar};</span>
+<span class="fc" id="L1608">    private static final char[] attributeDoubleValueCharsSorted = new char[]{'&quot;', '&amp;', nullChar};</span>
+<span class="fc" id="L1609">    private static final char[] attributeNameCharsSorted = new char[]{'\t', '\n', '\r', '\f', ' ', '/', '=', '&gt;', nullChar, '&quot;', '\'', '&lt;'};</span>
+<span class="fc" id="L1610">    private static final char[] attributeValueUnquoted = new char[]{'\t', '\n', '\r', '\f', ' ', '&amp;', '&gt;', nullChar, '&quot;', '\'', '&lt;', '=', '`'};</span>
+
+    private static final char replacementChar = Tokeniser.replacementChar;
+<span class="fc" id="L1613">    private static final String replacementStr = String.valueOf(Tokeniser.replacementChar);</span>
+    private static final char eof = CharacterReader.EOF;
+
+    static {
+<span class="fc" id="L1617">        Arrays.sort(attributeSingleValueCharsSorted);</span>
+<span class="fc" id="L1618">        Arrays.sort(attributeDoubleValueCharsSorted);</span>
+<span class="fc" id="L1619">        Arrays.sort(attributeNameCharsSorted);</span>
+<span class="fc" id="L1620">        Arrays.sort(attributeValueUnquoted);</span>
+<span class="fc" id="L1621">    }</span>
+
+    /**
+     * Handles RawtextEndTagName, ScriptDataEndTagName, and ScriptDataEscapedEndTagName. Same body impl, just
+     * different else exit transitions.
+     */
+    private static void handleDataEndTag(Tokeniser t, CharacterReader r, TokeniserState elseTransition) {
+<span class="fc bfc" id="L1628" title="All 2 branches covered.">        if (r.matchesLetter()) {</span>
+<span class="fc" id="L1629">            String name = r.consumeLetterSequence();</span>
+<span class="fc" id="L1630">            t.tagPending.appendTagName(name);</span>
+<span class="fc" id="L1631">            t.dataBuffer.append(name);</span>
+<span class="fc" id="L1632">            return;</span>
+        }
+
+<span class="fc" id="L1635">        boolean needsExitTransition = false;</span>
+<span class="fc bfc" id="L1636" title="All 4 branches covered.">        if (t.isAppropriateEndTagToken() &amp;&amp; !r.isEmpty()) {</span>
+<span class="fc" id="L1637">            char c = r.consume();</span>
+<span class="pc bpc" id="L1638" title="1 of 4 branches missed.">            switch (c) {</span>
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case ' ':
+<span class="fc" id="L1644">                    t.transition(BeforeAttributeName);</span>
+<span class="fc" id="L1645">                    break;</span>
+                case '/':
+<span class="nc" id="L1647">                    t.transition(SelfClosingStartTag);</span>
+<span class="nc" id="L1648">                    break;</span>
+                case '&gt;':
+<span class="fc" id="L1650">                    t.emitTagPending();</span>
+<span class="fc" id="L1651">                    t.transition(Data);</span>
+<span class="fc" id="L1652">                    break;</span>
+                default:
+<span class="fc" id="L1654">                    t.dataBuffer.append(c);</span>
+<span class="fc" id="L1655">                    needsExitTransition = true;</span>
+            }
+<span class="fc" id="L1657">        } else {</span>
+<span class="fc" id="L1658">            needsExitTransition = true;</span>
+        }
+
+<span class="fc bfc" id="L1661" title="All 2 branches covered.">        if (needsExitTransition) {</span>
+<span class="fc" id="L1662">            t.emit(&quot;&lt;/&quot; + t.dataBuffer.toString());</span>
+<span class="fc" id="L1663">            t.transition(elseTransition);</span>
+        }
+<span class="fc" id="L1665">    }</span>
+
+    private static void readData(Tokeniser t, CharacterReader r, TokeniserState current, TokeniserState advance) {
+<span class="pc bpc" id="L1668" title="1 of 4 branches missed.">        switch (r.current()) {</span>
+            case '&lt;':
+<span class="fc" id="L1670">                t.advanceTransition(advance);</span>
+<span class="fc" id="L1671">                break;</span>
+            case nullChar:
+<span class="nc" id="L1673">                t.error(current);</span>
+<span class="nc" id="L1674">                r.advance();</span>
+<span class="nc" id="L1675">                t.emit(replacementChar);</span>
+<span class="nc" id="L1676">                break;</span>
+            case eof:
+<span class="fc" id="L1678">                t.emit(new Token.EOF());</span>
+<span class="fc" id="L1679">                break;</span>
+            default:
+<span class="fc" id="L1681">                String data = r.consumeToAny('&lt;', nullChar); // todo - why hunt for null here? Just consumeTo'&lt;'?</span>
+<span class="fc" id="L1682">                t.emit(data);</span>
+                break;
+        }
+<span class="fc" id="L1685">    }</span>
+
+    private static void readCharRef(Tokeniser t, TokeniserState advance) {
+<span class="fc" id="L1688">        int[] c = t.consumeCharacterReference(null, false);</span>
+<span class="fc bfc" id="L1689" title="All 2 branches covered.">        if (c == null)</span>
+<span class="fc" id="L1690">            t.emit('&amp;');</span>
+        else
+<span class="fc" id="L1692">            t.emit(c);</span>
+<span class="fc" id="L1693">        t.transition(advance);</span>
+<span class="fc" id="L1694">    }</span>
+
+    private static void readEndTag(Tokeniser t, CharacterReader r, TokeniserState a, TokeniserState b) {
+<span class="fc bfc" id="L1697" title="All 2 branches covered.">        if (r.matchesLetter()) {</span>
+<span class="fc" id="L1698">            t.createTagPending(false);</span>
+<span class="fc" id="L1699">            t.transition(a);</span>
+        } else {
+<span class="fc" id="L1701">            t.emit(&quot;&lt;/&quot;);</span>
+<span class="fc" id="L1702">            t.transition(b);</span>
+        }
+<span class="fc" id="L1704">    }</span>
+
+    private static void handleDataDoubleEscapeTag(Tokeniser t, CharacterReader r, TokeniserState primary, TokeniserState fallback) {
+<span class="fc bfc" id="L1707" title="All 2 branches covered.">        if (r.matchesLetter()) {</span>
+<span class="fc" id="L1708">            String name = r.consumeLetterSequence();</span>
+<span class="fc" id="L1709">            t.dataBuffer.append(name);</span>
+<span class="fc" id="L1710">            t.emit(name);</span>
+<span class="fc" id="L1711">            return;</span>
+        }
+
+<span class="fc" id="L1714">        char c = r.consume();</span>
+<span class="fc bfc" id="L1715" title="All 2 branches covered.">        switch (c) {</span>
+            case '\t':
+            case '\n':
+            case '\r':
+            case '\f':
+            case ' ':
+            case '/':
+            case '&gt;':
+<span class="fc bfc" id="L1723" title="All 2 branches covered.">                if (t.dataBuffer.toString().equals(&quot;script&quot;))</span>
+<span class="fc" id="L1724">                    t.transition(primary);</span>
+                else
+<span class="fc" id="L1726">                    t.transition(fallback);</span>
+<span class="fc" id="L1727">                t.emit(c);</span>
+<span class="fc" id="L1728">                break;</span>
+            default:
+<span class="fc" id="L1730">                r.unconsume();</span>
+<span class="fc" id="L1731">                t.transition(fallback);</span>
+        }
+<span class="fc" id="L1733">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
