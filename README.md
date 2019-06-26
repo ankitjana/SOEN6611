@@ -29,8 +29,6 @@ Each Project has following Structure:
 
 References:
 
-https://github.com/jhy/jsoup
-
 https://commons.apache.org/proper/commons-collections/
 
 https://github.com/apache/commons-collections
@@ -50,3 +48,5 @@ https://github.com/imagej/imagej
 http://checkstyle.sourceforge.net/
 
 https://github.com/checkstyle/checkstyle
+
+https://github.com/jhy/jsoup
