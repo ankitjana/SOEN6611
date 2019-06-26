@@ -16,6 +16,12 @@ Six open source projects used for the project are:
 5) Checkstyle
 6) Jsoup
 
+Each Project has following Structure:
+1-Code churn
+2-Configuration Files
+3-Jacoco Reports
+4-PItest Report
+5-Spearman Correlation
 
  
 
