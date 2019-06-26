@@ -18,8 +18,8 @@ Six open source projects used for the project are:
 
 Each Project has following Structure:
 1-Code churn
-2-Configuration Files
-3-Jacoco Reports
+2-Configuration Files (5 Versions)
+3-Jacoco Reports (5 versions)
 4-PItest Report
 5-Spearman Correlation
 
