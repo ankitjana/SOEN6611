@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="iso-8859-1"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CircularByteBuffer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Commons IO</a> &gt; <a href="index.source.html" class="el_package">org.apache.commons.io.input.buffer</a> &gt; <span class="el_source">CircularByteBuffer.java</span></div><h1>CircularByteBuffer.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.io.input.buffer;
+
+import java.util.Objects;
+
+/**
+ * A buffer, which doesn't need reallocation of byte arrays, because it
+ * reuses a single byte array. This works particularly well, if reading
+ * from the buffer takes place at the same time than writing to. Such is the
+ * case, for example, when using the buffer within a filtering input stream,
+ * like the {@link CircularBufferInputStream}.
+ */
+public class CircularByteBuffer {
+    private final byte[] buffer;
+    private int startOffset, endOffset, currentNumberOfBytes;
+
+    /**
+     * Creates a new instance with the given buffer size.
+     *
+     * @param pSize the size of buffer to create
+     */
+<span class="fc" id="L37">    public CircularByteBuffer(int pSize) {</span>
+<span class="fc" id="L38">        buffer = new byte[pSize];</span>
+<span class="fc" id="L39">        startOffset = 0;</span>
+<span class="fc" id="L40">        endOffset = 0;</span>
+<span class="fc" id="L41">        currentNumberOfBytes = 0;</span>
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * Creates a new instance with a reasonable default buffer size (8192).
+     */
+    public CircularByteBuffer() {
+<span class="nc" id="L48">        this(8192);</span>
+<span class="nc" id="L49">    }</span>
+
+    /**
+     * Returns the next byte from the buffer, removing it at the same time, so
+     * that following invocations won't return it again.
+     *
+     * @return The byte, which is being returned.
+     * @throws IllegalStateException The buffer is empty. Use {@link #hasBytes()},
+     *                               or {@link #getCurrentNumberOfBytes()}, to prevent this exception.
+     */
+    public byte read() {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (currentNumberOfBytes &lt;= 0) {</span>
+<span class="nc" id="L61">            throw new IllegalStateException(&quot;No bytes available.&quot;);</span>
+        }
+<span class="fc" id="L63">        final byte b = buffer[startOffset];</span>
+<span class="fc" id="L64">        --currentNumberOfBytes;</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (++startOffset == buffer.length) {</span>
+<span class="fc" id="L66">            startOffset = 0;</span>
+        }
+<span class="fc" id="L68">        return b;</span>
+    }
+
+    /**
+     * Returns the given number of bytes from the buffer by storing them in
+     * the given byte array at the given offset.
+     *
+     * @param pBuffer The byte array, where to add bytes.
+     * @param pOffset The offset, where to store bytes in the byte array.
+     * @param pLength The number of bytes to return.
+     * @throws NullPointerException     The byte array {@code pBuffer} is null.
+     * @throws IllegalArgumentException Either of {@code pOffset}, or {@code pLength} is negative,
+     *                                  or the length of the byte array {@code pBuffer} is too small.
+     * @throws IllegalStateException    The buffer doesn't hold the given number
+     *                                  of bytes. Use {@link #getCurrentNumberOfBytes()} to prevent this
+     *                                  exception.
+     */
+    public void read(byte[] pBuffer, int pOffset, int pLength) {
+<span class="nc" id="L86">        Objects.requireNonNull(pBuffer);</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">        if (pOffset &lt; 0 || pOffset &gt;= pBuffer.length) {</span>
+<span class="nc" id="L88">            throw new IllegalArgumentException(&quot;Invalid offset: &quot; + pOffset);</span>
+        }
+<span class="nc bnc" id="L90" title="All 4 branches missed.">        if (pLength &lt; 0 || pLength &gt; buffer.length) {</span>
+<span class="nc" id="L91">            throw new IllegalArgumentException(&quot;Invalid length: &quot; + pLength);</span>
+        }
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (pOffset + pLength &gt; pBuffer.length) {</span>
+<span class="nc" id="L94">            throw new IllegalArgumentException(&quot;The supplied byte array contains only &quot;</span>
+                    + pBuffer.length + &quot; bytes, but offset, and length would require &quot;
+                    + (pOffset + pLength - 1));
+        }
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (currentNumberOfBytes &lt; pLength) {</span>
+<span class="nc" id="L99">            throw new IllegalStateException(&quot;Currently, there are only &quot; + currentNumberOfBytes</span>
+                    + &quot;in the buffer, not &quot; + pLength);
+        }
+<span class="nc" id="L102">        int offset = pOffset;</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int i = 0; i &lt; pLength; i++) {</span>
+<span class="nc" id="L104">            pBuffer[offset++] = buffer[startOffset];</span>
+<span class="nc" id="L105">            --currentNumberOfBytes;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            if (++startOffset == buffer.length) {</span>
+<span class="nc" id="L107">                startOffset = 0;</span>
+            }
+        }
+<span class="nc" id="L110">    }</span>
+
+    /**
+     * Adds a new byte to the buffer, which will eventually be returned by following
+     * invocations of {@link #read()}.
+     *
+     * @param pByte The byte, which is being added to the buffer.
+     * @throws IllegalStateException The buffer is full. Use {@link #hasSpace()},
+     *                               or {@link #getSpace()}, to prevent this exception.
+     */
+    public void add(byte pByte) {
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (currentNumberOfBytes &gt;= buffer.length) {</span>
+<span class="nc" id="L122">            throw new IllegalStateException(&quot;No space available&quot;);</span>
+        }
+<span class="nc" id="L124">        buffer[endOffset] = pByte;</span>
+<span class="nc" id="L125">        ++currentNumberOfBytes;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (++endOffset == buffer.length) {</span>
+<span class="nc" id="L127">            endOffset = 0;</span>
+        }
+<span class="nc" id="L129">    }</span>
+
+    /**
+     * Returns, whether the next bytes in the buffer are exactly those, given by
+     * {@code pBuffer}, {@code pOffset}, and {@code pLength}. No bytes are being
+     * removed from the buffer. If the result is true, then the following invocations
+     * of {@link #read()} are guaranteed to return exactly those bytes.
+     *
+     * @param pBuffer the buffer to compare against
+     * @param pOffset start offset
+     * @param pLength length to compare
+     * @return True, if the next invocations of {@link #read()} will return the
+     * bytes at offsets {@code pOffset}+0, {@code pOffset}+1, ...,
+     * {@code pOffset}+{@code pLength}-1 of byte array {@code pBuffer}.
+     * @throws IllegalArgumentException Either of {@code pOffset}, or {@code pLength} is negative.
+     * @throws NullPointerException     The byte array {@code pBuffer} is null.
+     */
+    public boolean peek(byte[] pBuffer, int pOffset, int pLength) {
+<span class="nc" id="L147">        Objects.requireNonNull(pBuffer, &quot;Buffer&quot;);</span>
+<span class="nc bnc" id="L148" title="All 4 branches missed.">        if (pOffset &lt; 0 || pOffset &gt;= pBuffer.length) {</span>
+<span class="nc" id="L149">            throw new IllegalArgumentException(&quot;Invalid offset: &quot; + pOffset);</span>
+        }
+<span class="nc bnc" id="L151" title="All 4 branches missed.">        if (pLength &lt; 0 || pLength &gt; buffer.length) {</span>
+<span class="nc" id="L152">            throw new IllegalArgumentException(&quot;Invalid length: &quot; + pLength);</span>
+        }
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (pLength &lt; currentNumberOfBytes) {</span>
+<span class="nc" id="L155">            return false;</span>
+        }
+<span class="nc" id="L157">        int offset = startOffset;</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        for (int i = 0; i &lt; pLength; i++) {</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            if (buffer[offset] != pBuffer[i + pOffset]) {</span>
+<span class="nc" id="L160">                return false;</span>
+            }
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            if (++offset == buffer.length) {</span>
+<span class="nc" id="L163">                offset = 0;</span>
+            }
+        }
+<span class="nc" id="L166">        return true;</span>
+    }
+
+    /**
+     * Adds the given bytes to the buffer. This is the same as invoking {@link #add(byte)}
+     * for the bytes at offsets {@code pOffset}+0, {@code pOffset}+1, ...,
+     * {@code pOffset}+{@code pLength}-1 of byte array {@code pBuffer}.
+     *
+     * @param pBuffer the buffer to copy
+     * @param pOffset start offset
+     * @param pLength length to copy
+     * @throws IllegalStateException    The buffer doesn't have sufficient space. Use
+     *                                  {@link #getSpace()} to prevent this exception.
+     * @throws IllegalArgumentException Either of {@code pOffset}, or {@code pLength} is negative.
+     * @throws NullPointerException     The byte array {@code pBuffer} is null.
+     */
+    public void add(byte[] pBuffer, int pOffset, int pLength) {
+<span class="fc" id="L183">        Objects.requireNonNull(pBuffer, &quot;Buffer&quot;);</span>
+<span class="pc bpc" id="L184" title="2 of 4 branches missed.">        if (pOffset &lt; 0 || pOffset &gt;= pBuffer.length) {</span>
+<span class="nc" id="L185">            throw new IllegalArgumentException(&quot;Invalid offset: &quot; + pOffset);</span>
+        }
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">        if (pLength &lt; 0) {</span>
+<span class="nc" id="L188">            throw new IllegalArgumentException(&quot;Invalid length: &quot; + pLength);</span>
+        }
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (currentNumberOfBytes + pLength &gt; buffer.length) {</span>
+<span class="nc" id="L191">            throw new IllegalStateException(&quot;No space available&quot;);</span>
+        }
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for (int i = 0; i &lt; pLength; i++) {</span>
+<span class="fc" id="L194">            buffer[endOffset] = pBuffer[pOffset + i];</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (++endOffset == buffer.length) {</span>
+<span class="fc" id="L196">                endOffset = 0;</span>
+            }
+        }
+<span class="fc" id="L199">        currentNumberOfBytes += pLength;</span>
+<span class="fc" id="L200">    }</span>
+
+    /**
+     * Returns, whether there is currently room for a single byte in the buffer.
+     * Same as {@link #hasSpace(int) hasSpace(1)}.
+     *
+     * @return true if there is space for a byte
+     * @see #hasSpace(int)
+     * @see #getSpace()
+     */
+    public boolean hasSpace() {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        return currentNumberOfBytes &lt; buffer.length;</span>
+    }
+
+    /**
+     * Returns, whether there is currently room for the given number of bytes in the buffer.
+     *
+     * @param pBytes the byte count
+     * @return true if there is space for the given number of bytes
+     * @see #hasSpace()
+     * @see #getSpace()
+     */
+    public boolean hasSpace(int pBytes) {
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        return currentNumberOfBytes + pBytes &lt;= buffer.length;</span>
+    }
+
+    /**
+     * Returns, whether the buffer is currently holding, at least, a single byte.
+     *
+     * @return true if the buffer is not empty
+     */
+    public boolean hasBytes() {
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        return currentNumberOfBytes &gt; 0;</span>
+    }
+
+    /**
+     * Returns the number of bytes, that can currently be added to the buffer.
+     *
+     * @return the number of bytes that can be added
+     */
+    public int getSpace() {
+<span class="fc" id="L241">        return buffer.length - currentNumberOfBytes;</span>
+    }
+
+    /**
+     * Returns the number of bytes, that are currently present in the buffer.
+     *
+     * @return the number of bytes
+     */
+    public int getCurrentNumberOfBytes() {
+<span class="fc" id="L250">        return currentNumberOfBytes;</span>
+    }
+
+    /**
+     * Removes all bytes from the buffer.
+     */
+    public void clear() {
+<span class="nc" id="L257">        startOffset = 0;</span>
+<span class="nc" id="L258">        endOffset = 0;</span>
+<span class="nc" id="L259">        currentNumberOfBytes = 0;</span>
+<span class="nc" id="L260">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
